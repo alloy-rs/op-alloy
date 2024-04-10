@@ -12,6 +12,13 @@ homepage = "https://github.com/alloy-rs/op-alloy"
 repository = "https://github.com/alloy-rs/op-alloy"
 exclude = ["benches/", "tests/"]
 
+[workspace.dependencies]
+# Alloy
+alloy-primitives = { version = "0.7.0", default-features = false }
+
+# Serde
+serde = { version = "1.0", default-features = false, features = ["derive", "alloc"] }
+
 [workspace.metadata.docs.rs]
 all-features = true
 rustdoc-args = ["--cfg", "docsrs"]
