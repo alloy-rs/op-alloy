@@ -21,6 +21,7 @@ alloy = { git = "https://github.com/alloy-rs/alloy", rev = "89f14f9", features =
     "rpc-types","rlp","consensus"
 ] }
 op-consensus = { version = "0.1.0", default-features = false, path = "crates/op-consensus" }
+op-rpc-types = { version = "0.1.0", default-features = false, path = "crates/op-rpc-types" }
 
 # Serde
 serde = { version = "1.0", default-features = false, features = ["derive", "alloc"] }
