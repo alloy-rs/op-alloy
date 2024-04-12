@@ -18,7 +18,7 @@ alloy-primitives = { version = "0.7.0", default-features = false }
 alloy = { git = "https://github.com/alloy-rs/alloy", rev = "89f14f9", features = [
     "serde",
     "rpc-types-eth",
-    "rpc-types"
+    "rpc-types","rlp","consensus"
 ] }
 op-consensus = { version = "0.1.0", default-features = false, path = "crates/op-consensus" }
 
