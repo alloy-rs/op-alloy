@@ -15,10 +15,10 @@ exclude = ["benches/", "tests/"]
 [workspace.dependencies]
 alloy-rlp = { version = "0.3", default-features = false }
 alloy-primitives = { version = "0.7.0", default-features = false }
-alloy-consensus = { git = "https://github.com/clabby/alloy", branch = "cl/consensus-expose-encoding", default-features = false }
-alloy-eips = { git = "https://github.com/clabby/alloy", branch = "cl/consensus-expose-encoding", default-features = false }
-alloy-signer = { git = "https://github.com/clabby/alloy", branch = "cl/consensus-expose-encoding", default-features = false }
-alloy-serde = { git = "https://github.com/clabby/alloy", branch = "cl/consensus-expose-encoding", default-features = false }
+alloy-consensus = { git = "https://github.com/alloy-rs/alloy", rev = "cb95183", default-features = false }
+alloy-eips = { git = "https://github.com/alloy-rs/alloy", rev = "cb95183", default-features = false }
+alloy-signer = { git = "https://github.com/alloy-rs/alloy", rev = "cb95183", default-features = false }
+alloy-serde = { git = "https://github.com/alloy-rs/alloy", rev = "cb95183", default-features = false }
 
 ## serde
 serde = { version = "1.0", default-features = false, features = ["derive", "alloc"] }
