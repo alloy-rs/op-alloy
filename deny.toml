@@ -7,7 +7,7 @@ notice = "warn"
 
 [bans]
 multiple-versions = "warn"
-wildcards = "deny"
+wildcards = "allow"
 highlight = "all"
 
 [licenses]
@@ -52,5 +52,6 @@ license-files = [{ path = "LICENSE", hash = 0x001c7e6c }]
 [sources]
 unknown-registry = "deny"
 unknown-git = "deny"
-# TODO: Remove once alloy-contract is stable. This is only used in tests for `sol!`.
-allow-git = ["https://github.com/alloy-rs/core"]
+allow-git = [
+    "https://github.com/alloy-rs/alloy",
+]
