@@ -15,12 +15,10 @@ exclude = ["benches/", "tests/"]
 [workspace.dependencies]
 # Alloy
 alloy-primitives = { version = "0.7.1", default-features = false }
-alloy = { git = "https://github.com/alloy-rs/alloy", rev = "004aa98", features = [
-    "serde",
-    "rpc-types-eth",
-    "rpc-types","rlp","consensus"
-] }
-op-rpc-types = { version = "0.1.0", default-features = false, path = "crates/op-rpc-types" }
+alloy = { git = "https://github.com/alloy-rs/alloy", rev = "55a278c" }
+alloy-consensus = { git = "https://github.com/alloy-rs/alloy", rev = "55a278c" }
+alloy-rpc-types = { git = "https://github.com/alloy-rs/alloy", rev = "55a278c" }
+alloy-op-rpc-types = { version = "0.1.0", path = "crates/rpc-types" }
 
 # Serde
 serde = { version = "1.0", default-features = false, features = ["derive", "alloc"] }
