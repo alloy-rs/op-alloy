@@ -2,8 +2,8 @@ use crate::TxDeposit;
 use alloy_consensus::{
     Signed, TxEip1559, TxEip2930, TxEip4844, TxEip4844Variant, TxEip4844WithSidecar, TxLegacy,
 };
-use alloy_op_rpc_types::transaction::TxType;
 use alloy_eips::eip2718::{Decodable2718, Encodable2718};
+use alloy_op_rpc_types::transaction::TxType;
 use alloy_rlp::{Decodable, Encodable, Header};
 
 /// The Ethereum [EIP-2718] Transaction Envelope, modified for OP Stack chains.

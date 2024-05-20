@@ -1,6 +1,6 @@
 use crate::{OpTxEnvelope, TxDeposit};
-use alloy_op_rpc_types::transaction::TxType;
 use alloy_consensus::{Transaction, TxEip1559, TxEip2930, TxEip4844Variant, TxLegacy};
+use alloy_op_rpc_types::transaction::TxType;
 use alloy_primitives::TxKind;
 
 /// The TypedTransaction enum represents all Ethereum transaction request types, modified for the OP

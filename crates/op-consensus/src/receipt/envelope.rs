@@ -1,6 +1,6 @@
 use crate::{OpDepositReceipt, OpReceiptWithBloom};
-use alloy_op_rpc_types::transaction::TxType;
 use alloy_eips::eip2718::{Decodable2718, Encodable2718};
+use alloy_op_rpc_types::transaction::TxType;
 use alloy_primitives::{Bloom, Log};
 use alloy_rlp::{length_of_length, BufMut, Decodable, Encodable};
 
