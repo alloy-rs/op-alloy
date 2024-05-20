@@ -13,6 +13,7 @@ exclude.workspace = true
 
 [dependencies]
 alloy-primitives = { workspace = true, features = ["rlp"] }
+alloy-op-rpc-types.workspace = true
 alloy-consensus.workspace = true
 alloy-rlp.workspace = true
 alloy-eips.workspace = true
@@ -32,8 +33,31 @@ serde_json.workspace = true
 
 [features]
 default = ["std"]
-std = ["alloy-eips/std", "alloy-consensus/std"]
+std = [
+  "alloy-eips/std",
+  "alloy-consensus/std",
+  "alloy-op-rpc-types/std",
+]
 k256 = ["alloy-primitives/k256", "alloy-consensus/k256"]
-kzg = ["alloy-eips/kzg", "alloy-consensus/kzg", "std"]
-arbitrary = ["std", "dep:arbitrary", "alloy-consensus/arbitrary", "alloy-eips/arbitrary", "alloy-primitives/rand"]
-serde = ["dep:serde", "dep:alloy-serde", "alloy-primitives/serde", "alloy-consensus/serde", "alloy-eips/serde"]
+kzg = [
+  "std",
+  "alloy-eips/kzg",
+  "alloy-consensus/kzg",
+  "alloy-op-rpc-types/kzg",
+]
+arbitrary = [
+  "std",
+  "dep:arbitrary",
+  "alloy-consensus/arbitrary",
+  "alloy-eips/arbitrary",
+  "alloy-primitives/rand",
+  "alloy-op-rpc-types/arbitrary",
+]
+serde = [
+  "dep:serde",
+  "dep:alloy-serde",
+  "alloy-primitives/serde",
+  "alloy-consensus/serde",
+  "alloy-eips/serde",
+  "alloy-op-rpc-types/serde",
+]

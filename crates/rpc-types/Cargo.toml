@@ -13,27 +13,34 @@ exclude.workspace = true
 
 [dependencies]
 alloy-primitives = { workspace = true, features = ["rlp", "serde", "std"] }
-alloy-consensus = { workspace = true, features = ["std", "serde"] }
 alloy-rpc-types.workspace = true
+alloy-eips.workspace = true
 
-serde = { workspace = true, features = ["derive"] }
-serde_json.workspace = true
-
-# arbitrary
+serde_json = { workspace = true, optional = true }
+serde = { workspace = true, features = ["derive"], optional = true }
 arbitrary = { version = "1.3", features = ["derive"], optional = true }
 
 [dev-dependencies]
 alloy-primitives = { workspace = true, features = ["arbitrary"] }
-alloy-consensus = { workspace = true, features = ["arbitrary"] }
 alloy-rpc-types = { workspace = true, features = ["arbitrary"] }
 
 arbitrary = { workspace = true, features = ["derive"] }
 rand.workspace = true
 
 [features]
+default = ["std"]
+std = ["alloy-eips/std"]
+kzg = ["std", "alloy-eips/kzg"]
 arbitrary = [
+    "std",
     "dep:arbitrary",
+    "alloy-eips/arbitrary",
     "alloy-primitives/arbitrary",
-    "alloy-consensus/arbitrary",
     "alloy-rpc-types/arbitrary",
+]
+serde = [
+  "dep:serde",
+  "dep:serde_json",
+  "alloy-eips/serde",
+  "alloy-primitives/serde",
 ]

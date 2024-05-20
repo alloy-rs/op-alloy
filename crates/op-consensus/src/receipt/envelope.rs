@@ -1,4 +1,5 @@
-use crate::{OpDepositReceipt, OpReceiptWithBloom, OpTxType};
+use crate::{OpDepositReceipt, OpReceiptWithBloom};
+use alloy_op_rpc_types::transaction::TxType;
 use alloy_eips::eip2718::{Decodable2718, Encodable2718};
 use alloy_primitives::{Bloom, Log};
 use alloy_rlp::{length_of_length, BufMut, Decodable, Encodable};
@@ -45,13 +46,13 @@ pub enum OpReceiptEnvelope<T = Log> {
 
 impl<T> OpReceiptEnvelope<T> {
     /// Return the [`OpTxType`] of the inner receipt.
-    pub const fn tx_type(&self) -> OpTxType {
+    pub const fn tx_type(&self) -> TxType {
         match self {
-            Self::Legacy(_) => OpTxType::Legacy,
-            Self::Eip2930(_) => OpTxType::Eip2930,
-            Self::Eip1559(_) => OpTxType::Eip1559,
-            Self::Eip4844(_) => OpTxType::Eip4844,
-            Self::Deposit(_) => OpTxType::Deposit,
+            Self::Legacy(_) => TxType::Legacy,
+            Self::Eip2930(_) => TxType::Eip2930,
+            Self::Eip1559(_) => TxType::Eip1559,
+            Self::Eip4844(_) => TxType::Eip4844,
+            Self::Deposit(_) => TxType::Deposit,
         }
     }
 
@@ -158,10 +159,10 @@ impl Encodable2718 for OpReceiptEnvelope {
     fn type_flag(&self) -> Option<u8> {
         match self {
             Self::Legacy(_) => None,
-            Self::Eip2930(_) => Some(OpTxType::Eip2930 as u8),
-            Self::Eip1559(_) => Some(OpTxType::Eip1559 as u8),
-            Self::Eip4844(_) => Some(OpTxType::Eip4844 as u8),
-            Self::Deposit(_) => Some(OpTxType::Deposit as u8),
+            Self::Eip2930(_) => Some(TxType::Eip2930 as u8),
+            Self::Eip1559(_) => Some(TxType::Eip1559 as u8),
+            Self::Eip4844(_) => Some(TxType::Eip4844 as u8),
+            Self::Deposit(_) => Some(TxType::Deposit as u8),
         }
     }
 
@@ -182,13 +183,13 @@ impl Decodable2718 for OpReceiptEnvelope {
     fn typed_decode(ty: u8, buf: &mut &[u8]) -> alloy_rlp::Result<Self> {
         let receipt = Decodable::decode(buf)?;
         match ty.try_into().map_err(|_| alloy_rlp::Error::Custom("Unexpected type"))? {
-            OpTxType::Legacy => {
+            TxType::Legacy => {
                 Err(alloy_rlp::Error::Custom("type-0 eip2718 transactions are not supported"))
             }
-            OpTxType::Eip2930 => Ok(Self::Eip2930(receipt)),
-            OpTxType::Eip1559 => Ok(Self::Eip1559(receipt)),
-            OpTxType::Eip4844 => Ok(Self::Eip4844(receipt)),
-            OpTxType::Deposit => Ok(Self::Deposit(receipt)),
+            TxType::Eip2930 => Ok(Self::Eip2930(receipt)),
+            TxType::Eip1559 => Ok(Self::Eip1559(receipt)),
+            TxType::Eip4844 => Ok(Self::Eip4844(receipt)),
+            TxType::Deposit => Ok(Self::Deposit(receipt)),
         }
     }
 
@@ -197,7 +198,7 @@ impl Decodable2718 for OpReceiptEnvelope {
     }
 }
 
-#[cfg(all(test, feature = "arbitrary"))]
+#[cfg(any(test, feature = "arbitrary"))]
 impl<'a, T> arbitrary::Arbitrary<'a> for OpReceiptEnvelope<T>
 where
     T: arbitrary::Arbitrary<'a>,

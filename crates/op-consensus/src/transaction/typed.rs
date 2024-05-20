@@ -1,4 +1,5 @@
-use crate::{OpTxEnvelope, OpTxType, TxDeposit};
+use crate::{OpTxEnvelope, TxDeposit};
+use alloy_op_rpc_types::transaction::TxType;
 use alloy_consensus::{Transaction, TxEip1559, TxEip2930, TxEip4844Variant, TxLegacy};
 use alloy_primitives::TxKind;
 
@@ -76,13 +77,13 @@ impl From<OpTxEnvelope> for OpTypedTransaction {
 
 impl OpTypedTransaction {
     /// Return the [`OpTxType`] of the inner txn.
-    pub const fn tx_type(&self) -> OpTxType {
+    pub const fn tx_type(&self) -> TxType {
         match self {
-            Self::Legacy(_) => OpTxType::Legacy,
-            Self::Eip2930(_) => OpTxType::Eip2930,
-            Self::Eip1559(_) => OpTxType::Eip1559,
-            Self::Eip4844(_) => OpTxType::Eip4844,
-            Self::Deposit(_) => OpTxType::Deposit,
+            Self::Legacy(_) => TxType::Legacy,
+            Self::Eip2930(_) => TxType::Eip2930,
+            Self::Eip1559(_) => TxType::Eip1559,
+            Self::Eip4844(_) => TxType::Eip4844,
+            Self::Deposit(_) => TxType::Deposit,
         }
     }
 
