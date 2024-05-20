@@ -76,7 +76,7 @@ impl From<OpTxEnvelope> for OpTypedTransaction {
 }
 
 impl OpTypedTransaction {
-    /// Return the [`OpTxType`] of the inner txn.
+    /// Return the [`TxType`] of the inner txn.
     pub const fn tx_type(&self) -> TxType {
         match self {
             Self::Legacy(_) => TxType::Legacy,
