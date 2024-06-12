@@ -14,15 +14,18 @@ exclude = ["benches/", "tests/"]
 
 [workspace.dependencies]
 # Alloy
-alloy = { git = "https://github.com/alloy-rs/alloy", rev = "55a278c" }
+alloy-op-rpc-types = { version = "0.1.0", path = "crates/rpc-types" }
+
 alloy-rlp = { version = "0.3", default-features = false }
 alloy-primitives = { version = "0.7.1", default-features = false }
-alloy-op-rpc-types = { version = "0.1.0", path = "crates/rpc-types" }
-alloy-consensus = { git = "https://github.com/alloy-rs/alloy", rev = "55a278c", default-features = false}
-alloy-rpc-types = { git = "https://github.com/alloy-rs/alloy", rev = "55a278c" }
-alloy-eips = { git = "https://github.com/alloy-rs/alloy", branch = "main", default-features = false }
-alloy-serde = { git = "https://github.com/alloy-rs/alloy", branch = "main", default-features = false }
-alloy-signer = { git = "https://github.com/alloy-rs/alloy", branch = "main", default-features = false }
+
+alloy = { git = "https://github.com/alloy-rs/alloy" }
+alloy-consensus = { git = "https://github.com/alloy-rs/alloy", default-features = false}
+alloy-rpc-types = { git = "https://github.com/alloy-rs/alloy" }
+alloy-rpc-types-eth = { git = "https://github.com/alloy-rs/alloy" }
+alloy-eips = { git = "https://github.com/alloy-rs/alloy", default-features = false }
+alloy-serde = { git = "https://github.com/alloy-rs/alloy", default-features = false }
+alloy-signer = { git = "https://github.com/alloy-rs/alloy", default-features = false }
 
 # Serde
 serde = { version = "1.0", default-features = false, features = ["derive", "alloc"] }
