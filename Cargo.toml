@@ -14,7 +14,8 @@ exclude = ["benches/", "tests/"]
 
 [workspace.dependencies]
 # Alloy
-alloy-op-rpc-types = { version = "0.1.0", path = "crates/rpc-types" }
+op-alloy-rpc-types = {  path = "crates/rpc-types" }
+op-alloy-consensus = {  path = "crates/rpc-types" }
 
 alloy-rlp = { version = "0.3", default-features = false }
 alloy-primitives = { version = "0.7.1", default-features = false }
