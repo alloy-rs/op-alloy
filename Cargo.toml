@@ -12,16 +12,32 @@ homepage = "https://github.com/alloy-rs/op-alloy"
 repository = "https://github.com/alloy-rs/op-alloy"
 exclude = ["benches/", "tests/"]
 
+[workspace.lints]
+rust.unused_must_use = "deny"
+rust.rust_2018_idioms = "deny"
+rustdoc.all = "warn"
+
+[workspace.lints.clippy]
+all = "warn"
+missing_const_for_fn = "warn"
+use_self = "warn"
+option_if_let_else = "warn"
+
+[workspace.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
 [workspace.dependencies]
 # Alloy
-op-alloy-rpc-types = {  path = "crates/rpc-types" }
-op-alloy-consensus = {  path = "crates/rpc-types" }
+op-alloy-rpc-types = { version = "0.1.0", path = "crates/rpc-types" }
+op-alloy-consensus = { version = "0.1.0", path = "crates/op-consensus" }
 
 alloy-rlp = { version = "0.3", default-features = false }
 alloy-primitives = { version = "0.7.1", default-features = false }
 
 alloy = { git = "https://github.com/alloy-rs/alloy" }
 alloy-consensus = { git = "https://github.com/alloy-rs/alloy", default-features = false}
+alloy-network = { git = "https://github.com/alloy-rs/alloy", default-features = false }
 alloy-rpc-types = { git = "https://github.com/alloy-rs/alloy" }
 alloy-rpc-types-eth = { git = "https://github.com/alloy-rs/alloy" }
 alloy-eips = { git = "https://github.com/alloy-rs/alloy", default-features = false }
@@ -43,7 +59,3 @@ tokio = "1"
 ## crypto
 c-kzg = { version = "1.0", default-features = false }
 k256 = { version = "0.13", default-features = false, features = ["ecdsa"] }
-
-[workspace.metadata.docs.rs]
-all-features = true
-rustdoc-args = ["--cfg", "docsrs"]
