@@ -19,6 +19,15 @@
 #[cfg(not(feature = "std"))]
 extern crate alloc;
 
+// Re-export EIP2718 Types and Traits
+pub use alloy_eips::eip2718::{Decodable2718, Eip2718Error, Eip2718Result, Encodable2718};
+
+// Re-export Alloy RLP Traits
+pub use alloy_rlp::{Decodable, Encodable};
+
+// Re-export Alloy Consensus Types
+pub use alloy_consensus::{Eip658Value, Receipt, ReceiptWithBloom, Transaction, TxReceipt};
+
 mod receipt;
 pub use receipt::{OpDepositReceipt, OpDepositReceiptWithBloom, OpReceiptEnvelope, OpTxReceipt};
 
