@@ -30,7 +30,7 @@ rustdoc-args = ["--cfg", "docsrs"]
 [workspace.dependencies]
 # Alloy
 op-alloy-rpc-types = { version = "0.1.0", path = "crates/rpc-types" }
-op-alloy-consensus = { version = "0.1.0", path = "crates/op-consensus" }
+op-alloy-consensus = { version = "0.1.0", path = "crates/consensus" }
 
 alloy-rlp = { version = "0.3", default-features = false }
 alloy-primitives = { version = "0.7.1", default-features = false }
