@@ -35,14 +35,14 @@ op-alloy-consensus = { version = "0.1.0", path = "crates/consensus" }
 alloy-rlp = { version = "0.3", default-features = false }
 alloy-primitives = { version = "0.7.1", default-features = false }
 
-alloy = { git = "https://github.com/alloy-rs/alloy" }
-alloy-consensus = { git = "https://github.com/alloy-rs/alloy", default-features = false}
-alloy-network = { git = "https://github.com/alloy-rs/alloy", default-features = false }
-alloy-rpc-types = { git = "https://github.com/alloy-rs/alloy" }
-alloy-rpc-types-eth = { git = "https://github.com/alloy-rs/alloy" }
-alloy-eips = { git = "https://github.com/alloy-rs/alloy", default-features = false }
-alloy-serde = { git = "https://github.com/alloy-rs/alloy", default-features = false }
-alloy-signer = { git = "https://github.com/alloy-rs/alloy", default-features = false }
+alloy = { version = "0.1" }
+alloy-consensus = { version = "0.1", default-features = false}
+alloy-network = { version = "0.1", default-features = false }
+alloy-rpc-types = { version = "0.1" }
+alloy-rpc-types-eth = { version = "0.1" }
+alloy-eips = { version = "0.1", default-features = false }
+alloy-serde = { version = "0.1", default-features = false }
+alloy-signer = { version = "0.1", default-features = false }
 
 # Serde
 serde = { version = "1.0", default-features = false, features = ["derive", "alloc"] }
