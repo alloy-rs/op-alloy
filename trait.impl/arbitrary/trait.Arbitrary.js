@@ -1,0 +1,4 @@
+(function() {var implementors = {
+"op_alloy_consensus":[["impl&lt;'a&gt; Arbitrary&lt;'a&gt; for <a class=\"enum\" href=\"op_alloy_consensus/transaction/envelope/enum.OpTxType.html\" title=\"enum op_alloy_consensus::transaction::envelope::OpTxType\">OpTxType</a>"]],
+"op_alloy_rpc_types":[["impl&lt;'arbitrary&gt; Arbitrary&lt;'arbitrary&gt; for <a class=\"struct\" href=\"op_alloy_rpc_types/transaction/struct.Transaction.html\" title=\"struct op_alloy_rpc_types::transaction::Transaction\">Transaction</a>"]]
+};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

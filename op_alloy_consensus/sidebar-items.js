@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["DEPOSIT_TX_TYPE_ID"],"enum":["OpReceiptEnvelope","OpTxEnvelope","OpTxType","OpTypedTransaction"],"mod":["receipt","transaction"],"struct":["OpDepositReceipt","OpDepositReceiptWithBloom","TxDeposit"],"trait":["OpTxReceipt"]};
