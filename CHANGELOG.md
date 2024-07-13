@@ -5,11 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.3](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.1.3) - 2024-07-13
+
+### Bug Fixes
+
+- Op alloy rpc tx receipt
+
+### Miscellaneous Tasks
+
+- Use serde::quantity
+- Rename mod
+
+### Other
+
+- Merge pull request [#21](https://github.com/alloy-rs/op-alloy/issues/21) from alloy-rs/matt/op-alloy-rpc-receipt
+- Merge pull request [#20](https://github.com/alloy-rs/op-alloy/issues/20) from alloy-rs/matt/use-serde-quantity
+- Merge pull request [#19](https://github.com/alloy-rs/op-alloy/issues/19) from alloy-rs/matt/rename-mod
+
 ## [0.1.2](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.1.2) - 2024-07-08
 
 ### Miscellaneous Tasks
 
+- Release 0.1.2
 - Update alloy
 - Update changelog
 
