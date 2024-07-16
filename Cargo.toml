@@ -35,14 +35,14 @@ op-alloy-consensus = { version = "0.1.3", path = "crates/consensus" }
 alloy-rlp = { version = "0.3", default-features = false }
 alloy-primitives = { version = "0.7.1", default-features = false }
 
-alloy = { version = "0.1" }
-alloy-consensus = { version = "0.1", default-features = false}
-alloy-network = { version = "0.1", default-features = false }
-alloy-rpc-types = { version = "0.1" }
-alloy-rpc-types-eth = { version = "0.1" }
-alloy-eips = { version = "0.1", default-features = false }
-alloy-serde = { version = "0.1", default-features = false }
-alloy-signer = { version = "0.1", default-features = false }
+alloy = { version = "0.2" }
+alloy-consensus = { version = "0.2", default-features = false}
+alloy-network = { version = "0.2", default-features = false }
+alloy-rpc-types = { version = "0.2" }
+alloy-rpc-types-eth = { version = "0.2" }
+alloy-eips = { version = "0.2", default-features = false }
+alloy-serde = { version = "0.2", default-features = false }
+alloy-signer = { version = "0.2", default-features = false }
 
 # Serde
 serde = { version = "1.0", default-features = false, features = ["derive", "alloc"] }
