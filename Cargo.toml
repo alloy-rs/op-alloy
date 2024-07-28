@@ -48,6 +48,9 @@ alloy-signer = { version = "0.2", default-features = false }
 serde = { version = "1.0", default-features = false, features = ["derive", "alloc"] }
 serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
 
+# misc
+derive_more = { version = "0.99", default-features = false }
+
 ## misc-testing
 arbitrary = { version = "1.3", features = ["derive"] }
 rand = "0.8"
