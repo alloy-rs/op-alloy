@@ -14,11 +14,11 @@ exclude = ["benches/", "tests/"]
 
 [workspace.lints]
 rust.unused_must_use = "deny"
-rust.rust_2018_idioms = "deny"
+rust.rust_2018_idioms = { level = "deny", priority = -1 }
 rustdoc.all = "warn"
 
 [workspace.lints.clippy]
-all = "warn"
+all = { level = "warn", priority = -1 }
 missing_const_for_fn = "warn"
 use_self = "warn"
 option_if_let_else = "warn"
