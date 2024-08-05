@@ -222,7 +222,7 @@ mod tests {
           "regolithTime": 12,
           "canyonTime": 0,
           "ecotoneTime": 0,
-          "fjordTime": 0
+          "fjordTime": 0,
           "graniteTime": 0
         }
         "#;
