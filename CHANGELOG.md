@@ -5,12 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.5](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.1.5) - 2024-08-08
+
+### Bug Fixes
+
+- Fix arbitrary impl for OpTxType to include deposit tx
+
+### Miscellaneous Tasks
+
+- Clippy happy ([#30](https://github.com/alloy-rs/op-alloy/issues/30))
+- Codeowners
+- Downgrad clippy all
+
+### Other
+
+- Add granite_time to OptimismGenesisInfo ([#31](https://github.com/alloy-rs/op-alloy/issues/31))
+- Merge pull request [#26](https://github.com/alloy-rs/op-alloy/issues/26) from alloy-rs/matt/codeowners1
+- Merge pull request [#23](https://github.com/alloy-rs/op-alloy/issues/23) from alloy-rs/emhane/op-alloy-tx-type
+- Replace TxType with OpTxType in Network impl for Optimism
+- Implement display for OpTxType
+- Merge pull request [#25](https://github.com/alloy-rs/op-alloy/issues/25) from alloy-rs/emhane/fix-arbitrary-op-tx-ty
+- Merge pull request [#24](https://github.com/alloy-rs/op-alloy/issues/24) from alloy-rs/matt/downgrade-all-clippy
+
 ## [0.1.4](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.1.4) - 2024-07-16
 
 ### Dependencies
 
 - Bump alloy
+
+### Miscellaneous Tasks
+
+- Release 0.1.4
 
 ## [0.1.3](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.1.3) - 2024-07-13
