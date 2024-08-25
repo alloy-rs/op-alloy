@@ -4,7 +4,7 @@ use alloy_rpc_types_eth::error::EthRpcErrorCode;
 use revm_primitives::{InvalidTransaction, OptimismInvalidTransaction};
 use std::fmt::Display;
 
-/// Optimism specific errors, that extend [`EthApiError`].
+/// Optimism specific errors.
 #[derive(Debug, thiserror::Error)]
 pub enum OpEthApiError<EthApiError: Display> {
     /// L1 ethereum error.
@@ -16,7 +16,7 @@ pub enum OpEthApiError<EthApiError: Display> {
     /// Thrown when calculating L1 gas used
     #[error("failed to calculate l1 gas used")]
     L1BlockGasError,
-    /// Wrapper for [`revm_primitives::InvalidTransaction`](InvalidTransaction).
+    /// Wrapper for [`revm_primitives::InvalidTransaction`].
     #[error(transparent)]
     InvalidTransaction(OptimismInvalidTransactionError),
 }
