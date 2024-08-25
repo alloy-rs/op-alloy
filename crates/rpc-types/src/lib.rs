@@ -16,8 +16,8 @@
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 
 pub mod genesis;
-pub mod sync;
 pub mod receipt;
+pub mod sync;
 pub mod transaction;
 
 pub use receipt::OpTransactionReceipt;
