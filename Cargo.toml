@@ -48,6 +48,10 @@ alloy-signer = { version = "0.2", default-features = false }
 serde = { version = "1.0", default-features = false, features = ["derive", "alloc"] }
 serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
 
+# rpc
+jsonrpsee = "0.24"
+jsonrpsee-types = "0.24"
+
 # misc
 derive_more = { version = "0.99", default-features = false }
 
