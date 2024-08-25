@@ -10,7 +10,7 @@ pub struct L2BlockRef {
     pub number: Option<BlockNumber>,
     pub parent_hash: Option<B256>,
     pub timestamp: Option<u64>,
-    pub l1origin: Option<BlockId>,
+    pub l1_origin: Option<BlockId>,
     pub sequence_number: Option<u64>,
 }
 
