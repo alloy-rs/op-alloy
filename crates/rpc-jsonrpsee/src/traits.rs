@@ -1,9 +1,8 @@
 //! Rollup Node
 
-use jsonrpsee_types::ResponsePayload;
-use jsonrpsee::{core::RpcResult, proc_macros::rpc};
+use jsonrpsee::{RpcResult, proc_macros::rpc};
 use alloy_eips::BlockNumberOrTag;
-use op_alloy_rpc_types::sync::{OutputResponse, RollupConfig, SyncStatus};
+use op_alloy_rpc_types::sync::SyncStatus;
 
 /// Optimism specified rpc interface.
 /// https://docs.optimism.io/builders/node-operators/json-rpc
