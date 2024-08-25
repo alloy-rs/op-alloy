@@ -29,6 +29,7 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [workspace.dependencies]
 # Alloy
+op-alloy-rpc-client = { version = "0.1.5", path = "crates/rpc-client" }
 op-alloy-rpc-types = { version = "0.1.5", path = "crates/rpc-types" }
 op-alloy-consensus = { version = "0.1.5", path = "crates/consensus" }
 
@@ -49,7 +50,7 @@ serde = { version = "1.0", default-features = false, features = ["derive", "allo
 serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
 
 # rpc
-jsonrpsee = "0.24"
+jsonrpsee = { version = "0.24", features = ["macros", "jsonrpsee-core"] }
 jsonrpsee-types = "0.24"
 
 # misc

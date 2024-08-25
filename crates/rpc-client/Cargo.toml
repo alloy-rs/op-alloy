@@ -12,6 +12,10 @@ repository.workspace = true
 exclude.workspace = true
 
 [dependencies]
+# Alloy
+op-alloy-rpc-types.workspace = true
+alloy-eips.workspace = true
+
 # rpc
 jsonrpsee.workspace = true
 jsonrpsee-types.workspace = true
