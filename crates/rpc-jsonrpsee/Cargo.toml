@@ -1,5 +1,5 @@
 [package]
-name = "op-alloy-rpc-client"
+name = "op-alloy-rpc-jsonrpsee"
 description = "Optimism RPC Client"
 
 version.workspace = true

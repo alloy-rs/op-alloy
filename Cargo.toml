@@ -29,7 +29,7 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [workspace.dependencies]
 # Alloy
-op-alloy-rpc-client = { version = "0.1.5", path = "crates/rpc-client" }
+op-alloy-rpc-jsonrpsee = { version = "0.1.5", path = "crates/rpc-jsonrpsee" }
 op-alloy-rpc-types = { version = "0.1.5", path = "crates/rpc-types" }
 op-alloy-consensus = { version = "0.1.5", path = "crates/consensus" }
 
