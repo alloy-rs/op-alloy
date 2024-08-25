@@ -1,9 +1,8 @@
 //! Rollup Node
 
-use jsonrpsee::{RpcResult, proc_macros::rpc};
 use alloy_eips::BlockNumberOrTag;
-use op_alloy_rpc_types::sync::SyncStatus;
-use op_alloy_rpc_types::config::{RollupConfig, OutputResponse};
+use jsonrpsee::{core::RpcResult, proc_macros::rpc};
+use op_alloy_rpc_types::{config::RollupConfig, output::OutputResponse, sync::SyncStatus};
 
 /// Optimism specified rpc interface.
 ///
@@ -14,10 +13,8 @@ use op_alloy_rpc_types::config::{RollupConfig, OutputResponse};
 pub trait RollupNode {
     /// Get the output root at a specific block.
     #[method(name = "outputAtBlock")]
-    async fn op_output_at_block(
-        &self,
-        block_number: BlockNumberOrTag,
-    ) -> RpcResult<OutputResponse>;
+    async fn op_output_at_block(&self, block_number: BlockNumberOrTag)
+        -> RpcResult<OutputResponse>;
 
     /// Get the synchronization status.
     #[method(name = "syncStatus")]

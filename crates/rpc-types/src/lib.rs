@@ -18,6 +18,7 @@
 pub mod config;
 pub mod genesis;
 pub mod net;
+pub mod output;
 pub mod receipt;
 pub mod sync;
 pub mod transaction;
