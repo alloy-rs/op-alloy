@@ -6,21 +6,21 @@ use alloy_rpc_types_eth::BlockId;
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct L2BlockRef {
-    pub hash: B256,
-    pub number: BlockNumber,
-    pub parent_hash: B256,
-    pub timestamp: u64,
-    pub l1origin: BlockId,
-    pub sequence_number: u64,
+    pub hash: Option<B256>,
+    pub number: Option<BlockNumber>,
+    pub parent_hash: Option<B256>,
+    pub timestamp: Option<u64>,
+    pub l1origin: Option<BlockId>,
+    pub sequence_number: Option<u64>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct L1BlockRef {
-    pub hash: B256,
-    pub number: BlockNumber,
-    pub parent_hash: B256,
-    pub timestamp: u64,
+    pub hash: Option<B256>,
+    pub number: Option<BlockNumber>,
+    pub parent_hash: Option<B256>,
+    pub timestamp: Option<u64>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -34,15 +34,4 @@ pub struct SyncStatus {
     pub safe_l2: L2BlockRef,
     pub finalized_l2: L2BlockRef,
     pub pending_safe_l2: L2BlockRef,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct OutputResponse {
-    pub version: B256,
-    pub output_root: B256,
-    pub block_ref: L2BlockRef,
-    pub withdrawal_storage_root: B256,
-    pub state_root: B256,
-    pub sync_status: SyncStatus,
 }
