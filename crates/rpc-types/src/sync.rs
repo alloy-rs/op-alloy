@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 /// The block reference for an L2 block.
 ///
 /// See: <https://github.com/ethereum-optimism/optimism/blob/develop/op-service/eth/id.go#L33>
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct L2BlockRef {
     /// The block hash.
@@ -28,7 +28,7 @@ pub struct L2BlockRef {
 /// The block reference for an L1 block.
 ///
 /// See: <https://github.com/ethereum-optimism/optimism/blob/develop/op-service/eth/id.go#L52>
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct L1BlockRef {
     /// The block hash.
