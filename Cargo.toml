@@ -44,6 +44,11 @@ alloy-eips = { version = "0.2", default-features = false }
 alloy-serde = { version = "0.2", default-features = false }
 alloy-signer = { version = "0.2", default-features = false }
 
+# Revm
+revm-primitives = { version = "8.0.0", features = [
+    "std",
+], default-features = false }
+
 # Serde
 serde = { version = "1.0", default-features = false, features = ["derive", "alloc"] }
 serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
