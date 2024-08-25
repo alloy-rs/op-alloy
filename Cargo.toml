@@ -50,7 +50,7 @@ serde = { version = "1.0", default-features = false, features = ["derive", "allo
 serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
 
 # rpc
-jsonrpsee = { version = "0.24", features = ["jsonrpsee-core", "full"] }
+jsonrpsee = { version = "0.24", features = ["jsonrpsee-core", "client-core", "server-core", "macros"] }
 jsonrpsee-core = "0.24"
 jsonrpsee-types = "0.24"
 
