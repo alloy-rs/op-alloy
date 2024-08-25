@@ -1,9 +1,7 @@
 //! Op types related to sync.
 use serde::{Deserialize, Serialize};
-use alloy::{
-    primitives::{BlockNumber, B256},
-    rpc::types::BlockId,
-};
+use alloy_primitives::{BlockNumber, B256};
+use alloy_rpc_types_eth::BlockId;
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
