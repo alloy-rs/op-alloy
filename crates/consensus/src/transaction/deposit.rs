@@ -163,6 +163,14 @@ impl Transaction for TxDeposit {
     fn ty(&self) -> u8 {
         OpTxType::Deposit as u8
     }
+
+    fn max_fee_per_blob_gas(&self) -> Option<u128> {
+        None
+    }
+
+    fn authorization_list(&self) -> Option<&[alloy_eips::eip7702::SignedAuthorization]> {
+        None
+    }
 }
 
 impl Encodable for TxDeposit {
