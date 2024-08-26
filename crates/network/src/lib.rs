@@ -39,7 +39,8 @@ impl Network for Optimism {
 
     type HeaderResponse = alloy_rpc_types_eth::Header;
 
-    type BlockResponse = alloy_rpc_types_eth::Block<Self::TransactionResponse, Self::HeaderResponse>;
+    type BlockResponse =
+        alloy_rpc_types_eth::Block<Self::TransactionResponse, Self::HeaderResponse>;
 }
 
 impl TransactionBuilder<Optimism> for alloy_rpc_types_eth::transaction::TransactionRequest {

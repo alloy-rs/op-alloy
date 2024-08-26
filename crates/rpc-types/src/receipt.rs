@@ -87,8 +87,8 @@ mod l1_fee_scalar_serde {
 
 #[cfg(test)]
 mod tests {
-    use serde_json::{json, Value};
     use super::*;
+    use serde_json::{json, Value};
 
     // <https://github.com/alloy-rs/op-alloy/issues/18>
     #[test]
