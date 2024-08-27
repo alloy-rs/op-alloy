@@ -2,6 +2,7 @@
 
 use alloy_network::TransactionResponse;
 use alloy_primitives::B256;
+use alloy_serde::OtherFields;
 use serde::{Deserialize, Serialize};
 
 /// OP Transaction type
@@ -71,4 +72,10 @@ pub struct OptimismTransactionFields {
     /// Deposit receipt version for deposit transactions post-canyon
     #[serde(default, skip_serializing_if = "Option::is_none", with = "alloy_serde::quantity::opt")]
     pub deposit_receipt_version: Option<u64>,
+}
+
+impl From<OptimismTransactionFields> for OtherFields {
+    fn from(value: OptimismTransactionFields) -> Self {
+        serde_json::to_value(value).unwrap().try_into().unwrap()
+    }
 }

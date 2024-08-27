@@ -2,6 +2,7 @@
 
 use alloy_network::ReceiptResponse;
 use alloy_primitives::BlockHash;
+use alloy_serde::OtherFields;
 use op_alloy_consensus::OpReceiptEnvelope;
 use serde::{Deserialize, Serialize};
 
@@ -82,6 +83,12 @@ mod l1_fee_scalar_serde {
         }
 
         Ok(None)
+    }
+}
+
+impl From<OptimismTransactionReceiptFields> for OtherFields {
+    fn from(value: OptimismTransactionReceiptFields) -> Self {
+        serde_json::to_value(value).unwrap().try_into().unwrap()
     }
 }
 
