@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.2.1) - 2024-08-28
+
+### Bug Fixes
+
+- Some serde fixes ([#51](https://github.com/alloy-rs/op-alloy/issues/51))
+
+### Miscellaneous Tasks
+
+- Add missing envelope fns ([#52](https://github.com/alloy-rs/op-alloy/issues/52))
+
+### Other
+
+- Add emhane to CODEOWNERS ([#50](https://github.com/alloy-rs/op-alloy/issues/50))
+
 ## [0.2.0](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.2.0) - 2024-08-28
 
@@ -24,6 +39,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add rollup and other config types ([#42](https://github.com/alloy-rs/op-alloy/issues/42))
 - Added sync file with types from reth ([#35](https://github.com/alloy-rs/op-alloy/issues/35))
 - [rpc-types] P2p net types ([#39](https://github.com/alloy-rs/op-alloy/issues/39))
+
+### Miscellaneous Tasks
+
+- Release 0.2.0
 
 ### Other
 
