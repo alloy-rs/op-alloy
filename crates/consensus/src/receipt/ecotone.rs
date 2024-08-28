@@ -19,6 +19,18 @@ pub struct OpEcotoneReceipt<T = Log> {
     #[as_ref]
     #[cfg_attr(feature = "serde", serde(flatten))]
     pub inner: Receipt<T>,
+    /// L1 blob base fee scalar.
+    ///
+    /// Always null prior to the Ecotone hardfork.
+    #[cfg_attr(
+        feature = "serde",
+        serde(
+            default,
+            skip_serializing_if = "Option::is_none",
+            with = "alloy_serde::quantity::opt"
+        )
+    )]
+    pub l1_base_fee_scalar: Option<u128>,
     /// L1 blob base fee.
     ///
     /// Always null prior to the Ecotone hardfork.
@@ -43,6 +55,20 @@ pub struct OpEcotoneReceipt<T = Log> {
         )
     )]
     pub l1_blob_base_fee_scalar: Option<u128>,
+}
+
+impl<T> OpEcotoneReceipt<T>
+where
+    T: alloy_rlp::Encodable,
+{
+    fn payload_len(&self) -> usize {
+        self.inner.status.length()
+            + self.inner.cumulative_gas_used.length()
+            + self.inner.logs.length()
+            + self.l1_base_fee_scalar.map_or(0, |nonce| nonce.length())
+            + self.l1_blob_base_fee.map_or(0, |nonce| nonce.length())
+            + self.l1_blob_base_fee_scalar.map_or(0, |version| version.length())
+    }
 }
 
 impl<T> TxReceipt<T> for OpEcotoneReceipt<T>
@@ -78,6 +104,7 @@ where
     T: arbitrary::Arbitrary<'a>,
 {
     fn arbitrary(u: &mut arbitrary::Unstructured<'a>) -> arbitrary::Result<Self> {
+        let l1_base_fee_scalar = Option::<u128>::arbitrary(u)?;
         let l1_blob_base_fee = Option::<u128>::arbitrary(u)?;
         let l1_blob_base_fee_scalar =
             l1_blob_base_fee.is_some().then(|| u128::arbitrary(u)).transpose()?;
@@ -87,6 +114,7 @@ where
                 cumulative_gas_used: u128::arbitrary(u)?,
                 logs: Vec::<T>::arbitrary(u)?,
             },
+            l1_base_fee_scalar,
             l1_blob_base_fee,
             l1_blob_base_fee_scalar,
         })
@@ -117,12 +145,7 @@ where
     T: alloy_rlp::Encodable,
 {
     fn payload_len(&self) -> usize {
-        self.receipt.inner.status.length()
-            + self.receipt.inner.cumulative_gas_used.length()
-            + self.logs_bloom.length()
-            + self.receipt.inner.logs.length()
-            + self.receipt.l1_blob_base_fee.map_or(0, |nonce| nonce.length())
-            + self.receipt.l1_blob_base_fee_scalar.map_or(0, |version| version.length())
+        self.receipt.payload_len() + self.logs_bloom.length()
     }
 }
 
@@ -195,12 +218,15 @@ where
         let logs = Decodable::decode(b)?;
 
         let remaining = |b: &[u8]| rlp_head.payload_length - (started_len - b.len()) > 0;
+        let l1_base_fee_scalar =
+            remaining(b).then(|| alloy_rlp::Decodable::decode(b)).transpose()?;
         let l1_blob_base_fee = remaining(b).then(|| alloy_rlp::Decodable::decode(b)).transpose()?;
         let l1_blob_base_fee_scalar =
             remaining(b).then(|| alloy_rlp::Decodable::decode(b)).transpose()?;
 
         let receipt = OpEcotoneReceipt {
             inner: Receipt { status: success, cumulative_gas_used, logs },
+            l1_base_fee_scalar,
             l1_blob_base_fee,
             l1_blob_base_fee_scalar,
         };
