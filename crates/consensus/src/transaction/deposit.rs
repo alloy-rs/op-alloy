@@ -2,7 +2,9 @@ use super::OpTxType;
 use alloy_consensus::Transaction;
 use alloy_eips::eip2930::AccessList;
 use alloy_primitives::{Address, Bytes, ChainId, TxKind, B256, U256};
-use alloy_rlp::{BufMut, Decodable, Encodable, Header};
+use alloy_rlp::{
+    Buf, BufMut, Decodable, Encodable, Error as DecodeError, Header, EMPTY_STRING_CODE,
+};
 use core::mem;
 
 /// Deposit transactions, also known as deposits are initiated on L1, and executed on L2.
