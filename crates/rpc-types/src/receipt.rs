@@ -57,6 +57,12 @@ pub struct OptimismTransactionReceiptFields {
     /// L1 gas used for the transaction
     #[serde(default, skip_serializing_if = "Option::is_none", with = "alloy_serde::quantity::opt")]
     pub l1_gas_used: Option<u128>,
+    /// L1 blob base fee for transaction
+    #[serde(default, skip_serializing_if = "Option::is_none", with = "alloy_serde::quantity::opt")]
+    pub l1_blob_base_fee: Option<u128>,
+    /// L1 blob base fee scalar for transaction
+    #[serde(default, skip_serializing_if = "Option::is_none", with = "l1_base_fee_scalar_serde")]
+    pub l1_blob_base_fee_scalar: Option<f64>,
 }
 
 /// Serialize/Deserialize l1FeeScalar to/from string
