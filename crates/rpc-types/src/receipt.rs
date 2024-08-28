@@ -48,9 +48,9 @@ pub struct OptimismTransactionReceiptFields {
     /// L1 fee for the transaction
     #[serde(default, skip_serializing_if = "Option::is_none", with = "alloy_serde::quantity::opt")]
     pub l1_fee: Option<u128>,
-    /// L1 fee scalar for the transaction
-    #[serde(default, skip_serializing_if = "Option::is_none", with = "l1_fee_scalar_serde")]
-    pub l1_fee_scalar: Option<f64>,
+    /// L1 base fee scalar for the transaction
+    #[serde(default, skip_serializing_if = "Option::is_none", with = "l1_base_fee_scalar_serde")]
+    pub l1_base_fee_scalar: Option<f64>,
     /// L1 gas price for the transaction
     #[serde(default, skip_serializing_if = "Option::is_none", with = "alloy_serde::quantity::opt")]
     pub l1_gas_price: Option<u128>,
@@ -60,7 +60,7 @@ pub struct OptimismTransactionReceiptFields {
 }
 
 /// Serialize/Deserialize l1FeeScalar to/from string
-mod l1_fee_scalar_serde {
+mod l1_base_fee_scalar_serde {
     use serde::{de, Deserialize};
 
     pub(super) fn serialize<S>(value: &Option<f64>, s: S) -> Result<S::Ok, S::Error>
@@ -135,7 +135,7 @@ mod tests {
     #[test]
     fn serialize_l1_fee_scalar() {
         let op_fields = OptimismTransactionReceiptFields {
-            l1_fee_scalar: Some(0.678),
+            l1_base_fee_scalar: Some(0.678),
             ..OptimismTransactionReceiptFields::default()
         };
 
