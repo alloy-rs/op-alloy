@@ -57,6 +57,7 @@ jsonrpsee-core = "0.24"
 jsonrpsee-types = "0.24"
 
 # misc
+spin = { version = "0.9.8", features = ["mutex"] }
 derive_more = { version = "1.0", features = ["full"] }
 
 ## misc-testing
