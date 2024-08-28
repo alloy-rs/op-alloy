@@ -21,7 +21,7 @@ extern crate alloc;
 
 mod receipt;
 pub use receipt::{
-    OpDepositReceipt, OpDepositReceiptWithBloom, OpEip4844Receipt, OpEip4844ReceiptWithBloom,
+    OpDepositReceipt, OpDepositReceiptWithBloom, OpEcotoneReceipt, OpEcotoneReceiptWithBloom,
     OpReceiptEnvelope, OpTxReceipt,
 };
 

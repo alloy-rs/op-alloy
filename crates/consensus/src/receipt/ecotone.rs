@@ -13,7 +13,7 @@ use crate::OpTxReceipt;
 #[derive(Clone, Debug, Deref, AsRef, Eq, PartialEq, Default)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
-pub struct OpEip4844Receipt<T = Log> {
+pub struct OpEcotoneReceipt<T = Log> {
     /// The inner receipt type.
     #[deref]
     #[as_ref]
@@ -41,7 +41,7 @@ pub struct OpEip4844Receipt<T = Log> {
     pub l1_blob_base_fee_scalar: Option<u128>,
 }
 
-impl<T> TxReceipt<T> for OpEip4844Receipt<T>
+impl<T> TxReceipt<T> for OpEcotoneReceipt<T>
 where
     T: Borrow<Log>,
 {
@@ -66,10 +66,10 @@ where
     }
 }
 
-impl<T> OpTxReceipt<T> for OpEip4844Receipt<T> where T: Borrow<Log> {}
+impl<T> OpTxReceipt<T> for OpEcotoneReceipt<T> where T: Borrow<Log> {}
 
 #[cfg(all(test, feature = "arbitrary"))]
-impl<'a, T> arbitrary::Arbitrary<'a> for OpEip4844Receipt<T>
+impl<'a, T> arbitrary::Arbitrary<'a> for OpEcotoneReceipt<T>
 where
     T: arbitrary::Arbitrary<'a>,
 {
@@ -89,7 +89,7 @@ where
     }
 }
 
-/// [`OpEip4844Receipt`] with calculated bloom filter, modified for the OP Stack.
+/// [`OpEcotoneReceipt`] with calculated bloom filter, modified for the OP Stack.
 ///
 /// This convenience type allows us to lazily calculate the bloom filter for a
 /// receipt, similar to [`Sealed`].
@@ -98,17 +98,17 @@ where
 #[derive(Clone, Debug, Deref, AsRef, PartialEq, Eq, Default)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
-pub struct OpEip4844ReceiptWithBloom<T = Log> {
+pub struct OpEcotoneReceiptWithBloom<T = Log> {
     /// The receipt.
     #[deref]
     #[as_ref(forward)]
     #[cfg_attr(feature = "serde", serde(flatten))]
-    pub receipt: OpEip4844Receipt<T>,
+    pub receipt: OpEcotoneReceipt<T>,
     /// The bloom filter.
     pub logs_bloom: Bloom,
 }
 
-impl<T> OpEip4844ReceiptWithBloom<T>
+impl<T> OpEcotoneReceiptWithBloom<T>
 where
     T: alloy_rlp::Encodable,
 {
@@ -122,7 +122,7 @@ where
     }
 }
 
-impl<T> TxReceipt<T> for OpEip4844ReceiptWithBloom<T>
+impl<T> TxReceipt<T> for OpEcotoneReceiptWithBloom<T>
 where
     T: Borrow<Log>,
 {
@@ -147,9 +147,9 @@ where
     }
 }
 
-impl<T> OpTxReceipt<T> for OpEip4844ReceiptWithBloom<T> where T: Borrow<Log> {}
+impl<T> OpTxReceipt<T> for OpEcotoneReceiptWithBloom<T> where T: Borrow<Log> {}
 
-impl<T> alloy_rlp::Encodable for OpEip4844ReceiptWithBloom<T>
+impl<T> alloy_rlp::Encodable for OpEcotoneReceiptWithBloom<T>
 where
     T: alloy_rlp::Encodable,
 {
@@ -173,7 +173,7 @@ where
     }
 }
 
-impl<T> alloy_rlp::Decodable for OpEip4844ReceiptWithBloom<T>
+impl<T> alloy_rlp::Decodable for OpEcotoneReceiptWithBloom<T>
 where
     T: alloy_rlp::Decodable,
 {
@@ -195,7 +195,7 @@ where
         let l1_blob_base_fee_scalar =
             remaining(b).then(|| alloy_rlp::Decodable::decode(b)).transpose()?;
 
-        let receipt = OpEip4844Receipt {
+        let receipt = OpEcotoneReceipt {
             inner: Receipt { status: success, cumulative_gas_used, logs },
             l1_blob_base_fee,
             l1_blob_base_fee_scalar,
@@ -214,22 +214,22 @@ where
     }
 }
 
-impl<T> From<OpEip4844Receipt<T>> for OpEip4844ReceiptWithBloom<T>
+impl<T> From<OpEcotoneReceipt<T>> for OpEcotoneReceiptWithBloom<T>
 where
     T: Borrow<Log>,
 {
-    fn from(receipt: OpEip4844Receipt<T>) -> Self {
+    fn from(receipt: OpEcotoneReceipt<T>) -> Self {
         let logs_bloom = receipt.bloom_slow();
-        OpEip4844ReceiptWithBloom { receipt, logs_bloom }
+        OpEcotoneReceiptWithBloom { receipt, logs_bloom }
     }
 }
 
 #[cfg(all(test, feature = "arbitrary"))]
-impl<'a, T> arbitrary::Arbitrary<'a> for OpEip4844ReceiptWithBloom<T>
+impl<'a, T> arbitrary::Arbitrary<'a> for OpEcotoneReceiptWithBloom<T>
 where
     T: arbitrary::Arbitrary<'a>,
 {
     fn arbitrary(u: &mut arbitrary::Unstructured<'a>) -> arbitrary::Result<Self> {
-        Ok(Self { receipt: OpEip4844Receipt::<T>::arbitrary(u)?, logs_bloom: Bloom::arbitrary(u)? })
+        Ok(Self { receipt: OpEcotoneReceipt::<T>::arbitrary(u)?, logs_bloom: Bloom::arbitrary(u)? })
     }
 }

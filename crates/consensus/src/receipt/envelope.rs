@@ -3,7 +3,7 @@ use alloy_eips::eip2718::{Decodable2718, Eip2718Error, Eip2718Result, Encodable2
 use alloy_primitives::{Bloom, Log};
 use alloy_rlp::{length_of_length, BufMut, Decodable, Encodable};
 
-use crate::{OpDepositReceipt, OpDepositReceiptWithBloom, OpEip4844ReceiptWithBloom, OpTxType};
+use crate::{OpDepositReceipt, OpDepositReceiptWithBloom, OpEcotoneReceiptWithBloom, OpTxType};
 
 /// Receipt envelope, as defined in [EIP-2718], modified for OP Stack chains.
 ///
@@ -37,7 +37,7 @@ pub enum OpReceiptEnvelope<T = Log> {
     ///
     /// [EIP-4844]: https://eips.ethereum.org/EIPS/eip-4844
     #[cfg_attr(feature = "serde", serde(rename = "0x3", alias = "0x03"))]
-    Eip4844(OpEip4844ReceiptWithBloom<T>),
+    Eip4844(OpEcotoneReceiptWithBloom<T>),
     /// Receipt envelope with type flag 126, containing a [deposit] receipt.
     ///
     /// [deposit]: https://specs.optimism.io/protocol/deposits.html

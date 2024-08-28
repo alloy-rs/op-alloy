@@ -6,8 +6,8 @@ pub use envelope::OpReceiptEnvelope;
 mod deposit;
 pub use deposit::{OpDepositReceipt, OpDepositReceiptWithBloom};
 
-mod eip4844;
-pub use eip4844::{OpEip4844Receipt, OpEip4844ReceiptWithBloom};
+mod ecotone;
+pub use ecotone::{OpEcotoneReceipt, OpEcotoneReceiptWithBloom};
 
 /// Receipt is the result of a transaction execution.
 pub trait OpTxReceipt<T>: TxReceipt<T> {
