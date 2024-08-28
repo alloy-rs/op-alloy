@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.2.0) - 2024-08-28
+
+### Bug Fixes
+
+- [rpc] Add Missing Safe Head Endpoint ([#47](https://github.com/alloy-rs/op-alloy/issues/47))
+
+### Dependencies
+
+- [deps] Use latest alloy ([#45](https://github.com/alloy-rs/op-alloy/issues/45))
+
+### Features
+
+- Op-alloy-rpc-types-engine ([#49](https://github.com/alloy-rs/op-alloy/issues/49))
+- Add other op endpoints ([#46](https://github.com/alloy-rs/op-alloy/issues/46))
+- [rpc-client] Introduce rpc-jsonrpsee Crate ([#37](https://github.com/alloy-rs/op-alloy/issues/37))
+- Add rollup and other config types ([#42](https://github.com/alloy-rs/op-alloy/issues/42))
+- Added sync file with types from reth ([#35](https://github.com/alloy-rs/op-alloy/issues/35))
+- [rpc-types] P2p net types ([#39](https://github.com/alloy-rs/op-alloy/issues/39))
+
+### Other
+
+- Set op_alloy_rpc_types::Transaction as Optimism::TransactionResponse ([#33](https://github.com/alloy-rs/op-alloy/issues/33))
+
 ## [0.1.5](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.1.5) - 2024-08-08
 
@@ -14,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.1.5
 - Clippy happy ([#30](https://github.com/alloy-rs/op-alloy/issues/30))
 - Codeowners
 - Downgrad clippy all
