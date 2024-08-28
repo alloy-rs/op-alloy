@@ -3,8 +3,8 @@ use alloy_consensus::TxReceipt;
 mod envelope;
 pub use envelope::OpReceiptEnvelope;
 
-mod receipts;
-pub use receipts::{OpDepositReceipt, OpDepositReceiptWithBloom};
+mod deposit_receipts;
+pub use deposit_receipts::{OpDepositReceipt, OpDepositReceiptWithBloom};
 
 /// Receipt is the result of a transaction execution.
 pub trait OpTxReceipt: TxReceipt {
