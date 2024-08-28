@@ -2,9 +2,7 @@ use super::OpTxType;
 use alloy_consensus::Transaction;
 use alloy_eips::eip2930::AccessList;
 use alloy_primitives::{Address, Bytes, ChainId, TxKind, B256, U256};
-use alloy_rlp::{
-    Buf, BufMut, Decodable, Encodable, Error as DecodeError, Header, EMPTY_STRING_CODE,
-};
+use alloy_rlp::{BufMut, Decodable, Encodable, Header};
 use core::mem;
 
 /// Deposit transactions, also known as deposits are initiated on L1, and executed on L2.
@@ -26,9 +24,10 @@ pub struct TxDeposit {
     ///  The ETH value to send to the recipient account.
     pub value: U256,
     /// The gas limit for the L2 transaction.
-    #[cfg_attr(feature = "serde", serde(with = "alloy_serde::quantity"))]
+    #[cfg_attr(feature = "serde", serde(with = "alloy_serde::quantity", rename = "gas"))]
     pub gas_limit: u128,
     /// Field indicating if this transaction is exempt from the L2 gas limit.
+    #[cfg_attr(feature = "serde", serde(with = "alloy_serde::quantity", rename = "isSystemTx"))]
     pub is_system_transaction: bool,
     /// Input has two uses depending if transaction is Create or Call (if `to` field is None or
     /// Some).
