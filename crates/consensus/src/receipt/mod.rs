@@ -7,7 +7,7 @@ mod deposit;
 pub use deposit::{OpDepositReceipt, OpDepositReceiptWithBloom};
 
 mod eip4844;
-pub use eip4844::OpEip4844Receipt;
+pub use eip4844::{OpEip4844Receipt, OpEip4844ReceiptWithBloom};
 
 /// Receipt is the result of a transaction execution.
 pub trait OpTxReceipt<T>: TxReceipt<T> {
