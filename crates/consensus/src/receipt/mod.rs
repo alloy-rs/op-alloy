@@ -3,16 +3,23 @@ use alloy_consensus::TxReceipt;
 mod envelope;
 pub use envelope::OpReceiptEnvelope;
 
-mod deposit_receipts;
-pub use deposit_receipts::{OpDepositReceipt, OpDepositReceiptWithBloom};
+mod deposit;
+pub use deposit::{OpDepositReceipt, OpDepositReceiptWithBloom};
+
+mod eip4844;
+pub use eip4844::OpEip4844Receipt;
 
 /// Receipt is the result of a transaction execution.
-pub trait OpTxReceipt: TxReceipt {
+pub trait OpTxReceipt<T>: TxReceipt<T> {
     /// Returns the deposit nonce of the transaction.
-    fn deposit_nonce(&self) -> Option<u64>;
+    fn deposit_nonce(&self) -> Option<u64> {
+        None
+    }
 
     /// Returns the deposit receipt version of the transaction.
-    fn deposit_receipt_version(&self) -> Option<u64>;
+    fn deposit_receipt_version(&self) -> Option<u64> {
+        None
+    }
 }
 
 #[cfg(test)]
