@@ -19,7 +19,9 @@ pub struct OpEcotoneReceipt<T = Log> {
     #[as_ref]
     #[cfg_attr(feature = "serde", serde(flatten))]
     pub inner: Receipt<T>,
-    /// Deposit nonce for Optimism deposit transactions
+    /// L1 blob base fee.
+    ///
+    /// Always null prior to the Ecotone hardfork.
     #[cfg_attr(
         feature = "serde",
         serde(
@@ -29,7 +31,9 @@ pub struct OpEcotoneReceipt<T = Log> {
         )
     )]
     pub l1_blob_base_fee: Option<u128>,
-    /// L1 blob base fee scalar for transaction
+    /// L1 blob base fee scalar.
+    ///
+    /// Always null prior to the Ecotone hardfork.
     #[cfg_attr(
         feature = "serde",
         serde(
