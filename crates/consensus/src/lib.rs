@@ -30,4 +30,4 @@ pub use transaction::{
 };
 
 pub mod hardforks;
-pub use hardforks::{EcotoneTransactionBuilder, FjordTransactionBuilder};
+pub use hardforks::Hardforks;

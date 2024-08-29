@@ -9,7 +9,7 @@ use alloy_eips::eip2718::Encodable2718;
 use alloy_primitives::{address, bytes, Address, Bytes, TxKind, U256};
 use spin::Lazy;
 
-use crate::{hardforks::utils::upgrade_to_calldata, UpgradeDepositSource};
+use crate::UpgradeDepositSource;
 
 /// The UpdgradeTo Function Signature
 pub const UPDGRADE_TO_FUNC_SIGNATURE: &str = "upgradeTo(address)";
@@ -59,13 +59,9 @@ static BEACON_ROOTS_SOURCE: Lazy<UpgradeDepositSource> = Lazy::new(|| UpgradeDep
     intent: String::from("Ecotone: beacon block roots contract deployment"),
 });
 
-/// Builder wrapper for the Ecotone network updgrade.
-#[derive(Debug, Default, Clone, Copy)]
-pub struct EcotoneTransactionBuilder;
-
-impl EcotoneTransactionBuilder {
+impl super::Hardforks {
     /// Constructs the Ecotone network upgrade transactions.
-    pub fn build_txs() -> Vec<Bytes> {
+    pub fn ecotone_txs() -> Vec<Bytes> {
         let mut txs = vec![];
 
         let eip4788_creation_data = bytes!("60618060095f395ff33373fffffffffffffffffffffffffffffffffffffffe14604d57602036146024575f5ffd5b5f35801560495762001fff810690815414603c575f5ffd5b62001fff01545f5260205ff35b5f5ffd5b62001fff42064281555f359062001fff015500");
@@ -115,7 +111,7 @@ impl EcotoneTransactionBuilder {
             value: U256::ZERO,
             gas_limit: 50_000,
             is_system_transaction: false,
-            input: upgrade_to_calldata(NEW_L1_BLOCK_ADDRESS),
+            input: Self::upgrade_to_calldata(NEW_L1_BLOCK_ADDRESS),
         })
         .encode_2718(&mut buffer);
         txs.push(Bytes::from(buffer));
@@ -130,7 +126,7 @@ impl EcotoneTransactionBuilder {
             value: U256::ZERO,
             gas_limit: 50_000,
             is_system_transaction: false,
-            input: upgrade_to_calldata(GAS_PRICE_ORACLE_ADDRESS),
+            input: Self::upgrade_to_calldata(GAS_PRICE_ORACLE_ADDRESS),
         })
         .encode_2718(&mut buffer);
         txs.push(Bytes::from(buffer));
