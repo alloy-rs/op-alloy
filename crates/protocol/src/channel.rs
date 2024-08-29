@@ -3,7 +3,7 @@
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
 
-use alloy_primitives::{U64, Bytes};
+use alloy_primitives::{Bytes, U64};
 use hashbrown::HashMap;
 
 use crate::block::BlockInfo;

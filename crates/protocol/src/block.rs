@@ -1,6 +1,6 @@
 //! Block Types for Optimism.
 
-use alloy_primitives::{U64, B256};
+use alloy_primitives::{B256, U64};
 use superchain_primitives::BlockID;
 
 #[cfg(feature = "serde")]
@@ -64,6 +64,7 @@ impl L2BlockInfo {
 }
 
 #[cfg(test)]
+#[cfg(feature = "serde")]
 mod tests {
     use super::*;
 
