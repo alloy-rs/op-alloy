@@ -85,6 +85,7 @@ pub struct OptimismTransactionReceiptFields {
     /// L1 blob base fee scalar. Applied to blob base fee to compute weighted gas price multiplier.
     ///
     /// Always null prior to the Ecotone hardfork.
+    #[serde(default, skip_serializing_if = "Option::is_none", with = "alloy_serde::quantity::opt")]
     pub l1_blob_base_fee_scalar: Option<u128>,
 }
 
