@@ -15,6 +15,7 @@ pub struct OpTransactionReceipt {
     #[serde(flatten)]
     pub inner: alloy_rpc_types_eth::TransactionReceipt<OpReceiptEnvelope<alloy_rpc_types_eth::Log>>,
     //// L1 block info of the transaction.
+    #[serde(flatten)]
     pub l1_block_info: L1BlockInfo,
 }
 
@@ -182,8 +183,8 @@ mod tests {
     #[test]
     fn serialize_l1_fee_scalar() {
         let op_fields = OptimismTransactionReceiptFields {
-            l1_fee_scalar: Some(0.678),
-            ..OptimismTransactionReceiptFields::default()
+            l1_block_info: L1BlockInfo { l1_fee_scalar: Some(0.678), ..Default::default() },
+            ..Default::default()
         };
 
         let json = serde_json::to_value(op_fields).unwrap();
@@ -198,18 +199,18 @@ mod tests {
         });
 
         let op_fields: OptimismTransactionReceiptFields = serde_json::from_value(json).unwrap();
-        assert_eq!(op_fields.l1_fee_scalar, Some(0.678f64));
+        assert_eq!(op_fields.l1_block_info.l1_fee_scalar, Some(0.678f64));
 
         let json = json!({
             "l1FeeScalar": Value::Null
         });
 
         let op_fields: OptimismTransactionReceiptFields = serde_json::from_value(json).unwrap();
-        assert_eq!(op_fields.l1_fee_scalar, None);
+        assert_eq!(op_fields.l1_block_info.l1_fee_scalar, None);
 
         let json = json!({});
 
         let op_fields: OptimismTransactionReceiptFields = serde_json::from_value(json).unwrap();
-        assert_eq!(op_fields.l1_fee_scalar, None);
+        assert_eq!(op_fields.l1_block_info.l1_fee_scalar, None);
     }
 }
