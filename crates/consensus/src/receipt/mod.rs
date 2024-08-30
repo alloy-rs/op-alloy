@@ -3,16 +3,23 @@ use alloy_consensus::TxReceipt;
 mod envelope;
 pub use envelope::OpReceiptEnvelope;
 
-mod receipts;
-pub use receipts::{OpDepositReceipt, OpDepositReceiptWithBloom};
+mod deposit;
+pub use deposit::{OpDepositReceipt, OpDepositReceiptWithBloom};
+
+mod ecotone;
+pub use ecotone::{OpEcotoneReceipt, OpEcotoneReceiptWithBloom};
 
 /// Receipt is the result of a transaction execution.
-pub trait OpTxReceipt: TxReceipt {
+pub trait OpTxReceipt<T>: TxReceipt<T> {
     /// Returns the deposit nonce of the transaction.
-    fn deposit_nonce(&self) -> Option<u64>;
+    fn deposit_nonce(&self) -> Option<u64> {
+        None
+    }
 
     /// Returns the deposit receipt version of the transaction.
-    fn deposit_receipt_version(&self) -> Option<u64>;
+    fn deposit_receipt_version(&self) -> Option<u64> {
+        None
+    }
 }
 
 #[cfg(test)]

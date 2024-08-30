@@ -86,7 +86,10 @@ where
     }
 }
 
-impl OpTxReceipt for OpDepositReceipt {
+impl<T> OpTxReceipt<T> for OpDepositReceipt<T>
+where
+    T: Borrow<Log>,
+{
     fn deposit_nonce(&self) -> Option<u64> {
         self.deposit_nonce
     }
@@ -139,7 +142,7 @@ impl TxReceipt for OpDepositReceiptWithBloom {
     }
 }
 
-impl OpTxReceipt for OpDepositReceiptWithBloom {
+impl OpTxReceipt<Log> for OpDepositReceiptWithBloom {
     fn deposit_nonce(&self) -> Option<u64> {
         self.receipt.deposit_nonce
     }

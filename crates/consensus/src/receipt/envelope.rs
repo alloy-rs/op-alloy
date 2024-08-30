@@ -1,8 +1,9 @@
-use crate::{OpDepositReceipt, OpDepositReceiptWithBloom, OpTxType};
 use alloy_consensus::{Eip658Value, Receipt, ReceiptWithBloom, TxReceipt};
 use alloy_eips::eip2718::{Decodable2718, Eip2718Error, Eip2718Result, Encodable2718};
 use alloy_primitives::{Bloom, Log};
 use alloy_rlp::{length_of_length, BufMut, Decodable, Encodable};
+
+use crate::{OpDepositReceipt, OpDepositReceiptWithBloom, OpEcotoneReceiptWithBloom, OpTxType};
 
 /// Receipt envelope, as defined in [EIP-2718], modified for OP Stack chains.
 ///
@@ -32,11 +33,12 @@ pub enum OpReceiptEnvelope<T = Log> {
     /// [EIP-1559]: https://eips.ethereum.org/EIPS/eip-1559
     #[cfg_attr(feature = "serde", serde(rename = "0x2", alias = "0x02"))]
     Eip1559(ReceiptWithBloom<T>),
-    /// Receipt envelope with type flag 2, containing a [EIP-4844] receipt.
+    /// Receipt envelope with type flag 2, containing a [EIP-4844] or
+    /// Ecotone receipt.
     ///
     /// [EIP-4844]: https://eips.ethereum.org/EIPS/eip-4844
     #[cfg_attr(feature = "serde", serde(rename = "0x3", alias = "0x03"))]
-    Eip4844(ReceiptWithBloom<T>),
+    Eip4844(OpEcotoneReceiptWithBloom<T>),
     /// Receipt envelope with type flag 126, containing a [deposit] receipt.
     ///
     /// [deposit]: https://specs.optimism.io/protocol/deposits.html
@@ -117,9 +119,8 @@ impl<T> OpReceiptEnvelope<T> {
     /// receipt types may be added.
     pub const fn as_receipt(&self) -> Option<&Receipt<T>> {
         match self {
-            Self::Legacy(t) | Self::Eip2930(t) | Self::Eip1559(t) | Self::Eip4844(t) => {
-                Some(&t.receipt)
-            }
+            Self::Legacy(t) | Self::Eip2930(t) | Self::Eip1559(t) => Some(&t.receipt),
+            Self::Eip4844(t) => Some(&t.receipt.inner),
             Self::Deposit(t) => Some(&t.receipt.inner),
         }
     }
@@ -221,10 +222,10 @@ impl Encodable2718 for OpReceiptEnvelope {
         }
         match self {
             Self::Deposit(t) => t.encode(out),
+            Self::Eip4844(t) => t.encode(out),
             OpReceiptEnvelope::Legacy(t)
             | OpReceiptEnvelope::Eip2930(t)
-            | OpReceiptEnvelope::Eip1559(t)
-            | OpReceiptEnvelope::Eip4844(t) => t.encode(out),
+            | OpReceiptEnvelope::Eip1559(t) => t.encode(out),
         }
     }
 }
