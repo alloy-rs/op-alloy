@@ -57,7 +57,7 @@ pub struct OptimismTransactionReceiptFields {
     /// L1 fee scalar for the transaction
     ///
     /// Present from pre-bedrock to Ecotone. Null after Ecotone.
-    #[serde(default, skip_serializing_if = "Option::is_none", with = "l1_fee_scalar_serde")]
+    #[serde(default, skip_serializing_if = "Option::is_none", with = "l1_base_fee_scalar_serde")]
     pub l1_fee_scalar: Option<f64>,
     /* --------------------------------------- Regolith --------------------------------------- */
     /// Deposit nonce for deposit transactions.
