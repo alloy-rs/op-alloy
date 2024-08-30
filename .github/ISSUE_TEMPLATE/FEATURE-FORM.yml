@@ -10,17 +10,15 @@ body:
   - type: dropdown
     attributes:
       label: Component
-      description: What component is the feature for?
+      description: What crate is the feature for?
       multiple: true
       options:
         - contract
-        - consensus, eips, genesis
-        - network, json-rpc
-        - nodes
-        - provider, pubsub
-        - rpc
-        - signers
-        - transports
+        - network 
+        - protocol 
+        - rpc-jsonrpsee
+        - rpc-types
+        - rpc-types-engine
     validations:
       required: true
   - type: textarea
