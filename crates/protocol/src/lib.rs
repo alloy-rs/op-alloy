@@ -19,15 +19,17 @@
 #[cfg(not(feature = "std"))]
 extern crate alloc;
 
-mod receipt;
-pub use receipt::{OpDepositReceipt, OpDepositReceiptWithBloom, OpReceiptEnvelope, OpTxReceipt};
+/// [CHANNEL_ID_LENGTH] is the length of the channel ID.
+pub const CHANNEL_ID_LENGTH: usize = 16;
 
-mod transaction;
-pub use transaction::{
-    DepositSourceDomain, DepositSourceDomainIdentifier, L1InfoDepositSource, OpTxEnvelope,
-    OpTxType, OpTypedTransaction, TxDeposit, UpgradeDepositSource, UserDepositSource,
-    DEPOSIT_TX_TYPE_ID,
-};
+/// [ChannelId] is an opaque identifier for a channel.
+pub type ChannelId = [u8; CHANNEL_ID_LENGTH];
 
-pub mod hardforks;
-pub use hardforks::Hardforks;
+mod block;
+pub use block::{BlockInfo, L2BlockInfo};
+
+mod frame;
+pub use frame::{Frame, FrameDecodingError, FrameParseError};
+
+mod channel;
+pub use channel::{Channel, FJORD_MAX_RLP_BYTES_PER_CHANNEL, MAX_RLP_BYTES_PER_CHANNEL};
