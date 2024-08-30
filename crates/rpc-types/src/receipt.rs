@@ -57,7 +57,7 @@ pub struct OptimismTransactionReceiptFields {
     /// L1 fee scalar for the transaction
     ///
     /// Present from pre-bedrock to Ecotone. Null after Ecotone.
-    #[serde(default, skip_serializing_if = "Option::is_none", with = "l1_base_fee_scalar_serde")]
+    #[serde(default, skip_serializing_if = "Option::is_none", with = "l1_fee_scalar_serde")]
     pub l1_fee_scalar: Option<f64>,
     /* --------------------------------------- Regolith --------------------------------------- */
     /// Deposit nonce for deposit transactions.
@@ -90,7 +90,7 @@ pub struct OptimismTransactionReceiptFields {
 }
 
 /// Serialize/Deserialize l1FeeScalar to/from string
-mod l1_base_fee_scalar_serde {
+mod l1_fee_scalar_serde {
     use serde::{de, Deserialize};
 
     pub(super) fn serialize<S>(value: &Option<f64>, s: S) -> Result<S::Ok, S::Error>
@@ -163,73 +163,36 @@ mod tests {
     }
 
     #[test]
-    fn serialize_l1_base_fee_scalar() {
+    fn serialize_l1_fee_scalar() {
         let op_fields = OptimismTransactionReceiptFields {
-            l1_base_fee_scalar: Some(0.678),
+            l1_fee_scalar: Some(0.678),
             ..OptimismTransactionReceiptFields::default()
         };
 
         let json = serde_json::to_value(op_fields).unwrap();
 
-        assert_eq!(json["l1BaseFeeScalar"], serde_json::Value::String("0.678".to_string()));
+        assert_eq!(json["l1FeeScalar"], serde_json::Value::String("0.678".to_string()));
     }
 
     #[test]
-    fn deserialize_l1_base_fee_scalar() {
+    fn deserialize_l1_fee_scalar() {
         let json = json!({
-            "l1BaseFeeScalar": "0.678"
+            "l1FeeScalar": "0.678"
         });
 
         let op_fields: OptimismTransactionReceiptFields = serde_json::from_value(json).unwrap();
-        assert_eq!(op_fields.l1_base_fee_scalar, Some(0.678f64));
+        assert_eq!(op_fields.l1_fee_scalar, Some(0.678f64));
 
         let json = json!({
-            "l1BaseFeeScalar": Value::Null
+            "l1FeeScalar": Value::Null
         });
 
         let op_fields: OptimismTransactionReceiptFields = serde_json::from_value(json).unwrap();
-        assert_eq!(op_fields.l1_base_fee_scalar, None);
+        assert_eq!(op_fields.l1_fee_scalar, None);
 
         let json = json!({});
 
         let op_fields: OptimismTransactionReceiptFields = serde_json::from_value(json).unwrap();
-        assert_eq!(op_fields.l1_base_fee_scalar, None);
-    }
-
-    #[test]
-    fn serialize_l1_blob_base_fee_scalar() {
-        let op_fields = OptimismTransactionReceiptFields {
-            l1_blob_base_fee_scalar: Some(0.00000232),
-            ..OptimismTransactionReceiptFields::default()
-        };
-
-        let json = serde_json::to_value(op_fields).unwrap();
-
-        assert_eq!(
-            json["l1BlobBaseFeeScalar"],
-            serde_json::Value::String("0.00000232".to_string())
-        );
-    }
-
-    #[test]
-    fn deserialize_l1_blob_base_fee_scalar() {
-        let json = json!({
-            "l1BlobBaseFeeScalar": "0.00000211"
-        });
-
-        let op_fields: OptimismTransactionReceiptFields = serde_json::from_value(json).unwrap();
-        assert_eq!(op_fields.l1_blob_base_fee_scalar, Some(0.00000211));
-
-        let json = json!({
-            "l1BlobBaseFeeScalar": Value::Null
-        });
-
-        let op_fields: OptimismTransactionReceiptFields = serde_json::from_value(json).unwrap();
-        assert_eq!(op_fields.l1_blob_base_fee_scalar, None);
-
-        let json = json!({});
-
-        let op_fields: OptimismTransactionReceiptFields = serde_json::from_value(json).unwrap();
-        assert_eq!(op_fields.l1_blob_base_fee_scalar, None);
+        assert_eq!(op_fields.l1_fee_scalar, None);
     }
 }
