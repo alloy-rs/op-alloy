@@ -163,7 +163,13 @@ mod tests {
         "to": "0x4200000000000000000000000000000000000015",
         "transactionHash": "0xb7c74afdeb7c89fb9de2c312f49b38cb7a850ba36e064734c5223a477e83fdc9",
         "transactionIndex": "0x0",
-        "type": "0x7e"
+        "type": "0x7e",
+        "l1GasPrice": "0x3ef12787",
+        "l1GasUsed": "0x1177",
+        "l1Fee": "0x5bf1ab43d",
+        "l1BaseFeeScalar": "0x1",
+        "l1BlobBaseFee": "0x600ab8f05e64",
+        "l1BlobBaseFeeScalar": "0x1"
     }"#;
 
         let receipt: OpTransactionReceipt = serde_json::from_str(s).unwrap();
