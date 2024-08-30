@@ -259,7 +259,7 @@ where
             0 => Ok(Self::Legacy(ReceiptWithBloom::<T>::arbitrary(u)?)),
             1 => Ok(Self::Eip2930(ReceiptWithBloom::<T>::arbitrary(u)?)),
             2 => Ok(Self::Eip1559(ReceiptWithBloom::<T>::arbitrary(u)?)),
-            3 => Ok(Self::Eip4844(ReceiptWithBloom::<T>::arbitrary(u)?)),
+            3 => Ok(Self::Eip4844(OpEcotoneReceiptWithBloom::<T>::arbitrary(u)?)),
             _ => Ok(Self::Deposit(OpDepositReceiptWithBloom::<T>::arbitrary(u)?)),
         }
     }
