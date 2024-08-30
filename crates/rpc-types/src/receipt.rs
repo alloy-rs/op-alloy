@@ -41,26 +41,9 @@ impl ReceiptResponse for OpTransactionReceipt {
 #[serde(rename_all = "camelCase")]
 #[doc(alias = "OptimismTxReceiptFields")]
 pub struct OptimismTransactionReceiptFields {
-    /// L1 base fee is the minimum price per unit of gas.
-    ///
-    /// Present from pre-bedrock as de facto L1 price per unit of gas. L1 base fee after Bedrock.
-    #[serde(default, skip_serializing_if = "Option::is_none", with = "alloy_serde::quantity::opt")]
-    pub l1_gas_price: Option<u128>,
-    /// L1 gas used.
-    ///
-    /// Present from pre-bedrock to Ecotone. Null after Ecotone.
-    #[serde(default, skip_serializing_if = "Option::is_none", with = "alloy_serde::quantity::opt")]
-    pub l1_gas_used: Option<u128>,
-    /// L1 fee for the transaction.
-    ///
-    /// Present from pre-bedrock.
-    #[serde(default, skip_serializing_if = "Option::is_none", with = "alloy_serde::quantity::opt")]
-    pub l1_fee: Option<u128>,
-    /// L1 fee scalar for the transaction
-    ///
-    /// Present from pre-bedrock to Ecotone. Null after Ecotone.
-    #[serde(default, skip_serializing_if = "Option::is_none", with = "l1_fee_scalar_serde")]
-    pub l1_fee_scalar: Option<f64>,
+    /// L1 block info.
+    #[serde(flatten)]
+    pub l1_block_info: L1BlockInfo,
     /* --------------------------------------- Regolith --------------------------------------- */
     /// Deposit nonce for deposit transactions.
     ///
@@ -73,22 +56,6 @@ pub struct OptimismTransactionReceiptFields {
     /// Always null prior to the Canyon hardfork.
     #[serde(default, skip_serializing_if = "Option::is_none", with = "alloy_serde::quantity::opt")]
     pub deposit_receipt_version: Option<u64>,
-    /* ---------------------------------------- Ecotone ---------------------------------------- */
-    /// L1 base fee scalar. Applied to base fee to compute weighted gas price multiplier.
-    ///
-    /// Always null prior to the Ecotone hardfork.
-    #[serde(default, skip_serializing_if = "Option::is_none", with = "alloy_serde::quantity::opt")]
-    pub l1_base_fee_scalar: Option<u128>,
-    /// L1 blob base fee.
-    ///
-    /// Always null prior to the Ecotone hardfork.
-    #[serde(default, skip_serializing_if = "Option::is_none", with = "alloy_serde::quantity::opt")]
-    pub l1_blob_base_fee: Option<u128>,
-    /// L1 blob base fee scalar. Applied to blob base fee to compute weighted gas price multiplier.
-    ///
-    /// Always null prior to the Ecotone hardfork.
-    #[serde(default, skip_serializing_if = "Option::is_none", with = "alloy_serde::quantity::opt")]
-    pub l1_blob_base_fee_scalar: Option<u128>,
 }
 
 /// Serialize/Deserialize l1FeeScalar to/from string
