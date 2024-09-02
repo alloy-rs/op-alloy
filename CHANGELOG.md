@@ -5,12 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.6](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.2.6) - 2024-09-02
+
+### Bug Fixes
+
+- Derive_more dep ([#63](https://github.com/alloy-rs/op-alloy/issues/63))
+- [rpc] Add l1 block info to OpTransactionReceipt ([#62](https://github.com/alloy-rs/op-alloy/issues/62))
+
+### Features
+
+- Workflow to validate no_std Compatibility ([#64](https://github.com/alloy-rs/op-alloy/issues/64))
+- [consensus] Hardfork Transaction Builders ([#55](https://github.com/alloy-rs/op-alloy/issues/55))
+
+### Miscellaneous Tasks
+
+- Clean up components used in the feature form ([#60](https://github.com/alloy-rs/op-alloy/issues/60))
+- Remove ethers-rs contact link ([#61](https://github.com/alloy-rs/op-alloy/issues/61))
+
 ## [0.2.2](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.2.2) - 2024-08-29
 
 ### Features
 
 - [protocol] Core Protocol Types ([#56](https://github.com/alloy-rs/op-alloy/issues/56))
+
+### Miscellaneous Tasks
+
+- Release 0.2.2
 
 ### Other
 
