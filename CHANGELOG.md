@@ -5,8 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.8](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.2.8) - 2024-09-04
+
+### Bug Fixes
+
+- [docs] L1 gas used deprecated since Fjord not Ecotone ([#67](https://github.com/alloy-rs/op-alloy/issues/67))
+
+### Dependencies
+
+- Bump MSRV ([#66](https://github.com/alloy-rs/op-alloy/issues/66))
+
+### Features
+
+- [protocol] Batch Transaction ([#70](https://github.com/alloy-rs/op-alloy/issues/70))
+
+### Other
+
+- Make decode_fields pub for TxDeposit ([#68](https://github.com/alloy-rs/op-alloy/issues/68))
+- Add encode methods for `TxDeposit` ([#69](https://github.com/alloy-rs/op-alloy/issues/69))
+
 ## [0.2.7](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.2.7) - 2024-09-02
+
+### Miscellaneous Tasks
+
+- Release 0.2.7
 
 ### Other
 
