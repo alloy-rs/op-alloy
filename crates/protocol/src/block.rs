@@ -14,12 +14,12 @@ pub struct BlockInfo {
     /// The block hash
     pub hash: B256,
     /// The block number
-    #[cfg_attr(feature = "serde", serde(deserialize_with = "deserialize_u64_hex"))]
+    #[cfg_attr(feature = "serde", serde(with = "alloy_serde::quantity"))]
     pub number: u64,
     /// The parent block hash
     pub parent_hash: B256,
     /// The block timestamp
-    #[cfg_attr(feature = "serde", serde(deserialize_with = "deserialize_u64_hex"))]
+    #[cfg_attr(feature = "serde", serde(with = "alloy_serde::quantity"))]
     pub timestamp: u64,
 }
 
@@ -55,34 +55,8 @@ pub struct L2BlockInfo {
     /// The L1 origin [BlockID]
     pub l1_origin: BlockID,
     /// The sequence number of the L2 block
-    #[cfg_attr(feature = "serde", serde(deserialize_with = "deserialize_u64_hex"))]
+    #[cfg_attr(feature = "serde", serde(with = "alloy_serde::quantity"))]
     pub seq_num: u64,
-}
-
-#[cfg(feature = "serde")]
-fn deserialize_u64_hex<'de, D>(deserializer: D) -> Result<u64, D::Error>
-where
-    D: serde::Deserializer<'de>,
-{
-    fn deserialize_u64_hex_string<'de, D>(s: String) -> Result<u64, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        let s = s.replace("\"", "");
-        if let Some(s) = s.strip_prefix("0x") {
-            u64::from_str_radix(s, 16).map_err(serde::de::Error::custom)
-        } else {
-            s.parse().map_err(serde::de::Error::custom)
-        }
-    }
-    let value = serde_json::Value::deserialize(deserializer)?;
-    match value {
-        serde_json::Value::String(s) => deserialize_u64_hex_string::<D>(s),
-        serde_json::Value::Number(n) => {
-            n.as_u64().ok_or_else(|| serde::de::Error::custom("invalid u64"))
-        }
-        _ => Err(serde::de::Error::custom("invalid u64")),
-    }
 }
 
 impl L2BlockInfo {
