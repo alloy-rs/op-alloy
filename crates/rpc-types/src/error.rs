@@ -6,7 +6,7 @@ use std::fmt::Display;
 
 /// Optimism specific errors.
 #[derive(Debug, thiserror::Error)]
-pub enum OpEthApiError<EthApiError: Display> {
+pub enum OpEthApiError<EthApiError: Error> {
     /// L1 ethereum error.
     #[error(transparent)]
     Eth(#[from] EthApiError),
