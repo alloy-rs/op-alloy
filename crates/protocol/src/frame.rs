@@ -32,6 +32,22 @@ pub enum FrameDecodingError {
     InvalidDataLength,
 }
 
+impl core::fmt::Display for FrameDecodingError {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        match self {
+            FrameDecodingError::DataTooLarge(size) => {
+                write!(f, "Frame data too large: {} bytes", size)
+            }
+            FrameDecodingError::DataTooShort(size) => {
+                write!(f, "Frame data too short: {} bytes", size)
+            }
+            FrameDecodingError::InvalidId => write!(f, "Invalid frame id"),
+            FrameDecodingError::InvalidNumber => write!(f, "Invalid frame number"),
+            FrameDecodingError::InvalidDataLength => write!(f, "Invalid frame data length"),
+        }
+    }
+}
+
 /// Frame parsing error.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum FrameParseError {
@@ -45,6 +61,18 @@ pub enum FrameParseError {
     DataLengthMismatch,
     /// No frames decoded.
     NoFramesDecoded,
+}
+
+impl core::fmt::Display for FrameParseError {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        match self {
+            FrameParseError::FrameDecodingError(e) => write!(f, "Frame decoding error: {}", e),
+            FrameParseError::NoFrames => write!(f, "No frames to parse"),
+            FrameParseError::UnsupportedVersion => write!(f, "Unsupported derivation version"),
+            FrameParseError::DataLengthMismatch => write!(f, "Frame data length mismatch"),
+            FrameParseError::NoFramesDecoded => write!(f, "No frames decoded"),
+        }
+    }
 }
 
 /// A channel frame is a segment of a channel's data.
