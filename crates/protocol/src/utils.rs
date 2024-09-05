@@ -11,11 +11,19 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
+    use alloy_primitives::Bytes;
 
     #[test]
     fn test_is_deposit() {
         assert!(is_deposit(&[0x7E]));
         assert!(!is_deposit(&[]));
         assert!(!is_deposit(&[0x7F]));
+    }
+
+    #[test]
+    fn test_bytes_deposit() {
+        assert!(is_deposit(&Bytes::from_static(&[0x7E])));
+        assert!(!is_deposit(&Bytes::from_static(&[])));
+        assert!(!is_deposit(&Bytes::from_static(&[0x7F])));
     }
 }
