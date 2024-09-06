@@ -75,12 +75,3 @@ tokio = "1"
 ## crypto
 c-kzg = { version = "1.0", default-features = false }
 k256 = { version = "0.13", default-features = false, features = ["ecdsa"] }
-
-#[patch.crates-io]
-#alloy-consensus = { git = "https://github.com/alloy-rs/alloy", rev = "d663b1c" }
-#alloy-network = { git = "https://github.com/alloy-rs/alloy", rev = "d663b1c" }
-#alloy-rpc-types = { git = "https://github.com/alloy-rs/alloy", rev = "d663b1c" }
-#alloy-rpc-types-eth = { git = "https://github.com/alloy-rs/alloy", rev = "d663b1c" }
-#alloy-eips = { git = "https://github.com/alloy-rs/alloy", rev = "d663b1c" }
-#alloy-serde = { git = "https://github.com/alloy-rs/alloy", rev = "d663b1c" }
-#alloy-signer = { git = "https://github.com/alloy-rs/alloy", rev = "d663b1c" }
