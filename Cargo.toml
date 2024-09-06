@@ -5,7 +5,7 @@ resolver = "2"
 [workspace.package]
 version = "0.2.8"
 edition = "2021"
-rust-version = "1.78"
+rust-version = "1.79"
 authors = ["Alloy Contributors"]
 license = "MIT OR Apache-2.0"
 homepage = "https://github.com/alloy-rs/op-alloy"
@@ -32,10 +32,10 @@ rustdoc-args = ["--cfg", "docsrs"]
 op-alloy-rpc-jsonrpsee = { version = "0.2.8", path = "crates/rpc-jsonrpsee" }
 op-alloy-rpc-types = { version = "0.2.8", path = "crates/rpc-types" }
 op-alloy-rpc-types-engine = { version = "0.2.8", path = "crates/rpc-types-engine" }
-op-alloy-consensus = { version = "0.2.8", path = "crates/consensus" }
+op-alloy-consensus = { version = "0.2.8", path = "crates/consensus", default-features = false }
 
 alloy-rlp = { version = "0.3", default-features = false }
-alloy-primitives = { version = "0.8.0", default-features = false }
+alloy-primitives = { version = "0.8", default-features = false }
 
 alloy = { version = "0.3" }
 alloy-consensus = { version = "0.3", default-features = false}
@@ -48,7 +48,7 @@ alloy-serde = { version = "0.3", default-features = false }
 alloy-signer = { version = "0.3", default-features = false }
 
 # Superchain
-superchain-primitives = { version = "0.3.2", default-features = false }
+superchain-primitives = { version = "0.3", default-features = false }
 
 # Serde
 serde = { version = "1.0", default-features = false, features = ["derive", "alloc"] }
@@ -75,12 +75,3 @@ tokio = "1"
 ## crypto
 c-kzg = { version = "1.0", default-features = false }
 k256 = { version = "0.13", default-features = false, features = ["ecdsa"] }
-
-#[patch.crates-io]
-#alloy-consensus = { git = "https://github.com/alloy-rs/alloy", rev = "d663b1c" }
-#alloy-network = { git = "https://github.com/alloy-rs/alloy", rev = "d663b1c" }
-#alloy-rpc-types = { git = "https://github.com/alloy-rs/alloy", rev = "d663b1c" }
-#alloy-rpc-types-eth = { git = "https://github.com/alloy-rs/alloy", rev = "d663b1c" }
-#alloy-eips = { git = "https://github.com/alloy-rs/alloy", rev = "d663b1c" }
-#alloy-serde = { git = "https://github.com/alloy-rs/alloy", rev = "d663b1c" }
-#alloy-signer = { git = "https://github.com/alloy-rs/alloy", rev = "d663b1c" }
