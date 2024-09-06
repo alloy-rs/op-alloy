@@ -26,7 +26,7 @@ serde = { workspace = true, features = ["derive"], optional = true }
 
 # misc
 spin.workspace = true
-derive_more = { workspace = true, features = ["display"], default-features = false }
+derive_more = { workspace = true, features = ["display"] }
 
 [dev-dependencies]
 alloy-primitives = { workspace = true, features = ["rand"] }
