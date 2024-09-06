@@ -1,8 +1,5 @@
 //! Block Types for Optimism.
 
-#[cfg(not(feature = "std"))]
-use alloc::vec::Vec;
-
 use alloy_primitives::B256;
 use superchain_primitives::BlockID;
 
