@@ -48,7 +48,7 @@ alloy-serde = { version = "0.3", default-features = false }
 alloy-signer = { version = "0.3", default-features = false }
 
 # Superchain
-superchain-primitives = { version = "0.3", default-features = false }
+superchain-primitives = { version = "0.4", default-features = false }
 
 # Serde
 serde = { version = "1.0", default-features = false, features = ["derive", "alloc"] }
