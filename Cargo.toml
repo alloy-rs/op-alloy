@@ -38,7 +38,7 @@ alloy-rlp = { version = "0.3", default-features = false }
 alloy-primitives = { version = "0.8", default-features = false }
 
 alloy = { version = "0.3" }
-alloy-consensus = { version = "0.3", default-features = false}
+alloy-consensus = { version = "0.3", default-features = false }
 alloy-network = { version = "0.3", default-features = false }
 alloy-rpc-types = { version = "0.3" }
 alloy-rpc-types-engine = { version = "0.3" }
@@ -51,11 +51,19 @@ alloy-signer = { version = "0.3", default-features = false }
 superchain-primitives = { version = "0.4", default-features = false }
 
 # Serde
-serde = { version = "1.0", default-features = false, features = ["derive", "alloc"] }
+serde = { version = "1.0", default-features = false, features = [
+    "derive",
+    "alloc",
+] }
 serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
 
 # rpc
-jsonrpsee = { version = "0.24", features = ["jsonrpsee-core", "client-core", "server-core", "macros"] }
+jsonrpsee = { version = "0.24", features = [
+    "jsonrpsee-core",
+    "client-core",
+    "server-core",
+    "macros",
+] }
 jsonrpsee-core = "0.24"
 jsonrpsee-types = "0.24"
 
@@ -71,7 +79,7 @@ thiserror = "1.0"
 proptest = "1.4"
 proptest-derive = "0.4"
 tokio = "1"
-
+anyhow = { version = "1.0.86", default-features = false }
 ## crypto
 c-kzg = { version = "1.0", default-features = false }
 k256 = { version = "0.13", default-features = false, features = ["ecdsa"] }
