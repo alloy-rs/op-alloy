@@ -60,7 +60,7 @@ pub struct PeerInfo {
     /// 0: "`NotConnected`", 1: "Connected",
     /// 2: "`CanConnect`" (gracefully disconnected)
     /// 3: "`CannotConnect`" (tried but failed)
-    pub connectedness: u8,
+    pub connectedness: Connectedness,
     /// 0: "Unknown", 1: "Inbound" (if the peer contacted us)
     /// 2: "Outbound" (if we connected to them)
     pub direction: u8,
@@ -73,7 +73,7 @@ pub struct PeerInfo {
     #[serde(rename = "scores")]
     pub peer_scores: PeerScores,
 }
-
+// https://github.com/ethereum-optimism/optimism/blob/40750a58e7a4a6f06370d18dfe6c6eab309012d9/op-node/p2p/rpc_api.go#L36
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct PeerDump {
@@ -99,4 +99,55 @@ pub struct PeerStats {
     pub blocks_topic_v3: u32,
     pub banned: u32,
     pub known: u32,
+}
+
+/// Represents the connectivity state of a peer in a network, indicating the reachability and
+/// interaction status of a node with its peers.
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Copy)]
+#[serde(rename_all = "camelCase")]
+pub enum Connectedness {
+    /// No current connection to the peer, and no recent history of a successful connection.
+    NotConnected = 0,
+
+    /// An active, open connection to the peer exists.
+    Connected = 1,
+
+    /// Connection to the peer is possible but not currently established; usually implies a past
+    /// successful connection.
+    CanConnect = 2,
+
+    /// Recent attempts to connect to the peer failed, indicating potential issues in reachability
+    /// or peer status.
+    CannotConnect = 3,
+
+    /// Connection to the peer is limited; may not have full capabilities.
+    Limited = 4,
+}
+
+impl core::fmt::Display for Connectedness {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        match self {
+            Connectedness::NotConnected => write!(f, "Not Connected"),
+            Connectedness::Connected => write!(f, "Connected"),
+            Connectedness::CanConnect => write!(f, "Can Connect"),
+            Connectedness::CannotConnect => write!(f, "Cannot Connect"),
+            Connectedness::Limited => write!(f, "Limited"),
+        }
+    }
+}
+impl From<u8> for Connectedness {
+    fn from(value: u8) -> Self {
+        match value {
+            0 => Connectedness::Connected,
+            1 => Connectedness::CanConnect,
+            2 => Connectedness::CannotConnect,
+            3 => Connectedness::Limited,
+            _ => Connectedness::NotConnected,
+        }
+    }
+}
+impl Into<u8> for Connectedness {
+    fn into(self) -> u8 {
+        self as u8
+    }
 }
