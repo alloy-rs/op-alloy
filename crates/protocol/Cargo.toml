@@ -16,7 +16,7 @@ exclude.workspace = true
 alloy-primitives.workspace = true
 alloy-rlp.workspace = true
 alloy-eips.workspace = true
-
+alloy-consensus.workspace = true
 # Superchain
 superchain-primitives.workspace = true
 
@@ -31,7 +31,6 @@ serde = { workspace = true, optional = true }
 alloy-serde = { workspace = true, optional = true }
 
 
-anyhow.workspace = true
 [dev-dependencies]
 serde_json.workspace = true
 
