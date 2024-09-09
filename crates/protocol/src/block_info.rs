@@ -3,7 +3,6 @@
 use super::{DepositSourceDomain, L1InfoDepositSource};
 #[cfg(not(feature = "std"))]
 use alloc::{
-    boxed::Box,
     format,
     string::{String, ToString},
     vec::Vec,
@@ -122,27 +121,22 @@ pub struct L1BlockInfoEcotone {
     pub base_fee_scalar: u32,
 }
 
-#[allow(missing_docs)]
-#[derive(Debug)]
+/// An error type for parsing L1 block info transactions.
+#[derive(Debug, Copy, Clone)]
 pub enum BlockInfoError {
-    ParseError { field: &'static str, source: Box<dyn core::error::Error> },
+    /// Failed to parse the L1 blob base fee scalar.
+    L1BlobBaseFeeScalar,
+    /// Failed to parse the base fee scalar.
+    BaseFeeScalar,
 }
 
 impl core::fmt::Display for BlockInfoError {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         match self {
-            BlockInfoError::ParseError { field, source } => {
-                write!(f, "Failed to parse {}: {}", field, source)
+            BlockInfoError::L1BlobBaseFeeScalar => {
+                write!(f, "Failed to parse the L1 blob base fee scalar")
             }
-        }
-    }
-}
-
-#[cfg(feature = "std")]
-impl std::error::Error for BlockInfoError {
-    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
-        match self {
-            BlockInfoError::ParseError { source, .. } => Some(&**source),
+            BlockInfoError::BaseFeeScalar => write!(f, "Failed to parse the base fee scalar"),
         }
     }
 }
@@ -187,17 +181,16 @@ impl L1BlockInfoTx {
             let blob_base_fee_scalar = (scalar[0] == L1_SCALAR_ECOTONE)
                 .then(|| {
                     Ok::<u32, BlockInfoError>(u32::from_be_bytes(
-                        scalar[24..28].try_into().map_err(|e| BlockInfoError::ParseError {
-                            field: "L1 blob base fee scalar",
-                            source: Box::new(e),
-                        })?,
+                        scalar[24..28]
+                            .try_into()
+                            .map_err(|_| BlockInfoError::L1BlobBaseFeeScalar)?,
                     ))
                 })
                 .transpose()?
                 .unwrap_or_default();
-            let base_fee_scalar = u32::from_be_bytes(scalar[28..32].try_into().map_err(|e| {
-                BlockInfoError::ParseError { field: "base fee scalar", source: Box::new(e) }
-            })?);
+            let base_fee_scalar = u32::from_be_bytes(
+                scalar[28..32].try_into().map_err(|_| BlockInfoError::BaseFeeScalar)?,
+            );
             Ok(Self::Ecotone(L1BlockInfoEcotone {
                 number: l1_header.number,
                 time: l1_header.timestamp,
