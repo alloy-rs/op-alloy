@@ -2,7 +2,7 @@
 //! Network RPC types
 
 use alloy_primitives::ChainId;
-use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, net::IpAddr};
 
 // https://github.com/ethereum-optimism/optimism/blob/8dd17a7b114a7c25505cd2e15ce4e3d0f7e3f7c1/op-node/p2p/store/iface.go#L13
@@ -103,7 +103,7 @@ pub struct PeerStats {
 
 /// Represents the connectivity state of a peer in a network, indicating the reachability and
 /// interaction status of a node with its peers.
-#[derive(Clone, Debug, PartialEq, Copy, Default)]
+#[derive(Clone, Debug, PartialEq, Copy, Default, Serialize, Deserialize)]
 #[repr(u8)]
 pub enum Connectedness {
     /// No current connection to the peer, and no recent history of a successful connection.
@@ -136,6 +136,7 @@ impl core::fmt::Display for Connectedness {
         }
     }
 }
+
 impl From<u8> for Connectedness {
     fn from(value: u8) -> Self {
         match value {
@@ -148,42 +149,11 @@ impl From<u8> for Connectedness {
         }
     }
 }
-impl Into<u8> for Connectedness {
-    fn into(self) -> u8 {
-        self as u8
-    }
-}
-impl Serialize for Connectedness {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        serializer.serialize_u8(*self as u8)
-    }
-}
 
-impl<'de> Deserialize<'de> for Connectedness {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        let value = u8::deserialize(deserializer)?;
-        Ok(Connectedness::from(value))
-    }
-}
 #[cfg(test)]
 mod tests {
     use super::*;
     use serde_json::{self};
-
-    #[test]
-    fn deserializer() {
-        let json_data = r#"1"#;
-
-        let deserialized: Connectedness = serde_json::from_str(&json_data).unwrap();
-
-        assert_eq!(deserialized, Connectedness::Connected);
-    }
 
     #[test]
     fn test_peer_info_connectedness_serialization() {
@@ -244,16 +214,5 @@ mod tests {
             peer_info.peer_scores.req_resp.valid_responses,
             deserialized.peer_scores.req_resp.valid_responses
         );
-    }
-
-    #[test]
-    fn test_connectedness_serialization_as_u8() {
-        let connected = Connectedness::Connected;
-        let serialized = serde_json::to_string(&connected).expect("Serialization failed");
-        assert_eq!(serialized, "1");
-
-        let deserialized: Connectedness =
-            serde_json::from_str(&serialized).expect("Deserialization failed");
-        assert_eq!(deserialized, Connectedness::Connected);
     }
 }
