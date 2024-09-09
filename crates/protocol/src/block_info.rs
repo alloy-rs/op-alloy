@@ -121,6 +121,7 @@ pub struct L1BlockInfoEcotone {
     /// The fee scalar for L1 data
     pub base_fee_scalar: u32,
 }
+
 #[allow(missing_docs)]
 #[derive(Debug)]
 pub enum BlockInfoError {
@@ -137,13 +138,15 @@ impl core::fmt::Display for BlockInfoError {
     }
 }
 
-impl core::error::Error for BlockInfoError {
-    fn source(&self) -> Option<&(dyn core::error::Error + 'static)> {
+#[cfg(feature = "std")]
+impl std::error::Error for BlockInfoError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
         match self {
             BlockInfoError::ParseError { source, .. } => Some(&**source),
         }
     }
 }
+
 #[allow(missing_docs)]
 #[derive(Debug)]
 pub enum DecodeError {
@@ -162,7 +165,8 @@ impl core::fmt::Display for DecodeError {
     }
 }
 
-impl core::error::Error for DecodeError {}
+#[cfg(feature = "std")]
+impl std::error::Error for DecodeError {}
 
 impl L1BlockInfoTx {
     /// Creates a new [L1BlockInfoTx] from the given information.
