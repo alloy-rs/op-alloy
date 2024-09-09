@@ -12,8 +12,14 @@ repository.workspace = true
 exclude.workspace = true
 
 [dependencies]
+# Workspace
+op-alloy-consensus.workspace = true
+
 # Alloy
 alloy-primitives.workspace = true
+alloy-rlp.workspace = true
+alloy-eips.workspace = true
+alloy-consensus.workspace = true
 
 # Superchain
 superchain-primitives.workspace = true
@@ -31,8 +37,4 @@ serde_json.workspace = true
 [features]
 default = ["serde", "std"]
 std = []
-serde = [
-  "dep:serde",
-  "dep:alloy-serde",
-  "superchain-primitives/serde",
-]
+serde = ["dep:serde", "dep:alloy-serde", "superchain-primitives/serde"]

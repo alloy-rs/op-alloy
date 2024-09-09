@@ -5,6 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.9](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.2.9) - 2024-09-09
+
+### Bug Fixes
+
+- Use no_std workflow ([#78](https://github.com/alloy-rs/op-alloy/issues/78))
+- Alloy-protocols utils fix ([#80](https://github.com/alloy-rs/op-alloy/issues/80))
+- Alloy-rs/core update ([#75](https://github.com/alloy-rs/op-alloy/issues/75))
+- [protocol] Native u64 ([#73](https://github.com/alloy-rs/op-alloy/issues/73))
+
+### Dependencies
+
+- Bump alloy 0.3.2 ([#86](https://github.com/alloy-rs/op-alloy/issues/86))
+
+### Documentation
+
+- [rpc-type] Add reference to peerdump ([#83](https://github.com/alloy-rs/op-alloy/issues/83))
+
+### Features
+
+- [op-alloy-protocol] Add deposit module ([#81](https://github.com/alloy-rs/op-alloy/issues/81))
+- Bump superchain-primitives ([#79](https://github.com/alloy-rs/op-alloy/issues/79))
+- [protocol] Deposit Tx Utility ([#74](https://github.com/alloy-rs/op-alloy/issues/74))
+- Feature Powerset Job ([#72](https://github.com/alloy-rs/op-alloy/issues/72))
+- [protocol] Exports Frame Constants ([#71](https://github.com/alloy-rs/op-alloy/issues/71))
+
+### Miscellaneous Tasks
+
+- Cleanup depositerror ([#87](https://github.com/alloy-rs/op-alloy/issues/87))
+
 ## [0.2.8](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.2.8) - 2024-09-04
 
@@ -19,6 +49,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Features
 
 - [protocol] Batch Transaction ([#70](https://github.com/alloy-rs/op-alloy/issues/70))
+
+### Miscellaneous Tasks
+
+- Release 0.2.8
 
 ### Other
 
