@@ -37,15 +37,15 @@ op-alloy-consensus = { version = "0.2.8", path = "crates/consensus", default-fea
 alloy-rlp = { version = "0.3", default-features = false }
 alloy-primitives = { version = "0.8", default-features = false }
 
-alloy = { version = "0.3" }
-alloy-consensus = { version = "0.3", default-features = false }
-alloy-network = { version = "0.3", default-features = false }
-alloy-rpc-types = { version = "0.3" }
-alloy-rpc-types-engine = { version = "0.3" }
-alloy-rpc-types-eth = { version = "0.3" }
-alloy-eips = { version = "0.3", default-features = false }
-alloy-serde = { version = "0.3", default-features = false }
-alloy-signer = { version = "0.3", default-features = false }
+alloy = { version = "0.3.2" }
+alloy-consensus = { version = "0.3.2", default-features = false }
+alloy-network = { version = "0.3.2", default-features = false }
+alloy-rpc-types = { version = "0.3.2" }
+alloy-rpc-types-engine = { version = "0.3.2" }
+alloy-rpc-types-eth = { version = "0.3.2" }
+alloy-eips = { version = "0.3.2", default-features = false }
+alloy-serde = { version = "0.3.2", default-features = false }
+alloy-signer = { version = "0.3.2", default-features = false }
 
 # Superchain
 superchain-primitives = { version = "0.4", default-features = false }
