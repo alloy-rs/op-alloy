@@ -29,10 +29,13 @@ impl BatchTransaction {
 
 impl From<&BatchTransaction> for Bytes {
     fn from(tx: &BatchTransaction) -> Self {
-        tx.frames.iter().fold(Vec::new(), |mut acc, frame| {
-            acc.append(&mut frame.encode());
-            acc
-        }).into()
+        tx.frames
+            .iter()
+            .fold(Vec::new(), |mut acc, frame| {
+                acc.append(&mut frame.encode());
+                acc
+            })
+            .into()
     }
 }
 
@@ -48,7 +51,8 @@ mod test {
         let batch = BatchTransaction { frames: vec![frame.clone(); 5], size: 5 * frame.size() };
 
         let bytes: Bytes = (&batch).into();
-        let bytes = [crate::DERIVATION_VERSION_0].iter().chain(bytes.iter()).copied().collect::<Vec<_>>();
+        let bytes =
+            [crate::DERIVATION_VERSION_0].iter().chain(bytes.iter()).copied().collect::<Vec<_>>();
         let frames = Frame::parse_frames(&bytes).unwrap();
         assert_eq!(frames.len(), 5);
         (0..5).for_each(|i| {
