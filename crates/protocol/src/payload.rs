@@ -1,7 +1,11 @@
 //! Contains the execution payload type.
 
 #[cfg(not(feature = "std"))]
-use alloc::vec::Vec;
+use alloc::{
+    format,
+    string::{String, ToString},
+    vec::Vec,
+};
 use alloy_eips::{
     eip2718::{Decodable2718, Encodable2718},
     eip4895::Withdrawal,
@@ -37,6 +41,7 @@ pub enum ExecutionPayloadError {
     /// missing system configuration in the genesis block.
     MissingSystemConfig,
 }
+#[cfg(feature = "std")]
 impl core::fmt::Display for ExecutionPayloadError {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         match self {
