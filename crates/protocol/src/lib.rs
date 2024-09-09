@@ -42,3 +42,8 @@ pub use deposits::{
 
 pub mod block_info;
 pub use block_info::{L1BlockInfoBedrock, L1BlockInfoEcotone, L1BlockInfoHolocene, L1BlockInfoTx};
+
+pub mod payload;
+pub use payload::{
+    L2ExecutionPayload, L2ExecutionPayloadEnvelope, PAYLOAD_MEM_FIXED_COST, PAYLOAD_TX_MEM_OVERHEAD,
+};
