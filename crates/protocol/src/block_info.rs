@@ -5,9 +5,8 @@ use super::{DepositSourceDomain, L1InfoDepositSource};
 use alloc::vec::Vec;
 use alloy_consensus::Header;
 use alloy_primitives::{address, Address, Bytes, TxKind, B256, U256};
-use superchain_primitives::{BlockID, RollupConfig, SystemConfig};
-// use anyhow::{anyhow, Result};
 use op_alloy_consensus::{OpTxEnvelope, TxDeposit};
+use superchain_primitives::{BlockID, RollupConfig, SystemConfig};
 
 /// The system transaction gas limit post-Regolith
 const REGOLITH_SYSTEM_TX_GAS: u128 = 1_000_000;
@@ -287,7 +286,7 @@ impl L1BlockInfoTx {
     }
 
     /// Returns the L1 [BlockID] for the info transaction.
-    pub fn id(&self) -> BlockID {
+    pub const fn id(&self) -> BlockID {
         match self {
             Self::Ecotone(L1BlockInfoEcotone { number, block_hash, .. }) => {
                 BlockID { number: *number, hash: *block_hash }
@@ -299,7 +298,7 @@ impl L1BlockInfoTx {
     }
 
     /// Returns the L1 fee overhead for the info transaction. After ecotone, this value is ignored.
-    pub fn l1_fee_overhead(&self) -> U256 {
+    pub const fn l1_fee_overhead(&self) -> U256 {
         match self {
             Self::Bedrock(L1BlockInfoBedrock { l1_fee_overhead, .. }) => *l1_fee_overhead,
             Self::Ecotone(_) => U256::ZERO,
@@ -307,7 +306,7 @@ impl L1BlockInfoTx {
     }
 
     /// Returns the batcher address for the info transaction
-    pub fn batcher_address(&self) -> Address {
+    pub const fn batcher_address(&self) -> Address {
         match self {
             Self::Bedrock(L1BlockInfoBedrock { batcher_address, .. }) => *batcher_address,
             Self::Ecotone(L1BlockInfoEcotone { batcher_address, .. }) => *batcher_address,
@@ -315,7 +314,7 @@ impl L1BlockInfoTx {
     }
 
     /// Returns the sequence number for the info transaction
-    pub fn sequence_number(&self) -> u64 {
+    pub const fn sequence_number(&self) -> u64 {
         match self {
             Self::Bedrock(L1BlockInfoBedrock { sequence_number, .. }) => *sequence_number,
             Self::Ecotone(L1BlockInfoEcotone { sequence_number, .. }) => *sequence_number,
@@ -466,7 +465,7 @@ mod test {
         assert!(err.is_err());
         assert_eq!(
             err.err().unwrap().to_string(),
-            "Invalid calldata length for Bedrock L1 info transaction"
+            "Invalid data length: Invalid calldata length for Bedrock L1 info transaction, expected 260, got 2"
         );
     }
 
@@ -476,7 +475,7 @@ mod test {
         assert!(err.is_err());
         assert_eq!(
             err.err().unwrap().to_string(),
-            "Invalid calldata length for Ecotone L1 info transaction"
+            "Invalid data length: Invalid calldata length for Ecotone L1 info transaction, expected 164, got 2"
         );
     }
 
