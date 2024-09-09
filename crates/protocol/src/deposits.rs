@@ -53,7 +53,7 @@ pub enum DepositError<T: Error> {
     MintDecode(Bytes),
     /// Failed to decode the deposit gas value.
     GasDecode(Bytes),
-    /// A custom error wrapping [anyhow::Error].
+    /// A custom error wrapping a generic [Error] implementation.
     Custom(T),
 }
 
