@@ -3,7 +3,7 @@ members = ["crates/*"]
 resolver = "2"
 
 [workspace.package]
-version = "0.2.8"
+version = "0.2.9"
 edition = "2021"
 rust-version = "1.81"
 authors = ["Alloy Contributors"]
@@ -29,23 +29,23 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [workspace.dependencies]
 # Alloy
-op-alloy-rpc-jsonrpsee = { version = "0.2.8", path = "crates/rpc-jsonrpsee" }
-op-alloy-rpc-types = { version = "0.2.8", path = "crates/rpc-types" }
-op-alloy-rpc-types-engine = { version = "0.2.8", path = "crates/rpc-types-engine" }
-op-alloy-consensus = { version = "0.2.8", path = "crates/consensus", default-features = false }
+op-alloy-rpc-jsonrpsee = { version = "0.2.9", path = "crates/rpc-jsonrpsee" }
+op-alloy-rpc-types = { version = "0.2.9", path = "crates/rpc-types" }
+op-alloy-rpc-types-engine = { version = "0.2.9", path = "crates/rpc-types-engine" }
+op-alloy-consensus = { version = "0.2.9", path = "crates/consensus", default-features = false }
 
 alloy-rlp = { version = "0.3", default-features = false }
 alloy-primitives = { version = "0.8", default-features = false }
 
-alloy = { version = "0.3" }
-alloy-consensus = { version = "0.3", default-features = false }
-alloy-network = { version = "0.3", default-features = false }
-alloy-rpc-types = { version = "0.3" }
-alloy-rpc-types-engine = { version = "0.3" }
-alloy-rpc-types-eth = { version = "0.3" }
-alloy-eips = { version = "0.3", default-features = false }
-alloy-serde = { version = "0.3", default-features = false }
-alloy-signer = { version = "0.3", default-features = false }
+alloy = { version = "0.3.2" }
+alloy-consensus = { version = "0.3.2", default-features = false }
+alloy-network = { version = "0.3.2", default-features = false }
+alloy-rpc-types = { version = "0.3.2" }
+alloy-rpc-types-engine = { version = "0.3.2" }
+alloy-rpc-types-eth = { version = "0.3.2" }
+alloy-eips = { version = "0.3.2", default-features = false }
+alloy-serde = { version = "0.3.2", default-features = false }
+alloy-signer = { version = "0.3.2", default-features = false }
 
 # Superchain
 superchain-primitives = { version = "0.4", default-features = false }
