@@ -2,7 +2,12 @@
 
 use super::{DepositSourceDomain, L1InfoDepositSource};
 #[cfg(not(feature = "std"))]
-use alloc::vec::Vec;
+use alloc::{
+    boxed::Box,
+    format,
+    string::{String, ToString},
+    vec::Vec,
+};
 use alloy_consensus::Header;
 use alloy_primitives::{address, Address, Bytes, TxKind, B256, U256};
 use op_alloy_consensus::{OpTxEnvelope, TxDeposit};
