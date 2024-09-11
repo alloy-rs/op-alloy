@@ -154,6 +154,7 @@ impl From<u8> for Connectedness {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Direction {
     /// DirUnknown is the default direction when the direction is not specified.
+    #[default]
     DirUnknown = 0,
     /// DirInbound is for when the remote peer initiated the connection.
     DirInbound = 1,
@@ -171,11 +172,6 @@ impl From<u8> for Direction {
     }
 }
 
-impl Default for Direction {
-    fn default() -> Self {
-        Direction::DirUnknown
-    }
-}
 impl core::fmt::Display for Direction {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         write!(
