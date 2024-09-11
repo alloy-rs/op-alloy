@@ -63,7 +63,7 @@ pub struct PeerInfo {
     pub connectedness: Connectedness,
     /// 0: "Unknown", 1: "Inbound" (if the peer contacted us)
     /// 2: "Outbound" (if we connected to them)
-    pub direction: u8,
+    pub direction: Direction,
     pub protected: bool,
     #[serde(rename = "chainID")]
     pub chain_id: ChainId,
@@ -149,7 +149,46 @@ impl From<u8> for Connectedness {
         }
     }
 }
+/// Direction represents the direction of a connection.
+#[repr(u8)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum Direction {
+    /// DirUnknown is the default direction when the direction is not specified.
+    DirUnknown = 0,
+    /// DirInbound is for when the remote peer initiated the connection.
+    DirInbound = 1,
+    /// DirOutbound is for when the local peer initiated the connection.
+    DirOutbound = 2,
+}
+impl From<u8> for Direction {
+    fn from(num: u8) -> Self {
+        match num {
+            0 => Direction::DirInbound,
+            1 => Direction::DirOutbound,
+            2 => Direction::DirUnknown,
+            _ => Direction::DirInbound,
+        }
+    }
+}
 
+impl Default for Direction {
+    fn default() -> Self {
+        Direction::DirUnknown
+    }
+}
+impl core::fmt::Display for Direction {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Direction::DirUnknown => "Unknown",
+                Direction::DirInbound => "Inbound",
+                Direction::DirOutbound => "Outbound",
+            }
+        )
+    }
+}
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -166,7 +205,7 @@ mod tests {
             addresses: vec![String::from("127.0.0.1")],
             protocols: Some(vec![String::from("eth"), String::from("p2p")]),
             connectedness: Connectedness::Connected,
-            direction: 1,
+            direction: Direction::DirOutbound,
             protected: true,
             chain_id: 1,
             latency: 100,
