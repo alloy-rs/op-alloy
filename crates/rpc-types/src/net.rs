@@ -151,7 +151,7 @@ impl From<u8> for Connectedness {
 }
 /// Direction represents the direction of a connection.
 #[repr(u8)]
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
 pub enum Direction {
     /// DirUnknown is the default direction when the direction is not specified.
     #[default]
