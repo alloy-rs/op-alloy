@@ -1,8 +1,17 @@
 //! Op types related to sync.
 
 use alloy_primitives::{BlockNumber, B256};
-use alloy_rpc_types_eth::BlockId;
 use serde::{Deserialize, Serialize};
+
+
+/// See: https://github.com/ethereum-optimism/optimism/blob/develop/op-service/eth/id.go#L10-L13
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct BlockID {
+    /// The block hash.
+    pub hash: B256,
+    /// The block number.
+    pub number: BlockNumber,
+}
 
 /// The block reference for an L2 block.
 ///
@@ -20,7 +29,7 @@ pub struct L2BlockRef {
     pub timestamp: u64,
     /// The L1 origin.
     #[serde(rename = "l1Origin")]
-    pub l1_origin: BlockId,
+    pub l1_origin: BlockID,
     /// The sequence number.
     pub sequence_number: u64,
 }
