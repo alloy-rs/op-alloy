@@ -13,7 +13,7 @@ body:
       description: What crate is the feature for?
       multiple: true
       options:
-        - contract
+        - consensus
         - network 
         - protocol 
         - rpc-jsonrpsee
