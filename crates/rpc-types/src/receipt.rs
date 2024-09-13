@@ -1,8 +1,5 @@
 //! Receipt types for RPC
 
-use alloy_eips::eip7702::SignedAuthorization;
-use alloy_network::ReceiptResponse;
-use alloy_primitives::{Address, BlockHash, TxHash, B256};
 use alloy_serde::OtherFields;
 use op_alloy_consensus::OpReceiptEnvelope;
 use serde::{Deserialize, Serialize};
@@ -20,8 +17,9 @@ pub struct OpTransactionReceipt {
     pub l1_block_info: L1BlockInfo,
 }
 
-impl ReceiptResponse for OpTransactionReceipt {
-    fn contract_address(&self) -> Option<Address> {
+#[cfg(feature = "std")]
+impl alloy_network::ReceiptResponse for OpTransactionReceipt {
+    fn contract_address(&self) -> Option<alloy_primitives::Address> {
         self.inner.contract_address
     }
 
@@ -29,7 +27,7 @@ impl ReceiptResponse for OpTransactionReceipt {
         self.inner.inner.status()
     }
 
-    fn block_hash(&self) -> Option<BlockHash> {
+    fn block_hash(&self) -> Option<alloy_primitives::BlockHash> {
         self.inner.block_hash
     }
 
@@ -37,7 +35,7 @@ impl ReceiptResponse for OpTransactionReceipt {
         self.inner.block_number
     }
 
-    fn transaction_hash(&self) -> TxHash {
+    fn transaction_hash(&self) -> alloy_primitives::TxHash {
         self.inner.transaction_hash
     }
 
@@ -61,15 +59,15 @@ impl ReceiptResponse for OpTransactionReceipt {
         self.inner.blob_gas_price()
     }
 
-    fn from(&self) -> Address {
+    fn from(&self) -> alloy_primitives::Address {
         self.inner.from()
     }
 
-    fn to(&self) -> Option<Address> {
+    fn to(&self) -> Option<alloy_primitives::Address> {
         self.inner.to()
     }
 
-    fn authorization_list(&self) -> Option<&[SignedAuthorization]> {
+    fn authorization_list(&self) -> Option<&[alloy_eips::eip7702::SignedAuthorization]> {
         self.inner.authorization_list()
     }
 
@@ -77,7 +75,7 @@ impl ReceiptResponse for OpTransactionReceipt {
         self.inner.cumulative_gas_used()
     }
 
-    fn state_root(&self) -> Option<B256> {
+    fn state_root(&self) -> Option<alloy_primitives::B256> {
         self.inner.state_root()
     }
 }
@@ -112,6 +110,7 @@ mod l1_fee_scalar_serde {
     where
         S: serde::Serializer,
     {
+        use alloc::string::ToString;
         if let Some(v) = value {
             return s.serialize_str(&v.to_string());
         }
@@ -122,6 +121,7 @@ mod l1_fee_scalar_serde {
     where
         D: serde::Deserializer<'de>,
     {
+        use alloc::string::String;
         let s: Option<String> = Option::deserialize(deserializer)?;
         if let Some(s) = s {
             return Ok(Some(s.parse::<f64>().map_err(de::Error::custom)?));
