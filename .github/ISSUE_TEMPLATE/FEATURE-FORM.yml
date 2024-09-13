@@ -15,6 +15,7 @@ body:
       options:
         - consensus
         - network 
+        - genesis 
         - protocol 
         - rpc-jsonrpsee
         - rpc-types
