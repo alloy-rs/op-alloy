@@ -514,9 +514,9 @@ pub const BASE_SEPOLIA_CONFIG: RollupConfig = RollupConfig {
 
 #[cfg(test)]
 mod tests {
-    use alloy_primitives::U256;
-
     use super::*;
+    #[cfg(feature = "serde")]
+    use alloy_primitives::U256;
 
     #[test]
     fn test_regolith_active() {
@@ -611,6 +611,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(feature = "serde")]
     fn test_deserialize_reference_rollup_config() {
         // Reference serialized rollup config from the `op-node`.
         let ser_cfg = r#"

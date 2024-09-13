@@ -18,6 +18,7 @@ pub struct ChainGenesis {
 }
 
 #[cfg(test)]
+#[cfg(feature = "serde")]
 mod tests {
     use super::*;
     use alloy_primitives::{address, b256, uint};

@@ -274,6 +274,7 @@ mod test {
     }
 
     #[test]
+    #[cfg(feature = "serde")]
     fn test_system_config_serde() {
         let sc_str = r#"{
           "batcherAddr": "0x6887246668a3b87F54DeB3b94Ba47a6f63F32985",
