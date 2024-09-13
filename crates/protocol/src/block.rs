@@ -49,7 +49,7 @@ impl core::fmt::Display for BlockInfo {
 pub struct L2BlockInfo {
     /// The base [BlockInfo]
     pub block_info: BlockInfo,
-    /// The L1 origin [BlockID]
+    /// The L1 origin [BlockNumHash]
     pub l1_origin: BlockNumHash,
     /// The sequence number of the L2 block
     #[cfg_attr(feature = "serde", serde(with = "alloy_serde::quantity"))]

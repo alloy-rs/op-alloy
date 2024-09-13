@@ -288,7 +288,7 @@ impl L1BlockInfoTx {
         }
     }
 
-    /// Returns the L1 [BlockID] for the info transaction.
+    /// Returns the L1 [BlockNumHash] for the info transaction.
     pub const fn id(&self) -> BlockNumHash {
         match self {
             Self::Ecotone(L1BlockInfoEcotone { number, block_hash, .. }) => {
