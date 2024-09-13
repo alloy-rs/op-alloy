@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.10](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.2.10) - 2024-09-13
+
+### Dependencies
+
+- Bump alloy ([#98](https://github.com/alloy-rs/op-alloy/issues/98))
+
+### Features
+
+- [rpc-types] Replace u8 with Connectedness Enum ([#84](https://github.com/alloy-rs/op-alloy/issues/84))
+- Feat(protocol) add block information module ([#82](https://github.com/alloy-rs/op-alloy/issues/82))
+
 ## [0.2.9](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.2.9) - 2024-09-09
 
@@ -33,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.2.9
 - Cleanup depositerror ([#87](https://github.com/alloy-rs/op-alloy/issues/87))
 
 ## [0.2.8](https://github.com/alloy-rs/op-alloy
