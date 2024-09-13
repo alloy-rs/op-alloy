@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.11](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.2.11) - 2024-09-13
+
+### Bug Fixes
+
+- Remove Block ID ([#94](https://github.com/alloy-rs/op-alloy/issues/94))
+- Issue Template ([#96](https://github.com/alloy-rs/op-alloy/issues/96))
+
+### Features
+
+- Genesis Types ([#97](https://github.com/alloy-rs/op-alloy/issues/97))
+- Attributes with parent ([#95](https://github.com/alloy-rs/op-alloy/issues/95))
+
+### Other
+
+- Make `l1_origin` in `L2BlockRef` a struct instead of an enum ([#91](https://github.com/alloy-rs/op-alloy/issues/91))
+
 ## [0.2.10](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.2.10) - 2024-09-13
 
@@ -16,6 +33,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [rpc-types] Replace u8 with Connectedness Enum ([#84](https://github.com/alloy-rs/op-alloy/issues/84))
 - Feat(protocol) add block information module ([#82](https://github.com/alloy-rs/op-alloy/issues/82))
+
+### Miscellaneous Tasks
+
+- Release 0.2.10
 
 ## [0.2.9](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.2.9) - 2024-09-09

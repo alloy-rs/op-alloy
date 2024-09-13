@@ -3,7 +3,7 @@ members = ["crates/*"]
 resolver = "2"
 
 [workspace.package]
-version = "0.2.10"
+version = "0.2.11"
 edition = "2021"
 rust-version = "1.79"
 authors = ["Alloy Contributors"]
@@ -29,12 +29,12 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [workspace.dependencies]
 # Alloy
-op-alloy-rpc-jsonrpsee = { version = "0.2.10", path = "crates/rpc-jsonrpsee" }
-op-alloy-rpc-types = { version = "0.2.10", path = "crates/rpc-types" }
-op-alloy-rpc-types-engine = { version = "0.2.10", path = "crates/rpc-types-engine" }
-op-alloy-consensus = { version = "0.2.10", path = "crates/consensus", default-features = false }
-op-alloy-genesis = { version = "0.2.10", path = "crates/genesis" }
-op-alloy-protocol = { version = "0.2.10", path = "crates/protocol", default-features = false }
+op-alloy-rpc-jsonrpsee = { version = "0.2.11", path = "crates/rpc-jsonrpsee" }
+op-alloy-rpc-types = { version = "0.2.11", path = "crates/rpc-types" }
+op-alloy-rpc-types-engine = { version = "0.2.11", path = "crates/rpc-types-engine" }
+op-alloy-consensus = { version = "0.2.11", path = "crates/consensus", default-features = false }
+op-alloy-genesis = { version = "0.2.11", path = "crates/genesis" }
+op-alloy-protocol = { version = "0.2.11", path = "crates/protocol", default-features = false }
 
 alloy-rlp = { version = "0.3", default-features = false }
 alloy-primitives = { version = "0.8", default-features = false }
