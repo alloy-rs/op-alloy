@@ -6,9 +6,9 @@ use alloy_primitives::{address, b256, uint, Address};
 use alloy_eips::eip1898::BlockNumHash;
 
 use crate::{
-    base_fee_params, canyon_base_fee_params, ChainConfig, ChainGenesis, SystemConfig,
-    BASE_SEPOLIA_BASE_FEE_PARAMS, BASE_SEPOLIA_CANYON_BASE_FEE_PARAMS, OP_BASE_FEE_PARAMS,
-    OP_CANYON_BASE_FEE_PARAMS, OP_SEPOLIA_BASE_FEE_PARAMS, OP_SEPOLIA_CANYON_BASE_FEE_PARAMS,
+    ChainGenesis, SystemConfig, BASE_SEPOLIA_BASE_FEE_PARAMS, BASE_SEPOLIA_CANYON_BASE_FEE_PARAMS,
+    OP_BASE_FEE_PARAMS, OP_CANYON_BASE_FEE_PARAMS, OP_SEPOLIA_BASE_FEE_PARAMS,
+    OP_SEPOLIA_CANYON_BASE_FEE_PARAMS,
 };
 
 /// The max rlp bytes per channel for the Bedrock hardfork.
@@ -170,57 +170,6 @@ impl Default for RollupConfig {
             blobs_enabled_l1_timestamp: None,
             da_challenge_address: None,
         }
-    }
-}
-
-/// Loads the rollup config for the OP-Stack chain given the chain config and address list.
-pub fn load_op_stack_rollup_config(chain_config: &ChainConfig) -> RollupConfig {
-    RollupConfig {
-        genesis: chain_config.genesis,
-        l1_chain_id: chain_config.l1_chain_id,
-        l2_chain_id: chain_config.chain_id,
-        base_fee_params: base_fee_params(chain_config.chain_id),
-        canyon_base_fee_params: canyon_base_fee_params(chain_config.chain_id),
-        regolith_time: Some(0),
-        canyon_time: chain_config.hardfork_configuration.canyon_time,
-        delta_time: chain_config.hardfork_configuration.delta_time,
-        ecotone_time: chain_config.hardfork_configuration.ecotone_time,
-        fjord_time: chain_config.hardfork_configuration.fjord_time,
-        granite_time: chain_config.hardfork_configuration.granite_time,
-        holocene_time: chain_config.hardfork_configuration.holocene_time,
-        batch_inbox_address: chain_config.batch_inbox_addr,
-        deposit_contract_address: chain_config
-            .addresses
-            .as_ref()
-            .map(|a| a.optimism_portal_proxy)
-            .unwrap_or_default(),
-        l1_system_config_address: chain_config
-            .addresses
-            .as_ref()
-            .map(|a| a.system_config_proxy)
-            .unwrap_or_default(),
-        protocol_versions_address: chain_config
-            .addresses
-            .as_ref()
-            .map(|a| a.address_manager)
-            .unwrap_or_default(),
-        superchain_config_address: None,
-        blobs_enabled_l1_timestamp: None,
-        da_challenge_address: chain_config
-            .alt_da
-            .as_ref()
-            .and_then(|alt_da| alt_da.da_challenge_address),
-
-        // The below chain parameters can be different per OP-Stack chain,
-        // but since none of the superchain chains differ, it's not represented in the
-        // superchain-registry yet. This restriction on superchain-chains may change in the
-        // future. Test/Alt configurations can still load custom rollup-configs when
-        // necessary.
-        block_time: 2,
-        channel_timeout: 300,
-        granite_channel_timeout: GRANITE_CHANNEL_TIMEOUT,
-        max_sequencer_drift: 600,
-        seq_window_size: 3600,
     }
 }
 

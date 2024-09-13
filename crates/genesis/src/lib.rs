@@ -41,4 +41,4 @@ pub mod genesis;
 pub use genesis::ChainGenesis;
 
 pub mod rollup;
-pub use rollup::RollupConfig;
+pub use rollup::{RollupConfig, GRANITE_CHANNEL_TIMEOUT};
