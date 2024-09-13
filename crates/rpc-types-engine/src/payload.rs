@@ -3,6 +3,7 @@ use alloy_rpc_types_engine::{
     BlobsBundleV1, ExecutionPayloadV3, ExecutionPayloadV4, PayloadAttributes,
 };
 use op_alloy_protocol::L2BlockInfo;
+use alloc::vec::Vec;
 
 /// Optimism Payload Attributes
 #[derive(Clone, Debug, PartialEq, Eq)]
