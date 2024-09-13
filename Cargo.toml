@@ -33,6 +33,7 @@ op-alloy-rpc-jsonrpsee = { version = "0.2.10", path = "crates/rpc-jsonrpsee" }
 op-alloy-rpc-types = { version = "0.2.10", path = "crates/rpc-types" }
 op-alloy-rpc-types-engine = { version = "0.2.10", path = "crates/rpc-types-engine" }
 op-alloy-consensus = { version = "0.2.10", path = "crates/consensus", default-features = false }
+op-alloy-protocol = { version = "0.2.9", path = "crates/protocol", default-features = false }
 
 alloy-rlp = { version = "0.3", default-features = false }
 alloy-primitives = { version = "0.8", default-features = false }
@@ -41,7 +42,7 @@ alloy = { version = "0.3.4" }
 alloy-consensus = { version = "0.3.4", default-features = false }
 alloy-network = { version = "0.3.4", default-features = false }
 alloy-rpc-types = { version = "0.3.4" }
-alloy-rpc-types-engine = { version = "0.3.4" }
+alloy-rpc-types-engine = { version = "0.3.4", default-features = false }
 alloy-rpc-types-eth = { version = "0.3.4" }
 alloy-eips = { version = "0.3.4", default-features = false }
 alloy-serde = { version = "0.3.4", default-features = false }
