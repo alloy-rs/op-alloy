@@ -27,6 +27,9 @@ option_if_let_else = "warn"
 all-features = true
 rustdoc-args = ["--cfg", "docsrs"]
 
+[patch.crates-io]
+alloy-eips = { git = "https://github.com/alloy-rs/alloy", branch = "main" }
+
 [workspace.dependencies]
 # Alloy
 op-alloy-rpc-jsonrpsee = { version = "0.2.9", path = "crates/rpc-jsonrpsee" }

@@ -8,6 +8,7 @@ use alloc::{
     vec::Vec,
 };
 use alloy_consensus::Header;
+use alloy_eips::BlockNumHash;
 use alloy_primitives::{address, Address, Bytes, TxKind, B256, U256};
 use op_alloy_consensus::{OpTxEnvelope, TxDeposit};
 use superchain_primitives::{RollupConfig, SystemConfig};
@@ -288,13 +289,13 @@ impl L1BlockInfoTx {
     }
 
     /// Returns the L1 [BlockID] for the info transaction.
-    pub const fn id(&self) -> BlockID {
+    pub const fn id(&self) -> BlockNumHash {
         match self {
             Self::Ecotone(L1BlockInfoEcotone { number, block_hash, .. }) => {
-                BlockID { number: *number, hash: *block_hash }
+                BlockNumHash { number: *number, hash: *block_hash }
             }
             Self::Bedrock(L1BlockInfoBedrock { number, block_hash, .. }) => {
-                BlockID { number: *number, hash: *block_hash }
+                BlockNumHash { number: *number, hash: *block_hash }
             }
         }
     }

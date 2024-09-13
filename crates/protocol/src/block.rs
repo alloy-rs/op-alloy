@@ -1,7 +1,7 @@
 //! Block Types for Optimism.
 
-use alloy_primitives::B256;
 use alloy_eips::BlockNumHash;
+use alloy_primitives::B256;
 
 /// Block Header Info
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
