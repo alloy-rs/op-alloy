@@ -78,10 +78,9 @@ impl SystemConfig {
                 if log.address == rollup_config.l1_system_config_address
                     && !topics.is_empty()
                     && topics[0] == CONFIG_UPDATE_TOPIC
+                    && self.process_config_update_log(log, rollup_config, l1_time).is_err()
                 {
-                    if let Err(_) = self.process_config_update_log(log, rollup_config, l1_time) {
-                        return Err("Failed to process config update log");
-                    }
+                    return Err("Failed to process config update log");
                 }
                 Ok::<_, &'static str>(())
             })?;
@@ -298,7 +297,7 @@ mod test {
             b256!("0000000000000000000000000000000000000000000000000000000000000000");
 
         let mut system_config = SystemConfig::default();
-        let rollup_config = mock_rollup_config(system_config.clone());
+        let rollup_config = mock_rollup_config(system_config);
 
         let update_log = Log {
             address: Address::ZERO,
@@ -327,7 +326,7 @@ mod test {
             b256!("0000000000000000000000000000000000000000000000000000000000000001");
 
         let mut system_config = SystemConfig::default();
-        let rollup_config = mock_rollup_config(system_config.clone());
+        let rollup_config = mock_rollup_config(system_config);
 
         let update_log = Log {
             address: Address::ZERO,
@@ -354,7 +353,7 @@ mod test {
             b256!("0000000000000000000000000000000000000000000000000000000000000001");
 
         let mut system_config = SystemConfig::default();
-        let rollup_config = mock_rollup_config(system_config.clone());
+        let rollup_config = mock_rollup_config(system_config);
 
         let update_log = Log {
             address: Address::ZERO,
@@ -381,7 +380,7 @@ mod test {
             b256!("0000000000000000000000000000000000000000000000000000000000000002");
 
         let mut system_config = SystemConfig::default();
-        let rollup_config = mock_rollup_config(system_config.clone());
+        let rollup_config = mock_rollup_config(system_config);
 
         let update_log = Log {
             address: Address::ZERO,

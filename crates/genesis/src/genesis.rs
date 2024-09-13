@@ -22,7 +22,7 @@ mod tests {
     use super::*;
     use alloy_primitives::{address, b256, uint};
 
-    fn ref_genesis() -> ChainGenesis {
+    const fn ref_genesis() -> ChainGenesis {
         ChainGenesis {
             l1: BlockNumHash {
                 hash: b256!("438335a20d98863a4c0c97999eb2481921ccd28553eac6f913af7c12aec04108"),

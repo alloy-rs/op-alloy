@@ -3,7 +3,7 @@
 use alloy_eips::eip1559::BaseFeeParams;
 
 /// Returns the [BaseFeeParams] for the given chain id.
-pub fn base_fee_params(chain_id: u64) -> BaseFeeParams {
+pub const fn base_fee_params(chain_id: u64) -> BaseFeeParams {
     match chain_id {
         10 => OP_BASE_FEE_PARAMS,
         11155420 => OP_SEPOLIA_BASE_FEE_PARAMS,
@@ -14,7 +14,7 @@ pub fn base_fee_params(chain_id: u64) -> BaseFeeParams {
 }
 
 /// Returns the Canyon [BaseFeeParams] for the given chain id.
-pub fn canyon_base_fee_params(chain_id: u64) -> BaseFeeParams {
+pub const fn canyon_base_fee_params(chain_id: u64) -> BaseFeeParams {
     match chain_id {
         10 => OP_CANYON_BASE_FEE_PARAMS,
         11155420 => OP_SEPOLIA_CANYON_BASE_FEE_PARAMS,

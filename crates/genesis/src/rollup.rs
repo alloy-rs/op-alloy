@@ -24,7 +24,7 @@ pub const FJORD_MAX_SEQUENCER_DRIFT: u64 = 1800;
 pub const GRANITE_CHANNEL_TIMEOUT: u64 = 50;
 
 #[cfg(feature = "serde")]
-fn default_granite_channel_timeout() -> u64 {
+const fn default_granite_channel_timeout() -> u64 {
     GRANITE_CHANNEL_TIMEOUT
 }
 
@@ -176,7 +176,7 @@ impl Default for RollupConfig {
 /// Loads the rollup config for the OP-Stack chain given the chain config and address list.
 pub fn load_op_stack_rollup_config(chain_config: &ChainConfig) -> RollupConfig {
     RollupConfig {
-        genesis: chain_config.genesis.clone(),
+        genesis: chain_config.genesis,
         l1_chain_id: chain_config.l1_chain_id,
         l2_chain_id: chain_config.chain_id,
         base_fee_params: base_fee_params(chain_config.chain_id),
@@ -317,7 +317,7 @@ impl RollupConfig {
     }
 
     /// Returns the [RollupConfig] for the given L2 chain ID.
-    pub fn from_l2_chain_id(l2_chain_id: u64) -> Option<RollupConfig> {
+    pub const fn from_l2_chain_id(l2_chain_id: u64) -> Option<RollupConfig> {
         match l2_chain_id {
             10 => Some(OP_MAINNET_CONFIG),
             11155420 => Some(OP_SEPOLIA_CONFIG),
