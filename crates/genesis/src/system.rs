@@ -118,10 +118,10 @@ impl SystemConfig {
         if version != CONFIG_UPDATE_EVENT_VERSION_0 {
             return Err("Invalid config update log: unsupported version");
         }
-        let Ok(topic_bytes) = log.topics()[2].as_slice()[0..8].try_into() else {
+        let Ok(topic_bytes) = <&[u8; 8]>::try_from(&log.topics()[2].as_slice()[24..]) else {
             return Err("Invalid config update log: invalid update type");
         };
-        let update_type = u64::from_be_bytes(topic_bytes);
+        let update_type = u64::from_be_bytes(*topic_bytes);
         let log_data = log.data.data.as_ref();
 
         match update_type.try_into()? {
