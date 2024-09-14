@@ -17,8 +17,7 @@ pub struct OpTransactionReceipt {
     pub l1_block_info: L1BlockInfo,
 }
 
-#[cfg(feature = "std")]
-impl alloy_network::ReceiptResponse for OpTransactionReceipt {
+impl alloy_network_primitives::ReceiptResponse for OpTransactionReceipt {
     fn contract_address(&self) -> Option<alloy_primitives::Address> {
         self.inner.contract_address
     }

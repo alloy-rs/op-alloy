@@ -19,6 +19,7 @@ op-alloy-consensus = { workspace = true, features = ["serde"] }
 alloy-primitives = { workspace = true, features = ["rlp", "serde"] }
 alloy-rpc-types-eth = { workspace = true, features = ["serde"] }
 alloy-serde.workspace = true
+alloy-network-primitives.workspace = true
 alloy-eips = { workspace = true, features = ["serde"] }
 
 # Serde
@@ -28,9 +29,6 @@ serde_json = { workspace = true }
 # `no_std` support
 cfg-if.workspace = true
 hashbrown = { workspace = true, features = ["serde"] }
-
-# std
-alloy-network = { workspace = true, optional = true }
 
 # arbitrary
 arbitrary = { workspace = true, features = ["derive"], optional = true }
@@ -45,7 +43,7 @@ rand.workspace = true
 [features]
 default = ["std"]
 std = [
-  "dep:alloy-network",
+  "alloy-network-primitives/std",
   "alloy-eips/std",
   "alloy-primitives/std",
   "alloy-rpc-types-eth/std",

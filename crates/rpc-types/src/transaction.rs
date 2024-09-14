@@ -27,18 +27,17 @@ pub struct Transaction {
     pub deposit_receipt_version: Option<u64>,
 }
 
-#[cfg(feature = "std")]
-impl alloy_network::TransactionResponse for Transaction {
+impl alloy_network_primitives::TransactionResponse for Transaction {
+    fn tx_hash(&self) -> alloy_primitives::TxHash {
+        self.inner.tx_hash()
+    }
+
     fn from(&self) -> alloy_primitives::Address {
         self.inner.from()
     }
 
     fn to(&self) -> Option<alloy_primitives::Address> {
         self.inner.to()
-    }
-
-    fn tx_hash(&self) -> alloy_primitives::TxHash {
-        self.inner.tx_hash()
     }
 
     fn value(&self) -> alloy_primitives::U256 {
