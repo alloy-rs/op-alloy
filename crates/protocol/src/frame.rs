@@ -200,7 +200,12 @@ mod test {
 
     #[test]
     fn test_decode_exceeds_max_data_len() {
-        let frame = Frame { id: [0xFF; 16], number: 0xEE, data: vec![0xDD; MAX_FRAME_LEN + 1], is_last: true };
+        let frame = Frame {
+            id: [0xFF; 16],
+            number: 0xEE,
+            data: vec![0xDD; MAX_FRAME_LEN + 1],
+            is_last: true,
+        };
         let err = Frame::decode(&frame.encode()).unwrap_err();
         assert_eq!(err, FrameDecodingError::DataTooLarge(MAX_FRAME_LEN + 1));
     }
