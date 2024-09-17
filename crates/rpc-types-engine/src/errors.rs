@@ -5,8 +5,8 @@ use alloy_eips::eip2718::Eip2718Error;
 use alloy_primitives::B256;
 use op_alloy_protocol::block_info::DecodeError;
 
-/// An error that can occur when converting an [OptimismExecutionPayloadEnvelopeV4] to an
-/// [L2BlockInfo].
+/// An error that can occur when converting an [crate::OptimismExecutionPayloadEnvelopeV4] to an
+/// [op_alloy_protocol::L2BlockInfo].
 #[derive(Debug)]
 pub enum ToL2BlockRefError {
     /// The genesis block hash does not match the expected value.
@@ -15,11 +15,11 @@ pub enum ToL2BlockRefError {
     MissingL1InfoDeposit(B256),
     /// The first payload transaction has an unexpected type.
     UnexpectedTxType(u8),
-    /// Failed to decode the first transaction into an [OpTxEnvelope].
+    /// Failed to decode the first transaction into an [op_alloy_consensus::OpTxEnvelope].
     TxEnvelopeDecodeError(Eip2718Error),
     /// The first payload transaction is not a deposit transaction.
     FirstTxNonDeposit(u8),
-    /// Failed to decode the [L1BlockInfoTx] from the deposit transaction.
+    /// Failed to decode the [op_alloy_protocol::L1BlockInfoTx] from the deposit transaction.
     BlockInfoDecodeError(DecodeError),
 }
 
@@ -51,8 +51,8 @@ impl core::fmt::Display for ToL2BlockRefError {
     }
 }
 
-/// An error that can occur when converting an [OptimismExecutionPayloadEnvelopeV4] to a
-/// [SystemConfig].
+/// An error that can occur when converting an [crate::OptimismExecutionPayloadEnvelopeV4] to a
+/// [op_alloy_genesis::SystemConfig].
 #[derive(Debug)]
 pub enum ToSystemConfigError {
     /// The genesis block hash does not match the expected value.
@@ -61,11 +61,11 @@ pub enum ToSystemConfigError {
     MissingL1InfoDeposit(B256),
     /// The first payload transaction has an unexpected type.
     UnexpectedTxType(u8),
-    /// Failed to decode the first transaction into an [OpTxEnvelope].
+    /// Failed to decode the first transaction into an [op_alloy_consensus::OpTxEnvelope].
     TxEnvelopeDecodeError(Eip2718Error),
     /// The first payload transaction is not a deposit transaction.
     FirstTxNonDeposit(u8),
-    /// Failed to decode the [L1BlockInfoTx] from the deposit transaction.
+    /// Failed to decode the [op_alloy_protocol::L1BlockInfoTx] from the deposit transaction.
     BlockInfoDecodeError(DecodeError),
     /// Missing system config in the genesis block.
     MissingSystemConfig,
