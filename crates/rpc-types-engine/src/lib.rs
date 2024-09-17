@@ -40,13 +40,13 @@ mod errors;
 pub use errors::{ToL2BlockRefError, ToSystemConfigError};
 
 /// Converts a payload into its most inner [ExecutionPayloadV1].
-pub trait IntoInnerPayload {
+pub trait AsInnerPayload {
     /// Converts the payload into its most inner [ExecutionPayloadV1].
-    fn inner_payload(&self) -> &crate::ExecutionPayloadV1;
+    fn as_v1_payload(&self) -> alloc::borrow::Cow<'_, ExecutionPayloadV1>;
 }
 
-/// OptimismPayload trait defines conversion methods for Optimism-specific payloads.
-pub trait OptimismPayload {
+/// Defines conversion utility methods for Optimism-specific payloads.
+pub trait OptimismPayloadUtils {
     /// Converts the payload into an [L2BlockInfo].
     fn to_l2_block_ref(
         &self,
@@ -60,15 +60,15 @@ pub trait OptimismPayload {
     ) -> Result<SystemConfig, ToSystemConfigError>;
 }
 
-impl<T> OptimismPayload for T
+impl<T> OptimismPayloadUtils for T
 where
-    T: IntoInnerPayload,
+    T: AsInnerPayload,
 {
     fn to_l2_block_ref(
         &self,
         rollup_config: &RollupConfig,
     ) -> Result<L2BlockInfo, ToL2BlockRefError> {
-        let inner_payload = self.inner_payload();
+        let inner_payload = self.as_v1_payload();
 
         let (l1_origin, sequence_number) =
             if inner_payload.block_number == rollup_config.genesis.l2.number {
@@ -113,7 +113,7 @@ where
         &self,
         rollup_config: &RollupConfig,
     ) -> Result<SystemConfig, ToSystemConfigError> {
-        let inner_payload = self.inner_payload();
+        let inner_payload = self.as_v1_payload();
 
         if inner_payload.block_number == rollup_config.genesis.l2.number {
             if inner_payload.block_hash != rollup_config.genesis.l2.hash {

@@ -3,8 +3,6 @@
 use alloy_primitives::{B256, U256};
 use alloy_rpc_types_engine::{BlobsBundleV1, ExecutionPayloadV1, ExecutionPayloadV4};
 
-use crate::IntoInnerPayload;
-
 /// This structure maps for the return value of `engine_getPayload` of the beacon chain spec, for
 /// V4.
 ///
@@ -27,9 +25,11 @@ pub struct OptimismExecutionPayloadEnvelopeV4 {
     pub parent_beacon_block_root: B256,
 }
 
-impl IntoInnerPayload for OptimismExecutionPayloadEnvelopeV4 {
+impl crate::AsInnerPayload for OptimismExecutionPayloadEnvelopeV4 {
     /// Returns the inner [ExecutionPayloadV1] from the envelope.
-    fn inner_payload(&self) -> &ExecutionPayloadV1 {
-        &self.execution_payload.payload_inner.payload_inner.payload_inner
+    fn as_v1_payload(&self) -> alloc::borrow::Cow<'_, ExecutionPayloadV1> {
+        alloc::borrow::Cow::Borrowed(
+            &self.execution_payload.payload_inner.payload_inner.payload_inner,
+        )
     }
 }
