@@ -19,6 +19,8 @@ op-alloy-protocol.workspace = true
 op-alloy-genesis.workspace = true
 op-alloy-consensus.workspace = true
 
+derive_more = { workspace = true, features = ["display"] }
+
 # serde
 serde = { workspace = true, optional = true }
 alloy-serde = { workspace = true, optional = true }
