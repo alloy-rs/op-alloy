@@ -63,7 +63,8 @@ pub trait OptimismPayloadUtils {
     ///
     /// If the payload is the genesis block, it will return the system config from the genesis
     /// block. Otherwise, it will return the system config from the first deposit transaction.
-    fn to_system_config(&self, genesis: &ChainGenesis) -> Result<SystemConfig, ToSystemConfigError>;
+    fn to_system_config(&self, genesis: &ChainGenesis)
+        -> Result<SystemConfig, ToSystemConfigError>;
 }
 
 impl<T> OptimismPayloadUtils for T
@@ -111,7 +112,10 @@ where
         })
     }
 
-    fn to_system_config(&self, genesis: &ChainGenesis) -> Result<SystemConfig, ToSystemConfigError> {
+    fn to_system_config(
+        &self,
+        genesis: &ChainGenesis,
+    ) -> Result<SystemConfig, ToSystemConfigError> {
         let inner_payload = self.as_v1_payload();
 
         if inner_payload.block_number == genesis.l2.number {
