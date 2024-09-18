@@ -48,24 +48,6 @@ pub trait AsInnerPayload {
 /// Defines conversion utility methods for Optimism-specific payloads.
 pub trait OptimismPayloadUtils {
     /// Converts the payload into an [L2BlockInfo].
-    #[deprecated(since = "0.2.12", note = "Use `to_l2_block_info` instead")]
-    fn to_l2_block_ref(
-        &self,
-        rollup_config: &RollupConfig,
-    ) -> Result<L2BlockInfo, ToL2BlockRefError> {
-        self.to_l2_block_info(&rollup_config.genesis)
-    }
-
-    /// Converts the payload into a [SystemConfig].
-    #[deprecated(since = "0.2.12", note = "Use `to_sys_config` instead")]
-    fn to_system_config(
-        &self,
-        rollup_config: &RollupConfig,
-    ) -> Result<SystemConfig, ToSystemConfigError> {
-        self.to_sys_config(&rollup_config.genesis)
-    }
-
-    /// Converts the payload into an [L2BlockInfo].
     ///
     /// This method creates the [L2BlockInfo] using the inner payload
     /// fetched with the [AsInnerPayload::as_v1_payload] method.
@@ -81,7 +63,7 @@ pub trait OptimismPayloadUtils {
     ///
     /// If the payload is the genesis block, it will return the system config from the genesis
     /// block. Otherwise, it will return the system config from the first deposit transaction.
-    fn to_sys_config(&self, genesis: &ChainGenesis) -> Result<SystemConfig, ToSystemConfigError>;
+    fn to_system_config(&self, genesis: &ChainGenesis) -> Result<SystemConfig, ToSystemConfigError>;
 }
 
 impl<T> OptimismPayloadUtils for T
@@ -129,7 +111,7 @@ where
         })
     }
 
-    fn to_sys_config(&self, genesis: &ChainGenesis) -> Result<SystemConfig, ToSystemConfigError> {
+    fn to_system_config(&self, genesis: &ChainGenesis) -> Result<SystemConfig, ToSystemConfigError> {
         let inner_payload = self.as_v1_payload();
 
         if inner_payload.block_number == genesis.l2.number {
