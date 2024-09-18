@@ -29,7 +29,15 @@ pub enum ToL2BlockRefError {
     BlockInfoDecodeError(DecodeError),
 }
 
-impl core::error::Error for ToL2BlockRefError {}
+impl core::error::Error for ToL2BlockRefError {
+    fn source(&self) -> Option<&(dyn core::error::Error + 'static)> {
+        match self {
+            Self::TxEnvelopeDecodeError(err) => Some(err),
+            Self::BlockInfoDecodeError(err) => Some(err),
+            _ => None,
+        }
+    }
+}
 
 /// An error that can occur when converting an [crate::OptimismExecutionPayloadEnvelopeV4] to a
 /// [op_alloy_genesis::SystemConfig].
@@ -58,4 +66,12 @@ pub enum ToSystemConfigError {
     MissingSystemConfig,
 }
 
-impl core::error::Error for ToSystemConfigError {}
+impl core::error::Error for ToSystemConfigError {
+    fn source(&self) -> Option<&(dyn core::error::Error + 'static)> {
+        match self {
+            Self::TxEnvelopeDecodeError(err) => Some(err),
+            Self::BlockInfoDecodeError(err) => Some(err),
+            _ => None,
+        }
+    }
+}
