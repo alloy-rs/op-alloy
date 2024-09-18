@@ -5,6 +5,68 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.12](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.2.12) - 2024-09-18
+
+### Bug Fixes
+
+- No_std for op-alloy-rpc-types-engine ([#109](https://github.com/alloy-rs/op-alloy/issues/109))
+- [protocol] Invalid Frame Data Length ([#108](https://github.com/alloy-rs/op-alloy/issues/108))
+
+### Dependencies
+
+- Bump alloy 0.3.6 ([#111](https://github.com/alloy-rs/op-alloy/issues/111))
+- Bump msrv 1.81 ([#106](https://github.com/alloy-rs/op-alloy/issues/106))
+
+### Features
+
+- [engine] Payload Conversion Utilities ([#110](https://github.com/alloy-rs/op-alloy/issues/110))
+- Remove the superchain primitives dependency ([#100](https://github.com/alloy-rs/op-alloy/issues/100))
+- [rpc-types-engine] No_std Support ([#104](https://github.com/alloy-rs/op-alloy/issues/104))
+- [rpc-types] No_std Support ([#103](https://github.com/alloy-rs/op-alloy/issues/103))
+- Remove std flag over alloc ([#101](https://github.com/alloy-rs/op-alloy/issues/101))
+
+### Miscellaneous Tasks
+
+- Re-export module items ([#102](https://github.com/alloy-rs/op-alloy/issues/102))
+
+## [0.2.11](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.2.11) - 2024-09-13
+
+### Bug Fixes
+
+- Remove Block ID ([#94](https://github.com/alloy-rs/op-alloy/issues/94))
+- Issue Template ([#96](https://github.com/alloy-rs/op-alloy/issues/96))
+
+### Features
+
+- Genesis Types ([#97](https://github.com/alloy-rs/op-alloy/issues/97))
+- Attributes with parent ([#95](https://github.com/alloy-rs/op-alloy/issues/95))
+
+### Miscellaneous Tasks
+
+- Release 0.2.11
+
+### Other
+
+- Make `l1_origin` in `L2BlockRef` a struct instead of an enum ([#91](https://github.com/alloy-rs/op-alloy/issues/91))
+
+## [0.2.10](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.2.10) - 2024-09-13
+
+### Dependencies
+
+- Bump alloy ([#98](https://github.com/alloy-rs/op-alloy/issues/98))
+
+### Features
+
+- [rpc-types] Replace u8 with Connectedness Enum ([#84](https://github.com/alloy-rs/op-alloy/issues/84))
+- Feat(protocol) add block information module ([#82](https://github.com/alloy-rs/op-alloy/issues/82))
+
+### Miscellaneous Tasks
+
+- Release 0.2.10
+
 ## [0.2.9](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.2.9) - 2024-09-09
 
@@ -33,6 +95,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.2.9
 - Cleanup depositerror ([#87](https://github.com/alloy-rs/op-alloy/issues/87))
 
 ## [0.2.8](https://github.com/alloy-rs/op-alloy

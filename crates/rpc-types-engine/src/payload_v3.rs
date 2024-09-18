@@ -1,35 +1,16 @@
-use alloy_primitives::{Bytes, B256, U256};
-use alloy_rpc_types_engine::{
-    BlobsBundleV1, ExecutionPayloadV3, ExecutionPayloadV4, PayloadAttributes,
-};
-use serde::{Deserialize, Serialize};
+//! Optimism execution payload envelope V3.
 
-/// Optimism Payload Attributes
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct OptimismPayloadAttributes {
-    /// The payload attributes
-    #[serde(flatten)]
-    pub payload_attributes: PayloadAttributes,
-    /// Transactions is a field for rollups: the transactions list is forced into the block
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub transactions: Option<Vec<Bytes>>,
-    /// If true, the no transactions are taken out of the tx-pool, only transactions from the above
-    /// Transactions list will be included.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub no_tx_pool: Option<bool>,
-    /// If set, this sets the exact gas limit the block produced with.
-    #[serde(skip_serializing_if = "Option::is_none", with = "alloy_serde::quantity::opt")]
-    pub gas_limit: Option<u64>,
-}
+use alloy_primitives::{B256, U256};
+use alloy_rpc_types_engine::{BlobsBundleV1, ExecutionPayloadV1, ExecutionPayloadV3};
 
 /// This structure maps for the return value of `engine_getPayload` of the beacon chain spec, for
 /// V3.
 ///
 /// See also:
 /// [Optimism execution payload envelope v3] <https://github.com/ethereum-optimism/specs/blob/main/specs/protocol/exec-engine.md#engine_getpayloadv3>
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct OptimismExecutionPayloadEnvelopeV3 {
     /// Execution payload V3
     pub execution_payload: ExecutionPayloadV3,
@@ -44,25 +25,11 @@ pub struct OptimismExecutionPayloadEnvelopeV3 {
     pub parent_beacon_block_root: B256,
 }
 
-/// This structure maps for the return value of `engine_getPayload` of the beacon chain spec, for
-/// V4.
-///
-/// See also:
-/// [Optimism execution payload envelope v4] <https://github.com/ethereum-optimism/specs/blob/main/specs/protocol/exec-engine.md#engine_getpayloadv4>
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct OptimismExecutionPayloadEnvelopeV4 {
-    /// Execution payload V4
-    pub execution_payload: ExecutionPayloadV4,
-    /// The expected value to be received by the feeRecipient in wei
-    pub block_value: U256,
-    /// The blobs, commitments, and proofs associated with the executed payload.
-    pub blobs_bundle: BlobsBundleV1,
-    /// Introduced in V3, this represents a suggestion from the execution layer if the payload
-    /// should be used instead of an externally provided one.
-    pub should_override_builder: bool,
-    /// Ecotone parent beacon block root
-    pub parent_beacon_block_root: B256,
+impl crate::AsInnerPayload for OptimismExecutionPayloadEnvelopeV3 {
+    /// Returns the inner [ExecutionPayloadV1] from the envelope.
+    fn as_v1_payload(&self) -> alloc::borrow::Cow<'_, ExecutionPayloadV1> {
+        alloc::borrow::Cow::Borrowed(&self.execution_payload.payload_inner.payload_inner)
+    }
 }
 
 #[cfg(test)]
@@ -70,6 +37,7 @@ mod tests {
     use super::*;
 
     #[test]
+    #[cfg(feature = "serde")]
     fn serde_roundtrip_execution_payload_envelope_v3() {
         // pulled from a geth response getPayloadV3 in hive tests, modified to add a mock parent
         // beacon block root.
