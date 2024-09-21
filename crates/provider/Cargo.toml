@@ -22,26 +22,11 @@ alloy-provider.workspace = true
 alloy-network.workspace = true
 alloy-transport.workspace = true
 
-# arbitrary
-arbitrary = { workspace = true, features = ["derive"], optional = true }
-
 # misc
 async-trait = "0.1.82"
-
-[dev-dependencies]
-alloy-primitives = { workspace = true, features = ["arbitrary"] }
-alloy-consensus = { workspace = true, features = ["arbitrary"] }
-alloy-rpc-types = { workspace = true, features = ["arbitrary"] }
-arbitrary = { workspace = true, features = ["derive"] }
-rand.workspace = true
 
 [features]
 default = ["std"]
 std = [
   "alloy-primitives/std",
-]
-arbitrary = [
-  "std",
-  "dep:arbitrary",
-  "alloy-primitives/arbitrary",
 ]
