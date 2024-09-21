@@ -33,7 +33,7 @@ pub struct SuperchainSignal {
 /// said hardforks.
 ///
 /// The Protocol Version is Semver-compatible. It is encoded as a single 32 bytes long
-/// <protocol version>. The version must be encoded as 32 bytes of DATA in JSON RPC usage.
+/// protocol version. The version must be encoded as 32 bytes of DATA in JSON RPC usage.
 ///
 /// See also: <https://specs.optimism.io/protocol/superchain-upgrades.html#protocol-version>
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
