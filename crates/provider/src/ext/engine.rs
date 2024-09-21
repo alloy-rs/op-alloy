@@ -128,7 +128,7 @@ pub trait OpEngineApi<N, T>: Send + Sync {
     /// > Provider software MAY stop the corresponding build process after serving this call.
     ///
     /// OP modifications:
-    /// - the response type is extended to [`ExecutionPayloadEnvelopeV4`].
+    /// - the response type is extended to [`OptimismExecutionPayloadEnvelopeV4`].
     async fn get_payload_v4(
         &self,
         payload_id: PayloadId,
