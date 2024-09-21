@@ -20,11 +20,11 @@ op-alloy-genesis.workspace = true
 op-alloy-consensus.workspace = true
 
 derive_more = { workspace = true, features = ["display"] }
+cfg-if.workspace = true
 
 # serde
 serde = { workspace = true, optional = true }
 alloy-serde = { workspace = true, optional = true }
-cfg-if = { version = "1.0" }
 
 [dev-dependencies]
 serde_json.workspace = true
