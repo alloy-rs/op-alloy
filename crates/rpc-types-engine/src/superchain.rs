@@ -43,6 +43,14 @@ pub enum ProtocolVersion {
     V0(ProtocolVersionFormatV0),
 }
 
+impl core::fmt::Display for ProtocolVersion {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        match self {
+            ProtocolVersion::V0(value) => write!(f, "{}", value),
+        }
+    }
+}
+
 #[derive(Copy, Clone, Debug, Display, From)]
 pub enum ProtocolVersionError {
     #[display("Unsupported version: {}", _0)]
@@ -139,6 +147,13 @@ impl ProtocolVersion {
             ProtocolVersion::V0(value) => value.pre_release,
         }
     }
+
+    /// Returns a human-readable string representation of the ProtocolVersion
+    pub fn display(&self) -> String {
+        match self {
+            ProtocolVersion::V0(value) => format!("{}", value),
+        }
+    }
 }
 
 #[cfg(feature = "serde")]
@@ -176,18 +191,18 @@ pub struct ProtocolVersionFormatV0 {
     pub pre_release: u32,
 }
 
-#[cfg(feature = "std")]
-impl std::fmt::Display for ProtocolVersionFormatV0 {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "v{major}.{minor}.{patch}-{pre_release}+{build}",
-            major = self.major,
-            minor = self.minor,
-            patch = self.patch,
-            pre_release = self.pre_release,
-            build = self.build,
-        )
+impl core::fmt::Display for ProtocolVersionFormatV0 {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        let build_tag = if self.build.0.iter().any(|&byte| byte != 0) {
+            format!("+{}", self.build)
+        } else {
+            String::new()
+        };
+
+        let pre_release_tag =
+            if self.pre_release != 0 { format!("-{}", self.pre_release) } else { String::new() };
+
+        write!(f, "v{}.{}.{}{}{}", self.major, self.minor, self.patch, pre_release_tag, build_tag)
     }
 }
 
@@ -237,5 +252,77 @@ impl ProtocolVersionFormatV0 {
             patch: u32::from_be_bytes(value[23..27].try_into()?),
             pre_release: u32::from_be_bytes(value[27..31].try_into()?),
         })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use alloy_primitives::b256;
+
+    use super::*;
+
+    #[test]
+    fn test_protocol_version_encode_decode() {
+        let test_cases = vec![
+            (
+                ProtocolVersion::V0(ProtocolVersionFormatV0 {
+                    build: B64::from_slice(&[0x61, 0x62, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00]),
+                    major: 42,
+                    minor: 0,
+                    patch: 2,
+                    pre_release: 0,
+                }),
+                "v42.0.2+0x6162010000000000",
+                b256!("000000000000000061620100000000000000002a000000000000000200000000"),
+            ),
+            (
+                ProtocolVersion::V0(ProtocolVersionFormatV0 {
+                    build: B64::from_slice(&[0x61, 0x62, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00]),
+                    major: 42,
+                    minor: 0,
+                    patch: 2,
+                    pre_release: 1,
+                }),
+                "v42.0.2-1+0x6162010000000000",
+                b256!("000000000000000061620100000000000000002a000000000000000200000001"),
+            ),
+            (
+                ProtocolVersion::V0(ProtocolVersionFormatV0 {
+                    build: B64::from_slice(&[0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08]),
+                    major: 42,
+                    minor: 0,
+                    patch: 2,
+                    pre_release: 0,
+                }),
+                "v42.0.2+0x0102030405060708",
+                b256!("000000000000000001020304050607080000002a000000000000000200000000"),
+            ),
+            (
+                ProtocolVersion::V0(ProtocolVersionFormatV0 {
+                    build: B64::from_slice(&[0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]),
+                    major: 0,
+                    minor: 100,
+                    patch: 2,
+                    pre_release: 0,
+                }),
+                "v0.100.2",
+                b256!("0000000000000000000000000000000000000000000000640000000200000000"),
+            ),
+        ];
+
+        for (decoded_exp, formatted_exp, encoded_exp) in test_cases {
+            encode_decode_v0(encoded_exp, formatted_exp, decoded_exp);
+        }
+    }
+
+    fn encode_decode_v0(encoded_exp: B256, formatted_exp: &str, decoded_exp: ProtocolVersion) {
+        let decoded = ProtocolVersion::decode(encoded_exp).unwrap();
+        assert_eq!(decoded, decoded_exp);
+
+        let encoded = decoded.encode();
+        assert_eq!(encoded, encoded_exp);
+
+        let formatted = decoded.display();
+        assert_eq!(formatted, formatted_exp);
     }
 }
