@@ -20,7 +20,7 @@ op-alloy-genesis.workspace = true
 op-alloy-consensus.workspace = true
 
 derive_more = { workspace = true, features = ["display"] }
-cfg-if.workspace = true
+thiserror.workspace = true
 
 # serde
 serde = { workspace = true, optional = true }
