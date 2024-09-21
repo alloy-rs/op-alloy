@@ -90,6 +90,55 @@ impl ProtocolVersion {
             other => Err(ProtocolVersionError::UnsupportedVersion(other)),
         }
     }
+
+    /// Returns the inner value of the ProtocolVersion enum
+    pub const fn inner(&self) -> ProtocolVersionFormatV0 {
+        match self {
+            ProtocolVersion::V0(value) => *value,
+        }
+    }
+
+    /// Returns the inner value of the ProtocolVersion enum if it is V0, otherwise None
+    pub const fn as_v0(&self) -> Option<ProtocolVersionFormatV0> {
+        match self {
+            ProtocolVersion::V0(value) => Some(*value),
+        }
+    }
+
+    /// Differentiates forks and custom-builds of standard protocol
+    pub const fn build(&self) -> B64 {
+        match self {
+            ProtocolVersion::V0(value) => value.build,
+        }
+    }
+
+    /// Incompatible API changes
+    pub const fn major(&self) -> u32 {
+        match self {
+            ProtocolVersion::V0(value) => value.major,
+        }
+    }
+
+    /// Identifies additional functionality in backwards compatible manner
+    pub const fn minor(&self) -> u32 {
+        match self {
+            ProtocolVersion::V0(value) => value.minor,
+        }
+    }
+
+    /// Identifies backward-compatible bug-fixes
+    pub const fn patch(&self) -> u32 {
+        match self {
+            ProtocolVersion::V0(value) => value.patch,
+        }
+    }
+
+    /// Identifies unstable versions that may not satisfy the above
+    pub const fn pre_release(&self) -> u32 {
+        match self {
+            ProtocolVersion::V0(value) => value.pre_release,
+        }
+    }
 }
 
 #[cfg(feature = "serde")]
@@ -115,10 +164,15 @@ impl<'de> serde::Deserialize<'de> for ProtocolVersion {
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct ProtocolVersionFormatV0 {
+    /// Differentiates forks and custom-builds of standard protocol
     pub build: B64,
+    /// Incompatible API changes
     pub major: u32,
+    /// Identifies additional functionality in backwards compatible manner
     pub minor: u32,
+    /// Identifies backward-compatible bug-fixes
     pub patch: u32,
+    /// Identifies unstable versions that may not satisfy the above
     pub pre_release: u32,
 }
 
@@ -127,12 +181,12 @@ impl std::fmt::Display for ProtocolVersionFormatV0 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "{build}.{major}.{minor}.{patch}-{pre_release}",
-            build = self.build,
+            "v{major}.{minor}.{patch}-{pre_release}+{build}",
             major = self.major,
             minor = self.minor,
             patch = self.patch,
-            pre_release = self.pre_release
+            pre_release = self.pre_release,
+            build = self.build,
         )
     }
 }
