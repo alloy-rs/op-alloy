@@ -24,6 +24,7 @@ derive_more = { workspace = true, features = ["display"] }
 # serde
 serde = { workspace = true, optional = true }
 alloy-serde = { workspace = true, optional = true }
+cfg-if = { version = "1.0" }
 
 [dev-dependencies]
 serde_json.workspace = true
