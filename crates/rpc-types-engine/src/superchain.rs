@@ -45,43 +45,46 @@ pub enum ProtocolVersion {
 pub enum ProtocolVersionError {
     #[error("Unsupported version: {0}")]
     UnsupportedVersion(u8),
-    #[error("Invalid version format length. Got {0}, expected 31")]
-    InvalidLength(usize),
+    #[error("Invalid version format length. Got {0}, expected {1}")]
+    InvalidLength(usize, usize),
     #[error("Invalid version format encoding")]
     FromSlice(#[from] core::array::TryFromSliceError),
 }
 
 #[cfg(feature = "std")]
-impl From<ProtocolVersion> for alloy_primitives::B256 {
-    fn from(value: ProtocolVersion) -> alloy_primitives::B256 {
+impl ProtocolVersion {
+    /// Version-type 0 byte encoding:
+    ///
+    /// ```text
+    /// <protocol version> ::= <version-type><typed-payload>
+    /// <version-type> ::= <uint8>
+    /// <typed-payload> ::= <31 bytes>
+    /// ```
+    pub fn encode(&self) -> alloy_primitives::B256 {
         let mut bytes = [0u8; 32];
 
-        // <protocol version> ::= <version-type><typed-payload>
-        // <version-type> ::= <uint8>
-        // <typed-payload> ::= <31 bytes>
-        match value {
+        match self {
             ProtocolVersion::V0(value) => {
                 bytes[0] = 0x00; // this is not necessary, but addded for clarity
-                bytes[1..].copy_from_slice(&value.into_slice());
+                bytes[1..].copy_from_slice(&value.encode());
                 alloy_primitives::B256::from_slice(&bytes)
             }
         }
     }
-}
 
-#[cfg(feature = "std")]
-impl TryFrom<alloy_primitives::B256> for ProtocolVersion {
-    type Error = ProtocolVersionError;
-
-    fn try_from(value: alloy_primitives::B256) -> Result<Self, Self::Error> {
-        // <protocol version> ::= <version-type><typed-payload>
-        // <version-type> ::= <uint8>
-        // <typed-payload> ::= <31 bytes>
+    /// Version-type 0 byte decoding:
+    ///
+    /// ```text
+    /// <protocol version> ::= <version-type><typed-payload>
+    /// <version-type> ::= <uint8>
+    /// <typed-payload> ::= <31 bytes>
+    /// ```
+    pub fn decode(value: alloy_primitives::B256) -> Result<Self, ProtocolVersionError> {
         let version_type = value[0];
         let typed_payload = &value[1..];
 
         match version_type {
-            0 => Ok(Self::V0(ProtocolVersionFormatV0::try_from_slice(typed_payload)?)),
+            0 => Ok(Self::V0(ProtocolVersionFormatV0::decode(typed_payload)?)),
             other => Err(ProtocolVersionError::UnsupportedVersion(other)),
         }
     }
@@ -93,7 +96,7 @@ impl serde::Serialize for ProtocolVersion {
     where
         S: serde::Serializer,
     {
-        alloy_primitives::B256::from(*self).serialize(serializer)
+        self.encode().serialize(serializer)
     }
 }
 
@@ -104,7 +107,7 @@ impl<'de> serde::Deserialize<'de> for ProtocolVersion {
         D: serde::Deserializer<'de>,
     {
         let value = alloy_primitives::B256::deserialize(deserializer)?;
-        Self::try_from(value).map_err(serde::de::Error::custom)
+        ProtocolVersion::decode(value).map_err(serde::de::Error::custom)
     }
 }
 
@@ -145,7 +148,7 @@ impl ProtocolVersionFormatV0 {
     /// <patch> ::= <big-endian uint32>
     /// <pre-release> ::= <big-endian uint32>
     /// ```
-    pub fn into_slice(self) -> [u8; 31] {
+    pub fn encode(&self) -> [u8; 31] {
         let mut bytes = [0u8; 31];
         bytes[0..7].copy_from_slice(&[0u8; 7]);
         bytes[7..15].copy_from_slice(&self.build.0);
@@ -167,9 +170,9 @@ impl ProtocolVersionFormatV0 {
     /// <patch> ::= <big-endian uint32>
     /// <pre-release> ::= <big-endian uint32>
     /// ```
-    fn try_from_slice(value: &[u8]) -> Result<Self, ProtocolVersionError> {
+    fn decode(value: &[u8]) -> Result<Self, ProtocolVersionError> {
         if value.len() != 31 {
-            return Err(ProtocolVersionError::InvalidLength(value.len()));
+            return Err(ProtocolVersionError::InvalidLength(value.len(), 31));
         }
 
         Ok(Self {
