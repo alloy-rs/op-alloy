@@ -1,6 +1,4 @@
-use core::array::TryFromSliceError;
-
-use alloy_primitives::{B256, B64};
+use alloy_primitives::B64;
 
 /// Superchain Signal information.
 ///
@@ -42,6 +40,7 @@ pub enum ProtocolVersion {
     V0(ProtocolVersionFormatV0),
 }
 
+#[cfg(feature = "std")]
 #[derive(Copy, Clone, Debug, thiserror::Error)]
 pub enum ProtocolVersionError {
     #[error("Unsupported version: {0}")]
@@ -49,30 +48,32 @@ pub enum ProtocolVersionError {
     #[error("Invalid version format length. Got {0}, expected 31")]
     InvalidLength(usize),
     #[error("Invalid version format encoding")]
-    FromSlice(#[from] TryFromSliceError),
+    FromSlice(#[from] core::array::TryFromSliceError),
 }
 
-impl From<ProtocolVersion> for B256 {
-    fn from(value: ProtocolVersion) -> B256 {
+#[cfg(feature = "std")]
+impl From<ProtocolVersion> for alloy_primitives::B256 {
+    fn from(value: ProtocolVersion) -> alloy_primitives::B256 {
         let mut bytes = [0u8; 32];
 
+        // <protocol version> ::= <version-type><typed-payload>
+        // <version-type> ::= <uint8>
+        // <typed-payload> ::= <31 bytes>
         match value {
             ProtocolVersion::V0(value) => {
-                // <protocol version> ::= <version-type><typed-payload>
-                // <version-type> ::= <uint8>
-                // <typed-payload> ::= <31 bytes>
                 bytes[0] = 0x00; // this is not necessary, but addded for clarity
                 bytes[1..].copy_from_slice(&value.into_slice());
-                B256::from_slice(&bytes)
+                alloy_primitives::B256::from_slice(&bytes)
             }
         }
     }
 }
 
-impl TryFrom<B256> for ProtocolVersion {
+#[cfg(feature = "std")]
+impl TryFrom<alloy_primitives::B256> for ProtocolVersion {
     type Error = ProtocolVersionError;
 
-    fn try_from(value: B256) -> Result<Self, Self::Error> {
+    fn try_from(value: alloy_primitives::B256) -> Result<Self, Self::Error> {
         // <protocol version> ::= <version-type><typed-payload>
         // <version-type> ::= <uint8>
         // <typed-payload> ::= <31 bytes>
@@ -92,7 +93,7 @@ impl serde::Serialize for ProtocolVersion {
     where
         S: serde::Serializer,
     {
-        B256::from(*self).serialize(serializer)
+        alloy_primitives::B256::from(*self).serialize(serializer)
     }
 }
 
@@ -102,7 +103,7 @@ impl<'de> serde::Deserialize<'de> for ProtocolVersion {
     where
         D: serde::Deserializer<'de>,
     {
-        let value = B256::deserialize(deserializer)?;
+        let value = alloy_primitives::B256::deserialize(deserializer)?;
         Self::try_from(value).map_err(serde::de::Error::custom)
     }
 }
@@ -116,6 +117,7 @@ pub struct ProtocolVersionFormatV0 {
     pub pre_release: u32,
 }
 
+#[cfg(feature = "std")]
 impl std::fmt::Display for ProtocolVersionFormatV0 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
@@ -130,6 +132,7 @@ impl std::fmt::Display for ProtocolVersionFormatV0 {
     }
 }
 
+#[cfg(feature = "std")]
 impl ProtocolVersionFormatV0 {
     /// Version-type 0 byte encoding:
     ///

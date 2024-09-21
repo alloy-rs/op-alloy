@@ -20,7 +20,7 @@ op-alloy-genesis.workspace = true
 op-alloy-consensus.workspace = true
 
 derive_more = { workspace = true, features = ["display"] }
-thiserror.workspace = true
+thiserror = { workspace = true, optional = true }
 
 # serde
 serde = { workspace = true, optional = true }
@@ -32,6 +32,7 @@ serde_json.workspace = true
 [features]
 default = ["std", "serde"]
 std = [
+  "dep:thiserror",
   "alloy-primitives/std",
   "alloy-rpc-types-engine/std",
   "op-alloy-protocol/std",
