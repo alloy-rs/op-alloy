@@ -24,9 +24,3 @@ alloy-transport.workspace = true
 
 # misc
 async-trait = "0.1.82"
-
-[features]
-default = ["std"]
-std = [
-  "alloy-primitives/std",
-]
