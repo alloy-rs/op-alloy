@@ -1,4 +1,7 @@
-use alloy_primitives::B64;
+use core::array::TryFromSliceError;
+
+use alloy_primitives::{B256, B64};
+use derive_more::derive::{Display, From};
 
 /// Superchain Signal information.
 ///
@@ -40,18 +43,17 @@ pub enum ProtocolVersion {
     V0(ProtocolVersionFormatV0),
 }
 
-#[cfg(feature = "std")]
-#[derive(Copy, Clone, Debug, thiserror::Error)]
+#[derive(Copy, Clone, Debug, Display, From)]
 pub enum ProtocolVersionError {
-    #[error("Unsupported version: {0}")]
+    #[display("Unsupported version: {}", _0)]
     UnsupportedVersion(u8),
-    #[error("Invalid version format length. Got {0}, expected {1}")]
-    InvalidLength(usize, usize),
-    #[error("Invalid version format encoding")]
-    FromSlice(#[from] core::array::TryFromSliceError),
+    #[display("Invalid length: got {}, expected {}", got, expected)]
+    InvalidLength { got: usize, expected: usize },
+    #[display("Failed to convert slice to array")]
+    #[from(TryFromSliceError)]
+    TryFromSlice,
 }
 
-#[cfg(feature = "std")]
 impl ProtocolVersion {
     /// Version-type 0 byte encoding:
     ///
@@ -60,14 +62,14 @@ impl ProtocolVersion {
     /// <version-type> ::= <uint8>
     /// <typed-payload> ::= <31 bytes>
     /// ```
-    pub fn encode(&self) -> alloy_primitives::B256 {
+    pub fn encode(&self) -> B256 {
         let mut bytes = [0u8; 32];
 
         match self {
             ProtocolVersion::V0(value) => {
                 bytes[0] = 0x00; // this is not necessary, but addded for clarity
                 bytes[1..].copy_from_slice(&value.encode());
-                alloy_primitives::B256::from_slice(&bytes)
+                B256::from_slice(&bytes)
             }
         }
     }
@@ -79,7 +81,7 @@ impl ProtocolVersion {
     /// <version-type> ::= <uint8>
     /// <typed-payload> ::= <31 bytes>
     /// ```
-    pub fn decode(value: alloy_primitives::B256) -> Result<Self, ProtocolVersionError> {
+    pub fn decode(value: B256) -> Result<Self, ProtocolVersionError> {
         let version_type = value[0];
         let typed_payload = &value[1..];
 
@@ -135,7 +137,6 @@ impl std::fmt::Display for ProtocolVersionFormatV0 {
     }
 }
 
-#[cfg(feature = "std")]
 impl ProtocolVersionFormatV0 {
     /// Version-type 0 byte encoding:
     ///
@@ -172,7 +173,7 @@ impl ProtocolVersionFormatV0 {
     /// ```
     fn decode(value: &[u8]) -> Result<Self, ProtocolVersionError> {
         if value.len() != 31 {
-            return Err(ProtocolVersionError::InvalidLength(value.len(), 31));
+            return Err(ProtocolVersionError::InvalidLength { got: value.len(), expected: 31 });
         }
 
         Ok(Self {
