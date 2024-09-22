@@ -1,4 +1,7 @@
-use alloc::{format, string::String};
+use alloc::{
+    format,
+    string::{String, ToString},
+};
 use core::array::TryFromSliceError;
 
 use alloy_primitives::{B256, B64};
