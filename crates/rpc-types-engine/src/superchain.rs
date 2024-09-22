@@ -178,6 +178,18 @@ impl<'de> serde::Deserialize<'de> for ProtocolVersion {
     }
 }
 
+/// The Protocol Version V0 format.
+/// Encoded as 31 bytes with the following structure:
+///
+/// ```text
+/// <reserved><build><major><minor><patch><pre-release>
+/// <reserved> ::= <7 zeroed bytes>
+/// <build> ::= <8 bytes>
+/// <major> ::= <big-endian uint32>
+/// <minor> ::= <big-endian uint32>
+/// <patch> ::= <big-endian uint32>
+/// <pre-release> ::= <big-endian uint32>
+/// ```
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct ProtocolVersionFormatV0 {
     /// Differentiates forks and custom-builds of standard protocol
@@ -195,7 +207,12 @@ pub struct ProtocolVersionFormatV0 {
 impl core::fmt::Display for ProtocolVersionFormatV0 {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         let build_tag = if self.build.0.iter().any(|&byte| byte != 0) {
-            format!("+{}", self.build)
+            if is_human_readable_build_tag(self.build) {
+                let full = format!("+{}", String::from_utf8_lossy(&self.build.0));
+                full.trim_end_matches('\0').to_string()
+            } else {
+                format!("+{}", self.build)
+            }
         } else {
             String::new()
         };
@@ -256,6 +273,25 @@ impl ProtocolVersionFormatV0 {
     }
 }
 
+/// Returns true if the build tag is human-readable, false otherwise.
+fn is_human_readable_build_tag(build: B64) -> bool {
+    for (i, &c) in build.iter().enumerate() {
+        if c == 0 {
+            // Trailing zeros are allowed
+            if build[i..].iter().any(|&d| d != 0) {
+                return false;
+            }
+            return true;
+        }
+
+        // following semver.org advertised regex, alphanumeric with '-' and '.', except leading '.'.
+        if !(c.is_ascii_alphanumeric() || c == b'-' || (c == b'.' && i > 0)) {
+            return false;
+        }
+    }
+    true
+}
+
 #[cfg(test)]
 mod tests {
     use alloy_primitives::b256;
@@ -308,6 +344,39 @@ mod tests {
                 }),
                 "v0.100.2",
                 b256!("0000000000000000000000000000000000000000000000640000000200000000"),
+            ),
+            (
+                ProtocolVersion::V0(ProtocolVersionFormatV0 {
+                    build: B64::from_slice(&[b'O', b'P', b'-', b'm', b'o', b'd', 0x00, 0x00]),
+                    major: 42,
+                    minor: 0,
+                    patch: 2,
+                    pre_release: 1,
+                }),
+                "v42.0.2-1+OP-mod",
+                b256!("00000000000000004f502d6d6f6400000000002a000000000000000200000001"),
+            ),
+            (
+                ProtocolVersion::V0(ProtocolVersionFormatV0 {
+                    build: B64::from_slice(&[b'a', b'b', 0x01, 0x00, 0x00, 0x00, 0x00, 0x00]),
+                    major: 42,
+                    minor: 0,
+                    patch: 2,
+                    pre_release: 0,
+                }),
+                "v42.0.2+0x6162010000000000", // do not render invalid alpha numeric
+                b256!("000000000000000061620100000000000000002a000000000000000200000000"),
+            ),
+            (
+                ProtocolVersion::V0(ProtocolVersionFormatV0 {
+                    build: B64::from_slice(b"beta.123"),
+                    major: 1,
+                    minor: 0,
+                    patch: 0,
+                    pre_release: 0,
+                }),
+                "v1.0.0+beta.123",
+                b256!("0000000000000000626574612e31323300000001000000000000000000000000"),
             ),
         ];
 
