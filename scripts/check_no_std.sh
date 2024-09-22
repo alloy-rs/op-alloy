@@ -4,6 +4,9 @@ set -eo pipefail
 no_std_packages=(
   op-alloy-consensus
   op-alloy-protocol
+  op-alloy-genesis
+  op-alloy-rpc-types
+  op-alloy-rpc-types-engine
 )
 
 for package in "${no_std_packages[@]}"; do
