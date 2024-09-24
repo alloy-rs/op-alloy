@@ -380,6 +380,9 @@ impl L1BlockInfoTx {
             L1_INFO_TX_SELECTOR_ECOTONE => L1BlockInfoEcotone::decode_calldata(r)
                 .map(Self::Ecotone)
                 .map_err(|e| DecodeError::ParseError(format!("Ecotone decode error: {}", e))),
+            L1_INFO_TX_SELECTOR_HOLOCENE => L1BlockInfoHolocene::decode_calldata(r)
+                .map(Self::Holocene)
+                .map_err(|e| DecodeError::ParseError(format!("Holocene decode error: {}", e))),
             _ => Err(DecodeError::InvalidSelector),
         }
     }
