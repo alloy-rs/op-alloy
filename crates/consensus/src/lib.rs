@@ -30,3 +30,6 @@ pub use transaction::{
 
 pub mod hardforks;
 pub use hardforks::Hardforks;
+
+mod block;
+pub use block::OpBlock;
