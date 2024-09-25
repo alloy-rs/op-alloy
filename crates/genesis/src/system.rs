@@ -501,6 +501,56 @@ mod test {
     }
 
     #[test]
+    fn test_system_config_update_with_receipts_unchanged() {
+        let mut system_config = SystemConfig::default();
+        let receipts = vec![];
+        let l1_system_config_address = Address::ZERO;
+        let ecotone_active = false;
+
+        system_config
+            .update_with_receipts(&receipts, l1_system_config_address, ecotone_active)
+            .unwrap();
+
+        assert_eq!(system_config, SystemConfig::default());
+    }
+
+    #[test]
+    fn test_system_config_update_with_receipts_batcher_address() {
+        const UPDATE_TYPE: B256 =
+            b256!("0000000000000000000000000000000000000000000000000000000000000000");
+        let mut system_config = SystemConfig::default();
+        let l1_system_config_address = Address::ZERO;
+        let ecotone_active = false;
+
+        let update_log = Log {
+            address: Address::ZERO,
+            data: LogData::new_unchecked(
+                vec![
+                    CONFIG_UPDATE_TOPIC,
+                    CONFIG_UPDATE_EVENT_VERSION_0,
+                    UPDATE_TYPE,
+                ],
+                hex!("00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000beef").into()
+            )
+        };
+
+        let receipt = Receipt {
+            logs: vec![update_log],
+            status: Eip658Value::Eip658(true),
+            cumulative_gas_used: 0u128,
+        };
+
+        system_config
+            .update_with_receipts(&[receipt], l1_system_config_address, ecotone_active)
+            .unwrap();
+
+        assert_eq!(
+            system_config.batcher_address,
+            address!("000000000000000000000000000000000000bEEF"),
+        );
+    }
+
+    #[test]
     fn test_system_config_update_batcher_log() {
         const UPDATE_TYPE: B256 =
             b256!("0000000000000000000000000000000000000000000000000000000000000000");
