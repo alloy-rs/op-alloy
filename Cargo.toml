@@ -27,6 +27,19 @@ option_if_let_else = "warn"
 all-features = true
 rustdoc-args = ["--cfg", "docsrs"]
 
+[patch.crates-io]
+alloy-consensus = { git = "https://github.com/alloy-rs/alloy", branch = "main" }
+alloy-network = { git = "https://github.com/alloy-rs/alloy", branch = "main" }
+alloy-network-primitives = { git = "https://github.com/alloy-rs/alloy", branch = "main" }
+alloy-rpc-types = { git = "https://github.com/alloy-rs/alloy", branch = "main" }
+alloy-rpc-types-eth = { git = "https://github.com/alloy-rs/alloy", branch = "main" }
+alloy-rpc-types-engine = { git = "https://github.com/alloy-rs/alloy", branch = "main" }
+alloy-eips = { git = "https://github.com/alloy-rs/alloy", branch = "main" }
+alloy-serde = { git = "https://github.com/alloy-rs/alloy", branch = "main" }
+alloy-signer = { git = "https://github.com/alloy-rs/alloy", branch = "main" }
+alloy-provider = { git = "https://github.com/alloy-rs/alloy", branch = "main" }
+alloy-transport = { git = "https://github.com/alloy-rs/alloy", branch = "main" }
+
 [workspace.dependencies]
 # Alloy
 op-alloy-rpc-jsonrpsee = { version = "0.2.12", path = "crates/rpc-jsonrpsee" }
