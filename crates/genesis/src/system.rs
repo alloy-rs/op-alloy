@@ -67,8 +67,8 @@ impl SystemConfig {
     pub fn update_with_receipts(
         &mut self,
         receipts: &[Receipt],
-        rollup_config: &RollupConfig,
-        l1_time: u64,
+        l1_system_config_address: Address,
+        ecotone_active: bool,
     ) -> Result<(), SystemConfigUpdateError> {
         for receipt in receipts {
             if Eip658Value::Eip658(false) == receipt.status {
@@ -77,12 +77,12 @@ impl SystemConfig {
 
             receipt.logs.iter().try_for_each(|log| {
                 let topics = log.topics();
-                if log.address == rollup_config.l1_system_config_address
+                if log.address == l1_system_config_address
                     && !topics.is_empty()
                     && topics[0] == CONFIG_UPDATE_TOPIC
                 {
                     // Safety: Error is bubbled up by the trailing `?`
-                    self.process_config_update_log(log, rollup_config, l1_time)?;
+                    self.process_config_update_log(log, ecotone_active)?;
                 }
                 Ok(())
             })?;
@@ -105,8 +105,7 @@ impl SystemConfig {
     fn process_config_update_log(
         &mut self,
         log: &Log,
-        rollup_config: &RollupConfig,
-        l1_time: u64,
+        ecotone_active: bool,
     ) -> Result<SystemConfigUpdateType, SystemConfigUpdateError> {
         // Validate the log
         if log.topics().len() < 3 {
@@ -139,7 +138,7 @@ impl SystemConfig {
                 self.update_batcher_address(log_data).map_err(SystemConfigUpdateError::Batcher)
             }
             SystemConfigUpdateType::GasConfig => self
-                .update_gas_config(log_data, rollup_config, l1_time)
+                .update_gas_config(log_data, ecotone_active)
                 .map_err(SystemConfigUpdateError::GasConfig),
             SystemConfigUpdateType::GasLimit => {
                 self.update_gas_limit(log_data).map_err(SystemConfigUpdateError::GasLimit)
@@ -185,8 +184,7 @@ impl SystemConfig {
     fn update_gas_config(
         &mut self,
         log_data: &[u8],
-        rollup_config: &RollupConfig,
-        l1_time: u64,
+        ecotone_active: bool,
     ) -> Result<SystemConfigUpdateType, GasConfigUpdateError> {
         if log_data.len() != 128 {
             return Err(GasConfigUpdateError::InvalidDataLen(log_data.len()));
@@ -212,20 +210,18 @@ impl SystemConfig {
             return Err(GasConfigUpdateError::ScalarDecodingError);
         };
 
-        if rollup_config.is_ecotone_active(l1_time) {
-            if RollupConfig::check_ecotone_l1_system_config_scalar(scalar.to_be_bytes()).is_err() {
-                // ignore invalid scalars, retain the old system-config scalar
-                return Ok(SystemConfigUpdateType::GasConfig);
-            }
-
-            // retain the scalar data in encoded form
-            self.scalar = scalar;
-            // zero out the overhead, it will not affect the state-transition after Ecotone
-            self.overhead = U256::ZERO;
-        } else {
-            self.scalar = scalar;
-            self.overhead = overhead;
+        if ecotone_active
+            && RollupConfig::check_ecotone_l1_system_config_scalar(scalar.to_be_bytes()).is_err()
+        {
+            // ignore invalid scalars, retain the old system-config scalar
+            return Ok(SystemConfigUpdateType::GasConfig);
         }
+
+        // Retain the scalar data in encoded form.
+        self.scalar = scalar;
+
+        // If ecotone is active, set the overhead to zero, otherwise set to the decoded value.
+        self.overhead = if ecotone_active { U256::ZERO } else { overhead };
 
         Ok(SystemConfigUpdateType::GasConfig)
     }
@@ -482,28 +478,8 @@ impl Default for SystemAccounts {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::ChainGenesis;
     use alloc::vec;
     use alloy_primitives::{b256, hex, LogData, B256};
-
-    fn mock_rollup_config(system_config: SystemConfig) -> RollupConfig {
-        RollupConfig {
-            genesis: ChainGenesis { system_config: Some(system_config), ..Default::default() },
-            block_time: 2,
-            l1_chain_id: 1,
-            l2_chain_id: 10,
-            regolith_time: Some(0),
-            canyon_time: Some(0),
-            delta_time: Some(0),
-            ecotone_time: Some(10),
-            fjord_time: Some(0),
-            granite_time: Some(0),
-            holocene_time: Some(0),
-            blobs_enabled_l1_timestamp: Some(0),
-            da_challenge_address: Some(Address::ZERO),
-            ..Default::default()
-        }
-    }
 
     #[test]
     #[cfg(feature = "serde")]
@@ -530,7 +506,6 @@ mod test {
             b256!("0000000000000000000000000000000000000000000000000000000000000000");
 
         let mut system_config = SystemConfig::default();
-        let rollup_config = mock_rollup_config(system_config);
 
         let update_log = Log {
             address: Address::ZERO,
@@ -545,7 +520,7 @@ mod test {
         };
 
         // Update the batcher address.
-        system_config.process_config_update_log(&update_log, &rollup_config, 0).unwrap();
+        system_config.process_config_update_log(&update_log, false).unwrap();
 
         assert_eq!(
             system_config.batcher_address,
@@ -559,7 +534,6 @@ mod test {
             b256!("0000000000000000000000000000000000000000000000000000000000000001");
 
         let mut system_config = SystemConfig::default();
-        let rollup_config = mock_rollup_config(system_config);
 
         let update_log = Log {
             address: Address::ZERO,
@@ -574,7 +548,7 @@ mod test {
         };
 
         // Update the batcher address.
-        system_config.process_config_update_log(&update_log, &rollup_config, 0).unwrap();
+        system_config.process_config_update_log(&update_log, false).unwrap();
 
         assert_eq!(system_config.overhead, U256::from(0xbabe));
         assert_eq!(system_config.scalar, U256::from(0xbeef));
@@ -586,7 +560,6 @@ mod test {
             b256!("0000000000000000000000000000000000000000000000000000000000000001");
 
         let mut system_config = SystemConfig::default();
-        let rollup_config = mock_rollup_config(system_config);
 
         let update_log = Log {
             address: Address::ZERO,
@@ -601,7 +574,7 @@ mod test {
         };
 
         // Update the batcher address.
-        system_config.process_config_update_log(&update_log, &rollup_config, 10).unwrap();
+        system_config.process_config_update_log(&update_log, true).unwrap();
 
         assert_eq!(system_config.overhead, U256::from(0));
         assert_eq!(system_config.scalar, U256::from(0xbeef));
@@ -613,7 +586,6 @@ mod test {
             b256!("0000000000000000000000000000000000000000000000000000000000000002");
 
         let mut system_config = SystemConfig::default();
-        let rollup_config = mock_rollup_config(system_config);
 
         let update_log = Log {
             address: Address::ZERO,
@@ -628,7 +600,7 @@ mod test {
         };
 
         // Update the batcher address.
-        system_config.process_config_update_log(&update_log, &rollup_config, 0).unwrap();
+        system_config.process_config_update_log(&update_log, false).unwrap();
 
         assert_eq!(system_config.gas_limit, 0xbeef_u64);
     }
