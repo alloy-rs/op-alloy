@@ -184,6 +184,9 @@ impl ChainConfig {
             l1_chain_id: self.l1_chain_id,
             l2_chain_id: self.chain_id,
             base_fee_params: config.as_base_fee_params(),
+            block_time: self.block_time,
+            seq_window_size: self.seq_window_size,
+            max_sequencer_drift: self.max_sequencer_drift,
             canyon_base_fee_params: config.as_canyon_base_fee_params(),
             regolith_time: Some(0),
             canyon_time: self.hardfork_configuration.canyon_time,
@@ -220,11 +223,8 @@ impl ChainConfig {
             // superchain-registry yet. This restriction on superchain-chains may change in the
             // future. Test/Alt configurations can still load custom rollup-configs when
             // necessary.
-            block_time: 2,
             channel_timeout: 300,
             granite_channel_timeout: GRANITE_CHANNEL_TIMEOUT,
-            max_sequencer_drift: 600,
-            seq_window_size: 3600,
         }
     }
 }
