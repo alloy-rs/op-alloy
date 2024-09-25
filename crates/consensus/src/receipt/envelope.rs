@@ -192,7 +192,8 @@ impl Encodable for OpReceiptEnvelope {
 
 impl Decodable for OpReceiptEnvelope {
     fn decode(buf: &mut &[u8]) -> alloy_rlp::Result<Self> {
-        Self::network_decode(buf).map_or_else(|_| Err(alloy_rlp::Error::Custom("Unexpected type")), Ok)
+        Self::network_decode(buf)
+            .map_or_else(|_| Err(alloy_rlp::Error::Custom("Unexpected type")), Ok)
     }
 }
 
@@ -218,10 +219,9 @@ impl Encodable2718 for OpReceiptEnvelope {
         }
         match self {
             Self::Deposit(t) => t.encode(out),
-            Self::Legacy(t)
-            | Self::Eip2930(t)
-            | Self::Eip1559(t)
-            | Self::Eip4844(t) => t.encode(out),
+            Self::Legacy(t) | Self::Eip2930(t) | Self::Eip1559(t) | Self::Eip4844(t) => {
+                t.encode(out)
+            }
         }
     }
 }

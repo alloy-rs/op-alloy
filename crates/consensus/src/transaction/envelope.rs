@@ -40,13 +40,8 @@ pub enum OpTxType {
 
 impl OpTxType {
     /// List of all variants.
-    pub const ALL: [Self; 5] = [
-        Self::Legacy,
-        Self::Eip2930,
-        Self::Eip1559,
-        Self::Eip4844,
-        Self::Deposit,
-    ];
+    pub const ALL: [Self; 5] =
+        [Self::Legacy, Self::Eip2930, Self::Eip1559, Self::Eip4844, Self::Deposit];
 }
 
 #[cfg(any(test, feature = "arbitrary"))]

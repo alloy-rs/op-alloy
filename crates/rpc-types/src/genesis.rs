@@ -91,9 +91,7 @@ impl TryFrom<&OtherFields> for OptimismBaseFeeInfo {
     type Error = serde_json::Error;
 
     fn try_from(others: &OtherFields) -> Result<Self, Self::Error> {
-        if let Some(Ok(optimism_base_fee_info)) =
-            others.get_deserialized::<Self>("optimism")
-        {
+        if let Some(Ok(optimism_base_fee_info)) = others.get_deserialized::<Self>("optimism") {
             Ok(optimism_base_fee_info)
         } else {
             Err(serde_json::Error::missing_field("optimism"))
