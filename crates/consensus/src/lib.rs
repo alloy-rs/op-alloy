@@ -32,6 +32,7 @@ pub use block::OpBlock;
 /// all fields are serialized.
 ///
 /// Read more: <https://github.com/bincode-org/bincode/issues/326>
+#[cfg(all(feature = "serde", feature = "serde-bincode-compat"))]
 pub mod serde_bincode_compat {
     pub use super::transaction::serde_bincode_compat::TxDeposit;
 }
