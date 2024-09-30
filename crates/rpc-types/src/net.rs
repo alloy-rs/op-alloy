@@ -1,9 +1,8 @@
 #![allow(missing_docs)]
 //! Network RPC types
 
-use crate::collections::HashMap;
 use alloc::{string::String, vec::Vec};
-use alloy_primitives::ChainId;
+use alloy_primitives::{map::HashMap, ChainId};
 use core::net::IpAddr;
 use serde::{
     de::{self, Unexpected},
@@ -133,11 +132,11 @@ pub enum Connectedness {
 impl core::fmt::Display for Connectedness {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         match self {
-            Connectedness::NotConnected => write!(f, "Not Connected"),
-            Connectedness::Connected => write!(f, "Connected"),
-            Connectedness::CanConnect => write!(f, "Can Connect"),
-            Connectedness::CannotConnect => write!(f, "Cannot Connect"),
-            Connectedness::Limited => write!(f, "Limited"),
+            Self::NotConnected => write!(f, "Not Connected"),
+            Self::Connected => write!(f, "Connected"),
+            Self::CanConnect => write!(f, "Can Connect"),
+            Self::CannotConnect => write!(f, "Cannot Connect"),
+            Self::Limited => write!(f, "Limited"),
         }
     }
 }
@@ -145,12 +144,12 @@ impl core::fmt::Display for Connectedness {
 impl From<u8> for Connectedness {
     fn from(value: u8) -> Self {
         match value {
-            0 => Connectedness::NotConnected,
-            1 => Connectedness::Connected,
-            2 => Connectedness::CanConnect,
-            3 => Connectedness::CannotConnect,
-            4 => Connectedness::Limited,
-            _ => Connectedness::NotConnected,
+            0 => Self::NotConnected,
+            1 => Self::Connected,
+            2 => Self::CanConnect,
+            3 => Self::CannotConnect,
+            4 => Self::Limited,
+            _ => Self::NotConnected,
         }
     }
 }
@@ -182,9 +181,9 @@ impl<'de> Deserialize<'de> for Direction {
     {
         let value = u8::deserialize(deserializer)?;
         match value {
-            0 => Ok(Direction::Unknown),
-            1 => Ok(Direction::Inbound),
-            2 => Ok(Direction::Outbound),
+            0 => Ok(Self::Unknown),
+            1 => Ok(Self::Inbound),
+            2 => Ok(Self::Outbound),
             _ => Err(de::Error::invalid_value(
                 Unexpected::Unsigned(value as u64),
                 &"a value between 0 and 2",
@@ -198,9 +197,9 @@ impl core::fmt::Display for Direction {
             f,
             "{}",
             match self {
-                Direction::Unknown => "Unknown",
-                Direction::Inbound => "Inbound",
-                Direction::Outbound => "Outbound",
+                Self::Unknown => "Unknown",
+                Self::Inbound => "Inbound",
+                Self::Outbound => "Outbound",
             }
         )
     }

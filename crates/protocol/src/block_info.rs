@@ -13,7 +13,7 @@ use op_alloy_consensus::{OpTxEnvelope, TxDeposit};
 use op_alloy_genesis::{RollupConfig, SystemConfig};
 
 /// The system transaction gas limit post-Regolith
-const REGOLITH_SYSTEM_TX_GAS: u128 = 1_000_000;
+const REGOLITH_SYSTEM_TX_GAS: u64 = 1_000_000;
 /// The type byte identifier for the L1 scalar format in Ecotone.
 const L1_SCALAR_ECOTONE: u8 = 1;
 /// The length of an L1 info transaction in Bedrock.
@@ -192,14 +192,14 @@ pub enum BlockInfoError {
 impl core::fmt::Display for BlockInfoError {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         match self {
-            BlockInfoError::L1BlobBaseFeeScalar => {
+            Self::L1BlobBaseFeeScalar => {
                 write!(f, "Failed to parse the L1 blob base fee scalar")
             }
-            BlockInfoError::BaseFeeScalar => write!(f, "Failed to parse the base fee scalar"),
-            BlockInfoError::Eip1559Denominator => {
+            Self::BaseFeeScalar => write!(f, "Failed to parse the base fee scalar"),
+            Self::Eip1559Denominator => {
                 write!(f, "Failed to parse the EIP-1559 denominator")
             }
-            BlockInfoError::Eip1559Elasticity => {
+            Self::Eip1559Elasticity => {
                 write!(f, "Failed to parse the EIP-1559 elasticity parameter")
             }
         }
@@ -217,9 +217,9 @@ pub enum DecodeError {
 impl core::fmt::Display for DecodeError {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         match self {
-            DecodeError::InvalidSelector => write!(f, "Invalid L1 info transaction selector"),
-            DecodeError::ParseError(msg) => write!(f, "Parse error: {}", msg),
-            DecodeError::InvalidLength(msg) => write!(f, "Invalid data length: {}", msg), /* Handle display for length errors */
+            Self::InvalidSelector => write!(f, "Invalid L1 info transaction selector"),
+            Self::ParseError(msg) => write!(f, "Parse error: {}", msg),
+            Self::InvalidLength(msg) => write!(f, "Invalid data length: {}", msg), /* Handle display for length errors */
         }
     }
 }
@@ -263,7 +263,7 @@ impl L1BlockInfoTx {
             return Ok(Self::Holocene(L1BlockInfoHolocene {
                 number: l1_header.number,
                 time: l1_header.timestamp,
-                base_fee: l1_header.base_fee_per_gas.unwrap_or(0) as u64,
+                base_fee: l1_header.base_fee_per_gas.unwrap_or(0),
                 block_hash: l1_header.hash_slow(),
                 sequence_number,
                 batcher_address: system_config.batcher_address,
@@ -297,7 +297,7 @@ impl L1BlockInfoTx {
             Ok(Self::Ecotone(L1BlockInfoEcotone {
                 number: l1_header.number,
                 time: l1_header.timestamp,
-                base_fee: l1_header.base_fee_per_gas.unwrap_or(0) as u64,
+                base_fee: l1_header.base_fee_per_gas.unwrap_or(0),
                 block_hash: l1_header.hash_slow(),
                 sequence_number,
                 batcher_address: system_config.batcher_address,
@@ -309,7 +309,7 @@ impl L1BlockInfoTx {
             Ok(Self::Bedrock(L1BlockInfoBedrock {
                 number: l1_header.number,
                 time: l1_header.timestamp,
-                base_fee: l1_header.base_fee_per_gas.unwrap_or(0) as u64,
+                base_fee: l1_header.base_fee_per_gas.unwrap_or(0),
                 block_hash: l1_header.hash_slow(),
                 sequence_number,
                 batcher_address: system_config.batcher_address,
@@ -327,7 +327,7 @@ impl L1BlockInfoTx {
         sequence_number: u64,
         l1_header: &Header,
         l2_block_time: u64,
-    ) -> Result<(L1BlockInfoTx, OpTxEnvelope), BlockInfoError> {
+    ) -> Result<(Self, OpTxEnvelope), BlockInfoError> {
         let l1_info =
             Self::try_new(rollup_config, system_config, sequence_number, l1_header, l2_block_time)?;
 
@@ -791,7 +791,7 @@ mod test {
 
         assert_eq!(l1_info.number, l1_header.number);
         assert_eq!(l1_info.time, l1_header.timestamp);
-        assert_eq!(l1_info.base_fee, l1_header.base_fee_per_gas.unwrap_or(0) as u64);
+        assert_eq!(l1_info.base_fee, { l1_header.base_fee_per_gas.unwrap_or(0) });
         assert_eq!(l1_info.block_hash, l1_header.hash_slow());
         assert_eq!(l1_info.sequence_number, sequence_number);
         assert_eq!(l1_info.batcher_address, system_config.batcher_address);
@@ -822,7 +822,7 @@ mod test {
 
         assert_eq!(l1_info.number, l1_header.number);
         assert_eq!(l1_info.time, l1_header.timestamp);
-        assert_eq!(l1_info.base_fee, l1_header.base_fee_per_gas.unwrap_or(0) as u64);
+        assert_eq!(l1_info.base_fee, { l1_header.base_fee_per_gas.unwrap_or(0) });
         assert_eq!(l1_info.block_hash, l1_header.hash_slow());
         assert_eq!(l1_info.sequence_number, sequence_number);
         assert_eq!(l1_info.batcher_address, system_config.batcher_address);

@@ -63,7 +63,7 @@ impl<T> TxReceipt<T> for OpDepositReceipt<T>
 where
     T: Borrow<Log>,
 {
-    fn status_or_post_state(&self) -> &Eip658Value {
+    fn status_or_post_state(&self) -> Eip658Value {
         self.inner.status_or_post_state()
     }
 
@@ -112,7 +112,7 @@ pub struct OpDepositReceiptWithBloom<T = Log> {
 }
 
 impl TxReceipt for OpDepositReceiptWithBloom {
-    fn status_or_post_state(&self) -> &Eip658Value {
+    fn status_or_post_state(&self) -> Eip658Value {
         self.receipt.status_or_post_state()
     }
 
@@ -150,7 +150,7 @@ impl OpTxReceipt for OpDepositReceiptWithBloom {
 impl From<OpDepositReceipt> for OpDepositReceiptWithBloom {
     fn from(receipt: OpDepositReceipt) -> Self {
         let bloom = receipt.bloom_slow();
-        OpDepositReceiptWithBloom { receipt, logs_bloom: bloom }
+        Self { receipt, logs_bloom: bloom }
     }
 }
 
