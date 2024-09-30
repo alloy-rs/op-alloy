@@ -25,10 +25,10 @@ op-alloy-genesis = { version = "x.y.z", default-features = false, features = ["s
 There are a few constant declarations for various chain's rollup configs.
 
 ```rust
-use op_alloy_genesis::{OP_MAINNET_ROLLUP_CONFIG, rollup_config_from_chain_id};
+use op_alloy_genesis::{OP_MAINNET_CONFIG, rollup_config_from_chain_id};
 
 let op_mainnet_config = rollup_config_from_chain_id(10).expect("infallible");
-assert_eq!(OP_MAINNET_ROLLUP_CONFIG, op_mainnet_config);
+assert_eq!(OP_MAINNET_CONFIG, op_mainnet_config);
 ```
 
 
