@@ -13,7 +13,7 @@ use op_alloy_consensus::{OpTxEnvelope, TxDeposit};
 use op_alloy_genesis::{RollupConfig, SystemConfig};
 
 /// The system transaction gas limit post-Regolith
-const REGOLITH_SYSTEM_TX_GAS: u128 = 1_000_000;
+const REGOLITH_SYSTEM_TX_GAS: u64 = 1_000_000;
 /// The type byte identifier for the L1 scalar format in Ecotone.
 const L1_SCALAR_ECOTONE: u8 = 1;
 /// The length of an L1 info transaction in Bedrock.
