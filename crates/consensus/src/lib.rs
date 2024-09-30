@@ -24,3 +24,14 @@ pub use hardforks::Hardforks;
 
 mod block;
 pub use block::OpBlock;
+
+/// Bincode-compatible serde implementations for consensus types.
+///
+/// `bincode` crate doesn't work well with optionally serializable serde fields, but some of the
+/// consensus types require optional serialization for RPC compatibility. This module makes so that
+/// all fields are serialized.
+///
+/// Read more: <https://github.com/bincode-org/bincode/issues/326>
+pub mod serde_bincode_compat {
+    pub use super::transaction::serde_bincode_compat::TxDeposit;
+}
