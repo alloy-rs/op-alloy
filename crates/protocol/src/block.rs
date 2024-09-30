@@ -161,7 +161,7 @@ impl L2BlockInfo {
             (l1_info.id(), l1_info.sequence_number())
         };
 
-        Ok(L2BlockInfo { block_info, l1_origin, seq_num: sequence_number })
+        Ok(Self { block_info, l1_origin, seq_num: sequence_number })
     }
 }
 
