@@ -22,6 +22,3 @@ mod superchain;
 pub use superchain::{
     ProtocolVersion, ProtocolVersionError, ProtocolVersionFormatV0, SuperchainSignal,
 };
-
-mod errors;
-pub use errors::{ToL2BlockRefError, ToSystemConfigError};

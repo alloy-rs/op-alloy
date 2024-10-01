@@ -15,7 +15,6 @@ exclude.workspace = true
 workspace = true
 
 [dependencies]
-alloy-eips.workspace = true
 alloy-primitives.workspace = true
 alloy-rpc-types-engine.workspace = true
 op-alloy-protocol.workspace = true
