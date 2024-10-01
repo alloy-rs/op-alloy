@@ -12,14 +12,14 @@ const NON_ZERO_BYTE_COST: u64 = 16;
 ///
 /// In bedrock, calldata costs 16 gas per non-zero byte and 4 gas per zero byte, with
 /// an extra 68 non-zero bytes were included in the rollup data costs to account for the empty signature.
-fn data_gas_bedrock(input: &[u8]) -> U256 {
+pub fn data_gas_bedrock(input: &[u8]) -> U256 {
     data_gas_regolith(input) + U256::from(NON_ZERO_BYTE_COST).mul(U256::from(68))
 }
 
 /// Calculate the data gas for posting the transaction on L1.
 ///
 /// In regolith, calldata costs 16 gas per non-zero byte and 4 gas per zero byte
-fn data_gas_regolith(input: &[u8]) -> U256 {
+pub fn data_gas_regolith(input: &[u8]) -> U256 {
     let rollup_data_gas_cost = U256::from(input.iter().fold(0, |acc, byte| {
         acc + if *byte == 0x00 { ZERO_BYTE_COST } else { NON_ZERO_BYTE_COST }
     }));
@@ -30,7 +30,7 @@ fn data_gas_regolith(input: &[u8]) -> U256 {
 /// Calculate the data gas for posting the transaction on L1.
 ///
 /// In fjord, Calldata costs 16 gas per byte after compression.
-fn data_gas_fjord(input: &[u8]) -> U256 {
+pub fn data_gas_fjord(input: &[u8]) -> U256 {
     let estimated_size = tx_estimated_size_fjord(input);
     estimated_size
         .saturating_mul(U256::from(NON_ZERO_BYTE_COST))
