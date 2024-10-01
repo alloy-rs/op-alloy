@@ -3,7 +3,7 @@ members = ["crates/*"]
 resolver = "2"
 
 [workspace.package]
-version = "0.2.12"
+version = "0.3.2"
 edition = "2021"
 rust-version = "1.81"
 authors = ["Alloy Contributors"]
@@ -36,29 +36,29 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [workspace.dependencies]
 # Alloy
-op-alloy-rpc-jsonrpsee = { version = "0.2.12", path = "crates/rpc-jsonrpsee" }
-op-alloy-rpc-types = { version = "0.2.12", path = "crates/rpc-types" }
-op-alloy-rpc-types-engine = { version = "0.2.12", path = "crates/rpc-types-engine" }
-op-alloy-consensus = { version = "0.2.12", path = "crates/consensus", default-features = false }
-op-alloy-genesis = { version = "0.2.12", path = "crates/genesis", default-features = false }
-op-alloy-protocol = { version = "0.2.12", path = "crates/protocol", default-features = false }
+op-alloy-rpc-jsonrpsee = { version = "0.3.2", path = "crates/rpc-jsonrpsee" }
+op-alloy-rpc-types = { version = "0.3.2", path = "crates/rpc-types" }
+op-alloy-rpc-types-engine = { version = "0.3.2", path = "crates/rpc-types-engine" }
+op-alloy-consensus = { version = "0.3.2", path = "crates/consensus", default-features = false }
+op-alloy-genesis = { version = "0.3.2", path = "crates/genesis", default-features = false }
+op-alloy-protocol = { version = "0.3.2", path = "crates/protocol", default-features = false }
 
 alloy-rlp = { version = "0.3", default-features = false }
 alloy-primitives = { version = "0.8", default-features = false }
 alloy-sol-types = { version = "0.8", default-features = false }
 
-alloy = { version = "0.3.6" }
-alloy-consensus = { version = "0.3.6", default-features = false }
-alloy-network = { version = "0.3.6", default-features = false }
-alloy-network-primitives = { version = "0.3.6", default-features = false }
-alloy-rpc-types = { version = "0.3.6" }
-alloy-rpc-types-engine = { version = "0.3.6", default-features = false }
-alloy-rpc-types-eth = { version = "0.3.6", default-features = false }
-alloy-eips = { version = "0.3.6", default-features = false }
-alloy-serde = { version = "0.3.6", default-features = false }
-alloy-signer = { version = "0.3.6", default-features = false }
-alloy-provider = { version = "0.3.6", default-features = false }
-alloy-transport = { version = "0.3.6", default-features = false }
+alloy = { version = "0.4.0" }
+alloy-consensus = { version = "0.4.0", default-features = false }
+alloy-network = { version = "0.4.0", default-features = false }
+alloy-network-primitives = { version = "0.4.0", default-features = false }
+alloy-rpc-types = { version = "0.4.0" }
+alloy-rpc-types-engine = { version = "0.4.0", default-features = false }
+alloy-rpc-types-eth = { version = "0.4.0", default-features = false }
+alloy-eips = { version = "0.4.0", default-features = false }
+alloy-serde = { version = "0.4.0", default-features = false }
+alloy-signer = { version = "0.4.0", default-features = false }
+alloy-provider = { version = "0.4.0", default-features = false }
+alloy-transport = { version = "0.4.0", default-features = false }
 
 # Serde
 serde_repr = "0.1"
@@ -95,3 +95,17 @@ tokio = "1"
 ## crypto
 c-kzg = { version = "1.0", default-features = false }
 k256 = { version = "0.13", default-features = false, features = ["ecdsa"] }
+
+
+#[patch.crates-io]
+#alloy-consensus = { git = "https://github.com/alloy-rs/alloy", branch = "main" }
+#alloy-network = { git = "https://github.com/alloy-rs/alloy", branch = "main" }
+#alloy-network-primitives = { git = "https://github.com/alloy-rs/alloy", branch = "main" }
+#alloy-rpc-types = { git = "https://github.com/alloy-rs/alloy", branch = "main" }
+#alloy-rpc-types-eth = { git = "https://github.com/alloy-rs/alloy", branch = "main" }
+#alloy-rpc-types-engine = { git = "https://github.com/alloy-rs/alloy", branch = "main" }
+#alloy-eips = { git = "https://github.com/alloy-rs/alloy", branch = "main" }
+#alloy-serde = { git = "https://github.com/alloy-rs/alloy", branch = "main" }
+#alloy-signer = { git = "https://github.com/alloy-rs/alloy", branch = "main" }
+#alloy-provider = { git = "https://github.com/alloy-rs/alloy", branch = "main" }
+#alloy-transport = { git = "https://github.com/alloy-rs/alloy", branch = "main" }

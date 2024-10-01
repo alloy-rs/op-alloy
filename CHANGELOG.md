@@ -5,6 +5,64 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.2](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.3.2) - 2024-09-30
+
+### Features
+
+- [consensus] Bincode compatibility ([#131](https://github.com/alloy-rs/op-alloy/issues/131))
+
+### Miscellaneous Tasks
+
+- [genesis] Small README Update ([#128](https://github.com/alloy-rs/op-alloy/issues/128))
+
+## [0.3.1](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.3.1) - 2024-09-30
+
+### Bug Fixes
+
+- HashMap default
+
+### Miscellaneous Tasks
+
+- Release 0.3.1
+
+## [0.3.0](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.3.0) - 2024-09-30
+
+### Bug Fixes
+
+- Clean up protocol std feat flagging ([#119](https://github.com/alloy-rs/op-alloy/issues/119))
+- [protocol] Functional Batch Transaction ([#88](https://github.com/alloy-rs/op-alloy/issues/88))
+- L1Origin -> l1origin during deser of L2BlockRef ([#116](https://github.com/alloy-rs/op-alloy/issues/116))
+- [engine] Missing Error Source ([#114](https://github.com/alloy-rs/op-alloy/issues/114))
+
+### Dependencies
+
+- Bump alloy 0.4 ([#127](https://github.com/alloy-rs/op-alloy/issues/127))
+- Use alloy map ([#126](https://github.com/alloy-rs/op-alloy/issues/126))
+
+### Features
+
+- [consensus] OpBlock Type ([#105](https://github.com/alloy-rs/op-alloy/issues/105))
+- [workspace] Use Workspace Level Lints ([#125](https://github.com/alloy-rs/op-alloy/issues/125))
+- [genesis] Simplify Log Updates in System Config ([#123](https://github.com/alloy-rs/op-alloy/issues/123))
+- [genesis] Optimism Base Fee Params ([#122](https://github.com/alloy-rs/op-alloy/issues/122))
+- [protocol] Holocene Support ([#118](https://github.com/alloy-rs/op-alloy/issues/118))
+- [provider] OP engine api trait ext + superchain signal type ([#117](https://github.com/alloy-rs/op-alloy/issues/117))
+- [engine] Deprecate RollupConfig Argument ([#112](https://github.com/alloy-rs/op-alloy/issues/112))
+- Exec payload v4 serde test ([#113](https://github.com/alloy-rs/op-alloy/issues/113))
+
+### Miscellaneous Tasks
+
+- Release 0.3.0
+- [protocol] Cleanup block info block hash retrieval ([#120](https://github.com/alloy-rs/op-alloy/issues/120))
+
+### Other
+
+- Replace u8 direction field with Direction type ([#90](https://github.com/alloy-rs/op-alloy/issues/90))
+- Add holocene time to genesis ([#115](https://github.com/alloy-rs/op-alloy/issues/115))
+
 ## [0.2.12](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.2.12) - 2024-09-18
 
@@ -28,6 +86,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.2.12
 - Re-export module items ([#102](https://github.com/alloy-rs/op-alloy/issues/102))
 
 ## [0.2.11](https://github.com/alloy-rs/op-alloy

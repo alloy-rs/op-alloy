@@ -16,7 +16,7 @@ pub const CHANNEL_ID_LENGTH: usize = 16;
 pub type ChannelId = [u8; CHANNEL_ID_LENGTH];
 
 mod block;
-pub use block::{BlockInfo, L2BlockInfo};
+pub use block::{BlockInfo, FromBlockError, L2BlockInfo};
 
 mod batch_tx;
 pub use batch_tx::BatchTransaction;
@@ -27,7 +27,7 @@ pub use frame::{
 };
 
 mod utils;
-pub use utils::starts_with_2718_deposit;
+pub use utils::{starts_with_2718_deposit, to_system_config, OpBlockConversionError};
 
 mod channel;
 pub use channel::{

@@ -1,8 +1,7 @@
 //! Channel Types
 
 use alloc::vec::Vec;
-use alloy_primitives::Bytes;
-use hashbrown::HashMap;
+use alloy_primitives::{map::HashMap, Bytes};
 
 use crate::{block::BlockInfo, frame::Frame, ChannelId};
 
@@ -69,7 +68,7 @@ pub struct Channel {
 impl Channel {
     /// Create a new [Channel] with the given [ChannelId] and [BlockInfo].
     pub fn new(id: ChannelId, open_block: BlockInfo) -> Self {
-        Self { id, open_block, inputs: HashMap::new(), ..Default::default() }
+        Self { id, open_block, inputs: HashMap::default(), ..Default::default() }
     }
 
     /// Returns the current [ChannelId] for the channel.
