@@ -1,9 +1,6 @@
 //! Utility methods used by protocol types.
 
-use crate::{
-    block_info::DecodeError, L1BlockInfoBedrock, L1BlockInfoEcotone,
-    L1BlockInfoTx,
-};
+use crate::{block_info::DecodeError, L1BlockInfoBedrock, L1BlockInfoEcotone, L1BlockInfoTx};
 use alloy_primitives::B256;
 use op_alloy_consensus::{OpBlock, OpTxEnvelope};
 use op_alloy_genesis::{RollupConfig, SystemConfig};
