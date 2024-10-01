@@ -1,7 +1,7 @@
 //! Utility methods used by protocol types.
 
 use crate::{
-    block_info::DecodeError, L1BlockInfoBedrock, L1BlockInfoEcotone, L1BlockInfoHolocene,
+    block_info::DecodeError, L1BlockInfoBedrock, L1BlockInfoEcotone,
     L1BlockInfoTx,
 };
 use alloy_primitives::B256;
@@ -82,11 +82,6 @@ pub fn to_system_config(
     let l1_fee_scalar = match l1_info {
         L1BlockInfoTx::Bedrock(L1BlockInfoBedrock { l1_fee_scalar, .. }) => l1_fee_scalar,
         L1BlockInfoTx::Ecotone(L1BlockInfoEcotone {
-            base_fee_scalar,
-            blob_base_fee_scalar,
-            ..
-        })
-        | L1BlockInfoTx::Holocene(L1BlockInfoHolocene {
             base_fee_scalar,
             blob_base_fee_scalar,
             ..
