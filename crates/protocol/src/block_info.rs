@@ -1111,6 +1111,9 @@ mod test {
         l1_block_bedrock.l1_fee_overhead = U256::from(1_000);
         l1_block_bedrock.l1_fee_scalar = U256::from(1_000);
 
+        // calldataGas * (l1BaseFee * 16 * l1BaseFeeScalar + l1BlobBaseFee * l1BlobBaseFeeScalar) / (16 * 1e6)
+        // = (16 * 3 + 16 * 68 + 1000) * 1000 * 1000 / (1_000_000)
+        // = 2136
         let input = bytes!("FACADE");
         let gas_cost = l1_block_bedrock.calculate_tx_l1_cost(&input);
         assert_eq!(gas_cost, U256::from(2136));
