@@ -24,7 +24,6 @@ alloy-primitives = { workspace = true, features = ["map"] }
 alloy-rlp.workspace = true
 alloy-eips.workspace = true
 alloy-consensus.workspace = true
-alloy-sol-types.workspace = true
 
 # Misc
 derive_more.workspace = true
@@ -37,6 +36,7 @@ alloy-serde = { workspace = true, optional = true }
 serde_json.workspace = true
 rstest = "0.22.0"
 revm = "14.0.2"
+alloy-sol-types.workspace = true
 
 [features]
 default = ["serde", "std"]

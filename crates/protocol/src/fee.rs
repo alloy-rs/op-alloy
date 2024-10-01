@@ -12,17 +12,8 @@ const NON_ZERO_BYTE_COST: u64 = 16;
 ///
 /// In bedrock, calldata costs 16 gas per non-zero byte and 4 gas per zero byte, with
 /// an extra 68 non-zero bytes were included in the rollup data costs to account for the empty signature.
-fn data_gas_bedrock(input: &[u8], is_before_regolith: bool) -> U256 {
-    let mut rollup_data_gas_cost = U256::from(input.iter().fold(0, |acc, byte| {
-        acc + if *byte == 0x00 { ZERO_BYTE_COST } else { NON_ZERO_BYTE_COST }
-    }));
-
-    if is_before_regolith {
-        // Prior to regolith, an extra 68 non zero bytes were included in the rollup data costs.
-        rollup_data_gas_cost += U256::from(NON_ZERO_BYTE_COST).mul(U256::from(68));
-    }
-
-    rollup_data_gas_cost
+fn data_gas_bedrock(input: &[u8]) -> U256 {
+    return data_gas_regolith(input) + U256::from(NON_ZERO_BYTE_COST).mul(U256::from(68));
 }
 
 /// Calculate the data gas for posting the transaction on L1.
@@ -64,13 +55,12 @@ pub fn calculate_tx_l1_cost_bedrock(
     l1_fee_overhead: U256,
     base_fee: U256,
     l1_fee_scalar: U256,
-    is_before_regolith: bool,
 ) -> U256 {
     if input.is_empty() || input.first() == Some(&0x7F) {
         return U256::ZERO;
     }
 
-    let rollup_data_gas_cost = data_gas_bedrock(input, is_before_regolith);
+    let rollup_data_gas_cost = data_gas_bedrock(input);
     rollup_data_gas_cost
         .saturating_add(l1_fee_overhead)
         .saturating_mul(base_fee)
@@ -109,29 +99,13 @@ pub fn calculate_tx_l1_cost_regolith(
 /// `calldataGas*(l1BaseFee*16*l1BaseFeeScalar + l1BlobBaseFee*l1BlobBaseFeeScalar)/16e6`
 pub fn calculate_tx_l1_cost_ecotone(
     input: &[u8],
-    l1_fee_overhead: U256,
-    l1_fee_scalar: U256,
     base_fee: U256,
     base_fee_scalar: U256,
     blob_base_fee: U256,
     blob_base_fee_scalar: U256,
-    empty_scalars: bool,
 ) -> U256 {
     if input.is_empty() || input.first() == Some(&0x7F) {
         return U256::ZERO;
-    }
-
-    // There is an edgecase where, for the very first Ecotone block (unless it is activated at Genesis), we must
-    // use the Bedrock cost function. To determine if this is the case, we can check if the Ecotone parameters are
-    // unset.
-    if empty_scalars {
-        return calculate_tx_l1_cost_bedrock(
-            input,
-            l1_fee_overhead,
-            base_fee,
-            l1_fee_scalar,
-            false,
-        );
     }
 
     let rollup_data_gas_cost = data_gas_regolith(input);
@@ -205,13 +179,13 @@ mod tests {
         // Pre-regolith (ie bedrock) has an extra 68 non-zero bytes
         // gas cost = 3 non-zero bytes * NON_ZERO_BYTE_COST + NON_ZERO_BYTE_COST * 68
         // gas cost = 3 * 16 + 68 * 16 = 1136
-        let bedrock_data_gas = data_gas_bedrock(&input_1, true);
+        let bedrock_data_gas = data_gas_bedrock(&input_1);
         assert_eq!(bedrock_data_gas, U256::from(1136));
 
         // Pre-regolith (ie bedrock) has an extra 68 non-zero bytes
         // gas cost = 3 non-zero * NON_ZERO_BYTE_COST + 2 * ZERO_BYTE_COST + NON_ZERO_BYTE_COST * 68
         // gas cost = 3 * 16 + 2 * 4 + 68 * 16 = 1144
-        let bedrock_data_gas = data_gas_bedrock(&input_2, true);
+        let bedrock_data_gas = data_gas_bedrock(&input_2);
         assert_eq!(bedrock_data_gas, U256::from(1144));
     }
 
@@ -269,19 +243,19 @@ mod tests {
         // = 2136
         let input = bytes!("FACADE");
         let gas_cost =
-            calculate_tx_l1_cost_bedrock(&input, l1_fee_overhead, base_fee, l1_fee_scalar, true);
+            calculate_tx_l1_cost_bedrock(&input, l1_fee_overhead, base_fee, l1_fee_scalar);
         assert_eq!(gas_cost, U256::from(2136));
 
         // Zero rollup data gas cost should result in zero
         let input = bytes!("");
         let gas_cost =
-            calculate_tx_l1_cost_bedrock(&input, l1_fee_overhead, base_fee, l1_fee_scalar, true);
+            calculate_tx_l1_cost_bedrock(&input, l1_fee_overhead, base_fee, l1_fee_scalar);
         assert_eq!(gas_cost, U256::ZERO);
 
         // Deposit transactions with the EIP-2718 type of 0x7F should result in zero
         let input = bytes!("7FFACADE");
         let gas_cost =
-            calculate_tx_l1_cost_bedrock(&input, l1_fee_overhead, base_fee, l1_fee_scalar, true);
+            calculate_tx_l1_cost_bedrock(&input, l1_fee_overhead, base_fee, l1_fee_scalar);
         assert_eq!(gas_cost, U256::ZERO);
     }
 
@@ -316,8 +290,6 @@ mod tests {
     #[test]
     fn test_calculate_tx_l1_cost_ecotone() {
         let base_fee = U256::from(1_000);
-        let l1_fee_overhead = U256::from(1_000);
-        let l1_fee_scalar = U256::from(1_000);
         let blob_base_fee = U256::from(1_000);
         let blob_base_fee_scalar = U256::from(1_000);
         let base_fee_scalar = U256::from(1_000);
@@ -328,13 +300,10 @@ mod tests {
         let input = bytes!("FACADE");
         let gas_cost = calculate_tx_l1_cost_ecotone(
             &input,
-            l1_fee_overhead,
-            l1_fee_scalar,
             base_fee,
             base_fee_scalar,
             blob_base_fee,
             blob_base_fee_scalar,
-            false,
         );
         assert_eq!(gas_cost, U256::from(51));
 
@@ -342,13 +311,10 @@ mod tests {
         let input = bytes!("");
         let gas_cost = calculate_tx_l1_cost_ecotone(
             &input,
-            l1_fee_overhead,
-            l1_fee_scalar,
             base_fee,
             base_fee_scalar,
             blob_base_fee,
             blob_base_fee_scalar,
-            false,
         );
         assert_eq!(gas_cost, U256::ZERO);
 
@@ -356,29 +322,12 @@ mod tests {
         let input = bytes!("7FFACADE");
         let gas_cost = calculate_tx_l1_cost_ecotone(
             &input,
-            l1_fee_overhead,
-            l1_fee_scalar,
             base_fee,
             base_fee_scalar,
             blob_base_fee,
             blob_base_fee_scalar,
-            false,
         );
         assert_eq!(gas_cost, U256::ZERO);
-
-        // If the scalars are empty, the bedrock cost function should be used.
-        let input = bytes!("FACADE");
-        let gas_cost = calculate_tx_l1_cost_ecotone(
-            &input,
-            l1_fee_overhead,
-            l1_fee_scalar,
-            base_fee,
-            base_fee_scalar,
-            blob_base_fee,
-            blob_base_fee_scalar,
-            true,
-        );
-        assert_eq!(gas_cost, U256::from(1048));
     }
 
     #[test]
