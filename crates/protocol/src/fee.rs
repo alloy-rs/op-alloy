@@ -8,14 +8,11 @@ use core::ops::Mul;
 const ZERO_BYTE_COST: u64 = 4;
 const NON_ZERO_BYTE_COST: u64 = 16;
 
-/// Calculate the data gas for posting the transaction on L1. Calldata costs 16 gas per byte
-/// after compression.
+/// Calculate the data gas for posting the transaction on L1.
 ///
-/// Prior to fjord, calldata costs 16 gas per non-zero byte and 4 gas per zero byte.
-///
-/// Prior to regolith, an extra 68 non-zero bytes were included in the rollup data costs to
-/// account for the empty signature.
-pub fn data_gas_bedrock(input: &[u8], is_before_regolith: bool) -> U256 {
+/// In bedrock, calldata costs 16 gas per non-zero byte and 4 gas per zero byte, with
+/// an extra 68 non-zero bytes were included in the rollup data costs to account for the empty signature.
+fn data_gas_bedrock(input: &[u8], is_before_regolith: bool) -> U256 {
     let mut rollup_data_gas_cost = U256::from(input.iter().fold(0, |acc, byte| {
         acc + if *byte == 0x00 { ZERO_BYTE_COST } else { NON_ZERO_BYTE_COST }
     }));
@@ -28,11 +25,10 @@ pub fn data_gas_bedrock(input: &[u8], is_before_regolith: bool) -> U256 {
     rollup_data_gas_cost
 }
 
-/// Calculate the data gas for posting the transaction on L1. Calldata costs 16 gas per byte
-/// after compression.
+/// Calculate the data gas for posting the transaction on L1.
 ///
-/// Prior to fjord, calldata costs 16 gas per non-zero byte and 4 gas per zero byte.
-pub fn data_gas_regolith(input: &[u8]) -> U256 {
+/// In regolith, calldata costs 16 gas per non-zero byte and 4 gas per zero byte
+fn data_gas_regolith(input: &[u8]) -> U256 {
     let rollup_data_gas_cost = U256::from(input.iter().fold(0, |acc, byte| {
         acc + if *byte == 0x00 { ZERO_BYTE_COST } else { NON_ZERO_BYTE_COST }
     }));
@@ -40,9 +36,10 @@ pub fn data_gas_regolith(input: &[u8]) -> U256 {
     rollup_data_gas_cost
 }
 
-/// Calculate the data gas for posting the transaction on L1. Calldata costs 16 gas per byte
-/// after compression.
-pub fn data_gas_fjord(input: &[u8]) -> U256 {
+/// Calculate the data gas for posting the transaction on L1.
+///
+/// In fjord, Calldata costs 16 gas per byte after compression.
+fn data_gas_fjord(input: &[u8]) -> U256 {
     let estimated_size = tx_estimated_size_fjord(input);
     return estimated_size
         .saturating_mul(U256::from(NON_ZERO_BYTE_COST))
@@ -61,7 +58,7 @@ fn tx_estimated_size_fjord(input: &[u8]) -> U256 {
         .max(U256::from(100_000_000))
 }
 
-/// Calculate the gas cost of a transaction based on L1 block data posted on L2, pre-Ecotone.
+/// Calculate the gas cost of a transaction based on L1 block data posted on L2 post-bedrock.
 pub fn calculate_tx_l1_cost_bedrock(
     input: &[u8],
     l1_fee_overhead: U256,
@@ -81,7 +78,7 @@ pub fn calculate_tx_l1_cost_bedrock(
         .wrapping_div(U256::from(1_000_000))
 }
 
-/// Calculate the gas cost of a transaction based on L1 block data posted on L2, pre-Ecotone.
+/// Calculate the gas cost of a transaction based on L1 block data posted on L2 post-regolith.
 pub fn calculate_tx_l1_cost_regolith(
     input: &[u8],
     l1_fee_overhead: U256,
@@ -102,7 +99,7 @@ pub fn calculate_tx_l1_cost_regolith(
 
 /// Calculate the gas cost of a transaction based on L1 block data posted on L2, post-Ecotone.
 ///
-/// [SpecId::ECOTONE] L1 cost function:
+/// L1 cost function:
 /// `(calldataGas/16)*(l1BaseFee*16*l1BaseFeeScalar + l1BlobBaseFee*l1BlobBaseFeeScalar)/1e6`
 ///
 /// We divide "calldataGas" by 16 to change from units of calldata gas to "estimated # of bytes when compressed".
@@ -110,7 +107,7 @@ pub fn calculate_tx_l1_cost_regolith(
 ///
 /// Function is actually computed as follows for better precision under integer arithmetic:
 /// `calldataGas*(l1BaseFee*16*l1BaseFeeScalar + l1BlobBaseFee*l1BlobBaseFeeScalar)/16e6`
-fn calculate_tx_l1_cost_ecotone(
+pub fn calculate_tx_l1_cost_ecotone(
     input: &[u8],
     l1_fee_overhead: U256,
     l1_fee_scalar: U256,
@@ -152,9 +149,9 @@ fn calculate_tx_l1_cost_ecotone(
 
 /// Calculate the gas cost of a transaction based on L1 block data posted on L2, post-Fjord.
 ///
-/// [SpecId::FJORD] L1 cost function:
+/// L1 cost function:
 /// `estimatedSize*(baseFeeScalar*l1BaseFee*16 + blobFeeScalar*l1BlobBaseFee)/1e12`
-fn calculate_tx_l1_cost_fjord(
+pub fn calculate_tx_l1_cost_fjord(
     input: &[u8],
     base_fee: U256,
     base_fee_scalar: U256,
@@ -193,8 +190,7 @@ fn calculate_l1_fee_scaled_ecotone(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use alloc::string::ToString;
-    use alloy_primitives::{address, b256, hex};
+    use alloy_primitives::hex;
 
     #[test]
     fn test_data_gas_bedrock() {
