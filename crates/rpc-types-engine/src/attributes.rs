@@ -1,7 +1,7 @@
 //! Optimism-specific payload attributes.
 
 use alloc::vec::Vec;
-use alloy_primitives::{Bytes, FixedBytes};
+use alloy_primitives::{Bytes, B64};
 use alloy_rpc_types_engine::PayloadAttributes;
 use op_alloy_protocol::L2BlockInfo;
 
@@ -30,7 +30,7 @@ pub struct OptimismPayloadAttributes {
     ///
     /// Prior to Holocene activation, this field should always be [None].
     #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
-    pub eip_1559_params: Option<FixedBytes<8>>,
+    pub eip_1559_params: Option<B64>,
 }
 
 /// Optimism Payload Attributes with parent block reference.
