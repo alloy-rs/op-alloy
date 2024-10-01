@@ -8,9 +8,13 @@ use alloc::{
 };
 use alloy_consensus::Header;
 use alloy_eips::BlockNumHash;
-use alloy_primitives::{address, Address, Bytes, TxKind, B256, U256};
+use alloy_primitives::{address, Address, Bytes, TxKind, B256, U256, bytes};
 use op_alloy_consensus::{OpTxEnvelope, TxDeposit};
 use op_alloy_genesis::{RollupConfig, SystemConfig};
+
+use crate::utils::flz_compress_len;
+
+use core::ops::Mul;
 
 /// The system transaction gas limit post-Regolith
 const REGOLITH_SYSTEM_TX_GAS: u128 = 1_000_000;
@@ -36,6 +40,10 @@ const L1_INFO_TX_SELECTOR_HOLOCENE: [u8; 4] = [0xd1, 0xfb, 0xe1, 0x5b];
 const L1_BLOCK_ADDRESS: Address = address!("4200000000000000000000000000000000000015");
 /// The depositor address of the L1 info transaction
 const L1_INFO_DEPOSITOR_ADDRESS: Address = address!("deaddeaddeaddeaddeaddeaddeaddeaddead0001");
+
+/// Cost per byte in calldata
+const ZERO_BYTE_COST: u64 = 4;
+const NON_ZERO_BYTE_COST: u64 = 16;
 
 /// The [L1BlockInfoTx] enum contains variants for the different versions of the L1 block info
 /// transaction on OP Stack chains.
@@ -439,6 +447,15 @@ impl L1BlockInfoTx {
             Self::Holocene(L1BlockInfoHolocene { sequence_number, .. }) => *sequence_number,
         }
     }
+
+    /// Returns the L1 block cost
+    pub fn calculate_tx_l1_cost(&self, input: &[u8], empty_scalers: bool, ) -> U256 {
+        match self {
+            Self::Bedrock(bedrock_tx) => bedrock_tx.calculate_tx_l1_cost(input),
+            Self::Ecotone(ecotone_tx) => ecotone_tx.calculate_tx_l1_cost(input, empty_scalers),
+            Self::Holocene(holocene_tx) => holocene_tx.calculate_tx_l1_cost(input),
+        }
+    }
 }
 
 impl L1BlockInfoBedrock {
@@ -500,6 +517,46 @@ impl L1BlockInfoBedrock {
             l1_fee_scalar,
         })
     }
+
+    /// Calculate the data gas for posting the transaction on L1. Calldata costs 16 gas per byte
+    /// after compression.
+    ///
+    /// Prior to fjord, calldata costs 16 gas per non-zero byte and 4 gas per zero byte.
+    ///
+    /// Prior to regolith, an extra 68 non-zero bytes were included in the rollup data costs to
+    /// account for the empty signature.
+    pub fn data_gas(&self, input: &[u8]) -> U256 {
+        let mut rollup_data_gas_cost = U256::from(input.iter().fold(0, |acc, byte| {
+            acc + if *byte == 0x00 {
+                ZERO_BYTE_COST
+            } else {
+                NON_ZERO_BYTE_COST
+            }
+        }));
+
+        println!("rollup_data_gas_cost: {:?}", rollup_data_gas_cost);
+
+        // Prior to regolith, an extra 68 non zero bytes were included in the rollup data costs.
+        rollup_data_gas_cost += U256::from(NON_ZERO_BYTE_COST).mul(U256::from(68));
+
+        rollup_data_gas_cost
+    }
+
+    /// Calculate the gas cost of a transaction based on L1 block data posted on L2, pre-Ecotone.
+    pub fn calculate_tx_l1_cost(&self, input: &[u8]) -> U256 {
+        if input.is_empty() || input.first() == Some(&0x7F) {
+            return U256::ZERO;
+        }
+
+        let rollup_data_gas_cost = self.data_gas(input);
+        println!("rollup_data_gas_cost: {:?}", rollup_data_gas_cost);
+        rollup_data_gas_cost
+            .saturating_add(self.l1_fee_overhead)
+            .saturating_mul(U256::from(self.base_fee))
+            .saturating_mul(self.l1_fee_scalar)
+            .wrapping_div(U256::from(1_000_000))
+    }
+
 }
 
 impl L1BlockInfoEcotone {
@@ -565,6 +622,76 @@ impl L1BlockInfoEcotone {
             blob_base_fee_scalar,
             base_fee_scalar,
         })
+    }
+
+    /// Calculate the data gas for posting the transaction on L1. Calldata costs 16 gas per byte
+    /// after compression.
+    ///
+    /// Prior to fjord, calldata costs 16 gas per non-zero byte and 4 gas per zero byte.
+    pub fn data_gas(&self, input: &[u8]) -> U256 {
+        let mut rollup_data_gas_cost = U256::from(input.iter().fold(0, |acc, byte| {
+            acc + if *byte == 0x00 {
+                ZERO_BYTE_COST
+            } else {
+                NON_ZERO_BYTE_COST
+            }
+        }));
+
+        rollup_data_gas_cost
+    }
+
+    /// Calculate the gas cost of a transaction based on L1 block data posted on L2, post-Ecotone.
+    ///
+    /// [SpecId::ECOTONE] L1 cost function:
+    /// `(calldataGas/16)*(l1BaseFee*16*l1BaseFeeScalar + l1BlobBaseFee*l1BlobBaseFeeScalar)/1e6`
+    ///
+    /// We divide "calldataGas" by 16 to change from units of calldata gas to "estimated # of bytes when compressed".
+    /// Known as "compressedTxSize" in the spec.
+    ///
+    /// Function is actually computed as follows for better precision under integer arithmetic:
+    /// `calldataGas*(l1BaseFee*16*l1BaseFeeScalar + l1BlobBaseFee*l1BlobBaseFeeScalar)/16e6`
+    pub fn calculate_tx_l1_cost(&self, input: &[u8], empty_scalers: bool) -> U256 {
+        if input.is_empty() || input.first() == Some(&0x7F) {
+            return U256::ZERO;
+        }
+
+        // There is an edgecase where, for the very first Ecotone block (unless it is activated at Genesis), we must
+        // use the Bedrock cost function. To determine if this is the case, we can check if the Ecotone parameters are
+        // unset.
+        if empty_scalers {
+            return self.calculate_tx_l1_cost_bedrock(input);
+        }
+
+        let rollup_data_gas_cost = self.data_gas(input);
+        let l1_fee_scaled = self.calculate_l1_fee_scaled_ecotone();
+
+        l1_fee_scaled
+            .saturating_mul(rollup_data_gas_cost)
+            .wrapping_div(U256::from(1_000_000 * NON_ZERO_BYTE_COST))
+    }
+
+    /// Calculate the gas cost of a transaction based on L1 block data posted on L2, pre-Ecotone.
+    pub fn calculate_tx_l1_cost_bedrock(&self, input: &[u8]) -> U256 {
+        let rollup_data_gas_cost = self.data_gas(input);
+        println!("rollup_data_gas_cost: {:?}", rollup_data_gas_cost);
+        rollup_data_gas_cost
+            //.saturating_add(self.l1_fee_overhead)
+            .saturating_mul(U256::from(self.base_fee))
+            .saturating_mul(U256::from(self.base_fee_scalar))
+            .wrapping_div(U256::from(1_000_000))
+    }
+
+    // l1BaseFee*16*l1BaseFeeScalar + l1BlobBaseFee*l1BlobBaseFeeScalar
+    fn calculate_l1_fee_scaled_ecotone(&self) -> U256 {
+        let calldata_cost_per_byte: u64 = self
+            .base_fee
+            .saturating_mul(NON_ZERO_BYTE_COST)
+            .saturating_mul(self.base_fee_scalar as u64);
+        let blob_cost_per_byte = self
+            .blob_base_fee
+            .saturating_mul(self.blob_base_fee_scalar as u128);
+
+            U256::from(calldata_cost_per_byte).saturating_add(U256::from(blob_cost_per_byte))
     }
 }
 
@@ -642,6 +769,57 @@ impl L1BlockInfoHolocene {
             eip_1559_elasticity,
         })
     }
+
+    /// Calculate the data gas for posting the transaction on L1. Calldata costs 16 gas per byte
+    /// after compression.
+    pub fn data_gas(&self, input: &[u8]) -> U256 {
+        let estimated_size = self.tx_estimated_size_fjord(input);
+        return estimated_size
+            .saturating_mul(U256::from(NON_ZERO_BYTE_COST))
+            .wrapping_div(U256::from(1_000_000));
+    }
+
+    // Calculate the estimated compressed transaction size in bytes, scaled by 1e6.
+    // This value is computed based on the following formula:
+    // max(minTransactionSize, intercept + fastlzCoef*fastlzSize)
+    fn tx_estimated_size_fjord(&self, input: &[u8]) -> U256 {
+        let fastlz_size = U256::from(flz_compress_len(input));
+
+        fastlz_size
+            .saturating_mul(U256::from(836_500))
+            .saturating_sub(U256::from(42_585_600))
+            .max(U256::from(100_000_000))
+    }
+
+    /// Calculate the gas cost of a transaction based on L1 block data posted on L2, post-Fjord.
+    ///
+    /// [OptimismSpecId::FJORD] L1 cost function:
+    /// `estimatedSize*(baseFeeScalar*l1BaseFee*16 + blobFeeScalar*l1BlobBaseFee)/1e12`
+    pub fn calculate_tx_l1_cost(&self, input: &[u8]) -> U256 {
+        if input.is_empty() || input.first() == Some(&0x7F) {
+            return U256::ZERO;
+        }
+
+        let l1_fee_scaled = self.calculate_l1_fee_scaled_ecotone();
+        let estimated_size = self.tx_estimated_size_fjord(input);
+
+        U256::from(estimated_size)
+            .saturating_mul(U256::from(l1_fee_scaled))
+            .wrapping_div(U256::from(1_000_000_000_000u64))
+    }
+
+    // l1BaseFee*16*l1BaseFeeScalar + l1BlobBaseFee*l1BlobBaseFeeScalar
+    fn calculate_l1_fee_scaled_ecotone(&self) -> U256 {
+        let calldata_cost_per_byte: u64 = self
+            .base_fee
+            .saturating_mul(NON_ZERO_BYTE_COST)
+            .saturating_mul(self.base_fee_scalar as u64);
+        let blob_cost_per_byte = self
+            .blob_base_fee
+            .saturating_mul(self.blob_base_fee_scalar as u128);
+
+            U256::from(calldata_cost_per_byte).saturating_add(U256::from(blob_cost_per_byte))
+    }
 }
 
 #[cfg(test)]
@@ -653,6 +831,93 @@ mod test {
     const RAW_BEDROCK_INFO_TX: [u8; L1_INFO_TX_LEN_BEDROCK] = hex!("015d8eb9000000000000000000000000000000000000000000000000000000000117c4eb0000000000000000000000000000000000000000000000000000000065280377000000000000000000000000000000000000000000000000000000026d05d953392012032675be9f94aae5ab442de73c5f4fb1bf30fa7dd0d2442239899a40fc00000000000000000000000000000000000000000000000000000000000000040000000000000000000000006887246668a3b87f54deb3b94ba47a6f63f3298500000000000000000000000000000000000000000000000000000000000000bc00000000000000000000000000000000000000000000000000000000000a6fe0");
     const RAW_ECOTONE_INFO_TX: [u8; L1_INFO_TX_LEN_ECOTONE] = hex!("440a5e2000000558000c5fc5000000000000000500000000661c277300000000012bec20000000000000000000000000000000000000000000000000000000026e9f109900000000000000000000000000000000000000000000000000000000000000011c4c84c50740386c7dc081efddd644405f04cde73e30a2e381737acce9f5add30000000000000000000000006887246668a3b87f54deb3b94ba47a6f63f32985");
     const RAW_HOLOCENE_INFO_TX: [u8; L1_INFO_TX_LEN_HOLOCENE] = hex!("d1fbe15b00000558000c5fc5000000000000000500000000661c277300000000012bec20000000000000000000000000000000000000000000000000000000026e9f109900000000000000000000000000000000000000000000000000000000000000011c4c84c50740386c7dc081efddd644405f04cde73e30a2e381737acce9f5add30000000000000000000000006887246668a3b87f54deb3b94ba47a6f63f3298500000000000012340000000000005678");
+
+    fn get_default_bedrock_l1_info() -> L1BlockInfoBedrock {
+        let rollup_config = RollupConfig::default();
+        let system_config = SystemConfig::default();
+        let sequence_number = 0;
+        let l1_header = Header::default();
+        let l2_block_time = 0;
+
+        let l1_info = L1BlockInfoTx::try_new(
+            &rollup_config,
+            &system_config,
+            sequence_number,
+            &l1_header,
+            l2_block_time,
+        )
+        .unwrap();
+
+        let L1BlockInfoTx::Bedrock(l1_info) = l1_info else {
+            panic!("Wrong fork");
+        };
+
+        assert_eq!(l1_info.number, l1_header.number);
+        assert_eq!(l1_info.time, l1_header.timestamp);
+        assert_eq!(l1_info.base_fee, l1_header.base_fee_per_gas.unwrap_or(0) as u64);
+        assert_eq!(l1_info.block_hash, l1_header.hash_slow());
+        assert_eq!(l1_info.sequence_number, sequence_number);
+        assert_eq!(l1_info.batcher_address, system_config.batcher_address);
+        assert_eq!(l1_info.l1_fee_overhead, system_config.overhead);
+        assert_eq!(l1_info.l1_fee_scalar, system_config.scalar);
+
+        return l1_info;
+    }
+
+    fn get_default_ecotone_l1_info() -> L1BlockInfoEcotone {
+        let rollup_config = RollupConfig { ecotone_time: Some(1), ..Default::default() };
+        let system_config = SystemConfig::default();
+        let sequence_number = 0;
+        let l1_header = Header::default();
+        let l2_block_time = 0xFF;
+
+        let l1_info = L1BlockInfoTx::try_new(
+            &rollup_config,
+            &system_config,
+            sequence_number,
+            &l1_header,
+            l2_block_time,
+        )
+        .unwrap();
+
+        let L1BlockInfoTx::Ecotone(l1_info) = l1_info else {
+            panic!("Wrong fork");
+        };
+
+        assert_eq!(l1_info.number, l1_header.number);
+        assert_eq!(l1_info.time, l1_header.timestamp);
+        assert_eq!(l1_info.base_fee, l1_header.base_fee_per_gas.unwrap_or(0) as u64);
+        assert_eq!(l1_info.block_hash, l1_header.hash_slow());
+        assert_eq!(l1_info.sequence_number, sequence_number);
+        assert_eq!(l1_info.batcher_address, system_config.batcher_address);
+        assert_eq!(l1_info.blob_base_fee, l1_header.blob_fee().unwrap_or(1));
+
+        return l1_info;
+    }
+
+    fn get_default_holocene_l1_info() -> L1BlockInfoHolocene {
+        let rollup_config = RollupConfig { holocene_time: Some(1), ..Default::default() };
+        let system_config = SystemConfig::default();
+        let sequence_number = 0;
+        let l1_header = Header::default();
+        let l2_block_time = 0xFF;
+
+        let l1_info = L1BlockInfoTx::try_new(
+            &rollup_config,
+            &system_config,
+            sequence_number,
+            &l1_header,
+            l2_block_time,
+        )
+        .unwrap();
+
+        let L1BlockInfoTx::Holocene(l1_info) = l1_info else {
+            panic!("Wrong fork");
+        };
+
+        return l1_info;
+    }
+
 
     #[test]
     fn bedrock_l1_block_info_invalid_len() {
@@ -769,66 +1034,10 @@ mod test {
     }
 
     #[test]
-    fn try_new_with_deposit_tx_bedrock() {
-        let rollup_config = RollupConfig::default();
-        let system_config = SystemConfig::default();
-        let sequence_number = 0;
-        let l1_header = Header::default();
-        let l2_block_time = 0;
-
-        let l1_info = L1BlockInfoTx::try_new(
-            &rollup_config,
-            &system_config,
-            sequence_number,
-            &l1_header,
-            l2_block_time,
-        )
-        .unwrap();
-
-        let L1BlockInfoTx::Bedrock(l1_info) = l1_info else {
-            panic!("Wrong fork");
-        };
-
-        assert_eq!(l1_info.number, l1_header.number);
-        assert_eq!(l1_info.time, l1_header.timestamp);
-        assert_eq!(l1_info.base_fee, l1_header.base_fee_per_gas.unwrap_or(0) as u64);
-        assert_eq!(l1_info.block_hash, l1_header.hash_slow());
-        assert_eq!(l1_info.sequence_number, sequence_number);
-        assert_eq!(l1_info.batcher_address, system_config.batcher_address);
-        assert_eq!(l1_info.l1_fee_overhead, system_config.overhead);
-        assert_eq!(l1_info.l1_fee_scalar, system_config.scalar);
-    }
-
-    #[test]
     fn try_new_with_deposit_tx_ecotone() {
-        let rollup_config = RollupConfig { ecotone_time: Some(1), ..Default::default() };
-        let system_config = SystemConfig::default();
-        let sequence_number = 0;
-        let l1_header = Header::default();
-        let l2_block_time = 0xFF;
+        let l1_info = get_default_ecotone_l1_info();
 
-        let l1_info = L1BlockInfoTx::try_new(
-            &rollup_config,
-            &system_config,
-            sequence_number,
-            &l1_header,
-            l2_block_time,
-        )
-        .unwrap();
-
-        let L1BlockInfoTx::Ecotone(l1_info) = l1_info else {
-            panic!("Wrong fork");
-        };
-
-        assert_eq!(l1_info.number, l1_header.number);
-        assert_eq!(l1_info.time, l1_header.timestamp);
-        assert_eq!(l1_info.base_fee, l1_header.base_fee_per_gas.unwrap_or(0) as u64);
-        assert_eq!(l1_info.block_hash, l1_header.hash_slow());
-        assert_eq!(l1_info.sequence_number, sequence_number);
-        assert_eq!(l1_info.batcher_address, system_config.batcher_address);
-        assert_eq!(l1_info.blob_base_fee, l1_header.blob_fee().unwrap_or(1));
-
-        let scalar = system_config.scalar.to_be_bytes::<32>();
+        let scalar = SystemConfig::default().scalar.to_be_bytes::<32>();
         let blob_base_fee_scalar = (scalar[0] == L1_SCALAR_ECOTONE)
             .then(|| {
                 u32::from_be_bytes(
@@ -840,5 +1049,202 @@ mod test {
             u32::from_be_bytes(scalar[28..32].try_into().expect("Failed to parse base fee scalar"));
         assert_eq!(l1_info.blob_base_fee_scalar, blob_base_fee_scalar);
         assert_eq!(l1_info.base_fee_scalar, base_fee_scalar);
+    }
+
+    #[test]
+    fn test_data_gas_bedrock() {
+        let l1_info = get_default_bedrock_l1_info();
+
+        // 0xFACADE = 6 nibbles = 3 bytes
+        // 0xFACADE = 1111 1010 . 1100 1010 . 1101 1110
+        let input_1 = bytes!("FACADE");
+
+        // 0xFA00CA00DE = 10 nibbles = 5 bytes
+        // 0xFA00CA00DE = 1111 1010 . 0000 0000 . 1100 1010 . 0000 0000 . 1101 1110
+        let input_2 = bytes!("FA00CA00DE");
+
+        // Pre-regolith (ie bedrock) has an extra 68 non-zero bytes
+        // gas cost = 3 non-zero bytes * NON_ZERO_BYTE_COST + NON_ZERO_BYTE_COST * 68
+        // gas cost = 3 * 16 + 68 * 16 = 1136
+        let bedrock_data_gas = l1_info.data_gas(&input_1);
+        assert_eq!(bedrock_data_gas, U256::from(1136));
+
+        // Pre-regolith (ie bedrock) has an extra 68 non-zero bytes
+        // gas cost = 3 non-zero * NON_ZERO_BYTE_COST + 2 * ZERO_BYTE_COST + NON_ZERO_BYTE_COST * 68
+        // gas cost = 3 * 16 + 2 * 4 + 68 * 16 = 1144
+        let bedrock_data_gas = l1_info.data_gas(&input_2);
+        assert_eq!(bedrock_data_gas, U256::from(1144));
+    }
+
+    #[test]
+    fn test_data_gas_ecotone() {
+        let l1_info = get_default_ecotone_l1_info();
+
+        // 0xFACADE = 6 nibbles = 3 bytes
+        // 0xFACADE = 1111 1010 . 1100 1010 . 1101 1110
+        let input_1 = bytes!("FACADE");
+
+        // 0xFA00CA00DE = 10 nibbles = 5 bytes
+        // 0xFA00CA00DE = 1111 1010 . 0000 0000 . 1100 1010 . 0000 0000 . 1101 1110
+        let input_2 = bytes!("FA00CA00DE");
+        
+        // Regolith has no added 68 non zero bytes
+        // gas cost = 3 * 16 = 48
+        let regolith_data_gas = l1_info.data_gas(&input_1);
+        assert_eq!(regolith_data_gas, U256::from(48));
+        // Regolith has no added 68 non zero bytes
+        // gas cost = 3 * 16 + 2 * 4 = 56
+        let regolith_data_gas = l1_info.data_gas(&input_2);
+        assert_eq!(regolith_data_gas, U256::from(56));
+    }
+
+    #[test]
+    fn test_data_gas_holocene() {
+        let l1_info = get_default_holocene_l1_info();
+
+        // 0xFACADE = 6 nibbles = 3 bytes
+        // 0xFACADE = 1111 1010 . 1100 1010 . 1101 1110
+        let input_1 = bytes!("FACADE");
+
+        // 0xFA00CA00DE = 10 nibbles = 5 bytes
+        // 0xFA00CA00DE = 1111 1010 . 0000 0000 . 1100 1010 . 0000 0000 . 1101 1110
+        let input_2 = bytes!("FA00CA00DE");
+
+        // Fjord has a minimum compressed size of 100 bytes
+        // gas cost = 100 * 16 = 1600
+        let fjord_data_gas = l1_info.data_gas(&input_1);
+        assert_eq!(fjord_data_gas, U256::from(1600));
+
+        // Fjord has a minimum compressed size of 100 bytes
+        // gas cost = 100 * 16 = 1600
+        let fjord_data_gas = l1_info.data_gas(&input_2);
+        assert_eq!(fjord_data_gas, U256::from(1600));
+    }
+
+    #[test]
+    fn test_calculate_tx_l1_cost_bedrock() {
+        let mut l1_block_bedrock = get_default_bedrock_l1_info();
+        l1_block_bedrock.base_fee = 1_000;
+        l1_block_bedrock.l1_fee_overhead = U256::from(1_000);
+        l1_block_bedrock.l1_fee_scalar = U256::from(1_000);
+
+        let input = bytes!("FACADE");
+        let gas_cost = l1_block_bedrock.calculate_tx_l1_cost(&input);
+        assert_eq!(gas_cost, U256::from(2136));
+
+        // Zero rollup data gas cost should result in zero
+        let input = bytes!("");
+        let gas_cost = l1_block_bedrock.calculate_tx_l1_cost(&input);
+        assert_eq!(gas_cost, U256::ZERO);
+
+        // Deposit transactions with the EIP-2718 type of 0x7F should result in zero
+        let input = bytes!("7FFACADE");
+        let gas_cost = l1_block_bedrock.calculate_tx_l1_cost(&input);
+        assert_eq!(gas_cost, U256::ZERO);
+    }
+
+    #[test]
+    fn test_calculate_tx_l1_cost_ecotone() {
+        let mut l1_block_ecotone = get_default_ecotone_l1_info();
+        l1_block_ecotone.base_fee = 1_000;
+        l1_block_ecotone.blob_base_fee = 1_000;
+        l1_block_ecotone.blob_base_fee_scalar = 1_000;
+        l1_block_ecotone.base_fee_scalar = 1_000;
+
+        // calldataGas * (l1BaseFee * 16 * l1BaseFeeScalar + l1BlobBaseFee * l1BlobBaseFeeScalar) / (16 * 1e6)
+        // = (16 * 3) * (1000 * 16 * 1000 + 1000 * 1000) / (16 * 1e6)
+        // = 51
+        let input = bytes!("FACADE");
+        let gas_cost = l1_block_ecotone.calculate_tx_l1_cost(&input, false);
+        assert_eq!(gas_cost, U256::from(51));
+
+        // Zero rollup data gas cost should result in zero
+        let input = bytes!("");
+        let gas_cost = l1_block_ecotone.calculate_tx_l1_cost(&input, false);
+        assert_eq!(gas_cost, U256::ZERO);
+
+        // Deposit transactions with the EIP-2718 type of 0x7F should result in zero
+        let input = bytes!("7FFACADE");
+        let gas_cost = l1_block_ecotone.calculate_tx_l1_cost(&input, false);
+        assert_eq!(gas_cost, U256::ZERO);
+
+        // If the scalars are empty, the bedrock cost function should be used.
+        let input = bytes!("FACADE");
+        let gas_cost = l1_block_ecotone.calculate_tx_l1_cost(&input, true);
+        assert_eq!(gas_cost, U256::from(1048));
+    }
+
+    #[test]
+    fn test_calculate_tx_l1_cost_holocene() {
+        let mut l1_block_holocene = get_default_holocene_l1_info();
+
+        // l1FeeScaled = baseFeeScalar*l1BaseFee*16 + blobFeeScalar*l1BlobBaseFee
+        //             = 1000 * 1000 * 16 + 1000 * 1000
+        //             = 17e6
+        l1_block_holocene.base_fee = 1_000;
+        l1_block_holocene.blob_base_fee = 1_000;
+        l1_block_holocene.blob_base_fee_scalar = 1_000;
+        l1_block_holocene.base_fee_scalar = 1_000;
+
+        // fastLzSize = 4
+        // estimatedSize = max(minTransactionSize, intercept + fastlzCoef*fastlzSize)
+        //               = max(100e6, 836500*4 - 42585600)
+        //               = 100e6
+        let input = bytes!("FACADE");
+        // l1Cost = estimatedSize * l1FeeScaled / 1e12
+        //        = 100e6 * 17 / 1e6
+        //        = 1700
+        let gas_cost = l1_block_holocene.calculate_tx_l1_cost(&input);
+        assert_eq!(gas_cost, U256::from(1700));
+
+        // fastLzSize = 202
+        // estimatedSize = max(minTransactionSize, intercept + fastlzCoef*fastlzSize)
+        //               = max(100e6, 836500*202 - 42585600)
+        //               = 126387400
+        let input = bytes!("02f901550a758302df1483be21b88304743f94f80e51afb613d764fa61751affd3313c190a86bb870151bd62fd12adb8e41ef24f3f000000000000000000000000000000000000000000000000000000000000006e000000000000000000000000af88d065e77c8cc2239327c5edb3a432268e5831000000000000000000000000000000000000000000000000000000000003c1e5000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000000148c89ed219d02f1a5be012c689b4f5b731827bebe000000000000000000000000c001a033fd89cb37c31b2cba46b6466e040c61fc9b2a3675a7f5f493ebd5ad77c497f8a07cdf65680e238392693019b4092f610222e71b7cec06449cb922b93b6a12744e");
+        // l1Cost = estimatedSize * l1FeeScaled / 1e12
+        //        = 126387400 * 17 / 1e6
+        //        = 2148
+        let gas_cost = l1_block_holocene.calculate_tx_l1_cost(&input);
+        assert_eq!(gas_cost, U256::from(2148));
+
+        // Zero rollup data gas cost should result in zero
+        let input = bytes!("");
+        let gas_cost = l1_block_holocene.calculate_tx_l1_cost(&input);
+        assert_eq!(gas_cost, U256::ZERO);
+
+        // Deposit transactions with the EIP-2718 type of 0x7F should result in zero
+        let input = bytes!("7FFACADE");
+        let gas_cost = l1_block_holocene.calculate_tx_l1_cost(&input);
+        assert_eq!(gas_cost, U256::ZERO);
+    }
+
+    #[test]
+    fn calculate_tx_l1_cost_fjord() {
+        let mut l1_block_holocene = get_default_holocene_l1_info();
+
+        // L1 block info for OP mainnet fjord block 124665056
+        // <https://optimistic.etherscan.io/block/124665056>
+        l1_block_holocene.base_fee = 1055991687;
+        l1_block_holocene.blob_base_fee = 1;
+        l1_block_holocene.blob_base_fee_scalar = 1014213;
+        l1_block_holocene.base_fee_scalar = 5227;
+
+        // second tx in OP mainnet Fjord block 124665056
+        // <https://optimistic.etherscan.io/tx/0x1059e8004daff32caa1f1b1ef97fe3a07a8cf40508f5b835b66d9420d87c4a4a>
+        const TX: &[u8] = &hex!("02f904940a8303fba78401d6d2798401db2b6d830493e0943e6f4f7866654c18f536170780344aa8772950b680b904246a761202000000000000000000000000087000a300de7200382b55d40045000000e5d60e0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000014000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003a0000000000000000000000000000000000000000000000000000000000000022482ad56cb0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000120000000000000000000000000dc6ff44d5d932cbd77b52e5612ba0529dc6226f1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000044095ea7b300000000000000000000000021c4928109acb0659a88ae5329b5374a3024694c0000000000000000000000000000000000000000000000049b9ca9a6943400000000000000000000000000000000000000000000000000000000000000000000000000000000000021c4928109acb0659a88ae5329b5374a3024694c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000024b6b55f250000000000000000000000000000000000000000000000049b9ca9a694340000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000415ec214a3950bea839a7e6fbb0ba1540ac2076acd50820e2d5ef83d0902cdffb24a47aff7de5190290769c4f0a9c6fabf63012986a0d590b1b571547a8c7050ea1b00000000000000000000000000000000000000000000000000000000000000c080a06db770e6e25a617fe9652f0958bd9bd6e49281a53036906386ed39ec48eadf63a07f47cf51a4a40b4494cf26efc686709a9b03939e20ee27e59682f5faa536667e");
+
+        // l1 gas used for tx and l1 fee for tx, from OP mainnet block scanner
+        // https://optimistic.etherscan.io/tx/0x1059e8004daff32caa1f1b1ef97fe3a07a8cf40508f5b835b66d9420d87c4a4a
+        let expected_data_gas = U256::from(4471);
+        let expected_l1_fee = U256::from_be_bytes(hex!(
+            "00000000000000000000000000000000000000000000000000000005bf1ab43d"
+        ));
+
+        // test
+        let data_gas = l1_block_holocene.data_gas(TX);
+        assert_eq!(data_gas, expected_data_gas);
+        let l1_fee = l1_block_holocene.calculate_tx_l1_cost(TX);
+        assert_eq!(l1_fee, expected_l1_fee)
     }
 }

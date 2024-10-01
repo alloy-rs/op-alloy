@@ -24,6 +24,7 @@ alloy-primitives.workspace = true
 alloy-rlp.workspace = true
 alloy-eips.workspace = true
 alloy-consensus.workspace = true
+alloy-sol-types.workspace = true
 
 # Misc
 hashbrown.workspace = true
@@ -34,6 +35,7 @@ alloy-serde = { workspace = true, optional = true }
 
 [dev-dependencies]
 serde_json.workspace = true
+rstest = "0.22.0"
 
 [features]
 default = ["serde", "std"]
