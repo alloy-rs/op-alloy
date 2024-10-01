@@ -165,7 +165,7 @@ pub(crate) fn flz_compress_len(input: &[u8]) -> u32 {
     literals(input.len() as u32 - anchor, size)
 }
 
-fn literals(r: u32, size: u32) -> u32 {
+const fn literals(r: u32, size: u32) -> u32 {
     let size = size + 0x21 * (r / 0x20);
     let r = r % 0x20;
     if r != 0 {
@@ -175,7 +175,7 @@ fn literals(r: u32, size: u32) -> u32 {
     }
 }
 
-fn cmp(input: &[u8], p: u32, q: u32, r: u32) -> u32 {
+const fn cmp(input: &[u8], p: u32, q: u32, r: u32) -> u32 {
     let mut l = 0;
     let mut r = r - q;
     while l < r {
@@ -187,7 +187,7 @@ fn cmp(input: &[u8], p: u32, q: u32, r: u32) -> u32 {
     l
 }
 
-fn flz_match(l: u32, size: u32) -> u32 {
+const fn flz_match(l: u32, size: u32) -> u32 {
     let l = l - 1;
     let size = size + (3 * (l / 262));
     if l % 262 >= 6 {
@@ -202,7 +202,7 @@ fn set_next_hash(htab: &mut [u32; 8192], input: &[u8], idx: u32) -> u32 {
     idx + 1
 }
 
-fn hash(v: u32) -> u16 {
+const fn hash(v: u32) -> u16 {
     let hash = (v as u64 * 2654435769) >> 19;
     hash as u16 & 0x1fff
 }
@@ -273,7 +273,7 @@ mod tests {
         let native_val = flz_compress_len(&input);
 
         let mut evm = Evm::builder()
-            .with_db(BenchmarkDB::new_bytecode(contract_bytecode.clone()))
+            .with_db(BenchmarkDB::new_bytecode(contract_bytecode))
             .modify_tx_env(|tx| {
                 tx.caller = address!("1000000000000000000000000000000000000000");
                 tx.transact_to = TxKind::Call(address!("0000000000000000000000000000000000000000"));

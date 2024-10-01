@@ -1,4 +1,4 @@
-//! This module contains the [L1BlockInfoTx] type, and various encoding / decoding methods for it.
+//! This module contains the L1 block fee calculation function.
 use alloy_primitives::{bytes, U256};
 
 use crate::utils::flz_compress_len;
@@ -13,7 +13,7 @@ const NON_ZERO_BYTE_COST: u64 = 16;
 /// In bedrock, calldata costs 16 gas per non-zero byte and 4 gas per zero byte, with
 /// an extra 68 non-zero bytes were included in the rollup data costs to account for the empty signature.
 fn data_gas_bedrock(input: &[u8]) -> U256 {
-    return data_gas_regolith(input) + U256::from(NON_ZERO_BYTE_COST).mul(U256::from(68));
+    data_gas_regolith(input) + U256::from(NON_ZERO_BYTE_COST).mul(U256::from(68))
 }
 
 /// Calculate the data gas for posting the transaction on L1.
@@ -32,9 +32,9 @@ fn data_gas_regolith(input: &[u8]) -> U256 {
 /// In fjord, Calldata costs 16 gas per byte after compression.
 fn data_gas_fjord(input: &[u8]) -> U256 {
     let estimated_size = tx_estimated_size_fjord(input);
-    return estimated_size
+    estimated_size
         .saturating_mul(U256::from(NON_ZERO_BYTE_COST))
-        .wrapping_div(U256::from(1_000_000));
+        .wrapping_div(U256::from(1_000_000))
 }
 
 // Calculate the estimated compressed transaction size in bytes, scaled by 1e6.
