@@ -1,5 +1,5 @@
 //! This module contains the L1 block fee calculation function.
-use alloy_primitives::{bytes, U256};
+use alloy_primitives::U256;
 
 use crate::utils::flz_compress_len;
 use core::ops::Mul;
@@ -11,7 +11,8 @@ const NON_ZERO_BYTE_COST: u64 = 16;
 /// Calculate the data gas for posting the transaction on L1.
 ///
 /// In bedrock, calldata costs 16 gas per non-zero byte and 4 gas per zero byte, with
-/// an extra 68 non-zero bytes were included in the rollup data costs to account for the empty signature.
+/// an extra 68 non-zero bytes were included in the rollup data costs to account for the empty
+/// signature.
 pub fn data_gas_bedrock(input: &[u8]) -> U256 {
     data_gas_regolith(input) + U256::from(NON_ZERO_BYTE_COST).mul(U256::from(68))
 }
@@ -92,8 +93,8 @@ pub fn calculate_tx_l1_cost_regolith(
 /// L1 cost function:
 /// `(calldataGas/16)*(l1BaseFee*16*l1BaseFeeScalar + l1BlobBaseFee*l1BlobBaseFeeScalar)/1e6`
 ///
-/// We divide "calldataGas" by 16 to change from units of calldata gas to "estimated # of bytes when compressed".
-/// Known as "compressedTxSize" in the spec.
+/// We divide "calldataGas" by 16 to change from units of calldata gas to "estimated # of bytes when
+/// compressed". Known as "compressedTxSize" in the spec.
 ///
 /// Function is actually computed as follows for better precision under integer arithmetic:
 /// `calldataGas*(l1BaseFee*16*l1BaseFeeScalar + l1BlobBaseFee*l1BlobBaseFeeScalar)/16e6`
@@ -164,7 +165,7 @@ fn calculate_l1_fee_scaled_ecotone(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use alloy_primitives::hex;
+    use alloy_primitives::{bytes, hex};
 
     #[test]
     fn test_data_gas_bedrock() {
@@ -238,8 +239,8 @@ mod tests {
         let l1_fee_overhead = U256::from(1_000);
         let l1_fee_scalar = U256::from(1_000);
 
-        // calldataGas * (l1BaseFee * 16 * l1BaseFeeScalar + l1BlobBaseFee * l1BlobBaseFeeScalar) / (16 * 1e6)
-        // = (16 * 3 + 16 * 68 + 1000) * 1000 * 1000 / (1_000_000)
+        // calldataGas * (l1BaseFee * 16 * l1BaseFeeScalar + l1BlobBaseFee * l1BlobBaseFeeScalar) /
+        // (16 * 1e6) = (16 * 3 + 16 * 68 + 1000) * 1000 * 1000 / (1_000_000)
         // = 2136
         let input = bytes!("FACADE");
         let gas_cost =
@@ -266,8 +267,8 @@ mod tests {
         let l1_fee_overhead = U256::from(1_000);
         let l1_fee_scalar = U256::from(1_000);
 
-        // calldataGas * (l1BaseFee * 16 * l1BaseFeeScalar + l1BlobBaseFee * l1BlobBaseFeeScalar) / (16 * 1e6)
-        // = (16 * 3 + 1000) * 1000 * 1000 / (1_000_000)
+        // calldataGas * (l1BaseFee * 16 * l1BaseFeeScalar + l1BlobBaseFee * l1BlobBaseFeeScalar) /
+        // (16 * 1e6) = (16 * 3 + 1000) * 1000 * 1000 / (1_000_000)
         // = 1048
         let input = bytes!("FACADE");
         let gas_cost =
@@ -294,8 +295,8 @@ mod tests {
         let blob_base_fee_scalar = U256::from(1_000);
         let base_fee_scalar = U256::from(1_000);
 
-        // calldataGas * (l1BaseFee * 16 * l1BaseFeeScalar + l1BlobBaseFee * l1BlobBaseFeeScalar) / (16 * 1e6)
-        // = (16 * 3) * (1000 * 16 * 1000 + 1000 * 1000) / (16 * 1e6)
+        // calldataGas * (l1BaseFee * 16 * l1BaseFeeScalar + l1BlobBaseFee * l1BlobBaseFeeScalar) /
+        // (16 * 1e6) = (16 * 3) * (1000 * 16 * 1000 + 1000 * 1000) / (16 * 1e6)
         // = 51
         let input = bytes!("FACADE");
         let gas_cost = calculate_tx_l1_cost_ecotone(

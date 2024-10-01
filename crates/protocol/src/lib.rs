@@ -46,5 +46,5 @@ pub use block_info::{L1BlockInfoBedrock, L1BlockInfoEcotone, L1BlockInfoTx};
 pub mod fee;
 pub use fee::{
     calculate_tx_l1_cost_bedrock, calculate_tx_l1_cost_ecotone, calculate_tx_l1_cost_fjord,
-    calculate_tx_l1_cost_regolith, data_gas_bedrock, data_gas_regolith, data_gas_fjord,
+    calculate_tx_l1_cost_regolith, data_gas_bedrock, data_gas_fjord, data_gas_regolith,
 };
