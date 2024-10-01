@@ -512,7 +512,7 @@ pub enum EIP1559UpdateError {
     LengthDecodingError,
     /// The data length is invalid.
     InvalidDataLength(u64),
-    /// Failed to decode the gas limit argument from the eip 1559 update log.
+    /// Failed to decode the eip1559 params argument from the eip 1559 update log.
     EIP1559DecodingError,
 }
 
