@@ -70,3 +70,54 @@ impl OptimismAttributesWithParent {
         self.is_last_in_span
     }
 }
+
+#[cfg(all(test, feature = "serde"))]
+mod test {
+    use super::*;
+    use alloy_primitives::{b64, Address, B256};
+    use alloy_rpc_types_engine::PayloadAttributes;
+
+    #[test]
+    fn test_serde_roundtrip_attributes_pre_holocene() {
+        let attributes = OptimismPayloadAttributes {
+            payload_attributes: PayloadAttributes {
+                timestamp: 0x1337,
+                prev_randao: B256::ZERO,
+                suggested_fee_recipient: Address::ZERO,
+                withdrawals: Default::default(),
+                parent_beacon_block_root: Some(B256::ZERO),
+            },
+            transactions: Some(vec![b"hello".to_vec().into()]),
+            no_tx_pool: Some(true),
+            gas_limit: Some(42),
+            eip_1559_params: None,
+        };
+
+        let ser = serde_json::to_string(&attributes).unwrap();
+        let de: OptimismPayloadAttributes = serde_json::from_str(&ser).unwrap();
+
+        assert_eq!(attributes, de);
+    }
+
+    #[test]
+    fn test_serde_roundtrip_attributes_post_holocene() {
+        let attributes = OptimismPayloadAttributes {
+            payload_attributes: PayloadAttributes {
+                timestamp: 0x1337,
+                prev_randao: B256::ZERO,
+                suggested_fee_recipient: Address::ZERO,
+                withdrawals: Default::default(),
+                parent_beacon_block_root: Some(B256::ZERO),
+            },
+            transactions: Some(vec![b"hello".to_vec().into()]),
+            no_tx_pool: Some(true),
+            gas_limit: Some(42),
+            eip_1559_params: Some(b64!("0000dead0000beef")),
+        };
+
+        let ser = serde_json::to_string(&attributes).unwrap();
+        let de: OptimismPayloadAttributes = serde_json::from_str(&ser).unwrap();
+
+        assert_eq!(attributes, de);
+    }
+}
