@@ -1,16 +1,5 @@
 //! This module contains the [L1BlockInfoTx] type, and various encoding / decoding methods for it.
-
-use crate::{DepositSourceDomain, L1InfoDepositSource};
-use alloc::{
-    format,
-    string::{String, ToString},
-    vec::Vec,
-};
-use alloy_consensus::Header;
-use alloy_eips::BlockNumHash;
-use alloy_primitives::{address, bytes, Address, Bytes, TxKind, B256, U256};
-use op_alloy_consensus::{OpTxEnvelope, TxDeposit};
-use op_alloy_genesis::{RollupConfig, SystemConfig};
+use alloy_primitives::{bytes, U256};
 
 use crate::utils::flz_compress_len;
 use core::ops::Mul;
