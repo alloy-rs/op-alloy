@@ -12,11 +12,7 @@ where
 pub(crate) fn flz_compress_len(input: &[u8]) -> u32 {
     let mut idx: u32 = 2;
 
-    let idx_limit: u32 = if input.len() < 13 {
-        0
-    } else {
-        input.len() as u32 - 13
-    };
+    let idx_limit: u32 = if input.len() < 13 { 0 } else { input.len() as u32 - 13 };
 
     let mut anchor = 0;
 
@@ -115,7 +111,7 @@ fn u24(input: &[u8], idx: u32) -> u32 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use alloy_primitives::{bytes};
+    use alloy_primitives::bytes;
     use rstest::rstest;
 
     #[rstest]

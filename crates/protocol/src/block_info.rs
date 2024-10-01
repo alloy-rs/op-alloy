@@ -8,12 +8,11 @@ use alloc::{
 };
 use alloy_consensus::Header;
 use alloy_eips::BlockNumHash;
-use alloy_primitives::{address, Address, Bytes, TxKind, B256, U256, bytes};
+use alloy_primitives::{address, bytes, Address, Bytes, TxKind, B256, U256};
 use op_alloy_consensus::{OpTxEnvelope, TxDeposit};
 use op_alloy_genesis::{RollupConfig, SystemConfig};
 
 use crate::utils::flz_compress_len;
-
 use core::ops::Mul;
 
 /// The system transaction gas limit post-Regolith
@@ -449,7 +448,7 @@ impl L1BlockInfoTx {
     }
 
     /// Returns the L1 block cost
-    pub fn calculate_tx_l1_cost(&self, input: &[u8], empty_scalers: bool, ) -> U256 {
+    pub fn calculate_tx_l1_cost(&self, input: &[u8], empty_scalers: bool) -> U256 {
         match self {
             Self::Bedrock(bedrock_tx) => bedrock_tx.calculate_tx_l1_cost(input),
             Self::Ecotone(ecotone_tx) => ecotone_tx.calculate_tx_l1_cost(input, empty_scalers),
@@ -527,14 +526,8 @@ impl L1BlockInfoBedrock {
     /// account for the empty signature.
     pub fn data_gas(&self, input: &[u8]) -> U256 {
         let mut rollup_data_gas_cost = U256::from(input.iter().fold(0, |acc, byte| {
-            acc + if *byte == 0x00 {
-                ZERO_BYTE_COST
-            } else {
-                NON_ZERO_BYTE_COST
-            }
+            acc + if *byte == 0x00 { ZERO_BYTE_COST } else { NON_ZERO_BYTE_COST }
         }));
-
-        println!("rollup_data_gas_cost: {:?}", rollup_data_gas_cost);
 
         // Prior to regolith, an extra 68 non zero bytes were included in the rollup data costs.
         rollup_data_gas_cost += U256::from(NON_ZERO_BYTE_COST).mul(U256::from(68));
@@ -549,14 +542,12 @@ impl L1BlockInfoBedrock {
         }
 
         let rollup_data_gas_cost = self.data_gas(input);
-        println!("rollup_data_gas_cost: {:?}", rollup_data_gas_cost);
         rollup_data_gas_cost
             .saturating_add(self.l1_fee_overhead)
             .saturating_mul(U256::from(self.base_fee))
             .saturating_mul(self.l1_fee_scalar)
             .wrapping_div(U256::from(1_000_000))
     }
-
 }
 
 impl L1BlockInfoEcotone {
@@ -629,12 +620,8 @@ impl L1BlockInfoEcotone {
     ///
     /// Prior to fjord, calldata costs 16 gas per non-zero byte and 4 gas per zero byte.
     pub fn data_gas(&self, input: &[u8]) -> U256 {
-        let mut rollup_data_gas_cost = U256::from(input.iter().fold(0, |acc, byte| {
-            acc + if *byte == 0x00 {
-                ZERO_BYTE_COST
-            } else {
-                NON_ZERO_BYTE_COST
-            }
+        let rollup_data_gas_cost = U256::from(input.iter().fold(0, |acc, byte| {
+            acc + if *byte == 0x00 { ZERO_BYTE_COST } else { NON_ZERO_BYTE_COST }
         }));
 
         rollup_data_gas_cost
@@ -673,7 +660,6 @@ impl L1BlockInfoEcotone {
     /// Calculate the gas cost of a transaction based on L1 block data posted on L2, pre-Ecotone.
     pub fn calculate_tx_l1_cost_bedrock(&self, input: &[u8]) -> U256 {
         let rollup_data_gas_cost = self.data_gas(input);
-        println!("rollup_data_gas_cost: {:?}", rollup_data_gas_cost);
         rollup_data_gas_cost
             //.saturating_add(self.l1_fee_overhead)
             .saturating_mul(U256::from(self.base_fee))
@@ -687,11 +673,10 @@ impl L1BlockInfoEcotone {
             .base_fee
             .saturating_mul(NON_ZERO_BYTE_COST)
             .saturating_mul(self.base_fee_scalar as u64);
-        let blob_cost_per_byte = self
-            .blob_base_fee
-            .saturating_mul(self.blob_base_fee_scalar as u128);
+        let blob_cost_per_byte =
+            self.blob_base_fee.saturating_mul(self.blob_base_fee_scalar as u128);
 
-            U256::from(calldata_cost_per_byte).saturating_add(U256::from(blob_cost_per_byte))
+        U256::from(calldata_cost_per_byte).saturating_add(U256::from(blob_cost_per_byte))
     }
 }
 
@@ -814,11 +799,10 @@ impl L1BlockInfoHolocene {
             .base_fee
             .saturating_mul(NON_ZERO_BYTE_COST)
             .saturating_mul(self.base_fee_scalar as u64);
-        let blob_cost_per_byte = self
-            .blob_base_fee
-            .saturating_mul(self.blob_base_fee_scalar as u128);
+        let blob_cost_per_byte =
+            self.blob_base_fee.saturating_mul(self.blob_base_fee_scalar as u128);
 
-            U256::from(calldata_cost_per_byte).saturating_add(U256::from(blob_cost_per_byte))
+        U256::from(calldata_cost_per_byte).saturating_add(U256::from(blob_cost_per_byte))
     }
 }
 
@@ -917,7 +901,6 @@ mod test {
 
         return l1_info;
     }
-
 
     #[test]
     fn bedrock_l1_block_info_invalid_len() {
@@ -1087,7 +1070,7 @@ mod test {
         // 0xFA00CA00DE = 10 nibbles = 5 bytes
         // 0xFA00CA00DE = 1111 1010 . 0000 0000 . 1100 1010 . 0000 0000 . 1101 1110
         let input_2 = bytes!("FA00CA00DE");
-        
+
         // Regolith has no added 68 non zero bytes
         // gas cost = 3 * 16 = 48
         let regolith_data_gas = l1_info.data_gas(&input_1);
