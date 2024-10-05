@@ -110,9 +110,7 @@ impl<T> OpReceiptEnvelope<T> {
     /// receipt types may be added.
     pub const fn as_receipt(&self) -> Option<&Receipt<T>> {
         match self {
-            Self::Legacy(t) | Self::Eip2930(t) | Self::Eip1559(t) => {
-                Some(&t.receipt)
-            }
+            Self::Legacy(t) | Self::Eip2930(t) | Self::Eip1559(t) => Some(&t.receipt),
             Self::Deposit(t) => Some(&t.receipt.inner),
         }
     }
@@ -210,9 +208,7 @@ impl Encodable2718 for OpReceiptEnvelope {
         }
         match self {
             Self::Deposit(t) => t.encode(out),
-            Self::Legacy(t) | Self::Eip2930(t) | Self::Eip1559(t) => {
-                t.encode(out)
-            }
+            Self::Legacy(t) | Self::Eip2930(t) | Self::Eip1559(t) => t.encode(out),
         }
     }
 }

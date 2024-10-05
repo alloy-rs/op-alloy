@@ -1,6 +1,4 @@
-use alloy_consensus::{
-    Signed, TxEip1559, TxEip2930, TxLegacy,
-};
+use alloy_consensus::{Signed, TxEip1559, TxEip2930, TxLegacy};
 use alloy_eips::eip2718::{Decodable2718, Eip2718Error, Eip2718Result, Encodable2718};
 use alloy_rlp::{Decodable, Encodable, Header};
 use derive_more::Display;
@@ -37,8 +35,7 @@ pub enum OpTxType {
 
 impl OpTxType {
     /// List of all variants.
-    pub const ALL: [Self; 4] =
-        [Self::Legacy, Self::Eip2930, Self::Eip1559, Self::Deposit];
+    pub const ALL: [Self; 4] = [Self::Legacy, Self::Eip2930, Self::Eip1559, Self::Deposit];
 }
 
 #[cfg(any(test, feature = "arbitrary"))]
