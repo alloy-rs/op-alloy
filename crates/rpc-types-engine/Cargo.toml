@@ -15,21 +15,24 @@ exclude.workspace = true
 workspace = true
 
 [dependencies]
+# Encoding
 snap = "1.1.1"
 ethereum_ssz = "0.8"
 
-alloy-primitives.workspace = true
-alloy-rpc-types-engine = { workspace = true, features = ["ssz"] }
+# Workspace
 op-alloy-protocol.workspace = true
 
-derive_more = { workspace = true, features = ["display"] }
-
-# arbitrary
-arbitrary = { workspace = true, features = ["derive"], optional = true }
+# Alloy
+alloy-primitives.workspace = true
+alloy-rpc-types-engine = { workspace = true, features = ["ssz"] }
 
 # serde
 serde = { workspace = true, optional = true }
 alloy-serde = { workspace = true, optional = true }
+
+# misc
+derive_more = { workspace = true, features = ["display"] }
+arbitrary = { workspace = true, features = ["derive"], optional = true }
 
 [dev-dependencies]
 serde_json.workspace = true
