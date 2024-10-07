@@ -1,4 +1,6 @@
 use super::OpTxType;
+#[cfg(not(feature = "std"))]
+use alloc::vec::Vec;
 use alloy_consensus::{SignableTransaction, Signed, Transaction};
 use alloy_eips::eip2930::AccessList;
 use alloy_primitives::{keccak256, Address, Bytes, ChainId, TxKind, B256, U256};
