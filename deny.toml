@@ -24,6 +24,7 @@ allow = [
     "Unicode-DFS-2016",
     "Unlicense",
     "MPL-2.0",
+    "Zlib",
     # https://github.com/briansmith/ring/issues/902
     "LicenseRef-ring",
 ]
@@ -53,4 +54,7 @@ license-files = [{ path = "LICENSE", hash = 0x001c7e6c }]
 unknown-registry = "deny"
 unknown-git = "deny"
 # TODO: Remove `alloy-rs/core` once alloy-contract is stable. This is only used in tests for `sol!`.
-allow-git = ["https://github.com/alloy-rs/core", "https://github.com/alloy-rs/alloy"]
+allow-git = [
+    "https://github.com/alloy-rs/core",
+    "https://github.com/alloy-rs/alloy",
+]
