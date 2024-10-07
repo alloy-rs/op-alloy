@@ -243,7 +243,7 @@ impl Decodable for TxDeposit {
     }
 }
 
-impl SignableTransaction<alloy_primitives::Signature> for TxDeposit {
+impl SignableTransaction<Signature> for TxDeposit {
     fn set_chain_id(&mut self, _chain_id: ChainId) {}
 
     fn payload_len_for_signature(&self) -> usize {
@@ -254,7 +254,7 @@ impl SignableTransaction<alloy_primitives::Signature> for TxDeposit {
         self.encode_inner(out, false);
     }
 
-    fn into_signed(self, signature: alloy_primitives::Signature) -> alloy_consensus::Signed<Self> {
+    fn into_signed(self, signature: Signature) -> alloy_consensus::Signed<Self> {
         let payload_length = self.encoded_len(false) + signature.rlp_vrs_len();
         let mut out = Vec::with_capacity(payload_length);
         self.encode_inner(&mut out, false);
