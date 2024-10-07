@@ -313,10 +313,7 @@ mod tests {
 
     #[test]
     fn test_system_transaction() {
-        let mut tx = TxDeposit {
-            is_system_transaction: true,
-            ..Default::default()
-        };
+        let mut tx = TxDeposit { is_system_transaction: true, ..Default::default() };
         let tx_envelope = OpTxEnvelope::Deposit(tx.clone());
         assert!(tx_envelope.is_system_transaction());
 
