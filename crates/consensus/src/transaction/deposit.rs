@@ -1,10 +1,9 @@
-use super::{OpTxType, DEPOSIT_TX_TYPE_ID};
+use super::OpTxType;
 use alloy_consensus::{SignableTransaction, Signed, Transaction};
 use alloy_eips::eip2930::AccessList;
 use alloy_primitives::{keccak256, Address, Bytes, ChainId, TxKind, B256, U256};
 use alloy_rlp::{
-    length_of_length, Buf, BufMut, Decodable, Encodable, Error as DecodeError, Header,
-    EMPTY_STRING_CODE,
+    Buf, BufMut, Decodable, Encodable, Error as DecodeError, Header, EMPTY_STRING_CODE,
 };
 use core::mem;
 
@@ -250,9 +249,7 @@ impl SignableTransaction<alloy_primitives::Signature> for TxDeposit {
     }
 
     fn encode_for_signing(&self, out: &mut dyn alloy_rlp::BufMut) {
-        out.put(self.tx_type() as u8);
-        alloy_rlp::Header { list: true, payload_length: self.fields_len() }.encode(out);
-        self.encode_fields(out);
+        self.encode_inner(out, false);
     }
 
     fn into_signed(self, signature: alloy_primitives::Signature) -> alloy_consensus::Signed<Self> {
