@@ -1,8 +1,8 @@
 #![allow(missing_docs)]
 //! OP rollup config types.
 
+use alloy_eips::BlockNumHash;
 use alloy_primitives::{Address, B256};
-use alloy_rpc_types_eth::BlockId;
 use serde::{Deserialize, Serialize};
 
 // https://github.com/ethereum-optimism/optimism/blob/c7ad0ebae5dca3bf8aa6f219367a95c15a15ae41/op-service/eth/types.go#L371
@@ -17,13 +17,13 @@ pub struct SystemConfig {
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Genesis {
-    pub l1: BlockId,
-    pub l2: BlockId,
+    pub l1: BlockNumHash,
+    pub l2: BlockNumHash,
     pub l2_time: u64,
     pub system_config: SystemConfig,
 }
 
-// https://github.com/ethereum-optimism/optimism/blob/develop/op-node/rollup/types.go#L53
+// <https://github.com/ethereum-optimism/optimism/blob/77c91d09eaa44d2c53bec60eb89c5c55737bc325/op-node/rollup/types.go#L66>
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct RollupConfig {
     pub genesis: Genesis,
