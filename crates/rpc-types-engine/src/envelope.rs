@@ -1,7 +1,7 @@
 //! Optimism execution payload envelope in network format and related types.
 //!
 //! This module uses the `snappy` compression algorithm to decompress the payload.
-//! The license for snappy can be found in the `SNAPPY-LICENSE` file inside this crate.
+//! The license for snappy can be found in the `SNAPPY-LICENSE` at the root of the repository.
 
 use alloy_primitives::{keccak256, Signature, B256};
 use alloy_rpc_types_engine::{
@@ -116,7 +116,7 @@ pub enum PayloadEnvelopeError {
 /// Represents the Keccak256 hash of the block
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 #[cfg_attr(any(test, feature = "arbitrary"), derive(arbitrary::Arbitrary))]
-pub struct PayloadHash(B256);
+pub struct PayloadHash(pub B256);
 
 impl From<&[u8]> for PayloadHash {
     /// Returns the Keccak256 hash of a sequence of bytes

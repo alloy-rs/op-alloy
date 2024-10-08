@@ -15,16 +15,16 @@ exclude.workspace = true
 workspace = true
 
 [dependencies]
-# Encoding
-snap = "1.1.1"
-ethereum_ssz = "0.8"
-
 # Workspace
 op-alloy-protocol.workspace = true
 
 # Alloy
 alloy-primitives.workspace = true
 alloy-rpc-types-engine = { workspace = true, features = ["ssz"] }
+
+# Encoding
+snap.workspace = true
+ethereum_ssz.workspace = true
 
 # serde
 serde = { workspace = true, optional = true }
