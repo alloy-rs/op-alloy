@@ -154,6 +154,17 @@ impl OpTxEnvelope {
         }
     }
 
+    /// Returns the gas limit of the transaction.
+    #[inline]
+    pub const fn gas_limit(&self) -> u64 {
+        match self {
+            Self::Legacy(tx) => tx.tx().gas_limit,
+            Self::Eip2930(tx) => tx.tx().gas_limit,
+            Self::Eip1559(tx) => tx.tx().gas_limit,
+            Self::Deposit(tx) => tx.gas_limit,
+        }
+    }
+
     /// Returns the [`TxLegacy`] variant if the transaction is a legacy transaction.
     pub const fn as_legacy(&self) -> Option<&Signed<TxLegacy>> {
         match self {
@@ -310,6 +321,13 @@ mod tests {
     use super::*;
     use alloc::vec;
     use alloy_primitives::{hex, Address, Bytes, TxKind, B256, U256};
+
+    #[test]
+    fn test_tx_gas_limit() {
+        let tx = TxDeposit { gas_limit: 1, ..Default::default() };
+        let tx_envelope = OpTxEnvelope::Deposit(tx);
+        assert_eq!(tx_envelope.gas_limit(), 1);
+    }
 
     #[test]
     fn test_system_transaction() {
