@@ -1,5 +1,10 @@
-use alloy_consensus::{Signed, TxEip1559, TxEip2930, TxLegacy};
-use alloy_eips::eip2718::{Decodable2718, Eip2718Error, Eip2718Result, Encodable2718};
+use alloy_consensus::{Signed, Transaction, TxEip1559, TxEip2930, TxLegacy};
+use alloy_eips::{
+    eip2718::{Decodable2718, Eip2718Error, Eip2718Result, Encodable2718},
+    eip2930::AccessList,
+    eip7702::SignedAuthorization,
+};
+use alloy_primitives::{TxKind, B256, U256};
 use alloy_rlp::{Decodable, Encodable, Header};
 use derive_more::Display;
 
@@ -120,6 +125,143 @@ impl From<TxDeposit> for OpTxEnvelope {
     }
 }
 
+impl Transaction for OpTxEnvelope {
+    fn chain_id(&self) -> Option<u64> {
+        match self {
+            Self::Legacy(tx) => tx.tx().chain_id(),
+            Self::Eip2930(tx) => tx.tx().chain_id(),
+            Self::Eip1559(tx) => tx.tx().chain_id(),
+            Self::Deposit(tx) => tx.chain_id(),
+        }
+    }
+
+    fn nonce(&self) -> u64 {
+        match self {
+            Self::Legacy(tx) => tx.tx().nonce(),
+            Self::Eip2930(tx) => tx.tx().nonce(),
+            Self::Eip1559(tx) => tx.tx().nonce(),
+            Self::Deposit(tx) => tx.nonce(),
+        }
+    }
+
+    fn gas_limit(&self) -> u64 {
+        match self {
+            Self::Legacy(tx) => tx.tx().gas_limit(),
+            Self::Eip2930(tx) => tx.tx().gas_limit(),
+            Self::Eip1559(tx) => tx.tx().gas_limit(),
+            Self::Deposit(tx) => tx.gas_limit(),
+        }
+    }
+
+    fn gas_price(&self) -> Option<u128> {
+        match self {
+            Self::Legacy(tx) => tx.tx().gas_price(),
+            Self::Eip2930(tx) => tx.tx().gas_price(),
+            Self::Eip1559(tx) => tx.tx().gas_price(),
+            Self::Deposit(tx) => tx.gas_price(),
+        }
+    }
+
+    fn max_fee_per_gas(&self) -> u128 {
+        match self {
+            Self::Legacy(tx) => tx.tx().max_fee_per_gas(),
+            Self::Eip2930(tx) => tx.tx().max_fee_per_gas(),
+            Self::Eip1559(tx) => tx.tx().max_fee_per_gas(),
+            Self::Deposit(tx) => tx.max_fee_per_gas(),
+        }
+    }
+
+    fn max_priority_fee_per_gas(&self) -> Option<u128> {
+        match self {
+            Self::Legacy(tx) => tx.tx().max_priority_fee_per_gas(),
+            Self::Eip2930(tx) => tx.tx().max_priority_fee_per_gas(),
+            Self::Eip1559(tx) => tx.tx().max_priority_fee_per_gas(),
+            Self::Deposit(tx) => tx.max_priority_fee_per_gas(),
+        }
+    }
+
+    fn max_fee_per_blob_gas(&self) -> Option<u128> {
+        match self {
+            Self::Legacy(tx) => tx.tx().max_fee_per_blob_gas(),
+            Self::Eip2930(tx) => tx.tx().max_fee_per_blob_gas(),
+            Self::Eip1559(tx) => tx.tx().max_fee_per_blob_gas(),
+            Self::Deposit(tx) => tx.max_fee_per_blob_gas(),
+        }
+    }
+
+    fn priority_fee_or_price(&self) -> u128 {
+        match self {
+            Self::Legacy(tx) => tx.tx().priority_fee_or_price(),
+            Self::Eip2930(tx) => tx.tx().priority_fee_or_price(),
+            Self::Eip1559(tx) => tx.tx().priority_fee_or_price(),
+            Self::Deposit(tx) => tx.priority_fee_or_price(),
+        }
+    }
+
+    fn to(&self) -> TxKind {
+        match self {
+            Self::Legacy(tx) => tx.tx().to(),
+            Self::Eip2930(tx) => tx.tx().to(),
+            Self::Eip1559(tx) => tx.tx().to(),
+            Self::Deposit(tx) => tx.to(),
+        }
+    }
+
+    fn value(&self) -> U256 {
+        match self {
+            Self::Legacy(tx) => tx.tx().value(),
+            Self::Eip2930(tx) => tx.tx().value(),
+            Self::Eip1559(tx) => tx.tx().value(),
+            Self::Deposit(tx) => tx.value(),
+        }
+    }
+
+    fn input(&self) -> &[u8] {
+        match self {
+            Self::Legacy(tx) => tx.tx().input(),
+            Self::Eip2930(tx) => tx.tx().input(),
+            Self::Eip1559(tx) => tx.tx().input(),
+            Self::Deposit(tx) => tx.input(),
+        }
+    }
+
+    fn ty(&self) -> u8 {
+        match self {
+            Self::Legacy(tx) => tx.tx().ty(),
+            Self::Eip2930(tx) => tx.tx().ty(),
+            Self::Eip1559(tx) => tx.tx().ty(),
+            Self::Deposit(tx) => tx.ty(),
+        }
+    }
+
+    fn access_list(&self) -> Option<&AccessList> {
+        match self {
+            Self::Legacy(tx) => tx.tx().access_list(),
+            Self::Eip2930(tx) => tx.tx().access_list(),
+            Self::Eip1559(tx) => tx.tx().access_list(),
+            Self::Deposit(tx) => tx.access_list(),
+        }
+    }
+
+    fn blob_versioned_hashes(&self) -> Option<&[B256]> {
+        match self {
+            Self::Legacy(tx) => tx.tx().blob_versioned_hashes(),
+            Self::Eip2930(tx) => tx.tx().blob_versioned_hashes(),
+            Self::Eip1559(tx) => tx.tx().blob_versioned_hashes(),
+            Self::Deposit(tx) => tx.blob_versioned_hashes(),
+        }
+    }
+
+    fn authorization_list(&self) -> Option<&[SignedAuthorization]> {
+        match self {
+            Self::Legacy(tx) => tx.tx().authorization_list(),
+            Self::Eip2930(tx) => tx.tx().authorization_list(),
+            Self::Eip1559(tx) => tx.tx().authorization_list(),
+            Self::Deposit(tx) => tx.authorization_list(),
+        }
+    }
+}
+
 impl OpTxEnvelope {
     /// Returns true if the transaction is a legacy transaction.
     #[inline]
@@ -151,17 +293,6 @@ impl OpTxEnvelope {
         match self {
             Self::Deposit(tx) => tx.is_system_transaction,
             _ => false,
-        }
-    }
-
-    /// Returns the gas limit of the transaction.
-    #[inline]
-    pub const fn gas_limit(&self) -> u64 {
-        match self {
-            Self::Legacy(tx) => tx.tx().gas_limit,
-            Self::Eip2930(tx) => tx.tx().gas_limit,
-            Self::Eip1559(tx) => tx.tx().gas_limit,
-            Self::Deposit(tx) => tx.gas_limit,
         }
     }
 
