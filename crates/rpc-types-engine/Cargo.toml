@@ -20,11 +20,11 @@ op-alloy-protocol.workspace = true
 
 # Alloy
 alloy-primitives.workspace = true
-alloy-rpc-types-engine = { workspace = true, features = ["ssz"] }
+alloy-rpc-types-engine.workspace = true
 
 # Encoding
-snap.workspace = true
-ethereum_ssz.workspace = true
+snap = { workspace = true, optional = true }
+ethereum_ssz = { workspace = true, optional = true }
 
 # serde
 serde = { workspace = true, optional = true }
@@ -42,6 +42,9 @@ arbitrary = { workspace = true, features = ["derive"] }
 [features]
 default = ["std", "serde"]
 std = [
+  "dep:snap",
+  "dep:ethereum_ssz",
+  "alloy-rpc-types-engine/ssz",
   "alloy-primitives/std",
   "alloy-rpc-types-engine/std",
   "op-alloy-protocol/std",
