@@ -1,0 +1,41 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/consensus/src/transaction/mod.rs`."><title>mod.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-6d8951b3ccd3cbca.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="op_alloy_consensus" data-themes="" data-resource-suffix="" data-rustdoc-version="1.83.0-nightly (6f4ae0f34 2024-10-08)" data-channel="nightly" data-search-js="search-e056c65ede92db13.js" data-settings-js="settings-805db61a62df4bd2.js" ><script src="../../../static.files/storage-1d39b6787ed640ff.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-f070b9041d14864c.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-0111fcff984fae8f.css"></noscript><link rel="icon" href="https://raw.githubusercontent.com/alloy-rs/core/main/assets/favicon.ico"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">op_alloy_consensus/transaction/</div>mod.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers">
+<a href="#1" id="1">1</a>
+<a href="#2" id="2">2</a>
+<a href="#3" id="3">3</a>
+<a href="#4" id="4">4</a>
+<a href="#5" id="5">5</a>
+<a href="#6" id="6">6</a>
+<a href="#7" id="7">7</a>
+<a href="#8" id="8">8</a>
+<a href="#9" id="9">9</a>
+<a href="#10" id="10">10</a>
+<a href="#11" id="11">11</a>
+<a href="#12" id="12">12</a>
+<a href="#13" id="13">13</a>
+<a href="#14" id="14">14</a>
+<a href="#15" id="15">15</a>
+<a href="#16" id="16">16</a>
+<a href="#17" id="17">17</a>
+<a href="#18" id="18">18</a>
+<a href="#19" id="19">19</a>
+<a href="#20" id="20">20</a></pre></div><pre class="rust"><code><span class="kw">mod </span><a href="deposit.rs.html#1-475">deposit</a>;
+<span class="kw">pub use </span><a href="deposit.rs.html#15-38">deposit::TxDeposit</a>;
+
+<span class="kw">mod </span><a href="envelope.rs.html#1-554">envelope</a>;
+<span class="kw">pub use </span>envelope::{<a href="envelope.rs.html#92-108">OpTxEnvelope</a>, <a href="envelope.rs.html#26-42">OpTxType</a>, <a href="envelope.rs.html#14">DEPOSIT_TX_TYPE_ID</a>};
+
+<span class="kw">mod </span><a href="typed.rs.html#1-266">typed</a>;
+<span class="kw">pub use </span><a href="typed.rs.html#17-33">typed::OpTypedTransaction</a>;
+
+<span class="kw">mod </span><a href="source.rs.html#1-128">source</a>;
+<span class="kw">pub use </span>source::{
+    <a href="source.rs.html#20-27">DepositSourceDomain</a>, <a href="source.rs.html#9-16">DepositSourceDomainIdentifier</a>, <a href="source.rs.html#42-47">L1InfoDepositSource</a>, <a href="source.rs.html#107-110">UpgradeDepositSource</a>,
+    <a href="source.rs.html#72-77">UserDepositSource</a>,
+};
+
+<span class="doccomment">/// Bincode-compatible serde implementations for transaction types.
+</span><span class="attr">#[cfg(all(feature = <span class="string">"serde"</span>, feature = <span class="string">"serde-bincode-compat"</span>))]
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">mod </span><a href="../../../op_alloy_consensus/transaction/serde_bincode_compat/index.html">serde_bincode_compat</a> {
+    <span class="kw">pub use </span><a href="deposit.rs.html#384-395"><span class="kw">super</span>::deposit::serde_bincode_compat::TxDeposit</a>;
+}
+</code></pre></div></section></main></body></html>
