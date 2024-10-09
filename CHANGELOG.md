@@ -5,18 +5,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.3.3](https://github.com/alloy-rs/op-alloy
-/releases/tag/v0.3.3) - 2024-10-02
+## [0.4.0](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.4.0) - 2024-10-09
+
+### Bug Fixes
+
+- Alloy Updates ([#166](https://github.com/alloy-rs/op-alloy/issues/166))
+- Op Prefix ([#164](https://github.com/alloy-rs/op-alloy/issues/164))
+- [genesis] Op Prefix Naming Convention ([#161](https://github.com/alloy-rs/op-alloy/issues/161))
+- [rpc-types-engine] Op Prefix Naming Convention ([#163](https://github.com/alloy-rs/op-alloy/issues/163))
+- [rpc-types] Op Prefix Naming Convention ([#162](https://github.com/alloy-rs/op-alloy/issues/162))
+- Elide Lifetimes ([#160](https://github.com/alloy-rs/op-alloy/issues/160))
+- Safeheadresponse field types ([#156](https://github.com/alloy-rs/op-alloy/issues/156))
+- Genesis l1 l2 field types ([#157](https://github.com/alloy-rs/op-alloy/issues/157))
+- Remove 4844 transaction type ([#151](https://github.com/alloy-rs/op-alloy/issues/151))
+- Reverts 13d0c2 - impl SignableTransaction for Deposit ([#153](https://github.com/alloy-rs/op-alloy/issues/153))
+- [genesis] BaseFeeParams Arbitrary Bounds ([#147](https://github.com/alloy-rs/op-alloy/issues/147))
 
 ### Features
 
+- Add 7702 ([#167](https://github.com/alloy-rs/op-alloy/issues/167))
+- [consensus] Transaction for OpTxEnvelope ([#159](https://github.com/alloy-rs/op-alloy/issues/159))
+- [consensus] System Transaction ([#154](https://github.com/alloy-rs/op-alloy/issues/154))
+- [`consensus`] Impl `SignableTx` for `TxDeposit` ([#152](https://github.com/alloy-rs/op-alloy/issues/152))
+- Codeowner Updates ([#148](https://github.com/alloy-rs/op-alloy/issues/148))
+- [protocol] Arbitrary Block Info Types ([#145](https://github.com/alloy-rs/op-alloy/issues/145))
+- [genesis] Arbitrary Support ([#144](https://github.com/alloy-rs/op-alloy/issues/144))
+- [protocol] Add Frame Iterator ([#141](https://github.com/alloy-rs/op-alloy/issues/141))
+- Justfile for my sanity ([#142](https://github.com/alloy-rs/op-alloy/issues/142))
 - [rpc-types-engine] EIP-1559 parameters in `OptimismPayloadAttributes` ([#138](https://github.com/alloy-rs/op-alloy/issues/138))
 - [genesis] `SystemConfig` holocene updates ([#139](https://github.com/alloy-rs/op-alloy/issues/139))
 - [protocol] SystemConfig Conversion Utility ([#135](https://github.com/alloy-rs/op-alloy/issues/135))
 
 ### Miscellaneous Tasks
 
-- Release 0.3.3
+- Cleanup Arbitrary Tests ([#146](https://github.com/alloy-rs/op-alloy/issues/146))
+- Cleanup Workspace Manifest ([#143](https://github.com/alloy-rs/op-alloy/issues/143))
+- V0.3.3 ([#140](https://github.com/alloy-rs/op-alloy/issues/140))
 - Cleanup Workspace Documentation ([#129](https://github.com/alloy-rs/op-alloy/issues/129))
 - [protocol] Remove `L1BlockInfoTx::Holocene` variant ([#137](https://github.com/alloy-rs/op-alloy/issues/137))
 - [protocol] Payload Conversion Utilities ([#136](https://github.com/alloy-rs/op-alloy/issues/136))
