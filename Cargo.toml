@@ -52,7 +52,7 @@ alloy-consensus = { version = "0.4.0", default-features = false }
 alloy-network = { version = "0.4.0", default-features = false }
 alloy-network-primitives = { version = "0.4.0", default-features = false }
 alloy-rpc-types = { version = "0.4.0" }
-alloy-rpc-types-engine = { version = "0.4.0", default-features = false }
+alloy-rpc-types-engine = { git = "https://github.com/alloy-rs/alloy", rev = "06db2ffa6172a1ac20f61998f084cfc87197c6f3"}
 alloy-rpc-types-eth = { version = "0.4.0", default-features = false }
 alloy-eips = { version = "0.4.0", default-features = false }
 alloy-serde = { version = "0.4.0", default-features = false }
