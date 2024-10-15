@@ -15,6 +15,9 @@ pub const CHANNEL_ID_LENGTH: usize = 16;
 /// [ChannelId] is an opaque identifier for a channel.
 pub type ChannelId = [u8; CHANNEL_ID_LENGTH];
 
+mod batch;
+pub use batch::BatchType;
+
 mod block;
 pub use block::{BlockInfo, FromBlockError, L2BlockInfo};
 
