@@ -241,7 +241,6 @@ impl Decodable for TxDeposit {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
