@@ -1,5 +1,5 @@
-use alloy_primitives::B256;
 use crate::TxDeposit;
+use alloy_primitives::B256;
 
 /// A trait representing a deposit transaction with specific attributes.
 pub trait DepositTransaction {
@@ -48,10 +48,9 @@ impl DepositTransaction for TxDeposit {
 
 #[cfg(test)]
 mod tests {
+    use crate::{traits::DepositTransaction, TxDeposit};
     use alloy_consensus::Transaction;
     use alloy_primitives::{Address, Bytes, TxKind, B256, U256};
-    use crate::traits::DepositTransaction;
-    use crate::TxDeposit;
 
     #[test]
     fn test_deposit_transaction_trait() {
