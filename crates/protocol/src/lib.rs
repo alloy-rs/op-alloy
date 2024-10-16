@@ -18,6 +18,12 @@ pub type ChannelId = [u8; CHANNEL_ID_LENGTH];
 mod batch;
 pub use batch::BatchType;
 
+mod validity;
+pub use validity::BatchValidity;
+
+mod single_batch;
+pub use single_batch::SingleBatch;
+
 mod block;
 pub use block::{BlockInfo, FromBlockError, L2BlockInfo};
 
