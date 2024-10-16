@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["CONFIG_UPDATE_EVENT_VERSION_0","CONFIG_UPDATE_TOPIC"],"enum":["BatcherUpdateError","EIP1559UpdateError","GasConfigUpdateError","GasLimitUpdateError","LogProcessingError","SystemConfigUpdateError","SystemConfigUpdateType"],"struct":["SystemAccounts","SystemConfig"]};
