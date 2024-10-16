@@ -138,7 +138,7 @@ jobs:
           cache-on-failure: true
       - run: cargo +stable clippy --workspace --all-targets --all-features
         env:
-          RUSTFLAGS: -Dwarnings
+          RUSTFLAGS: -D warnings
 
   docs:
     runs-on: ubuntu-latest
