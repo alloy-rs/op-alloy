@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.5.0) - 2024-10-18
+
+### Dependencies
+
+- Bump alloy and remove `OpExecutionPayloadV4` ([#176](https://github.com/alloy-rs/op-alloy/issues/176))
+
+### Features
+
+- Add signature function to TxDeposit ([#174](https://github.com/alloy-rs/op-alloy/issues/174))
+- Add depositTransaction trait ([#171](https://github.com/alloy-rs/op-alloy/issues/171))
+- Op network execution payload envelope decoding ([#149](https://github.com/alloy-rs/op-alloy/issues/149))
+- [rollup] Backward-activate forks in `RollupConfig` ([#170](https://github.com/alloy-rs/op-alloy/issues/170))
+- [envelope] Add missing `From<Signed<TxEip7702>>` ([#168](https://github.com/alloy-rs/op-alloy/issues/168))
+
 ## [0.4.0](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.4.0) - 2024-10-09
 
@@ -39,6 +54,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.4.0
 - Cleanup Arbitrary Tests ([#146](https://github.com/alloy-rs/op-alloy/issues/146))
 - Cleanup Workspace Manifest ([#143](https://github.com/alloy-rs/op-alloy/issues/143))
 - V0.3.3 ([#140](https://github.com/alloy-rs/op-alloy/issues/140))
