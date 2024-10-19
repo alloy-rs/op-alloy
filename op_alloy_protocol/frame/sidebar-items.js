@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["DERIVATION_VERSION_0","FRAME_OVERHEAD","MAX_FRAME_LEN"],"enum":["FrameDecodingError","FrameParseError"],"struct":["Frame"]};

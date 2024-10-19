@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["NON_ZERO_BYTE_COST","ZERO_BYTE_COST"],"fn":["calculate_l1_fee_scaled_ecotone","calculate_tx_l1_cost_bedrock","calculate_tx_l1_cost_ecotone","calculate_tx_l1_cost_fjord","calculate_tx_l1_cost_regolith","data_gas_bedrock","data_gas_fjord","data_gas_regolith","tx_estimated_size_fjord"]};

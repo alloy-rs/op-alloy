@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["DEPOSIT_EVENT_ABI","DEPOSIT_EVENT_ABI_HASH","DEPOSIT_EVENT_VERSION_0"],"enum":["DepositError","DepositSourceDomain","DepositSourceDomainIdentifier"],"fn":["decode_deposit","unmarshal_deposit_version0"],"struct":["L1InfoDepositSource","UpgradeDepositSource","UserDepositSource"]};
