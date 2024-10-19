@@ -35,30 +35,32 @@ all-features = true
 rustdoc-args = ["--cfg", "docsrs"]
 
 [workspace.dependencies]
-# Alloy
-op-alloy-rpc-jsonrpsee = { version = "0.5.0", path = "crates/rpc-jsonrpsee" }
-op-alloy-rpc-types = { version = "0.5.0", path = "crates/rpc-types" }
-op-alloy-rpc-types-engine = { version = "0.5.0", path = "crates/rpc-types-engine" }
-op-alloy-consensus = { version = "0.5.0", path = "crates/consensus", default-features = false }
+# Workspace
 op-alloy-genesis = { version = "0.5.0", path = "crates/genesis", default-features = false }
 op-alloy-protocol = { version = "0.5.0", path = "crates/protocol", default-features = false }
+op-alloy-consensus = { version = "0.5.0", path = "crates/consensus", default-features = false }
+op-alloy-rpc-types = { version = "0.5.0", path = "crates/rpc-types", default-features = false }
+op-alloy-rpc-jsonrpsee = { version = "0.5.0", path = "crates/rpc-jsonrpsee", default-features = false }
+op-alloy-rpc-types-engine = { version = "0.5.0", path = "crates/rpc-types-engine", default-features = false }
 
+# Alloy
+alloy-eips = { version = "0.5.2", default-features = false }
+alloy-serde = { version = "0.5.2", default-features = false }
+alloy-signer = { version = "0.5.2", default-features = false }
+alloy-network = { version = "0.5.2", default-features = false }
+alloy-provider = { version = "0.5.2", default-features = false }
+alloy-transport = { version = "0.5.2", default-features = false }
+alloy-consensus = { version = "0.5.2", default-features = false }
+alloy-rpc-types-eth = { version = "0.5.2", default-features = false }
+alloy-rpc-types-engine = { version = "0.5.2", default-features = false }
+alloy-network-primitives = { version = "0.5.2", default-features = false }
+
+# Alloy RLP
 alloy-rlp = { version = "0.3", default-features = false }
-alloy-primitives = { version = "0.8", default-features = false }
-alloy-sol-types = { version = "0.8", default-features = false }
 
-alloy = { version = "0.5.0" }
-alloy-consensus = { version = "0.5.0", default-features = false }
-alloy-network = { version = "0.5.0", default-features = false }
-alloy-network-primitives = { version = "0.5.0", default-features = false }
-alloy-rpc-types = { version = "0.5.0" }
-alloy-rpc-types-engine = { version = "0.5.0", default-features = false }
-alloy-rpc-types-eth = { version = "0.5.0", default-features = false }
-alloy-eips = { version = "0.5.0", default-features = false }
-alloy-serde = { version = "0.5.0", default-features = false }
-alloy-signer = { version = "0.5.0", default-features = false }
-alloy-provider = { version = "0.5.0", default-features = false }
-alloy-transport = { version = "0.5.0", default-features = false }
+# Alloy Core
+alloy-sol-types = { version = "0.8", default-features = false }
+alloy-primitives = { version = "0.8", default-features = false }
 
 # Serde
 serde_repr = "0.1"
