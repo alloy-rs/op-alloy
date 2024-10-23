@@ -1,5 +1,6 @@
 //! Optimism specific types related to transactions.
 
+use alloc::string::{String, ToString};
 use alloy_consensus::{
     SignableTransaction, Transaction as ConsensusTransaction, TxEip1559, TxEip2930, TxEip7702,
     TxLegacy,
@@ -9,7 +10,6 @@ use alloy_primitives::{Address, BlockHash, Bytes, ChainId, SignatureError, TxKin
 use alloy_serde::OtherFields;
 use op_alloy_consensus::{OpTxEnvelope, OpTxType, TxDeposit};
 use serde::{Deserialize, Serialize};
-use alloc::string::{String, ToString};
 
 /// OP Transaction type
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
