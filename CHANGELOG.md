@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.1](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.5.1) - 2024-10-24
+
+### Dependencies
+
+- Bump alloy ([#178](https://github.com/alloy-rs/op-alloy/issues/178))
+
+### Features
+
+- [rpc-types] `{Try}From` impl for `OpTransactionReceipt` + `Transaction` -> consensus types ([#183](https://github.com/alloy-rs/op-alloy/issues/183))
+- [genesis] EIP 1559 System Config Accessor ([#179](https://github.com/alloy-rs/op-alloy/issues/179))
+
+### Miscellaneous Tasks
+
+- [consensus] Small Cleanup ([#180](https://github.com/alloy-rs/op-alloy/issues/180))
+- Dependency Updates ([#177](https://github.com/alloy-rs/op-alloy/issues/177))
+
+### Other
+
+- Add arbitrary attr ([#182](https://github.com/alloy-rs/op-alloy/issues/182))
+
 ## [0.5.0](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.5.0) - 2024-10-18
 
@@ -19,6 +40,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Op network execution payload envelope decoding ([#149](https://github.com/alloy-rs/op-alloy/issues/149))
 - [rollup] Backward-activate forks in `RollupConfig` ([#170](https://github.com/alloy-rs/op-alloy/issues/170))
 - [envelope] Add missing `From<Signed<TxEip7702>>` ([#168](https://github.com/alloy-rs/op-alloy/issues/168))
+
+### Miscellaneous Tasks
+
+- Release 0.5.0
 
 ## [0.4.0](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.4.0) - 2024-10-09
