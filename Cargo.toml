@@ -97,6 +97,12 @@ thiserror = "1.0"
 proptest = "1.5"
 proptest-derive = "0.5"
 tokio = "1"
+async-trait = "0.1.83"
+unsigned-varint = "0.8.0"
+
+# tracing
+tracing-subscriber = "0.3.18"
+tracing = { version = "0.1.40", default-features = false }
 
 ## crypto
 c-kzg = { version = "1.0", default-features = false }
