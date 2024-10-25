@@ -9,14 +9,35 @@
 
 extern crate alloc;
 
-/// [CHANNEL_ID_LENGTH] is the length of the channel ID.
-pub const CHANNEL_ID_LENGTH: usize = 16;
+mod traits;
+pub use traits::BatchValidator;
 
-/// [ChannelId] is an opaque identifier for a channel.
-pub type ChannelId = [u8; CHANNEL_ID_LENGTH];
+mod errors;
+pub use errors::{SpanBatchError, SpanDecodingError};
+
+mod txs;
+pub use txs::SpanBatchTransactions;
+
+mod tx_data;
+pub use tx_data::{
+    SpanBatchEip1559TransactionData, SpanBatchEip2930TransactionData,
+    SpanBatchLegacyTransactionData, SpanBatchTransactionData,
+};
+
+mod element;
+pub use element::{SpanBatchElement, MAX_SPAN_BATCH_ELEMENTS};
 
 mod batch;
 pub use batch::BatchType;
+
+mod signature;
+pub use signature::SpanBatchSignature;
+
+mod bits;
+pub use bits::SpanBatchBits;
+
+mod span_batch;
+pub use span_batch::SpanBatch;
 
 mod validity;
 pub use validity::BatchValidity;
@@ -39,11 +60,15 @@ mod iter;
 pub use iter::FrameIter;
 
 mod utils;
-pub use utils::{starts_with_2718_deposit, to_system_config, OpBlockConversionError};
+pub use utils::{
+    convert_v_to_y_parity, is_protected_v, read_tx_data, starts_with_2718_deposit,
+    to_system_config, OpBlockConversionError,
+};
 
 mod channel;
 pub use channel::{
-    Channel, ChannelError, FJORD_MAX_RLP_BYTES_PER_CHANNEL, MAX_RLP_BYTES_PER_CHANNEL,
+    Channel, ChannelError, ChannelId, CHANNEL_ID_LENGTH, FJORD_MAX_RLP_BYTES_PER_CHANNEL,
+    MAX_RLP_BYTES_PER_CHANNEL,
 };
 
 pub mod deposits;
@@ -60,3 +85,6 @@ pub use fee::{
     calculate_tx_l1_cost_bedrock, calculate_tx_l1_cost_ecotone, calculate_tx_l1_cost_fjord,
     calculate_tx_l1_cost_regolith, data_gas_bedrock, data_gas_fjord, data_gas_regolith,
 };
+
+#[cfg(any(test, feature = "test-utils"))]
+pub mod test_utils;
