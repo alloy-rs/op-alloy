@@ -38,12 +38,6 @@ impl From<u8> for BatchType {
     }
 }
 
-impl From<&[u8]> for BatchType {
-    fn from(buf: &[u8]) -> Self {
-        Self::from(buf[0])
-    }
-}
-
 impl Encodable for BatchType {
     fn encode(&self, out: &mut dyn alloy_rlp::BufMut) {
         let val = match self {
