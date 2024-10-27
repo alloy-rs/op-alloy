@@ -49,16 +49,19 @@ impl SingleBatch {
             return BatchValidity::Future;
         }
         if self.timestamp < next_timestamp {
-            return if cfg.is_holocene_active(inclusion_block.timestamp) {
-                BatchValidity::Past
-            } else {
-                BatchValidity::Drop
-            };
+            if cfg.is_holocene_active(inclusion_block.timestamp) {
+                return BatchValidity::Past;
+            }
+            return BatchValidity::Drop;
         }
         BatchValidity::Accept
     }
 
     /// Checks if the batch is valid.
+    ///
+    /// The batch format type is defined in the [OP Stack Specs][specs].
+    ///
+    /// [specs]: https://specs.optimism.io/protocol/derivation.html#batch-format
     pub fn check_batch(
         &self,
         cfg: &RollupConfig,
