@@ -64,7 +64,6 @@ impl From<SpanBatchError> for BatchDecodingError {
 impl core::error::Error for BatchDecodingError {
     fn source(&self) -> Option<&(dyn core::error::Error + 'static)> {
         match self {
-            Self::AlloyRlpError(err) => Some(err),
             Self::SpanBatchError(err) => Some(err),
             _ => None,
         }
