@@ -98,6 +98,7 @@ thiserror = "1.0"
 proptest = "1.5"
 proptest-derive = "0.5"
 tokio = "1"
+unsigned-varint = "0.8.0"
 
 ## crypto
 c-kzg = { version = "1.0", default-features = false }
