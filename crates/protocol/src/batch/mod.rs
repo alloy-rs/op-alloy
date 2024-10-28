@@ -6,6 +6,9 @@ pub use r#type::*;
 mod errors;
 pub use errors::{SpanBatchError, SpanDecodingError};
 
+mod signature;
+pub use signature::SpanBatchSignature;
+
 mod validity;
 pub use validity::BatchValidity;
 
