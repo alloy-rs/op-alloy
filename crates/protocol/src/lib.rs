@@ -31,8 +31,8 @@ pub use iter::FrameIter;
 
 mod utils;
 pub use utils::{
-    convert_v_to_y_parity, is_protected_v, read_tx_data, starts_with_2718_deposit,
-    to_system_config, OpBlockConversionError,
+    is_protected_v, read_tx_data, starts_with_2718_deposit, to_system_config,
+    OpBlockConversionError,
 };
 
 mod channel;

@@ -232,7 +232,6 @@ fn u24(input: &[u8], idx: u32) -> u32 {
 }
 
 /// Reads transaction data from a reader.
-#[allow(unused)]
 pub fn read_tx_data(r: &mut &[u8]) -> Result<(Vec<u8>, TxType), SpanBatchError> {
     let mut tx_data = Vec::new();
     let first_byte =
@@ -269,26 +268,7 @@ pub fn read_tx_data(r: &mut &[u8]) -> Result<(Vec<u8>, TxType), SpanBatchError> 
     ))
 }
 
-/// Converts a `v` value to a y parity bit, from the transaaction type.
-#[allow(unused)]
-pub const fn convert_v_to_y_parity(v: u64, tx_type: TxType) -> Result<bool, SpanBatchError> {
-    match tx_type {
-        TxType::Legacy => {
-            if v != 27 && v != 28 {
-                // EIP-155: v = 2 * chain_id + 35 + yParity
-                Ok((v - 35) & 1 == 1)
-            } else {
-                // Unprotected legacy txs must have v = 27 or 28
-                Ok(v - 27 == 1)
-            }
-        }
-        TxType::Eip2930 | TxType::Eip1559 => Ok(v == 1),
-        _ => Err(SpanBatchError::Decoding(SpanDecodingError::InvalidTransactionType)),
-    }
-}
-
 /// Checks if the signature of the passed [TxEnvelope] is protected.
-#[allow(unused)]
 pub const fn is_protected_v(tx: &TxEnvelope) -> bool {
     match tx {
         TxEnvelope::Legacy(tx) => {
@@ -316,27 +296,8 @@ mod tests {
         primitives::{address, bytes, Bytecode, Bytes, TxKind, U256},
         Evm,
     };
-    use std::vec::Vec;
-
     use rstest::rstest;
-
-    #[test]
-    fn test_convert_v_to_y_parity() {
-        assert_eq!(convert_v_to_y_parity(27, TxType::Legacy), Ok(false));
-        assert_eq!(convert_v_to_y_parity(28, TxType::Legacy), Ok(true));
-        assert_eq!(convert_v_to_y_parity(36, TxType::Legacy), Ok(true));
-        assert_eq!(convert_v_to_y_parity(37, TxType::Legacy), Ok(false));
-        assert_eq!(convert_v_to_y_parity(1, TxType::Eip2930), Ok(true));
-        assert_eq!(convert_v_to_y_parity(1, TxType::Eip1559), Ok(true));
-        assert_eq!(
-            convert_v_to_y_parity(1, TxType::Eip4844),
-            Err(SpanBatchError::Decoding(SpanDecodingError::InvalidTransactionType))
-        );
-        assert_eq!(
-            convert_v_to_y_parity(0, TxType::Eip7702),
-            Err(SpanBatchError::Decoding(SpanDecodingError::InvalidTransactionType))
-        );
-    }
+    use std::vec::Vec;
 
     #[test]
     fn test_is_protected_v() {
