@@ -1,10 +1,11 @@
 //! This module contains the eip2930 transaction data type for a span batch.
 
 use crate::{SpanBatchError, SpanDecodingError};
-use alloy_consensus::{SignableTransaction, Signed, TxEip2930, TxEnvelope};
+use alloy_consensus::{SignableTransaction, Signed, TxEip2930};
 use alloy_eips::eip2930::AccessList;
 use alloy_primitives::{Address, Signature, TxKind, U256};
 use alloy_rlp::{Bytes, RlpDecodable, RlpEncodable};
+use op_alloy_consensus::OpTxEnvelope;
 
 /// The transaction data for an EIP-2930 transaction within a span batch.
 #[derive(Debug, Clone, PartialEq, Eq, RlpEncodable, RlpDecodable)]
@@ -20,7 +21,7 @@ pub struct SpanBatchEip2930TransactionData {
 }
 
 impl SpanBatchEip2930TransactionData {
-    /// Converts [SpanBatchEip2930TransactionData] into a [TxEnvelope].
+    /// Converts [SpanBatchEip2930TransactionData] into a [OpTxEnvelope].
     pub fn to_enveloped_tx(
         &self,
         nonce: u64,
@@ -28,7 +29,7 @@ impl SpanBatchEip2930TransactionData {
         to: Option<Address>,
         chain_id: u64,
         signature: Signature,
-    ) -> Result<TxEnvelope, SpanBatchError> {
+    ) -> Result<OpTxEnvelope, SpanBatchError> {
         let access_list_tx = TxEip2930 {
             chain_id,
             nonce,
@@ -46,7 +47,7 @@ impl SpanBatchEip2930TransactionData {
         let signature_hash = access_list_tx.signature_hash();
         let signed_access_list_tx =
             Signed::new_unchecked(access_list_tx, signature, signature_hash);
-        Ok(TxEnvelope::Eip2930(signed_access_list_tx))
+        Ok(OpTxEnvelope::Eip2930(signed_access_list_tx))
     }
 }
 

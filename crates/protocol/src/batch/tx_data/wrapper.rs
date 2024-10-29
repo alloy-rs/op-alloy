@@ -3,6 +3,7 @@
 use alloy_consensus::{Transaction, TxEnvelope, TxType};
 use alloy_primitives::{Address, Signature, U256};
 use alloy_rlp::{Bytes, Decodable, Encodable};
+use op_alloy_consensus::OpTxEnvelope;
 
 use crate::{
     SpanBatchEip1559TransactionData, SpanBatchEip2930TransactionData, SpanBatchError,
@@ -113,7 +114,7 @@ impl SpanBatchTransactionData {
         }
     }
 
-    /// Converts the [SpanBatchTransactionData] into a [TxEnvelope].
+    /// Converts the [SpanBatchTransactionData] into a [OpTxEnvelope].
     pub fn to_enveloped_tx(
         &self,
         nonce: u64,
@@ -121,7 +122,7 @@ impl SpanBatchTransactionData {
         to: Option<Address>,
         chain_id: u64,
         signature: Signature,
-    ) -> Result<TxEnvelope, SpanBatchError> {
+    ) -> Result<OpTxEnvelope, SpanBatchError> {
         match self {
             Self::Legacy(data) => data.to_enveloped_tx(nonce, gas, to, chain_id, signature),
             Self::Eip2930(data) => data.to_enveloped_tx(nonce, gas, to, chain_id, signature),

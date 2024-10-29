@@ -1,10 +1,11 @@
 //! This module contains the eip1559 transaction data type for a span batch.
 
 use crate::{SpanBatchError, SpanDecodingError};
-use alloy_consensus::{SignableTransaction, Signed, TxEip1559, TxEnvelope};
+use alloy_consensus::{SignableTransaction, Signed, TxEip1559};
 use alloy_eips::eip2930::AccessList;
 use alloy_primitives::{Address, Signature, TxKind, U256};
 use alloy_rlp::{Bytes, RlpDecodable, RlpEncodable};
+use op_alloy_consensus::OpTxEnvelope;
 
 /// The transaction data for an EIP-1559 transaction within a span batch.
 #[derive(Debug, Clone, PartialEq, Eq, RlpEncodable, RlpDecodable)]
@@ -22,7 +23,7 @@ pub struct SpanBatchEip1559TransactionData {
 }
 
 impl SpanBatchEip1559TransactionData {
-    /// Converts [SpanBatchEip1559TransactionData] into a [TxEnvelope].
+    /// Converts [SpanBatchEip1559TransactionData] into an [OpTxEnvelope].
     pub fn to_enveloped_tx(
         &self,
         nonce: u64,
@@ -30,7 +31,7 @@ impl SpanBatchEip1559TransactionData {
         to: Option<Address>,
         chain_id: u64,
         signature: Signature,
-    ) -> Result<TxEnvelope, SpanBatchError> {
+    ) -> Result<OpTxEnvelope, SpanBatchError> {
         let eip1559_tx = TxEip1559 {
             chain_id,
             nonce,
@@ -52,7 +53,7 @@ impl SpanBatchEip1559TransactionData {
         };
         let signature_hash = eip1559_tx.signature_hash();
         let signed_eip1559_tx = Signed::new_unchecked(eip1559_tx, signature, signature_hash);
-        Ok(TxEnvelope::Eip1559(signed_eip1559_tx))
+        Ok(OpTxEnvelope::Eip1559(signed_eip1559_tx))
     }
 }
 
