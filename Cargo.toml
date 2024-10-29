@@ -92,8 +92,13 @@ jsonrpsee-types = "0.24"
 # misc
 cfg-if = "1"
 async-trait = "0.1.83"
+unsigned-varint = "0.8.0"
 spin = { version = "0.9.8", features = ["mutex"] }
 derive_more = { version = "1.0", default-features = false }
+
+# tracing
+tracing-subscriber = "0.3.18"
+tracing = { version = "0.1.40", default-features = false }
 
 ## misc-testing
 arbitrary = { version = "1.3", features = ["derive"] }

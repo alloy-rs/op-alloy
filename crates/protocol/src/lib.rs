@@ -11,9 +11,11 @@ extern crate alloc;
 
 mod batch;
 pub use batch::{
-    BatchType, BatchValidationProvider, BatchValidity, SingleBatch, SpanBatchBits,
-    SpanBatchElement, SpanBatchError, SpanDecodingError, MAX_SPAN_BATCH_ELEMENTS,
-    SINGLE_BATCH_TYPE, SPAN_BATCH_TYPE,
+    BatchType, BatchValidationProvider, BatchValidity, SingleBatch, SpanBatch, SpanBatchBits,
+    SpanBatchEip1559TransactionData, SpanBatchEip2930TransactionData, SpanBatchElement,
+    SpanBatchError, SpanBatchLegacyTransactionData, SpanBatchTransactionData,
+    SpanBatchTransactions, SpanDecodingError, MAX_SPAN_BATCH_ELEMENTS, SINGLE_BATCH_TYPE,
+    SPAN_BATCH_TYPE,
 };
 
 mod block;
@@ -56,3 +58,6 @@ pub use fee::{
     calculate_tx_l1_cost_bedrock, calculate_tx_l1_cost_ecotone, calculate_tx_l1_cost_fjord,
     calculate_tx_l1_cost_regolith, data_gas_bedrock, data_gas_fjord, data_gas_regolith,
 };
+
+#[cfg(any(test, feature = "test-utils"))]
+pub mod test_utils;
