@@ -5,20 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.5.1](https://github.com/alloy-rs/op-alloy
-/releases/tag/v0.5.1) - 2024-10-24
+## [0.5.2](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.5.2) - 2024-10-29
 
 ### Dependencies
 
+- [workspace] Import Touchups ([#199](https://github.com/alloy-rs/op-alloy/issues/199))
 - Bump alloy ([#178](https://github.com/alloy-rs/op-alloy/issues/178))
 
 ### Features
 
+- [protocol] Batch ([#200](https://github.com/alloy-rs/op-alloy/issues/200))
+- [protocol] Span Batch Validity Checks ([#198](https://github.com/alloy-rs/op-alloy/issues/198))
+- [protocol] Span Batch Type ([#197](https://github.com/alloy-rs/op-alloy/issues/197))
+- [protocol] Span Batch Transactions ([#196](https://github.com/alloy-rs/op-alloy/issues/196))
+- [protocol] Batch TX Data ([#195](https://github.com/alloy-rs/op-alloy/issues/195))
+- [protocol] Span Batch Bits ([#194](https://github.com/alloy-rs/op-alloy/issues/194))
+- [protocol] Span Batch Element ([#193](https://github.com/alloy-rs/op-alloy/issues/193))
+- [protocol] Batch Utilities ([#191](https://github.com/alloy-rs/op-alloy/issues/191))
+- [protocol] Batch Error Types ([#190](https://github.com/alloy-rs/op-alloy/issues/190))
+- [protocol] BatchValidationProvider ([#189](https://github.com/alloy-rs/op-alloy/issues/189))
+- [protocol] SingleBatch Type ([#188](https://github.com/alloy-rs/op-alloy/issues/188))
+- [protocol] Batch Validity ([#187](https://github.com/alloy-rs/op-alloy/issues/187))
+- [protocol] Batch Type ([#186](https://github.com/alloy-rs/op-alloy/issues/186))
 - [rpc-types] `{Try}From` impl for `OpTransactionReceipt` + `Transaction` -> consensus types ([#183](https://github.com/alloy-rs/op-alloy/issues/183))
 - [genesis] EIP 1559 System Config Accessor ([#179](https://github.com/alloy-rs/op-alloy/issues/179))
 
 ### Miscellaneous Tasks
 
+- [consensus] Upstream Receipt Constructor ([#165](https://github.com/alloy-rs/op-alloy/issues/165))
+- Release 0.5.1 ([#184](https://github.com/alloy-rs/op-alloy/issues/184))
 - [consensus] Small Cleanup ([#180](https://github.com/alloy-rs/op-alloy/issues/180))
 - Dependency Updates ([#177](https://github.com/alloy-rs/op-alloy/issues/177))
 
