@@ -174,9 +174,9 @@ impl TxDeposit {
         }
     }
 
-    /// Returns the signature for the optimism deposit transactions, which don't include a
-    /// signature.
-    pub fn signature() -> Signature {
+    /// Returns the OVM signature for the optimism deposit transactions. Below bedrock, the deposit
+    /// transaction didn't include a signature.
+    pub fn pre_bedrock_signature() -> Signature {
         Signature::new(U256::ZERO, U256::ZERO, Parity::Parity(false))
     }
 }
