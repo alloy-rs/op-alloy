@@ -96,6 +96,27 @@ impl TxDeposit {
         })
     }
 
+    /// Decodes the transaction from RLP bytes.
+    pub fn rlp_decode(buf: &mut &[u8]) -> alloy_rlp::Result<Self> {
+        let header = Header::decode(buf)?;
+        if !header.list {
+            return Err(alloy_rlp::Error::UnexpectedString);
+        }
+        let remaining = buf.len();
+
+        if header.payload_length > remaining {
+            return Err(alloy_rlp::Error::InputTooShort);
+        }
+
+        let this = Self::rlp_decode_fields(buf)?;
+
+        if buf.len() + header.payload_length != remaining {
+            return Err(alloy_rlp::Error::UnexpectedLength);
+        }
+
+        Ok(this)
+    }
+
     /// Outputs the length of the transaction's fields, without a RLP header or length of the
     /// eip155 fields.
     pub(crate) fn rlp_encoded_fields_length(&self) -> usize {
