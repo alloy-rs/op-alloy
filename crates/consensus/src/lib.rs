@@ -14,9 +14,9 @@ pub use receipt::{OpDepositReceipt, OpDepositReceiptWithBloom, OpReceiptEnvelope
 
 mod transaction;
 pub use transaction::{
-    DepositSourceDomain, DepositSourceDomainIdentifier, DepositTransaction, L1InfoDepositSource,
-    OpTxEnvelope, OpTxType, OpTypedTransaction, TxDeposit, UpgradeDepositSource, UserDepositSource,
-    DEPOSIT_TX_TYPE_ID,
+    optimism_deposit_tx_signature, DepositSourceDomain, DepositSourceDomainIdentifier,
+    DepositTransaction, L1InfoDepositSource, OpTxEnvelope, OpTxType, OpTypedTransaction, TxDeposit,
+    UpgradeDepositSource, UserDepositSource, DEPOSIT_TX_TYPE_ID,
 };
 
 pub mod hardforks;

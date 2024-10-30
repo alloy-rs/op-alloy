@@ -4,11 +4,17 @@ use super::OpTxType;
 use crate::DepositTransaction;
 use alloy_consensus::Transaction;
 use alloy_eips::eip2930::AccessList;
-use alloy_primitives::{Address, Bytes, ChainId, TxKind, B256, U256};
+use alloy_primitives::{Address, Bytes, ChainId, Signature, TxKind, B256, U256};
 use alloy_rlp::{
     Buf, BufMut, Decodable, Encodable, Error as DecodeError, Header, EMPTY_STRING_CODE,
 };
 use core::mem;
+
+/// Pre-bedrock system transactions were sent from the zero address as legacy transactions with an
+/// empty signature. This method returns an instance of such signature.
+pub fn optimism_deposit_tx_signature() -> Signature {
+    Signature::new(U256::ZERO, U256::ZERO, false)
+}
 
 /// Deposit transactions, also known as deposits are initiated on L1, and executed on L2.
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Default)]

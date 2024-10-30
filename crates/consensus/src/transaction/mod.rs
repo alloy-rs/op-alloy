@@ -1,7 +1,7 @@
 //! Tramsaction types for Optimism.
 
 mod deposit;
-pub use deposit::TxDeposit;
+pub use deposit::{optimism_deposit_tx_signature, TxDeposit};
 
 mod envelope;
 pub use envelope::{OpTxEnvelope, OpTxType, DEPOSIT_TX_TYPE_ID};
