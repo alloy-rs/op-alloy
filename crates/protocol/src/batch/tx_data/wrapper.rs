@@ -122,9 +122,12 @@ impl SpanBatchTransactionData {
         to: Option<Address>,
         chain_id: u64,
         signature: Signature,
+        is_protected: bool,
     ) -> Result<OpTxEnvelope, SpanBatchError> {
         match self {
-            Self::Legacy(data) => data.to_enveloped_tx(nonce, gas, to, chain_id, signature),
+            Self::Legacy(data) => {
+                data.to_enveloped_tx(nonce, gas, to, chain_id, signature, is_protected)
+            }
             Self::Eip2930(data) => data.to_enveloped_tx(nonce, gas, to, chain_id, signature),
             Self::Eip1559(data) => data.to_enveloped_tx(nonce, gas, to, chain_id, signature),
         }
