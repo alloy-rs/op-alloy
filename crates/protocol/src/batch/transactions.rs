@@ -341,7 +341,7 @@ impl SpanBatchTransactions {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use alloy_consensus::{Signed, TxEip1559, TxEip2930, TxLegacy};
+    use alloy_consensus::{Signed, TxEip1559, TxEip2930};
     use alloy_primitives::{address, Signature, TxKind};
 
     #[test]
