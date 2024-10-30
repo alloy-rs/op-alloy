@@ -148,10 +148,11 @@ impl SpanBatchTransactions {
     pub fn decode_tx_sigs(&mut self, r: &mut &[u8]) -> Result<(), SpanBatchError> {
         let y_parity_bits = SpanBatchBits::decode(r, self.total_block_tx_count as usize)?;
         let mut sigs = Vec::with_capacity(self.total_block_tx_count as usize);
-        for y_parity in y_parity_bits.as_ref() {
+        for i in 0..self.total_block_tx_count {
+            let y_parity = y_parity_bits.get_bit(i as usize).expect("same length");
             let r_val = U256::from_be_slice(&r[..32]);
             let s_val = U256::from_be_slice(&r[32..64]);
-            sigs.push(Signature::new(r_val, s_val, *y_parity == 1));
+            sigs.push(Signature::new(r_val, s_val, y_parity == 1));
             r.advance(64);
         }
         self.tx_sigs = sigs;
