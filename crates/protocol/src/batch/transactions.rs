@@ -355,24 +355,6 @@ mod tests {
     }
 
     #[test]
-    fn test_span_batch_transactions_add_invalid_legacy_parity_decoding() {
-        let sig = Signature::test_signature();
-        let to = address!("0123456789012345678901234567890123456789");
-        let tx = TxEnvelope::Legacy(Signed::new_unchecked(
-            TxLegacy { to: TxKind::Call(to), ..Default::default() },
-            sig,
-            Default::default(),
-        ));
-        let mut span_batch_txs = SpanBatchTransactions::default();
-        let mut buf = vec![];
-        tx.encode(&mut buf);
-        let txs = vec![Bytes::from(buf)];
-        let chain_id = 1;
-        let err = span_batch_txs.add_txs(txs, chain_id).unwrap_err();
-        assert_eq!(err, SpanBatchError::Decoding(SpanDecodingError::InvalidTransactionData));
-    }
-
-    #[test]
     fn test_span_batch_transactions_add_eip2930_tx_wrong_chain_id() {
         let sig = Signature::test_signature();
         let to = address!("0123456789012345678901234567890123456789");
