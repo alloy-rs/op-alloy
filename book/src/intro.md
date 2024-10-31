@@ -21,11 +21,11 @@ performance types, traits, and middleware from [alloy][alloy].
 
 To get started with op-alloy, add op-alloy crates as a dependency and take your first steps.
 
-### [Building with op-alloy](./building/rollup-configs.md)
+### [Building with op-alloy](./building/README.md)
 
 A walkthrough of building with op-alloy.
 
-### [Examples](./examples/genesis/loading-a-rollup-config.md)
+### [Examples](./examples/README.md)
 
 This section will give you practical examples of how Alloy can be used in your codebase.
 
