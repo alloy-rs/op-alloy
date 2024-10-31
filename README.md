@@ -5,7 +5,7 @@
 <a href="https://github.com/alloy-rs/op-alloy/blob/main/LICENSE-MIT"><img src="https://img.shields.io/badge/License-MIT-d1d1f6.svg?label=license&labelColor=2a2f35" alt="License"></a>
 <a href="https://alloy-rs.github.io/op-alloy"><img src="https://img.shields.io/badge/Contributor%20Book-854a15?logo=mdBook&labelColor=2a2f35" alt="Book"></a>
 
-Transports, Middleware, and Networks for Optimism built with [Alloy][alloy].
+Built on [Alloy][alloy], op-alloy connects applications to the OP Stack.
 
 
 ## Usage
@@ -50,12 +50,11 @@ op-alloy is intended to be `no_std` compatible, initially for use in [kona][kona
 The following crates support `no_std`.
 Notice, provider crates do not support `no_std` compatibility.
 
-- `op-alloy-consensus`
-- `op-alloy-genesis`
-- `op-alloy-protocol`
-- `op-alloy-genesis`
-- `op-alloy-rpc-types`
-- `op-alloy-rpc-types-engine`
+- [`op-alloy-consensus`][op-alloy-consensus]
+- [`op-alloy-genesis`][op-alloy-genesis]
+- [`op-alloy-protocol`][op-alloy-protocol]
+- [`op-alloy-rpc-types-engine`][op-alloy-rpc-types-engine]
+- [`op-alloy-rpc-types`][op-alloy-rpc-types]
 
 If you would like to add no_std support to a crate,
 please make sure to update [scripts/check_no_std.sh][check-no-std].

@@ -7,10 +7,8 @@ discuss the change you wish to make via issue.
 
 Before working with this repository locally, you'll need to install several dependencies:
 
-- [Docker](https://www.docker.com/) for cross-compilation.
-- [just](https://github.com/casey/just) for our command-runner scripts.
-- The [Rust toolchain](https://rustup.rs/)
-- The [Golang toolchain](https://go.dev/dl/)
+- [Just](https://github.com/casey/just) for our command-runner scripts.
+- [The Rust toolchain](https://rustup.rs/).
 
 **Optional**
 
