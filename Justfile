@@ -4,6 +4,7 @@ alias l := lint
 alias f := fmtf
 alias b := build
 alias h := hack
+alias c := check
 
 # default recipe to display help information
 default:
@@ -24,11 +25,11 @@ test-docs:
 lint: lint-native lint-docs
 
 # Lint the workspace
-lint-native: fmt-native-check lint-docs
+lint-native: fmt-check lint-docs
   cargo +nightly clippy --workspace --all --all-features --all-targets -- -D warnings
 
 # Check the formatting of the workspace
-fmt-native-check:
+fmt-check:
   cargo +nightly fmt --all -- --check
 
 # Lint the Rust documentation
@@ -42,6 +43,10 @@ fmtf:
 # Build for the native target
 build *args='':
   cargo build --workspace $@
+
+# Checks the workspace with a cfg-check
+check:
+  cargo check -Zcheck-cfg --workspace
 
 # Runs `cargo hack check` against the workspace
 hack:
