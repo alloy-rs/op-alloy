@@ -55,6 +55,7 @@ arbitrary = [
   "dep:arbitrary",
   "alloy-primitives/arbitrary",
   "alloy-rpc-types-eth/arbitrary",
+  "op-alloy-consensus/arbitrary",
 ]
 k256 = [
   "alloy-rpc-types-eth/k256",
