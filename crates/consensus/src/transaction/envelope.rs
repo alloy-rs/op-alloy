@@ -90,6 +90,7 @@ impl TryFrom<u8> for OpTxType {
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "serde", serde(tag = "type"))]
+#[cfg_attr(all(any(test, feature = "arbitrary"), feature = "k256"), derive(arbitrary::Arbitrary))]
 #[non_exhaustive]
 pub enum OpTxEnvelope {
     /// An untagged [`TxLegacy`].
@@ -112,7 +113,7 @@ pub enum OpTxEnvelope {
     #[cfg_attr(feature = "serde", serde(rename = "0x4", alias = "0x04"))]
     Eip7702(Signed<TxEip7702>),
     /// A [`TxDeposit`] tagged with type 0x7E.
-    #[cfg_attr(feature = "serde", serde(rename = "0x7E", alias = "0x7E"))]
+    #[cfg_attr(feature = "serde", serde(rename = "0x7e", alias = "0x7E"))]
     Deposit(TxDeposit),
 }
 

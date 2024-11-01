@@ -29,7 +29,7 @@ pub enum OpTypedTransaction {
     #[cfg_attr(feature = "serde", serde(rename = "0x04", alias = "0x4"))]
     Eip7702(TxEip7702),
     /// Optimism deposit transaction
-    #[cfg_attr(feature = "serde", serde(rename = "0x7E", alias = "0x7E"))]
+    #[cfg_attr(feature = "serde", serde(rename = "0x7e", alias = "0x7E"))]
     Deposit(TxDeposit),
 }
 
