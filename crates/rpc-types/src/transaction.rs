@@ -151,9 +151,15 @@ impl AsRef<OpTxEnvelope> for Transaction {
 }
 
 mod tx_serde {
+    //! Helper module for serializing and deserializing OP [`Transaction`].
+    //!
+    //! This is needed because we might need to deserialize the `from` field into both
+    //! [`alloy_rpc_types_eth::Transaction::from`] and [`op_alloy_consensus::TxDeposit::from`].
     use super::*;
     use serde::de::Error;
 
+    /// Helper struct which will be flattened into the transaction and will only contain `from`
+    /// field if inner [`OpTxEnvelope`] did not consume it.
     #[derive(Serialize, Deserialize)]
     struct MaybeFrom {
         from: Option<Address>,
@@ -203,6 +209,7 @@ mod tx_serde {
                 deposit_receipt_version,
             } = value;
 
+            // if inner transaction is deposit, then don't serialize `from` directly
             let from = if matches!(inner, OpTxEnvelope::Deposit(_)) { None } else { Some(from) };
 
             Self {
@@ -229,6 +236,8 @@ mod tx_serde {
                 from,
             } = value;
 
+            // Try to get `from` field from inner envelope or from `MaybeFrom`, otherwise return
+            // error
             let from = if let Some(from) = from.from {
                 from
             } else if let OpTxEnvelope::Deposit(tx) = &inner {
