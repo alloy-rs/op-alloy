@@ -1,7 +1,7 @@
 //! Tramsaction types for Optimism.
 
 mod deposit;
-pub use deposit::{optimism_deposit_tx_signature, TxDeposit};
+pub use deposit::TxDeposit;
 
 mod envelope;
 pub use envelope::{OpTxEnvelope, OpTxType, DEPOSIT_TX_TYPE_ID};
@@ -14,6 +14,9 @@ pub use source::{
     DepositSourceDomain, DepositSourceDomainIdentifier, L1InfoDepositSource, UpgradeDepositSource,
     UserDepositSource,
 };
+
+#[cfg(feature = "serde")]
+pub use deposit::serde_deposit_tx_rpc;
 
 /// Bincode-compatible serde implementations for transaction types.
 #[cfg(all(feature = "serde", feature = "serde-bincode-compat"))]

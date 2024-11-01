@@ -162,6 +162,7 @@ mod tx_serde {
     /// field if inner [`OpTxEnvelope`] did not consume it.
     #[derive(Serialize, Deserialize)]
     struct MaybeFrom {
+        #[serde(default, skip_serializing_if = "Option::is_none")]
         from: Option<Address>,
     }
 

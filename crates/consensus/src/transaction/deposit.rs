@@ -12,12 +12,6 @@ use alloy_rlp::{
 };
 use core::mem;
 
-/// Pre-bedrock system transactions were sent from the zero address as legacy transactions with an
-/// empty signature. This method returns an instance of such signature.
-pub fn optimism_deposit_tx_signature() -> Signature {
-    Signature::new(U256::ZERO, U256::ZERO, false)
-}
-
 /// Deposit transactions, also known as deposits are initiated on L1, and executed on L2.
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Default)]
 #[cfg_attr(feature = "arbitrary", derive(arbitrary::Arbitrary))]
@@ -214,6 +208,12 @@ impl TxDeposit {
         self.network_header().encode(out);
         self.eip2718_encode(out);
     }
+
+    /// Returns the signature for the optimism deposit transactions, which don't include a
+    /// signature.
+    pub fn signature() -> Signature {
+        Signature::new(U256::ZERO, U256::ZERO, false)
+    }
 }
 
 impl Transaction for TxDeposit {
@@ -301,6 +301,29 @@ impl Decodable for TxDeposit {
 
         Self::rlp_decode_fields(data)
     }
+}
+
+/// Deposit transactions don't have a signature, however, we include an empty signature in the
+/// response for better compatibility.
+///
+/// This function can be used as `serialize_with` serde attribute for the [`TxDeposit`] and will
+/// flatten [`TxDeposit::signature`] into response.
+#[cfg(feature = "serde")]
+pub fn serde_deposit_tx_rpc<S: serde::Serializer>(
+    value: &TxDeposit,
+    serializer: S,
+) -> Result<S::Ok, S::Error> {
+    use serde::Serialize;
+
+    #[derive(Serialize)]
+    struct SerdeHelper<'a> {
+        #[serde(flatten)]
+        value: &'a TxDeposit,
+        #[serde(flatten)]
+        signature: Signature,
+    }
+
+    SerdeHelper { value, signature: TxDeposit::signature() }.serialize(serializer)
 }
 
 #[cfg(test)]

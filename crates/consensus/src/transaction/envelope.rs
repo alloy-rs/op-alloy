@@ -495,7 +495,7 @@ mod serde_from {
         Eip1559(Signed<TxEip1559>),
         #[serde(rename = "0x4", alias = "0x04")]
         Eip7702(Signed<TxEip7702>),
-        #[serde(rename = "0x7e", alias = "0x7E")]
+        #[serde(rename = "0x7e", alias = "0x7E", serialize_with = "crate::serde_deposit_tx_rpc")]
         Deposit(TxDeposit),
     }
 
