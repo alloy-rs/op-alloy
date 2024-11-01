@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"constant":["CHANNEL_ID_LENGTH","FJORD_MAX_RLP_BYTES_PER_CHANNEL","MAX_RLP_BYTES_PER_CHANNEL"],"enum":["ChannelError"],"struct":["Channel"],"type":["ChannelId"]};

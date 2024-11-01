@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["BlockInfoError","DecodeError","L1BlockInfoTx"],"struct":["L1BlockInfoBedrock","L1BlockInfoEcotone"]};

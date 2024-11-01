@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":["eip1559","eip2930","legacy","wrapper"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["SuperchainLevel"],"struct":["AltDAConfig","ChainConfig","HardForkConfiguration"]};

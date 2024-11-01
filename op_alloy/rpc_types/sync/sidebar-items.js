@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["L1BlockRef","L2BlockRef","SyncStatus"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["TransactionConversionError"],"mod":["request"],"struct":["OpTransactionFields","OpTransactionRequest","Transaction"]};

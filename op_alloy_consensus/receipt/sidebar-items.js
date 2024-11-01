@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":["envelope","receipts"],"trait":["OpTxReceipt"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["DepositSourceDomain","DepositSourceDomainIdentifier"],"struct":["L1InfoDepositSource","UpgradeDepositSource","UserDepositSource"]};

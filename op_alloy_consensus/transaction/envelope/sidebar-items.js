@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"constant":["DEPOSIT_TX_TYPE_ID"],"enum":["OpTxEnvelope","OpTxType"]};

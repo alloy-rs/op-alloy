@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":["addresses","chain","genesis","params","rollup","system"]};
