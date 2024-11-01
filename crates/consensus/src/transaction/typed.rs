@@ -335,7 +335,7 @@ mod serde_from {
                 TaggedTypedTransaction::Eip2930(signed) => Self::Eip2930(signed),
                 TaggedTypedTransaction::Eip1559(signed) => Self::Eip1559(signed),
                 TaggedTypedTransaction::Eip7702(signed) => Self::Eip7702(signed),
-                TaggedTypedTransaction::Deposit(tx) => Self::Deposit(tx)
+                TaggedTypedTransaction::Deposit(tx) => Self::Deposit(tx),
             }
         }
     }
