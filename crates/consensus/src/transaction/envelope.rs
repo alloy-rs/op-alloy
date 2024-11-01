@@ -89,31 +89,22 @@ impl TryFrom<u8> for OpTxType {
 /// [EIP-2718]: https://eips.ethereum.org/EIPS/eip-2718
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "serde", serde(tag = "type"))]
+#[cfg_attr(
+    feature = "serde",
+    serde(into = "serde_from::TaggedTxEnvelope", from = "serde_from::MaybeTaggedTxEnvelope")
+)]
 #[cfg_attr(all(any(test, feature = "arbitrary"), feature = "k256"), derive(arbitrary::Arbitrary))]
 #[non_exhaustive]
 pub enum OpTxEnvelope {
     /// An untagged [`TxLegacy`].
-    #[cfg_attr(
-        feature = "serde",
-        serde(
-            rename = "0x0",
-            alias = "0x00",
-            with = "alloy_consensus::transaction::signed_legacy_serde"
-        )
-    )]
     Legacy(Signed<TxLegacy>),
     /// A [`TxEip2930`] tagged with type 1.
-    #[cfg_attr(feature = "serde", serde(rename = "0x1", alias = "0x01"))]
     Eip2930(Signed<TxEip2930>),
     /// A [`TxEip1559`] tagged with type 2.
-    #[cfg_attr(feature = "serde", serde(rename = "0x2", alias = "0x02"))]
     Eip1559(Signed<TxEip1559>),
     /// A [`TxEip7702`] tagged with type 4.
-    #[cfg_attr(feature = "serde", serde(rename = "0x4", alias = "0x04"))]
     Eip7702(Signed<TxEip7702>),
     /// A [`TxDeposit`] tagged with type 0x7E.
-    #[cfg_attr(feature = "serde", serde(rename = "0x7e", alias = "0x7E"))]
     Deposit(TxDeposit),
 }
 
@@ -463,6 +454,80 @@ impl Encodable2718 for OpTxEnvelope {
             }
             Self::Deposit(tx) => {
                 tx.eip2718_encode(out);
+            }
+        }
+    }
+}
+
+#[cfg(feature = "serde")]
+mod serde_from {
+    //! NB: Why do we need this?
+    //!
+    //! Because the tag may be missing, we need an abstraction over tagged (with
+    //! type) and untagged (always legacy). This is [`MaybeTaggedTxEnvelope`].
+    //!
+    //! The tagged variant is [`TaggedTxEnvelope`], which always has a type tag.
+    //!
+    //! We serialize via [`TaggedTxEnvelope`] and deserialize via
+    //! [`MaybeTaggedTxEnvelope`].
+    use super::*;
+
+    #[derive(Debug, serde::Deserialize)]
+    #[serde(untagged)]
+    pub(crate) enum MaybeTaggedTxEnvelope {
+        Tagged(TaggedTxEnvelope),
+        #[serde(with = "alloy_consensus::transaction::signed_legacy_serde")]
+        Untagged(Signed<TxLegacy>),
+    }
+
+    #[derive(Debug, serde::Serialize, serde::Deserialize)]
+    #[serde(tag = "type")]
+    pub(crate) enum TaggedTxEnvelope {
+        #[serde(
+            rename = "0x0",
+            alias = "0x00",
+            with = "alloy_consensus::transaction::signed_legacy_serde"
+        )]
+        Legacy(Signed<TxLegacy>),
+        #[serde(rename = "0x1", alias = "0x01")]
+        Eip2930(Signed<TxEip2930>),
+        #[serde(rename = "0x2", alias = "0x02")]
+        Eip1559(Signed<TxEip1559>),
+        #[serde(rename = "0x4", alias = "0x04")]
+        Eip7702(Signed<TxEip7702>),
+        #[serde(rename = "0x7e", alias = "0x7E")]
+        Deposit(TxDeposit),
+    }
+
+    impl From<MaybeTaggedTxEnvelope> for OpTxEnvelope {
+        fn from(value: MaybeTaggedTxEnvelope) -> Self {
+            match value {
+                MaybeTaggedTxEnvelope::Tagged(tagged) => tagged.into(),
+                MaybeTaggedTxEnvelope::Untagged(tx) => Self::Legacy(tx),
+            }
+        }
+    }
+
+    impl From<TaggedTxEnvelope> for OpTxEnvelope {
+        fn from(value: TaggedTxEnvelope) -> Self {
+            match value {
+                TaggedTxEnvelope::Legacy(signed) => Self::Legacy(signed),
+                TaggedTxEnvelope::Eip2930(signed) => Self::Eip2930(signed),
+                TaggedTxEnvelope::Eip1559(signed) => Self::Eip1559(signed),
+                TaggedTxEnvelope::Eip7702(signed) => Self::Eip7702(signed),
+                TaggedTxEnvelope::Deposit(tx) => Self::Deposit(tx),
+            }
+        }
+    }
+
+    impl From<OpTxEnvelope> for TaggedTxEnvelope {
+        fn from(value: OpTxEnvelope) -> Self {
+            match value {
+                OpTxEnvelope::Legacy(signed) => Self::Legacy(signed),
+                OpTxEnvelope::Eip2930(signed) => Self::Eip2930(signed),
+                OpTxEnvelope::Eip1559(signed) => Self::Eip1559(signed),
+                OpTxEnvelope::Eip7702(signed) => Self::Eip7702(signed),
+                OpTxEnvelope::Deposit(tx) => Self::Deposit(tx),
             }
         }
     }
