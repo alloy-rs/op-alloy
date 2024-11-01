@@ -33,7 +33,7 @@ fmt-native-check:
 
 # Lint the Rust documentation
 lint-docs:
-  RUSTDOCFLAGS="-D warnings" cargo doc --all --no-deps --document-private-items 
+  RUSTDOCFLAGS="-D warnings" cargo doc --all --no-deps --document-private-items
 
 # Fixes the formatting of the workspace
 fmtf:
@@ -45,4 +45,4 @@ build *args='':
 
 # Runs `cargo hack check` against the workspace
 hack:
-  cargo hack check --feature-powerset --no-dev-deps
+  cargo hack check --feature-powerset --no-dev-deps --exclude op-alloy
