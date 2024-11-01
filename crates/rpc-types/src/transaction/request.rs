@@ -1,3 +1,4 @@
+use alloc::vec::Vec;
 use alloy_consensus::{SignableTransaction, Signed, TxEip1559, TxEip4844, TypedTransaction};
 use alloy_eips::eip7702::SignedAuthorization;
 use alloy_network::TransactionBuilder7702;
