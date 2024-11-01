@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["config","genesis","net","output","receipt","safe_head","sync","transaction"],"struct":["OpTransactionFields","OpTransactionReceipt","OpTransactionReceiptFields","OpTransactionRequest","Transaction"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["BASE_MAINNET_CONFIG","BASE_SEPOLIA_CONFIG","FJORD_MAX_SEQUENCER_DRIFT","GRANITE_CHANNEL_TIMEOUT","MAX_RLP_BYTES_PER_CHANNEL_BEDROCK","MAX_RLP_BYTES_PER_CHANNEL_FJORD","OP_MAINNET_CONFIG","OP_SEPOLIA_CONFIG"],"fn":["default_granite_channel_timeout","rollup_config_from_chain_id"],"struct":["RollupConfig"]};

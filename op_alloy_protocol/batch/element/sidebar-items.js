@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["MAX_SPAN_BATCH_ELEMENTS"],"struct":["SpanBatchElement"]};

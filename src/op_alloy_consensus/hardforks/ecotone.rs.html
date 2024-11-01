@@ -1,0 +1,331 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/consensus/src/hardforks/ecotone.rs`."><title>ecotone.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-590a400c.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="op_alloy_consensus" data-themes="" data-resource-suffix="" data-rustdoc-version="1.84.0-nightly (a0d98ff0e 2024-10-31)" data-channel="nightly" data-search-js="search-c5a66128.js" data-settings-js="settings-0f613d39.js" ><script src="../../../static.files/storage-59e33391.js"></script><script defer src="../../../static.files/src-script-56102188.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f194d8c.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-893ab5e7.css"></noscript><link rel="icon" href="https://raw.githubusercontent.com/alloy-rs/core/main/assets/favicon.ico"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">op_alloy_consensus/hardforks/</div>ecotone.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers">
+<a href="#1" id="1">1</a>
+<a href="#2" id="2">2</a>
+<a href="#3" id="3">3</a>
+<a href="#4" id="4">4</a>
+<a href="#5" id="5">5</a>
+<a href="#6" id="6">6</a>
+<a href="#7" id="7">7</a>
+<a href="#8" id="8">8</a>
+<a href="#9" id="9">9</a>
+<a href="#10" id="10">10</a>
+<a href="#11" id="11">11</a>
+<a href="#12" id="12">12</a>
+<a href="#13" id="13">13</a>
+<a href="#14" id="14">14</a>
+<a href="#15" id="15">15</a>
+<a href="#16" id="16">16</a>
+<a href="#17" id="17">17</a>
+<a href="#18" id="18">18</a>
+<a href="#19" id="19">19</a>
+<a href="#20" id="20">20</a>
+<a href="#21" id="21">21</a>
+<a href="#22" id="22">22</a>
+<a href="#23" id="23">23</a>
+<a href="#24" id="24">24</a>
+<a href="#25" id="25">25</a>
+<a href="#26" id="26">26</a>
+<a href="#27" id="27">27</a>
+<a href="#28" id="28">28</a>
+<a href="#29" id="29">29</a>
+<a href="#30" id="30">30</a>
+<a href="#31" id="31">31</a>
+<a href="#32" id="32">32</a>
+<a href="#33" id="33">33</a>
+<a href="#34" id="34">34</a>
+<a href="#35" id="35">35</a>
+<a href="#36" id="36">36</a>
+<a href="#37" id="37">37</a>
+<a href="#38" id="38">38</a>
+<a href="#39" id="39">39</a>
+<a href="#40" id="40">40</a>
+<a href="#41" id="41">41</a>
+<a href="#42" id="42">42</a>
+<a href="#43" id="43">43</a>
+<a href="#44" id="44">44</a>
+<a href="#45" id="45">45</a>
+<a href="#46" id="46">46</a>
+<a href="#47" id="47">47</a>
+<a href="#48" id="48">48</a>
+<a href="#49" id="49">49</a>
+<a href="#50" id="50">50</a>
+<a href="#51" id="51">51</a>
+<a href="#52" id="52">52</a>
+<a href="#53" id="53">53</a>
+<a href="#54" id="54">54</a>
+<a href="#55" id="55">55</a>
+<a href="#56" id="56">56</a>
+<a href="#57" id="57">57</a>
+<a href="#58" id="58">58</a>
+<a href="#59" id="59">59</a>
+<a href="#60" id="60">60</a>
+<a href="#61" id="61">61</a>
+<a href="#62" id="62">62</a>
+<a href="#63" id="63">63</a>
+<a href="#64" id="64">64</a>
+<a href="#65" id="65">65</a>
+<a href="#66" id="66">66</a>
+<a href="#67" id="67">67</a>
+<a href="#68" id="68">68</a>
+<a href="#69" id="69">69</a>
+<a href="#70" id="70">70</a>
+<a href="#71" id="71">71</a>
+<a href="#72" id="72">72</a>
+<a href="#73" id="73">73</a>
+<a href="#74" id="74">74</a>
+<a href="#75" id="75">75</a>
+<a href="#76" id="76">76</a>
+<a href="#77" id="77">77</a>
+<a href="#78" id="78">78</a>
+<a href="#79" id="79">79</a>
+<a href="#80" id="80">80</a>
+<a href="#81" id="81">81</a>
+<a href="#82" id="82">82</a>
+<a href="#83" id="83">83</a>
+<a href="#84" id="84">84</a>
+<a href="#85" id="85">85</a>
+<a href="#86" id="86">86</a>
+<a href="#87" id="87">87</a>
+<a href="#88" id="88">88</a>
+<a href="#89" id="89">89</a>
+<a href="#90" id="90">90</a>
+<a href="#91" id="91">91</a>
+<a href="#92" id="92">92</a>
+<a href="#93" id="93">93</a>
+<a href="#94" id="94">94</a>
+<a href="#95" id="95">95</a>
+<a href="#96" id="96">96</a>
+<a href="#97" id="97">97</a>
+<a href="#98" id="98">98</a>
+<a href="#99" id="99">99</a>
+<a href="#100" id="100">100</a>
+<a href="#101" id="101">101</a>
+<a href="#102" id="102">102</a>
+<a href="#103" id="103">103</a>
+<a href="#104" id="104">104</a>
+<a href="#105" id="105">105</a>
+<a href="#106" id="106">106</a>
+<a href="#107" id="107">107</a>
+<a href="#108" id="108">108</a>
+<a href="#109" id="109">109</a>
+<a href="#110" id="110">110</a>
+<a href="#111" id="111">111</a>
+<a href="#112" id="112">112</a>
+<a href="#113" id="113">113</a>
+<a href="#114" id="114">114</a>
+<a href="#115" id="115">115</a>
+<a href="#116" id="116">116</a>
+<a href="#117" id="117">117</a>
+<a href="#118" id="118">118</a>
+<a href="#119" id="119">119</a>
+<a href="#120" id="120">120</a>
+<a href="#121" id="121">121</a>
+<a href="#122" id="122">122</a>
+<a href="#123" id="123">123</a>
+<a href="#124" id="124">124</a>
+<a href="#125" id="125">125</a>
+<a href="#126" id="126">126</a>
+<a href="#127" id="127">127</a>
+<a href="#128" id="128">128</a>
+<a href="#129" id="129">129</a>
+<a href="#130" id="130">130</a>
+<a href="#131" id="131">131</a>
+<a href="#132" id="132">132</a>
+<a href="#133" id="133">133</a>
+<a href="#134" id="134">134</a>
+<a href="#135" id="135">135</a>
+<a href="#136" id="136">136</a>
+<a href="#137" id="137">137</a>
+<a href="#138" id="138">138</a>
+<a href="#139" id="139">139</a>
+<a href="#140" id="140">140</a>
+<a href="#141" id="141">141</a>
+<a href="#142" id="142">142</a>
+<a href="#143" id="143">143</a>
+<a href="#144" id="144">144</a>
+<a href="#145" id="145">145</a>
+<a href="#146" id="146">146</a>
+<a href="#147" id="147">147</a>
+<a href="#148" id="148">148</a>
+<a href="#149" id="149">149</a>
+<a href="#150" id="150">150</a>
+<a href="#151" id="151">151</a>
+<a href="#152" id="152">152</a>
+<a href="#153" id="153">153</a>
+<a href="#154" id="154">154</a>
+<a href="#155" id="155">155</a>
+<a href="#156" id="156">156</a>
+<a href="#157" id="157">157</a>
+<a href="#158" id="158">158</a>
+<a href="#159" id="159">159</a>
+<a href="#160" id="160">160</a>
+<a href="#161" id="161">161</a>
+<a href="#162" id="162">162</a>
+<a href="#163" id="163">163</a>
+<a href="#164" id="164">164</a>
+<a href="#165" id="165">165</a></pre></div><pre class="rust"><code><span class="doccomment">//! Module containing a [Transaction] builder for the Ecotone network updgrade transactions.
+//!
+//! [Transaction]: alloy_consensus::Transaction
+
+</span><span class="kw">use crate</span>::{<a href="../transaction/envelope.rs.html#92-108">OpTxEnvelope</a>, <a href="../transaction/deposit.rs.html#18-41">TxDeposit</a>};
+<span class="kw">use </span>alloc::{<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">string::String</a>, <a href="https://doc.rust-lang.org/nightly/alloc/macro.vec.html">vec</a>, <a href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html">vec::Vec</a>};
+<span class="kw">use </span>alloy_eips::eip2718::Encodable2718;
+<span class="kw">use </span>alloy_primitives::{address, bytes, Address, Bytes, TxKind, U256};
+<span class="kw">use </span>spin::Lazy;
+
+<span class="kw">use </span><a href="../transaction/source.rs.html#107-110"><span class="kw">crate</span>::UpgradeDepositSource</a>;
+
+<span class="doccomment">/// The UpdgradeTo Function Signature
+</span><span class="kw">pub const </span><a href="../../../op_alloy_consensus/hardforks/ecotone/constant.UPDGRADE_TO_FUNC_SIGNATURE.html">UPDGRADE_TO_FUNC_SIGNATURE</a>: <span class="kw-2">&amp;</span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a> = <span class="string">"upgradeTo(address)"</span>;
+
+<span class="doccomment">/// L1 Block Deployer Address
+</span><span class="kw">pub const </span><a href="../../../op_alloy_consensus/hardforks/ecotone/constant.L1_BLOCK_DEPLOYER_ADDRESS.html">L1_BLOCK_DEPLOYER_ADDRESS</a>: Address = <span class="macro">address!</span>(<span class="string">"4210000000000000000000000000000000000000"</span>);
+
+<span class="doccomment">/// The Gas Price Oracle Deployer Address
+</span><span class="kw">pub const </span><a href="../../../op_alloy_consensus/hardforks/ecotone/constant.GAS_PRICE_ORACLE_DEPLOYER_ADDRESS.html">GAS_PRICE_ORACLE_DEPLOYER_ADDRESS</a>: Address =
+    <span class="macro">address!</span>(<span class="string">"4210000000000000000000000000000000000001"</span>);
+
+<span class="doccomment">/// The new L1 Block Address
+/// This is computed by using go-ethereum's `crypto.CreateAddress` function,
+/// with the L1 Block Deployer Address and nonce 0.
+</span><span class="kw">pub const </span><a href="../../../op_alloy_consensus/hardforks/ecotone/constant.NEW_L1_BLOCK_ADDRESS.html">NEW_L1_BLOCK_ADDRESS</a>: Address = <span class="macro">address!</span>(<span class="string">"07dbe8500fc591d1852b76fee44d5a05e13097ff"</span>);
+
+<span class="doccomment">/// The Gas Price Oracle Address
+/// This is computed by using go-ethereum's `crypto.CreateAddress` function,
+/// with the Gas Price Oracle Deployer Address and nonce 0.
+</span><span class="kw">pub const </span><a href="../../../op_alloy_consensus/hardforks/ecotone/constant.GAS_PRICE_ORACLE_ADDRESS.html">GAS_PRICE_ORACLE_ADDRESS</a>: Address = <span class="macro">address!</span>(<span class="string">"b528d11cc114e026f138fe568744c6d45ce6da7a"</span>);
+
+<span class="doccomment">/// The Enable Ecotone Input Method 4Byte Signature
+</span><span class="kw">pub const </span><a href="../../../op_alloy_consensus/hardforks/ecotone/constant.ENABLE_ECOTONE_INPUT.html">ENABLE_ECOTONE_INPUT</a>: <span class="kw-2">&amp;</span>[<a href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>] = <span class="kw-2">&amp;</span>[<span class="number">0x22</span>, <span class="number">0xb9</span>, <span class="number">0x08</span>, <span class="number">0xb3</span>];
+
+<span class="doccomment">/// EIP-4788 From Address
+</span><span class="kw">pub const </span><a href="../../../op_alloy_consensus/hardforks/ecotone/constant.EIP4788_FROM.html">EIP4788_FROM</a>: Address = <span class="macro">address!</span>(<span class="string">"0B799C86a49DEeb90402691F1041aa3AF2d3C875"</span>);
+
+<span class="kw">static </span><a href="../../../op_alloy_consensus/hardforks/ecotone/static.DEPLOY_L1_BLOCK_SOURCE.html">DEPLOY_L1_BLOCK_SOURCE</a>: Lazy&lt;<a href="../transaction/source.rs.html#107-110">UpgradeDepositSource</a>&gt; =
+    Lazy::new(|| <a href="../transaction/source.rs.html#107-110">UpgradeDepositSource</a> { intent: <a href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from">String::from</a>(<span class="string">"Ecotone: L1 Block Deployment"</span>) });
+
+<span class="kw">static </span><a href="../../../op_alloy_consensus/hardforks/ecotone/static.DEPLOY_GAS_PRICE_ORACLE_SOURCE.html">DEPLOY_GAS_PRICE_ORACLE_SOURCE</a>: Lazy&lt;<a href="../transaction/source.rs.html#107-110">UpgradeDepositSource</a>&gt; = Lazy::new(|| {
+    <a href="../transaction/source.rs.html#107-110">UpgradeDepositSource</a> { intent: <a href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from">String::from</a>(<span class="string">"Ecotone: Gas Price Oracle Deployment"</span>) }
+});
+
+<span class="kw">static </span><a href="../../../op_alloy_consensus/hardforks/ecotone/static.UPDATE_L1_BLOCK_PROXY_SOURCE.html">UPDATE_L1_BLOCK_PROXY_SOURCE</a>: Lazy&lt;<a href="../transaction/source.rs.html#107-110">UpgradeDepositSource</a>&gt; =
+    Lazy::new(|| <a href="../transaction/source.rs.html#107-110">UpgradeDepositSource</a> { intent: <a href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from">String::from</a>(<span class="string">"Ecotone: L1 Block Proxy Update"</span>) });
+
+<span class="kw">static </span><a href="../../../op_alloy_consensus/hardforks/ecotone/static.UPDATE_GAS_PRICE_ORACLE_SOURCE.html">UPDATE_GAS_PRICE_ORACLE_SOURCE</a>: Lazy&lt;<a href="../transaction/source.rs.html#107-110">UpgradeDepositSource</a>&gt; = Lazy::new(|| {
+    <a href="../transaction/source.rs.html#107-110">UpgradeDepositSource</a> { intent: <a href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from">String::from</a>(<span class="string">"Ecotone: Gas Price Oracle Proxy Update"</span>) }
+});
+
+<span class="kw">static </span><a href="../../../op_alloy_consensus/hardforks/ecotone/static.ENABLE_ECOTONE_SOURCE.html">ENABLE_ECOTONE_SOURCE</a>: Lazy&lt;<a href="../transaction/source.rs.html#107-110">UpgradeDepositSource</a>&gt; = Lazy::new(|| <a href="../transaction/source.rs.html#107-110">UpgradeDepositSource</a> {
+    intent: <a href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from">String::from</a>(<span class="string">"Ecotone: Gas Price Oracle Set Ecotone"</span>),
+});
+
+<span class="kw">static </span><a href="../../../op_alloy_consensus/hardforks/ecotone/static.BEACON_ROOTS_SOURCE.html">BEACON_ROOTS_SOURCE</a>: Lazy&lt;<a href="../transaction/source.rs.html#107-110">UpgradeDepositSource</a>&gt; = Lazy::new(|| <a href="../transaction/source.rs.html#107-110">UpgradeDepositSource</a> {
+    intent: <a href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from">String::from</a>(<span class="string">"Ecotone: beacon block roots contract deployment"</span>),
+});
+
+<span class="kw">impl </span><a href="mod.rs.html#31"><span class="kw">super</span>::Hardforks</a> {
+    <span class="doccomment">/// Constructs the Ecotone network upgrade transactions.
+    </span><span class="kw">pub fn </span>ecotone_txs() -&gt; Vec&lt;Bytes&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>txs = <a class="macro" href="https://doc.rust-lang.org/nightly/alloc/macro.vec.html">vec!</a>[];
+
+        <span class="kw">let </span>eip4788_creation_data = <span class="macro">bytes!</span>(<span class="string">"60618060095f395ff33373fffffffffffffffffffffffffffffffffffffffe14604d57602036146024575f5ffd5b5f35801560495762001fff810690815414603c575f5ffd5b62001fff01545f5260205ff35b5f5ffd5b62001fff42064281555f359062001fff015500"</span>);
+
+        <span class="kw">let </span>l1_block_deployment_bytecode = <span class="macro">bytes!</span>(<span class="string">"608060405234801561001057600080fd5b5061053e806100206000396000f3fe608060405234801561001057600080fd5b50600436106100f55760003560e01c80638381f58a11610097578063c598591811610066578063c598591814610229578063e591b28214610249578063e81b2c6d14610289578063f82061401461029257600080fd5b80638381f58a146101e35780638b239f73146101f75780639e8c496614610200578063b80777ea1461020957600080fd5b806354fd4d50116100d357806354fd4d50146101335780635cf249691461017c57806364ca23ef1461018557806368d5dca6146101b257600080fd5b8063015d8eb9146100fa57806309bd5a601461010f578063440a5e201461012b575b600080fd5b61010d61010836600461044c565b61029b565b005b61011860025481565b6040519081526020015b60405180910390f35b61010d6103da565b61016f6040518060400160405280600581526020017f312e322e3000000000000000000000000000000000000000000000000000000081525081565b60405161012291906104be565b61011860015481565b6003546101999067ffffffffffffffff1681565b60405167ffffffffffffffff9091168152602001610122565b6003546101ce9068010000000000000000900463ffffffff1681565b60405163ffffffff9091168152602001610122565b6000546101999067ffffffffffffffff1681565b61011860055481565b61011860065481565b6000546101999068010000000000000000900467ffffffffffffffff1681565b6003546101ce906c01000000000000000000000000900463ffffffff1681565b61026473deaddeaddeaddeaddeaddeaddeaddeaddead000181565b60405173ffffffffffffffffffffffffffffffffffffffff9091168152602001610122565b61011860045481565b61011860075481565b3373deaddeaddeaddeaddeaddeaddeaddeaddead000114610342576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152603b60248201527f4c31426c6f636b3a206f6e6c7920746865206465706f7369746f72206163636f60448201527f756e742063616e20736574204c3120626c6f636b2076616c7565730000000000606482015260840160405180910390fd5b6000805467ffffffffffffffff98891668010000000000000000027fffffffffffffffffffffffffffffffff00000000000000000000000000000000909116998916999099179890981790975560019490945560029290925560038054919094167fffffffffffffffffffffffffffffffffffffffffffffffff00000000000000009190911617909255600491909155600555600655565b3373deaddeaddeaddeaddeaddeaddeaddeaddead00011461040357633cc50b456000526004601cfd5b60043560801c60035560143560801c600055602435600155604435600755606435600255608435600455565b803567ffffffffffffffff8116811461044757600080fd5b919050565b600080600080600080600080610100898b03121561046957600080fd5b6104728961042f565b975061048060208a0161042f565b9650604089013595506060890135945061049c60808a0161042f565b979a969950949793969560a0850135955060c08501359460e001359350915050565b600060208083528351808285015260005b818110156104eb578581018301518582016040015282016104cf565b818111156104fd576000604083870101525b50601f017fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe01692909201604001939250505056fea164736f6c634300080f000a"</span>);
+
+        <span class="kw">let </span>gas_price_oracle_deployment_bytecode =
+        <span class="macro">bytes!</span>(<span class="string">"608060405234801561001057600080fd5b50610fb5806100206000396000f3fe608060405234801561001057600080fd5b50600436106100f55760003560e01c806354fd4d5011610097578063de26c4a111610066578063de26c4a1146101da578063f45e65d8146101ed578063f8206140146101f5578063fe173b97146101cc57600080fd5b806354fd4d501461016657806368d5dca6146101af5780636ef25c3a146101cc578063c5985918146101d257600080fd5b8063313ce567116100d3578063313ce5671461012757806349948e0e1461012e5780634ef6e22414610141578063519b4bd31461015e57600080fd5b80630c18c162146100fa57806322b90ab3146101155780632e0f26251461011f575b600080fd5b6101026101fd565b6040519081526020015b60405180910390f35b61011d61031e565b005b610102600681565b6006610102565b61010261013c366004610b73565b610541565b60005461014e9060ff1681565b604051901515815260200161010c565b610102610565565b6101a26040518060400160405280600581526020017f312e322e3000000000000000000000000000000000000000000000000000000081525081565b60405161010c9190610c42565b6101b76105c6565b60405163ffffffff909116815260200161010c565b48610102565b6101b761064b565b6101026101e8366004610b73565b6106ac565b610102610760565b610102610853565b6000805460ff1615610296576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152602860248201527f47617350726963654f7261636c653a206f76657268656164282920697320646560448201527f707265636174656400000000000000000000000000000000000000000000000060648201526084015b60405180910390fd5b73420000000000000000000000000000000000001573ffffffffffffffffffffffffffffffffffffffff16638b239f736040518163ffffffff1660e01b8152600401602060405180830381865afa1580156102f5573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906103199190610cb5565b905090565b73420000000000000000000000000000000000001573ffffffffffffffffffffffffffffffffffffffff1663e591b2826040518163ffffffff1660e01b8152600401602060405180830381865afa15801561037d573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906103a19190610cce565b73ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614610481576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152604160248201527f47617350726963654f7261636c653a206f6e6c7920746865206465706f73697460448201527f6f72206163636f756e742063616e2073657420697345636f746f6e6520666c6160648201527f6700000000000000000000000000000000000000000000000000000000000000608482015260a40161028d565b60005460ff1615610514576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152602660248201527f47617350726963654f7261636c653a2045636f746f6e6520616c72656164792060448201527f6163746976650000000000000000000000000000000000000000000000000000606482015260840161028d565b600080547fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00166001179055565b6000805460ff161561055c57610556826108b4565b92915050565b61055682610958565b600073420000000000000000000000000000000000001573ffffffffffffffffffffffffffffffffffffffff16635cf249696040518163ffffffff1660e01b8152600401602060405180830381865afa1580156102f5573d6000803e3d6000fd5b600073420000000000000000000000000000000000001573ffffffffffffffffffffffffffffffffffffffff166368d5dca66040518163ffffffff1660e01b8152600401602060405180830381865afa158015610627573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906103199190610d04565b600073420000000000000000000000000000000000001573ffffffffffffffffffffffffffffffffffffffff1663c59859186040518163ffffffff1660e01b8152600401602060405180830381865afa158015610627573d6000803e3d6000fd5b6000806106b883610ab4565b60005490915060ff16156106cc5792915050565b73420000000000000000000000000000000000001573ffffffffffffffffffffffffffffffffffffffff16638b239f736040518163ffffffff1660e01b8152600401602060405180830381865afa15801561072b573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061074f9190610cb5565b6107599082610d59565b9392505050565b6000805460ff16156107f4576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152602660248201527f47617350726963654f7261636c653a207363616c61722829206973206465707260448201527f6563617465640000000000000000000000000000000000000000000000000000606482015260840161028d565b73420000000000000000000000000000000000001573ffffffffffffffffffffffffffffffffffffffff16639e8c49666040518163ffffffff1660e01b8152600401602060405180830381865afa1580156102f5573d6000803e3d6000fd5b600073420000000000000000000000000000000000001573ffffffffffffffffffffffffffffffffffffffff1663f82061406040518163ffffffff1660e01b8152600401602060405180830381865afa1580156102f5573d6000803e3d6000fd5b6000806108c083610ab4565b905060006108cc610565565b6108d461064b565b6108df906010610d71565b63ffffffff166108ef9190610d9d565b905060006108fb610853565b6109036105c6565b63ffffffff166109139190610d9d565b905060006109218284610d59565b61092b9085610d9d565b90506109396006600a610efa565b610944906010610d9d565b61094e9082610f06565b9695505050505050565b60008061096483610ab4565b9050600073420000000000000000000000000000000000001573ffffffffffffffffffffffffffffffffffffffff16639e8c49666040518163ffffffff1660e01b8152600401602060405180830381865afa1580156109c7573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906109eb9190610cb5565b6109f3610565565b73420000000000000000000000000000000000001573ffffffffffffffffffffffffffffffffffffffff16638b239f736040518163ffffffff1660e01b8152600401602060405180830381865afa158015610a52573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610a769190610cb5565b610a809085610d59565b610a8a9190610d9d565b610a949190610d9d565b9050610aa26006600a610efa565b610aac9082610f06565b949350505050565b80516000908190815b81811015610b3757848181518110610ad757610ad7610f41565b01602001517fff0000000000000000000000000000000000000000000000000000000000000016600003610b1757610b10600484610d59565b9250610b25565b610b22601084610d59565b92505b80610b2f81610f70565b915050610abd565b50610aac82610440610d59565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b600060208284031215610b8557600080fd5b813567ffffffffffffffff80821115610b9d57600080fd5b818401915084601f830112610bb157600080fd5b813581811115610bc357610bc3610b44565b604051601f82017fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0908116603f01168101908382118183101715610c0957610c09610b44565b81604052828152876020848701011115610c2257600080fd5b826020860160208301376000928101602001929092525095945050505050565b600060208083528351808285015260005b81811015610c6f57858101830151858201604001528201610c53565b81811115610c81576000604083870101525b50601f017fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe016929092016040019392505050565b600060208284031215610cc757600080fd5b5051919050565b600060208284031215610ce057600080fd5b815173ffffffffffffffffffffffffffffffffffffffff8116811461075957600080fd5b600060208284031215610d1657600080fd5b815163ffffffff8116811461075957600080fd5b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b60008219821115610d6c57610d6c610d2a565b500190565b600063ffffffff80831681851681830481118215151615610d9457610d94610d2a565b02949350505050565b6000817fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0483118215151615610dd557610dd5610d2a565b500290565b600181815b80851115610e3357817fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff04821115610e1957610e19610d2a565b80851615610e2657918102915b93841c9390800290610ddf565b509250929050565b600082610e4a57506001610556565b81610e5757506000610556565b8160018114610e6d5760028114610e7757610e93565b6001915050610556565b60ff841115610e8857610e88610d2a565b50506001821b610556565b5060208310610133831016604e8410600b8410161715610eb6575081810a610556565b610ec08383610dda565b807fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff04821115610ef257610ef2610d2a565b029392505050565b60006107598383610e3b565b600082610f3c577f4e487b7100000000000000000000000000000000000000000000000000000000600052601260045260246000fd5b500490565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052603260045260246000fd5b60007fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff8203610fa157610fa1610d2a565b506001019056fea164736f6c634300080f000a"</span>);
+
+        <span class="comment">// Deploy the L1 Block Contract
+        </span><span class="kw">let </span><span class="kw-2">mut </span>buffer = <a href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html#method.new">Vec::new</a>();
+        <a href="../transaction/envelope.rs.html#107">OpTxEnvelope::Deposit</a>(<a href="../transaction/deposit.rs.html#18-41">TxDeposit</a> {
+            source_hash: <a href="#39-40">DEPLOY_L1_BLOCK_SOURCE</a>.<a href="../transaction/source.rs.html#119-127">source_hash</a>(),
+            from: <a href="#17">L1_BLOCK_DEPLOYER_ADDRESS</a>,
+            to: TxKind::Create,
+            mint: <span class="number">0</span>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>(),
+            value: U256::ZERO,
+            gas_limit: <span class="number">375_000</span>,
+            is_system_transaction: <span class="bool-val">false</span>,
+            input: <a href="#68">l1_block_deployment_bytecode</a>,
+        })
+        .encode_2718(<span class="kw-2">&amp;mut </span><a href="#74">buffer</a>);
+        <a href="#64">txs</a>.<a href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html#method.push">push</a>(<a href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from">Bytes::from</a>(<a href="#74">buffer</a>));
+
+        <span class="comment">// Deploy the Gas Price Oracle
+        </span><a href="#74">buffer</a> = <a href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html#method.new">Vec::new</a>();
+        <a href="../transaction/envelope.rs.html#107">OpTxEnvelope::Deposit</a>(<a href="../transaction/deposit.rs.html#18-41">TxDeposit</a> {
+            source_hash: <a href="#42-44">DEPLOY_GAS_PRICE_ORACLE_SOURCE</a>.<a href="../transaction/source.rs.html#119-127">source_hash</a>(),
+            from: <a href="#20-21">GAS_PRICE_ORACLE_DEPLOYER_ADDRESS</a>,
+            to: TxKind::Create,
+            mint: <span class="number">0</span>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>(),
+            value: U256::ZERO,
+            gas_limit: <span class="number">1_000_000</span>,
+            is_system_transaction: <span class="bool-val">false</span>,
+            input: <a href="#70">gas_price_oracle_deployment_bytecode</a>,
+        })
+        .encode_2718(<span class="kw-2">&amp;mut </span><a href="#74">buffer</a>);
+        <a href="#64">txs</a>.<a href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html#method.push">push</a>(<a href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from">Bytes::from</a>(<a href="#74">buffer</a>));
+
+        <span class="comment">// Update the l1 block proxy
+        </span><a href="#74">buffer</a> = <a href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html#method.new">Vec::new</a>();
+        <a href="../transaction/envelope.rs.html#107">OpTxEnvelope::Deposit</a>(<a href="../transaction/deposit.rs.html#18-41">TxDeposit</a> {
+            source_hash: <a href="#46-47">UPDATE_L1_BLOCK_PROXY_SOURCE</a>.<a href="../transaction/source.rs.html#119-127">source_hash</a>(),
+            from: <a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default">Address::default</a>(),
+            to: TxKind::Call(<a href="#17">L1_BLOCK_DEPLOYER_ADDRESS</a>),
+            mint: <span class="number">0</span>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>(),
+            value: U256::ZERO,
+            gas_limit: <span class="number">50_000</span>,
+            is_system_transaction: <span class="bool-val">false</span>,
+            input: <a href="mod.rs.html#35-39"><span class="self">Self</span>::upgrade_to_calldata</a>(<a href="#26">NEW_L1_BLOCK_ADDRESS</a>),
+        })
+        .encode_2718(<span class="kw-2">&amp;mut </span><a href="#74">buffer</a>);
+        <a href="#64">txs</a>.<a href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html#method.push">push</a>(<a href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from">Bytes::from</a>(<a href="#74">buffer</a>));
+
+        <span class="comment">// Update gas price oracle proxy
+        </span><a href="#74">buffer</a> = <a href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html#method.new">Vec::new</a>();
+        <a href="../transaction/envelope.rs.html#107">OpTxEnvelope::Deposit</a>(<a href="../transaction/deposit.rs.html#18-41">TxDeposit</a> {
+            source_hash: <a href="#49-51">UPDATE_GAS_PRICE_ORACLE_SOURCE</a>.<a href="../transaction/source.rs.html#119-127">source_hash</a>(),
+            from: <a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default">Address::default</a>(),
+            to: TxKind::Call(<a href="#20-21">GAS_PRICE_ORACLE_DEPLOYER_ADDRESS</a>),
+            mint: <span class="number">0</span>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>(),
+            value: U256::ZERO,
+            gas_limit: <span class="number">50_000</span>,
+            is_system_transaction: <span class="bool-val">false</span>,
+            input: <a href="mod.rs.html#35-39"><span class="self">Self</span>::upgrade_to_calldata</a>(<a href="#31">GAS_PRICE_ORACLE_ADDRESS</a>),
+        })
+        .encode_2718(<span class="kw-2">&amp;mut </span><a href="#74">buffer</a>);
+        <a href="#64">txs</a>.<a href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html#method.push">push</a>(<a href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from">Bytes::from</a>(<a href="#74">buffer</a>));
+
+        <span class="comment">// Enable ecotone
+        </span><a href="#74">buffer</a> = <a href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html#method.new">Vec::new</a>();
+        <a href="../transaction/envelope.rs.html#107">OpTxEnvelope::Deposit</a>(<a href="../transaction/deposit.rs.html#18-41">TxDeposit</a> {
+            source_hash: <a href="#53-55">ENABLE_ECOTONE_SOURCE</a>.<a href="../transaction/source.rs.html#119-127">source_hash</a>(),
+            from: <a href="#17">L1_BLOCK_DEPLOYER_ADDRESS</a>,
+            to: TxKind::Call(<a href="#31">GAS_PRICE_ORACLE_ADDRESS</a>),
+            mint: <span class="number">0</span>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>(),
+            value: U256::ZERO,
+            gas_limit: <span class="number">80_000</span>,
+            is_system_transaction: <span class="bool-val">false</span>,
+            input: <a href="#34">ENABLE_ECOTONE_INPUT</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>(),
+        })
+        .encode_2718(<span class="kw-2">&amp;mut </span><a href="#74">buffer</a>);
+        <a href="#64">txs</a>.<a href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html#method.push">push</a>(<a href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from">Bytes::from</a>(<a href="#74">buffer</a>));
+
+        <span class="comment">// Deploy EIP4788
+        </span><a href="#74">buffer</a> = <a href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html#method.new">Vec::new</a>();
+        <a href="../transaction/envelope.rs.html#107">OpTxEnvelope::Deposit</a>(<a href="../transaction/deposit.rs.html#18-41">TxDeposit</a> {
+            source_hash: <a href="#57-59">BEACON_ROOTS_SOURCE</a>.<a href="../transaction/source.rs.html#119-127">source_hash</a>(),
+            from: <a href="#37">EIP4788_FROM</a>,
+            to: TxKind::Create,
+            mint: <span class="number">0</span>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>(),
+            value: U256::ZERO,
+            gas_limit: <span class="number">250_000</span>,
+            is_system_transaction: <span class="bool-val">false</span>,
+            input: <a href="#66">eip4788_creation_data</a>,
+        })
+        .encode_2718(<span class="kw-2">&amp;mut </span><a href="#74">buffer</a>);
+        <a href="#64">txs</a>.<a href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html#method.push">push</a>(<a href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from">Bytes::from</a>(<a href="#74">buffer</a>));
+
+        <a href="#64">txs</a>
+    }
+}
+</code></pre></div></section></main></body></html>

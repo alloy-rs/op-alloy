@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["L1BlockInfo","OpTransactionReceipt","OpTransactionReceiptFields"]};

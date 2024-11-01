@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["calculate_tx_l1_cost_bedrock","calculate_tx_l1_cost_ecotone","calculate_tx_l1_cost_fjord","calculate_tx_l1_cost_regolith","data_gas_bedrock","data_gas_fjord","data_gas_regolith"]};

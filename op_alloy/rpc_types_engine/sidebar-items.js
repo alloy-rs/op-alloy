@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["PayloadEnvelopeError","ProtocolVersion","ProtocolVersionError"],"struct":["OpAttributesWithParent","OpExecutionPayloadEnvelopeV3","OpExecutionPayloadEnvelopeV4","OpNetworkPayloadEnvelope","OpPayloadAttributes","PayloadHash","ProtocolVersionFormatV0","SuperchainSignal"]};
