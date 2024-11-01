@@ -57,6 +57,6 @@ arbitrary = [
   "alloy-rpc-types-eth/arbitrary",
 ]
 k256 = [
-  "alloy-consensus/k256",
   "alloy-rpc-types-eth/k256",
+  "op-alloy-consensus/k256",
 ]
