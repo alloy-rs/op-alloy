@@ -117,20 +117,18 @@ c-kzg = { version = "1.0", default-features = false }
 k256 = { version = "0.13", default-features = false, features = ["ecdsa"] }
 
 [patch.crates-io]
-alloy-sol-types = { git = "https://github.com/alloy-rs/core", rev = "237cfc4" }
-alloy-primitives = { git = "https://github.com/alloy-rs/core", rev = "237cfc4" }
-
-alloy-eip7702 = { git = "https://github.com/alloy-rs/eips", rev = "9e6fcee" }
+alloy-sol-types = { git = "https://github.com/alloy-rs/core", rev = "17ae00a" }
+alloy-primitives = { git = "https://github.com/alloy-rs/core", rev = "17ae00a" }
 
 revm-primitives = { git = "https://github.com/klkvr/revm", rev = "e552b1d" }
 
-alloy-consensus = { git = "https://github.com/alloy-rs/alloy", rev = "215315bd" }
-alloy-network = { git = "https://github.com/alloy-rs/alloy", rev = "215315bd" }
-alloy-network-primitives = { git = "https://github.com/alloy-rs/alloy", rev = "215315bd" }
-alloy-rpc-types-eth = { git = "https://github.com/alloy-rs/alloy", rev = "215315bd" }
-alloy-rpc-types-engine = { git = "https://github.com/alloy-rs/alloy", rev = "215315bd" }
-alloy-eips = { git = "https://github.com/alloy-rs/alloy", rev = "215315bd" }
-alloy-serde = { git = "https://github.com/alloy-rs/alloy", rev = "215315bd" }
-alloy-signer = { git = "https://github.com/alloy-rs/alloy", rev = "215315bd" }
-alloy-provider = { git = "https://github.com/alloy-rs/alloy", rev = "215315bd" }
-alloy-transport = { git = "https://github.com/alloy-rs/alloy", rev = "215315bd" }
+alloy-consensus = { git = "https://github.com/alloy-rs/alloy", rev = "708d0e3" }
+alloy-network = { git = "https://github.com/alloy-rs/alloy", rev = "708d0e3" }
+alloy-network-primitives = { git = "https://github.com/alloy-rs/alloy", rev = "708d0e3" }
+alloy-rpc-types-eth = { git = "https://github.com/alloy-rs/alloy", rev = "708d0e3" }
+alloy-rpc-types-engine = { git = "https://github.com/alloy-rs/alloy", rev = "708d0e3" }
+alloy-eips = { git = "https://github.com/alloy-rs/alloy", rev = "708d0e3" }
+alloy-serde = { git = "https://github.com/alloy-rs/alloy", rev = "708d0e3" }
+alloy-signer = { git = "https://github.com/alloy-rs/alloy", rev = "708d0e3" }
+alloy-provider = { git = "https://github.com/alloy-rs/alloy", rev = "708d0e3" }
+alloy-transport = { git = "https://github.com/alloy-rs/alloy", rev = "708d0e3" }
