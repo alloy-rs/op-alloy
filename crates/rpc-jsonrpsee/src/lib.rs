@@ -8,7 +8,6 @@
 
 pub mod traits;
 
-use alloy_transport::Transport;
 use jsonrpsee::{core::RpcResult, proc_macros::rpc};
 use op_alloy_rpc_types_engine::{ProtocolVersion, SuperchainSignal};
 
