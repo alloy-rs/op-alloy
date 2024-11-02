@@ -8,9 +8,9 @@
 
 pub mod traits;
 
-// Add these use statements to satisfy unused dependency warnings
 use alloy_transport as _;
 use serde as _;
+use serde_json as _;
 
 use jsonrpsee::{core::RpcResult, proc_macros::rpc};
 use op_alloy_rpc_types_engine::{ProtocolVersion, SuperchainSignal};

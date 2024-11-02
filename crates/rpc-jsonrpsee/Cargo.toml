@@ -24,7 +24,9 @@ alloy-transport.workspace = true
 
 # rpc
 jsonrpsee.workspace = true
-serde = { workspace = true, optional = true }
+# Serde
+serde_json.workspace = true
+serde = { workspace = true, features = ["derive"] }
 
 [features]
 client = [
