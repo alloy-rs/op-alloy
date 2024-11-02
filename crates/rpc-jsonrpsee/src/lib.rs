@@ -8,6 +8,10 @@
 
 pub mod traits;
 
+// Add these use statements to satisfy unused dependency warnings
+use alloy_transport as _;
+use serde as _;
+
 use jsonrpsee::{core::RpcResult, proc_macros::rpc};
 use op_alloy_rpc_types_engine::{ProtocolVersion, SuperchainSignal};
 
@@ -24,7 +28,7 @@ pub trait EngineApiExt {
     /// # Returns
     /// The latest supported OP-Stack protocol version of the execution engine.
     ///
-    /// See: https://specs.optimism.io/protocol/exec-engine.html#engine_signalsuperchainv1
+    /// See: <https://specs.optimism.io/protocol/exec-engine.html#engine_signalsuperchainv1>
     #[method(name = "engine_signalSuperchainV1")]
     async fn signal_superchain_v1(&self, signal: SuperchainSignal) -> RpcResult<ProtocolVersion>;
 }
