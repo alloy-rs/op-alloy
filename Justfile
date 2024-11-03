@@ -25,8 +25,11 @@ test-docs:
 lint: lint-native lint-docs
 
 # Lint the workspace
-lint-native: fmt-check lint-docs
-  cargo +nightly clippy --workspace --all --all-features --all-targets -- -D warnings
+lint-native: fmt-check lint-docs clippy
+
+# Checks the workspace with clippy
+clippy:
+  cargo +stable clippy --workspace --all-features --all-targets -- -D warnings
 
 # Check the formatting of the workspace
 fmt-check:

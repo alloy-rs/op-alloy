@@ -57,12 +57,13 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+      - uses: taiki-e/install-action@just
       - uses: dtolnay/rust-toolchain@stable
+      - uses: taiki-e/install-action@nextest
       - uses: Swatinem/rust-cache@v2
         with:
           cache-on-failure: true
-      - run: cargo test --workspace --doc
-      - run: cargo test --all-features --workspace --doc
+      - run: just test-docs
 
   wasm-unknown:
     runs-on: ubuntu-latest
@@ -129,6 +130,7 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+      - uses: taiki-e/install-action@just
       - uses: dtolnay/rust-toolchain@master
         with:
           toolchain: stable
@@ -136,9 +138,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           cache-on-failure: true
-      - run: cargo +stable clippy --workspace --all-targets --all-features
-        env:
-          RUSTFLAGS: -D warnings
+      - run: just clippy
 
   docs:
     runs-on: ubuntu-latest
