@@ -17,16 +17,12 @@ workspace = true
 [dependencies]
 # Alloy
 op-alloy-rpc-types.workspace = true
-op-alloy-rpc-types-engine.workspace = true
+op-alloy-rpc-types-engine = { workspace = true, features = ["serde"] }
 alloy-eips.workspace = true
 alloy-primitives.workspace = true
-alloy-transport.workspace = true
 
 # rpc
 jsonrpsee.workspace = true
-# Serde
-serde_json.workspace = true
-serde = { workspace = true, features = ["derive"] }
 
 [features]
 client = [
