@@ -63,6 +63,7 @@ are the following.
 - [`Hardforks::fjord_txs()`][fjord]
 
 
+[alloy]: https://github.com/alloy-rs/alloy
 [fjord]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/hardforks/struct.Hardforks.html#method.fjord_txs
 [ecotone]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/hardforks/struct.Hardforks.html#method.ecotone_txs
 [hardforks]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/hardforks/struct.Hardforks.html

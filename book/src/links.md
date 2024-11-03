@@ -16,6 +16,7 @@
 <!-- Alloy -->
 
 [alloy]: https://github.com/alloy-rs/alloy
+[op-alloy]: https://github.com/alloy-rs/op-alloy
 
 <!-- Kona links -->
 
