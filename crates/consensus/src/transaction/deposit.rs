@@ -41,7 +41,7 @@ pub struct TxDeposit {
             default,
             with = "alloy_serde::quantity",
             rename = "isSystemTx",
-            skip_serializing_if = "std::ops::Not::not"
+            skip_serializing_if = "core::ops::Not::not"
         )
     )]
     pub is_system_transaction: bool,
