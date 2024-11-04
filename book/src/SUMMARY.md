@@ -7,6 +7,8 @@
     - [Rollup Config](./building/genesis/rollup-config.md)
     - [System Config](./building/genesis/system-config.md)
   - [Consensus](./building/consensus.md)
+  - [Protocol](./building/protocol/README.md)
+    - [BlockInfo and L2BlockInfo Types](./building/protocol/block-info.md)
 - [Examples](./examples/README.md)
   - [Load a Rollup Config](./examples/load-a-rollup-config.md)
 - [Contributing](./CONTRIBUTING.md)
