@@ -23,6 +23,7 @@ allow = [
     "ISC",
     "Unicode-DFS-2016",
     "Unlicense",
+    "Unicode-3.0",
     "MPL-2.0",
     "Zlib",
     # https://github.com/briansmith/ring/issues/902
