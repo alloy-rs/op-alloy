@@ -91,7 +91,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../starting/installation.html" class="active"><strong aria-hidden="true">2.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="../building/index.html"><strong aria-hidden="true">3.</strong> Building</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../building/genesis/index.html"><strong aria-hidden="true">3.1.</strong> Genesis</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../building/genesis/rollup-config.html"><strong aria-hidden="true">3.1.1.</strong> Rollup Config</a></li><li class="chapter-item expanded "><a href="../building/genesis/system-config.html"><strong aria-hidden="true">3.1.2.</strong> System Config</a></li></ol></li><li class="chapter-item expanded "><a href="../building/consensus/index.html"><strong aria-hidden="true">3.2.</strong> Consensus</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../building/consensus/transactions.html"><strong aria-hidden="true">3.2.1.</strong> Transactions</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../examples/index.html"><strong aria-hidden="true">4.</strong> Examples</a></li><li class="chapter-item expanded "><a href="../CONTRIBUTING.html"><strong aria-hidden="true">5.</strong> Contributing</a></li><li class="chapter-item expanded "><a href="../LICENSE.html"><strong aria-hidden="true">6.</strong> Licensing</a></li><li class="chapter-item expanded "><a href="../glossary.html"><strong aria-hidden="true">7.</strong> Glossary</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../starting/installation.html" class="active"><strong aria-hidden="true">2.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="../building/index.html"><strong aria-hidden="true">3.</strong> Building</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../building/genesis/index.html"><strong aria-hidden="true">3.1.</strong> Genesis</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../building/genesis/rollup-config.html"><strong aria-hidden="true">3.1.1.</strong> Rollup Config</a></li><li class="chapter-item expanded "><a href="../building/genesis/system-config.html"><strong aria-hidden="true">3.1.2.</strong> System Config</a></li></ol></li><li class="chapter-item expanded "><a href="../building/consensus.html"><strong aria-hidden="true">3.2.</strong> Consensus</a></li></ol></li><li class="chapter-item expanded "><a href="../examples/index.html"><strong aria-hidden="true">4.</strong> Examples</a></li><li class="chapter-item expanded "><a href="../CONTRIBUTING.html"><strong aria-hidden="true">5.</strong> Contributing</a></li><li class="chapter-item expanded "><a href="../LICENSE.html"><strong aria-hidden="true">6.</strong> Licensing</a></li><li class="chapter-item expanded "><a href="../glossary.html"><strong aria-hidden="true">7.</strong> Glossary</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -193,10 +193,78 @@
                         <h1 id="installation"><a class="header" href="#installation">Installation</a></h1>
 <p>[op-alloy][op-alloy] consists of a number of crates that provide a range of functionality
 essential for interfacing with any OP Stack chain.</p>
+<p>The most succinct way to work with <code>op-alloy</code> is to add the [<code>op-alloy</code>][op-alloy-crate] crate
+with the <code>full</code> feature flag from the command-line using Cargo.</p>
+<pre><code class="language-bash">cargo add op-alloy --features full
+</code></pre>
+<p>Alternatively, you can add the following to your <code>Cargo.toml</code> file.</p>
+<pre><code class="language-bash">op-alloy = { version = "0.5", features = ["full"] }
+</code></pre>
+<p>For more fine-grained control over the features you wish to include, you can add the individual
+crates to your <code>Cargo.toml</code> file, or use the <code>op-alloy</code> crate with the features you need.</p>
+<p>After <code>op-alloy</code> is added as a dependency, crates re-exported by <code>op-alloy</code> are now available.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use op_alloy::{
+   genesis::{RollupConfig, SystemConfig},
+   consensus::OpBlock,
+   protocol::BlockInfo,
+   network::Optimism,
+   provider::ext::engine::OpEngineApi,
+   rpc_types::OpTransactionReceipt,
+   rpc_jsonrpsee::traits::RollupNode,
+   rpc_types_engine::OpAttributesWithParent,
+};
+<span class="boring">}</span></code></pre></pre>
+<h2 id="features"><a class="header" href="#features">Features</a></h2>
+<p>The [<code>op-alloy</code>][op-alloy-crate] defines many [feature flags][op-alloy-ff] including the following.</p>
+<p>Default</p>
+<ul>
+<li><code>std</code></li>
+<li><code>k256</code></li>
+<li><code>serde</code></li>
+</ul>
+<p>Full enables the most commonly used crates.</p>
+<ul>
+<li><code>full</code></li>
+</ul>
+<p>The <code>k256</code> feature flag enables the <code>k256</code> feature on the <code>op-alloy-consensus</code> crate.</p>
+<ul>
+<li><code>k256</code></li>
+</ul>
+<p>Arbitrary enables arbitrary features on crates, deriving the <code>Arbitrary</code> trait on types.</p>
+<ul>
+<li><code>arbitrary</code></li>
+</ul>
+<p>Serde derives serde's Serialize and Deserialize traits on types.</p>
+<ul>
+<li><code>serde</code></li>
+</ul>
+<p>Additionally, individual crates can be enabled using their shorthand names.
+For example, the <code>consensus</code> feature flag provides the <code>op-alloy-consensus</code> re-export
+so <code>op-alloy-consensus</code> types can be used from <code>op-alloy</code> through <code>op_alloy::consensus::InsertTypeHere</code>.</p>
 <h2 id="crates"><a class="header" href="#crates">Crates</a></h2>
-<p>TODO</p>
+<ul>
+<li>[<code>op-alloy-network</code>][op-alloy-network]</li>
+<li>[<code>op-alloy-genesis</code>][op-alloy-genesis] (supports <code>no_std</code>)</li>
+<li>[<code>op-alloy-protocol</code>][op-alloy-protocol] (supports <code>no_std</code>)</li>
+<li>[<code>op-alloy-provider</code>][op-alloy-provider]</li>
+<li>[<code>op-alloy-consensus</code>][op-alloy-consensus] (supports <code>no_std</code>)</li>
+<li>[<code>op-alloy-rpc-jsonrpsee</code>][op-alloy-rpc-jsonrpsee]</li>
+<li>[<code>op-alloy-rpc-types</code>][op-alloy-rpc-types] (supports <code>no_std</code>)</li>
+<li>[<code>op-alloy-rpc-types-engine</code>][op-alloy-rpc-types-engine] (supports <code>no_std</code>)</li>
+</ul>
 <h2 id="no_std"><a class="header" href="#no_std"><code>no_std</code></a></h2>
-<p>TODO</p>
+<p>As noted above, the following crates are <code>no_std</code> compatible.</p>
+<ul>
+<li>[<code>op-alloy-consensus</code>][op-alloy-consensus]</li>
+<li>[<code>op-alloy-genesis</code>][op-alloy-genesis]</li>
+<li>[<code>op-alloy-protocol</code>][op-alloy-protocol]</li>
+<li>[<code>op-alloy-rpc-types-engine</code>][op-alloy-rpc-types-engine]</li>
+<li>[<code>op-alloy-rpc-types</code>][op-alloy-rpc-types]</li>
+</ul>
+<p>To add <code>no_std</code> support to a crate, ensure the [check_no_std][check-no-std]
+script is updated to include this crate once <code>no_std</code> compatible.</p>
 <p>{{#include ./links.md}}</p>
 
                     </main>

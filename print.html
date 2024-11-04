@@ -92,7 +92,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="starting/installation.html"><strong aria-hidden="true">2.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="building/index.html"><strong aria-hidden="true">3.</strong> Building</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="building/genesis/index.html"><strong aria-hidden="true">3.1.</strong> Genesis</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="building/genesis/rollup-config.html"><strong aria-hidden="true">3.1.1.</strong> Rollup Config</a></li><li class="chapter-item expanded "><a href="building/genesis/system-config.html"><strong aria-hidden="true">3.1.2.</strong> System Config</a></li></ol></li><li class="chapter-item expanded "><a href="building/consensus/index.html"><strong aria-hidden="true">3.2.</strong> Consensus</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="building/consensus/transactions.html"><strong aria-hidden="true">3.2.1.</strong> Transactions</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="examples/index.html"><strong aria-hidden="true">4.</strong> Examples</a></li><li class="chapter-item expanded "><a href="CONTRIBUTING.html"><strong aria-hidden="true">5.</strong> Contributing</a></li><li class="chapter-item expanded "><a href="LICENSE.html"><strong aria-hidden="true">6.</strong> Licensing</a></li><li class="chapter-item expanded "><a href="glossary.html"><strong aria-hidden="true">7.</strong> Glossary</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="starting/installation.html"><strong aria-hidden="true">2.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="building/index.html"><strong aria-hidden="true">3.</strong> Building</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="building/genesis/index.html"><strong aria-hidden="true">3.1.</strong> Genesis</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="building/genesis/rollup-config.html"><strong aria-hidden="true">3.1.1.</strong> Rollup Config</a></li><li class="chapter-item expanded "><a href="building/genesis/system-config.html"><strong aria-hidden="true">3.1.2.</strong> System Config</a></li></ol></li><li class="chapter-item expanded "><a href="building/consensus.html"><strong aria-hidden="true">3.2.</strong> Consensus</a></li></ol></li><li class="chapter-item expanded "><a href="examples/index.html"><strong aria-hidden="true">4.</strong> Examples</a></li><li class="chapter-item expanded "><a href="CONTRIBUTING.html"><strong aria-hidden="true">5.</strong> Contributing</a></li><li class="chapter-item expanded "><a href="LICENSE.html"><strong aria-hidden="true">6.</strong> Licensing</a></li><li class="chapter-item expanded "><a href="glossary.html"><strong aria-hidden="true">7.</strong> Glossary</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -214,6 +214,7 @@ members of <a href="https://github.com/ethereum-optimism">OP Labs</a>, and the b
 <h3 id="licensing"><a class="header" href="#licensing"><a href="./LICENSE.html">Licensing</a></a></h3>
 <p>op-alloy is licensed under the combined Apache 2.0 and MIT License, along
 with a SNAPPY license for snappy encoding use.</p>
+<!-- op-alloy -->
 <!-- External -->
 <!-- Alloy -->
 <!-- Kona links -->
@@ -221,10 +222,78 @@ with a SNAPPY license for snappy encoding use.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="installation"><a class="header" href="#installation">Installation</a></h1>
 <p>[op-alloy][op-alloy] consists of a number of crates that provide a range of functionality
 essential for interfacing with any OP Stack chain.</p>
+<p>The most succinct way to work with <code>op-alloy</code> is to add the [<code>op-alloy</code>][op-alloy-crate] crate
+with the <code>full</code> feature flag from the command-line using Cargo.</p>
+<pre><code class="language-bash">cargo add op-alloy --features full
+</code></pre>
+<p>Alternatively, you can add the following to your <code>Cargo.toml</code> file.</p>
+<pre><code class="language-bash">op-alloy = { version = "0.5", features = ["full"] }
+</code></pre>
+<p>For more fine-grained control over the features you wish to include, you can add the individual
+crates to your <code>Cargo.toml</code> file, or use the <code>op-alloy</code> crate with the features you need.</p>
+<p>After <code>op-alloy</code> is added as a dependency, crates re-exported by <code>op-alloy</code> are now available.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use op_alloy::{
+   genesis::{RollupConfig, SystemConfig},
+   consensus::OpBlock,
+   protocol::BlockInfo,
+   network::Optimism,
+   provider::ext::engine::OpEngineApi,
+   rpc_types::OpTransactionReceipt,
+   rpc_jsonrpsee::traits::RollupNode,
+   rpc_types_engine::OpAttributesWithParent,
+};
+<span class="boring">}</span></code></pre></pre>
+<h2 id="features"><a class="header" href="#features">Features</a></h2>
+<p>The [<code>op-alloy</code>][op-alloy-crate] defines many [feature flags][op-alloy-ff] including the following.</p>
+<p>Default</p>
+<ul>
+<li><code>std</code></li>
+<li><code>k256</code></li>
+<li><code>serde</code></li>
+</ul>
+<p>Full enables the most commonly used crates.</p>
+<ul>
+<li><code>full</code></li>
+</ul>
+<p>The <code>k256</code> feature flag enables the <code>k256</code> feature on the <code>op-alloy-consensus</code> crate.</p>
+<ul>
+<li><code>k256</code></li>
+</ul>
+<p>Arbitrary enables arbitrary features on crates, deriving the <code>Arbitrary</code> trait on types.</p>
+<ul>
+<li><code>arbitrary</code></li>
+</ul>
+<p>Serde derives serde's Serialize and Deserialize traits on types.</p>
+<ul>
+<li><code>serde</code></li>
+</ul>
+<p>Additionally, individual crates can be enabled using their shorthand names.
+For example, the <code>consensus</code> feature flag provides the <code>op-alloy-consensus</code> re-export
+so <code>op-alloy-consensus</code> types can be used from <code>op-alloy</code> through <code>op_alloy::consensus::InsertTypeHere</code>.</p>
 <h2 id="crates"><a class="header" href="#crates">Crates</a></h2>
-<p>TODO</p>
+<ul>
+<li>[<code>op-alloy-network</code>][op-alloy-network]</li>
+<li>[<code>op-alloy-genesis</code>][op-alloy-genesis] (supports <code>no_std</code>)</li>
+<li>[<code>op-alloy-protocol</code>][op-alloy-protocol] (supports <code>no_std</code>)</li>
+<li>[<code>op-alloy-provider</code>][op-alloy-provider]</li>
+<li>[<code>op-alloy-consensus</code>][op-alloy-consensus] (supports <code>no_std</code>)</li>
+<li>[<code>op-alloy-rpc-jsonrpsee</code>][op-alloy-rpc-jsonrpsee]</li>
+<li>[<code>op-alloy-rpc-types</code>][op-alloy-rpc-types] (supports <code>no_std</code>)</li>
+<li>[<code>op-alloy-rpc-types-engine</code>][op-alloy-rpc-types-engine] (supports <code>no_std</code>)</li>
+</ul>
 <h2 id="no_std"><a class="header" href="#no_std"><code>no_std</code></a></h2>
-<p>TODO</p>
+<p>As noted above, the following crates are <code>no_std</code> compatible.</p>
+<ul>
+<li>[<code>op-alloy-consensus</code>][op-alloy-consensus]</li>
+<li>[<code>op-alloy-genesis</code>][op-alloy-genesis]</li>
+<li>[<code>op-alloy-protocol</code>][op-alloy-protocol]</li>
+<li>[<code>op-alloy-rpc-types-engine</code>][op-alloy-rpc-types-engine]</li>
+<li>[<code>op-alloy-rpc-types</code>][op-alloy-rpc-types]</li>
+</ul>
+<p>To add <code>no_std</code> support to a crate, ensure the [check_no_std][check-no-std]
+script is updated to include this crate once <code>no_std</code> compatible.</p>
 <p>{{#include ./links.md}}</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="building"><a class="header" href="#building">Building</a></h1>
 <p>This section offers in-depth documentation into the various <code>op-alloy</code> crates.</p>
@@ -273,13 +342,24 @@ type, adding EIP-1559 parameters to the config.</p>
 called <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html#method.eip_1559_params"><code>eip_1559_params</code></a> that returns the EIP-1559 parameters encoded as
 a <a href="https://docs.rs/alloy-primitives/latest/alloy_primitives/aliases/type.B64.html"><code>B64</code></a>.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="consensus"><a class="header" href="#consensus">Consensus</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="transactions"><a class="header" href="#transactions">Transactions</a></h1>
-<p>The <a href="https://crates.io/crates/op-alloy-consensus"><code>op-alloy-consensus</code></a> crate contains types for Optimism EL
-consensus and communication. Most notably, Optimism extends the Ethereum
-<a href="https://eips.ethereum.org/EIPS/eip-2718">EIP-2718</a> transaction envelope to include a deposit variant.</p>
-<p>This doc breaks down transaction and other types defined in the
-<a href="https://crates.io/crates/op-alloy-consensus"><code>op-alloy-consensus</code></a> crate.</p>
-<h2 id="optxenvelope"><a class="header" href="#optxenvelope"><a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/enum.OpTxEnvelope.html"><code>OpTxEnvelope</code></a></a></h2>
+<p><a href="https://crates.io/crates/op-alloy-consensus"><img src="https://img.shields.io/crates/v/op-alloy-consensus.svg" alt="op-alloy-consensus crate"></a></p>
+<p>The <code>op-alloy-consensus</code> crate provides an Optimism consensus interface.
+It contains constants, types, and functions for implementing Optimism EL
+consensus and communication. This includes an extended <code>OpTxEnvelope</code> type
+with <a href="https://specs.optimism.io/protocol/deposits.html">deposit transactions</a>, and receipts containing OP Stack
+specific fields (<code>deposit_nonce</code> + <code>deposit_receipt_version</code>).</p>
+<p>In general a type belongs in this crate if it exists in the
+<code>alloy-consensus</code> crate, but was modified from the base Ethereum protocol
+in the OP Stack. For consensus types that are not modified by the OP Stack,
+the <code>alloy-consensus</code> types should be used instead.</p>
+<h2 id="block"><a class="header" href="#block">Block</a></h2>
+<p><a href="https://crates.io/crates/op-alloy-consensus"><code>op-alloy-consensus</code></a> exports an Optimism block type, <a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/type.OpBlock.html"><code>OpBlock</code></a>.</p>
+<p>This type simply re-uses the <code>alloy-consensus</code> block type, with <code>OpTxEnvelope</code>
+as the type of transactions in the block.</p>
+<h2 id="transactions"><a class="header" href="#transactions">Transactions</a></h2>
+<p>Optimism extends the Ethereum <a href="https://eips.ethereum.org/EIPS/eip-2718">EIP-2718</a> transaction envelope to include a
+deposit variant.</p>
+<h3 id="optxenvelope"><a class="header" href="#optxenvelope"><a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/enum.OpTxEnvelope.html"><code>OpTxEnvelope</code></a></a></h3>
 <p>The <a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/enum.OpTxEnvelope.html"><code>OpTxEnvelope</code></a> type is based on <a href="https://github.com/alloy-rs/alloy">Alloy</a>'s
 <a href="https://docs.rs/alloy-consensus/latest/alloy_consensus/transaction/enum.TxEnvelope.html"><code>TxEnvelope</code></a> type.</p>
 <p>Optimism modifies the <code>TxEnvelope</code> to the following.</p>
@@ -293,11 +373,9 @@ consensus and communication. Most notably, Optimism extends the Ethereum
 <p>Deposit is a custom transaction type that is either an L1 attributes
 deposit transaction or a user-submitted deposit transaction. Read more
 about deposit transactions in <a href="https://specs.optimism.io/protocol/deposits.html">the specs</a>.</p>
-<h2 id="transaction-types-optxtype"><a class="header" href="#transaction-types-optxtype">Transaction Types (<a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/enum.OpTxType.html"><code>OpTxType</code></a>)</a></h2>
+<h3 id="transaction-types-optxtype"><a class="header" href="#transaction-types-optxtype">Transaction Types (<a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/enum.OpTxType.html"><code>OpTxType</code></a>)</a></h3>
 <p>The <a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/enum.OpTxType.html"><code>OpTxType</code></a> enumerates the transaction types using their byte identifier,
 represents as a <code>u8</code> in rust.</p>
-<h2 id="opblock"><a class="header" href="#opblock"><a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/type.OpBlock.html"><code>OpBlock</code></a></a></h2>
-<p><a href="https://crates.io/crates/op-alloy-consensus"><code>op-alloy-consensus</code></a> exports an Optimism block type.</p>
 <h2 id="receipt-types"><a class="header" href="#receipt-types">Receipt Types</a></h2>
 <p>Just like <a href="https://crates.io/crates/op-alloy-consensus"><code>op-alloy-consensus</code></a> defines transaction types,
 it also defines associated receipt types.</p>
@@ -323,6 +401,7 @@ are the following.</p>
 <li><a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/hardforks/struct.Hardforks.html#method.ecotone_txs"><code>Hardforks::ecotone_txs()</code></a></li>
 <li><a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/hardforks/struct.Hardforks.html#method.fjord_txs"><code>Hardforks::fjord_txs()</code></a></li>
 </ul>
+<!-- Links -->
 <div style="break-before: page; page-break-before: always;"></div><h1 id="examples-1"><a class="header" href="#examples-1">Examples</a></h1>
 <p>Examples for working with <code>op-alloy-*</code> crates.</p>
 <p>TODO: document <code>op-alloy</code> crate use and using it with re-exports.</p>
