@@ -19,7 +19,7 @@ test:
 
 # Test the Rust documentation
 test-docs:
-  cargo test --doc --all --locked
+  cargo test --doc --all
 
 # Lint the workspace for all available targets
 lint: lint-native lint-docs
