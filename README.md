@@ -3,7 +3,7 @@
 <a href="https://github.com/alloy-rs/op-alloy/actions/workflows/ci.yml"><img src="https://github.com/alloy-rs/op-alloy/actions/workflows/ci.yml/badge.svg?label=ci" alt="CI"></a>
 <a href="https://github.com/alloy-rs/op-alloy/blob/main/LICENSE-APACHE"><img src="https://img.shields.io/badge/License-APACHE-d1d1f6.svg?label=license&labelColor=2a2f35" alt="License"></a>
 <a href="https://github.com/alloy-rs/op-alloy/blob/main/LICENSE-MIT"><img src="https://img.shields.io/badge/License-MIT-d1d1f6.svg?label=license&labelColor=2a2f35" alt="License"></a>
-<a href="https://alloy-rs.github.io/op-alloy"><img src="https://img.shields.io/badge/Contributor%20Book-854a15?logo=mdBook&labelColor=2a2f35" alt="Book"></a>
+<a href="https://alloy-rs.github.io/op-alloy"><img src="https://img.shields.io/badge/Book-854a15?logo=mdBook&labelColor=2a2f35" alt="Book"></a>
 
 Built on [Alloy][alloy], op-alloy connects applications to the OP Stack.
 
@@ -22,6 +22,10 @@ The following crates are provided by `op-alloy`.
 - [`op-alloy-rpc-types`][op-alloy-rpc-types]
 
 
+## Development Status
+
+`op-alloy` is currently in active development, and is not yet ready for use in production.
+
 ## Supported Rust Versions (MSRV)
 
 The current MSRV (minimum supported rust version) is 1.81.
@@ -37,7 +41,7 @@ only as part of a patch (pre-1.0) or minor (post-1.0) release.
 
 op-alloy is built by open source contributors like you, thank you for improving the project!
 
-A [contributing guide][contributing] is available to help you get started to contribute to op-alloy.
+A [contributing guide][contributing] is available that sets guidelines for contributing.
 
 Pull requests will not be merged unless CI passes, so please ensure that your contribution follows the
 linting rules and passes clippy.
@@ -64,7 +68,7 @@ please make sure to update [scripts/check_no_std.sh][check-no-std].
 
 op-alloy is inspired by the work of several teams and projects, most notably [the Alloy project][alloy].
 
-op-alloy would not be possible without the contributions from open source contributors. Thank you.
+This would not be possible without the hard work from open source contributors. Thank you.
 
 
 ## License
@@ -78,21 +82,7 @@ for inclusion in these crates by you, as defined in the Apache-2.0 license,
 shall be dual licensed as above, without any additional terms or conditions.
 </sub>
 
+
 <!-- Hyperlinks -->
 
-[check-no-std]: ./scripts/check_no_std.sh
-
-[contributing]: https://alloy-rs.github.io/op-alloy
-
-[kona]: https://github.com/anton-rs/kona
-
-[alloy]: https://github.com/alloy-rs/alloy
-
-[op-alloy-consensus]: https://crates.io/crates/op-alloy-consensus
-[op-alloy-genesis]: https://crates.io/crates/op-alloy-genesis
-[op-alloy-network]: https://crates.io/crates/op-alloy-network
-[op-alloy-protocol]: https://crates.io/crates/op-alloy-protocol
-[op-alloy-provider]: https://crates.io/crates/op-alloy-provider
-[op-alloy-rpc-jsonrpsee]: https://crates.io/crates/op-alloy-rpc-jsonrpsee
-[op-alloy-rpc-types-engine]: https://crates.io/crates/op-alloy-rpc-types-engine
-[op-alloy-rpc-types]: https://crates.io/crates/op-alloy-rpc-types
+{{#include ./book/src/links.md}}

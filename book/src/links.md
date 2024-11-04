@@ -1,3 +1,17 @@
+<!-- op-alloy -->
+
+[check-no-std]: https://github.com/alloy-rs/op-alloy/blob/main/scripts/check_no_std.sh
+[contributing]: https://alloy-rs.github.io/op-alloy
+
+[op-alloy-consensus]: https://crates.io/crates/op-alloy-consensus
+[op-alloy-genesis]: https://crates.io/crates/op-alloy-genesis
+[op-alloy-network]: https://crates.io/crates/op-alloy-network
+[op-alloy-protocol]: https://crates.io/crates/op-alloy-protocol
+[op-alloy-provider]: https://crates.io/crates/op-alloy-provider
+[op-alloy-rpc-jsonrpsee]: https://crates.io/crates/op-alloy-rpc-jsonrpsee
+[op-alloy-rpc-types-engine]: https://crates.io/crates/op-alloy-rpc-types-engine
+[op-alloy-rpc-types]: https://crates.io/crates/op-alloy-rpc-types
+
 <!-- External -->
 
 [op-stack]: https://github.com/ethereum-optimism/optimism
