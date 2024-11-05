@@ -27,4 +27,4 @@ encoded as a [`B64`][b64].
 
 <!-- Links -->
 
-{{#include ../links.md}}
+{{#include ../../links.md}}

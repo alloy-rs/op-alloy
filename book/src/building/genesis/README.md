@@ -9,4 +9,4 @@ This section contains in-depth sections on building with [`op-alloy-genesis`][ge
 
 <!-- Links -->
 
-{{#include ../links.md}}
+{{#include ../../links.md}}

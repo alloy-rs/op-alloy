@@ -34,4 +34,4 @@ the following.
 
 <!-- Links -->
 
-{{#include ../links.md}}
+{{#include ../../links.md}}
