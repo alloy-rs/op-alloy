@@ -4,7 +4,7 @@
 <head>
     <!-- Book generated using mdBook -->
     <meta charset="UTF-8">
-    <title>Building - The op-alloy Book</title>
+    <title>Engine RPC Types - The op-alloy Book</title>
 
 
     <!-- Custom HTML head -->
@@ -91,7 +91,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../starting/installation.html"><strong aria-hidden="true">2.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="../building/index.html" class="active"><strong aria-hidden="true">3.</strong> Building</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../building/genesis/index.html"><strong aria-hidden="true">3.1.</strong> Genesis</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../building/genesis/rollup-config.html"><strong aria-hidden="true">3.1.1.</strong> Rollup Config</a></li><li class="chapter-item expanded "><a href="../building/genesis/system-config.html"><strong aria-hidden="true">3.1.2.</strong> System Config</a></li></ol></li><li class="chapter-item expanded "><a href="../building/consensus.html"><strong aria-hidden="true">3.2.</strong> Consensus</a></li><li class="chapter-item expanded "><a href="../building/engine.html"><strong aria-hidden="true">3.3.</strong> Engine RPC Types</a></li><li class="chapter-item expanded "><a href="../building/protocol/index.html"><strong aria-hidden="true">3.4.</strong> Protocol</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../building/protocol/block-info.html"><strong aria-hidden="true">3.4.1.</strong> BlockInfo and L2BlockInfo Types</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../examples/index.html"><strong aria-hidden="true">4.</strong> Examples</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../examples/load-a-rollup-config.html"><strong aria-hidden="true">4.1.</strong> Load a Rollup Config</a></li></ol></li><li class="chapter-item expanded "><a href="../CONTRIBUTING.html"><strong aria-hidden="true">5.</strong> Contributing</a></li><li class="chapter-item expanded "><a href="../LICENSE.html"><strong aria-hidden="true">6.</strong> Licensing</a></li><li class="chapter-item expanded "><a href="../glossary.html"><strong aria-hidden="true">7.</strong> Glossary</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../starting/installation.html"><strong aria-hidden="true">2.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="../building/index.html"><strong aria-hidden="true">3.</strong> Building</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../building/genesis/index.html"><strong aria-hidden="true">3.1.</strong> Genesis</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../building/genesis/rollup-config.html"><strong aria-hidden="true">3.1.1.</strong> Rollup Config</a></li><li class="chapter-item expanded "><a href="../building/genesis/system-config.html"><strong aria-hidden="true">3.1.2.</strong> System Config</a></li></ol></li><li class="chapter-item expanded "><a href="../building/consensus.html"><strong aria-hidden="true">3.2.</strong> Consensus</a></li><li class="chapter-item expanded "><a href="../building/engine.html" class="active"><strong aria-hidden="true">3.3.</strong> Engine RPC Types</a></li><li class="chapter-item expanded "><a href="../building/protocol/index.html"><strong aria-hidden="true">3.4.</strong> Protocol</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../building/protocol/block-info.html"><strong aria-hidden="true">3.4.1.</strong> BlockInfo and L2BlockInfo Types</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../examples/index.html"><strong aria-hidden="true">4.</strong> Examples</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../examples/load-a-rollup-config.html"><strong aria-hidden="true">4.1.</strong> Load a Rollup Config</a></li></ol></li><li class="chapter-item expanded "><a href="../CONTRIBUTING.html"><strong aria-hidden="true">5.</strong> Contributing</a></li><li class="chapter-item expanded "><a href="../LICENSE.html"><strong aria-hidden="true">6.</strong> Licensing</a></li><li class="chapter-item expanded "><a href="../glossary.html"><strong aria-hidden="true">7.</strong> Glossary</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -160,7 +160,7 @@
                         <a href="https://github.com/alloy-rs/op-alloy" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
-                        <a href="https://github.com/alloy-rs/op-alloy/edit/main/book/src/building/README.md" title="Suggest an edit" aria-label="Suggest an edit">
+                        <a href="https://github.com/alloy-rs/op-alloy/edit/main/book/src/building/engine.md" title="Suggest an edit" aria-label="Suggest an edit">
                             <i id="git-edit-button" class="fa fa-edit"></i>
                         </a>
 
@@ -190,19 +190,31 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="building"><a class="header" href="#building">Building</a></h1>
-<p>This section offers in-depth documentation into the various <code>op-alloy</code> crates.</p>
+                        <h1 id="rpc-engine-types"><a class="header" href="#rpc-engine-types">RPC Engine Types</a></h1>
+<p>The <a href="https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/struct.OpAttributesWithParent.html"><code>op-alloy-rpc-types-engine</code></a> crate provides Optimism types for interfacing
+with the Engine API in the OP Stack.</p>
+<p>Optimism defines a custom payload attributes type called <a href="https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/struct.OpPayloadAttributes.html"><code>OpPayloadAttributes</code></a>.
+<code>OpPayloadAttributes</code> extends alloy's <a href="https://docs.rs/alloy-rpc-types-engine/latest/alloy_rpc_types_engine/payload/struct.PayloadAttributes.html"><code>PayloadAttributes</code></a> with a few fields: transactions,
+a flag for enabling the tx pool, the gas limit, and EIP 1559 parameters.</p>
+<p>Wrapping <code>OpPayloadAttributes</code>, the <a href="https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/struct.OpAttributesWithParent.html"><code>OpAttributesWithParent</code></a> type extends payload
+attributes with the parent block (referenced as an [<code>L2BlockInfo</code>][lbi]) and a flag
+for whether the associated batch is the last batch in the span.</p>
+<p>Optimism also returns a custom type for the <code>engine_getPayload</code> request for both V3 and
+V4 payload envelopes. These are the <a href="https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/struct.OpExecutionPayloadEnvelopeV3.html"><code>OpExecutionPayloadEnvelopeV3</code></a> and
+<a href="https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/struct.OpExecutionPayloadEnvelopeV4.html"><code>OpExecutionPayloadEnvelopeV4</code></a> types, which both wrap payload envelope types
+from <a href="https://crates.io/crates/alloy-rpc-types-engine"><code>alloy-rpc-types-engine</code></a>.</p>
+<!-- Links -->
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                        <a rel="prev" href="../starting/installation.html" class="mobile-nav-chapters previous"
+                        <a rel="prev" href="../building/consensus.html" class="mobile-nav-chapters previous"
                             title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                             <i class="fa fa-angle-left"></i>
                         </a>
 
-                        <a rel="next prefetch" href="../building/genesis/index.html" class="mobile-nav-chapters next"
+                        <a rel="next prefetch" href="../building/protocol/index.html" class="mobile-nav-chapters next"
                             title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                             <i class="fa fa-angle-right"></i>
                         </a>
@@ -213,12 +225,12 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                <a rel="prev" href="../starting/installation.html" class="nav-chapters previous" title="Previous chapter"
+                <a rel="prev" href="../building/consensus.html" class="nav-chapters previous" title="Previous chapter"
                     aria-label="Previous chapter" aria-keyshortcuts="Left">
                     <i class="fa fa-angle-left"></i>
                 </a>
 
-                <a rel="next prefetch" href="../building/genesis/index.html" class="nav-chapters next" title="Next chapter"
+                <a rel="next prefetch" href="../building/protocol/index.html" class="nav-chapters next" title="Next chapter"
                     aria-label="Next chapter" aria-keyshortcuts="Right">
                     <i class="fa fa-angle-right"></i>
                 </a>
