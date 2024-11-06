@@ -5,16 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.5.2](https://github.com/alloy-rs/op-alloy
-/releases/tag/v0.5.2) - 2024-10-29
+## [0.6.0](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.6.0) - 2024-11-06
+
+### Bug Fixes
+
+- [book] Small Book Touchups ([#220](https://github.com/alloy-rs/op-alloy/issues/220))
+- [ci] Remove Docs gh-page publish ([#216](https://github.com/alloy-rs/op-alloy/issues/216))
+- Ci powerset ([#214](https://github.com/alloy-rs/op-alloy/issues/214))
+- [book] Missing READMEs ([#213](https://github.com/alloy-rs/op-alloy/issues/213))
 
 ### Dependencies
 
+- [wip] feat: bump alloy ([#205](https://github.com/alloy-rs/op-alloy/issues/205))
 - [workspace] Import Touchups ([#199](https://github.com/alloy-rs/op-alloy/issues/199))
 - Bump alloy ([#178](https://github.com/alloy-rs/op-alloy/issues/178))
 
 ### Features
 
+- Add holocene extradata fn ([#233](https://github.com/alloy-rs/op-alloy/issues/233))
+- Add jsonrpsee trait for SuperchainSignal ([#217](https://github.com/alloy-rs/op-alloy/issues/217))
+- `OpTransactionRequest` ([#215](https://github.com/alloy-rs/op-alloy/issues/215))
+- [book] Consensus ([#212](https://github.com/alloy-rs/op-alloy/issues/212))
+- [book] Genesis - System Config ([#211](https://github.com/alloy-rs/op-alloy/issues/211))
+- `op-alloy` meta crate ([#210](https://github.com/alloy-rs/op-alloy/issues/210))
+- [book] Genesis - Rollup Config ([#209](https://github.com/alloy-rs/op-alloy/issues/209))
+- Book Setup ([#208](https://github.com/alloy-rs/op-alloy/issues/208))
+- README ([#207](https://github.com/alloy-rs/op-alloy/issues/207))
+- Book ([#206](https://github.com/alloy-rs/op-alloy/issues/206))
 - [protocol] Batch ([#200](https://github.com/alloy-rs/op-alloy/issues/200))
 - [protocol] Span Batch Validity Checks ([#198](https://github.com/alloy-rs/op-alloy/issues/198))
 - [protocol] Span Batch Type ([#197](https://github.com/alloy-rs/op-alloy/issues/197))
@@ -33,6 +51,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- [book] Load Rollup Config Example ([#224](https://github.com/alloy-rs/op-alloy/issues/224))
+- [book] Genesis Docs ([#223](https://github.com/alloy-rs/op-alloy/issues/223))
+- [book] Consensus Docs ([#222](https://github.com/alloy-rs/op-alloy/issues/222))
+- [ci] Use Justfile Targets in Github Actions ([#219](https://github.com/alloy-rs/op-alloy/issues/219))
+- [book] Fix Doc Links ([#218](https://github.com/alloy-rs/op-alloy/issues/218))
+- Release 0.5.2 ([#201](https://github.com/alloy-rs/op-alloy/issues/201))
 - [consensus] Upstream Receipt Constructor ([#165](https://github.com/alloy-rs/op-alloy/issues/165))
 - Release 0.5.1 ([#184](https://github.com/alloy-rs/op-alloy/issues/184))
 - [consensus] Small Cleanup ([#180](https://github.com/alloy-rs/op-alloy/issues/180))
