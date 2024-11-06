@@ -93,6 +93,7 @@ jsonrpsee-types = "0.24"
 
 # misc
 cfg-if = "1"
+alloc-no-stdlib = "2.0.4"
 async-trait = "0.1.83"
 unsigned-varint = "0.8.0"
 spin = { version = "0.9.8", features = ["mutex"] }
@@ -111,6 +112,10 @@ proptest = "1.5"
 proptest-derive = "0.5"
 tokio = "1"
 rstest = "0.23.0"
+
+# Encoding
+miniz_oxide = "0.8.0"
+brotli = { version = "7.0.0", default-features = false }
 
 ## crypto
 c-kzg = { version = "1.0", default-features = false }

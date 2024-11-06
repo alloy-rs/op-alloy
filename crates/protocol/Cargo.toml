@@ -26,10 +26,13 @@ alloy-eips.workspace = true
 alloy-consensus.workspace = true
 
 # Misc
+brotli.workspace = true
 tracing.workspace = true
+miniz_oxide.workspace = true
 derive_more.workspace = true
 async-trait.workspace = true
 unsigned-varint.workspace = true
+alloc-no-stdlib.workspace = true
 
 # `arbitrary` feature
 arbitrary = { workspace = true, features = ["derive"], optional = true }

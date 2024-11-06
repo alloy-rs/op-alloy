@@ -11,13 +11,16 @@ extern crate alloc;
 
 mod batch;
 pub use batch::{
-    Batch, BatchDecodingError, BatchType, BatchValidationProvider, BatchValidity,
+    Batch, BatchDecodingError, BatchReader, BatchType, BatchValidationProvider, BatchValidity,
     BatchWithInclusionBlock, RawSpanBatch, SingleBatch, SpanBatch, SpanBatchBits,
     SpanBatchEip1559TransactionData, SpanBatchEip2930TransactionData, SpanBatchElement,
     SpanBatchError, SpanBatchLegacyTransactionData, SpanBatchPayload, SpanBatchPrefix,
     SpanBatchTransactionData, SpanBatchTransactions, SpanDecodingError, MAX_SPAN_BATCH_ELEMENTS,
     SINGLE_BATCH_TYPE, SPAN_BATCH_TYPE,
 };
+
+mod brotli;
+pub use brotli::{decompress_brotli, BatchDecompressionError};
 
 mod block;
 pub use block::{BlockInfo, FromBlockError, L2BlockInfo};
