@@ -297,14 +297,7 @@ impl Encodable for TxDeposit {
 
 impl Decodable for TxDeposit {
     fn decode(data: &mut &[u8]) -> alloy_rlp::Result<Self> {
-        let header = Header::decode(data)?;
-        let remaining_len = data.len();
-
-        if header.payload_length > remaining_len {
-            return Err(alloy_rlp::Error::InputTooShort);
-        }
-
-        Self::rlp_decode_fields(data)
+        Self::rlp_decode(data)
     }
 }
 
