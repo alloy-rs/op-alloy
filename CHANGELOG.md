@@ -5,8 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.6.1](https://github.com/alloy-rs/op-alloy
-/releases/tag/v0.6.1) - 2024-11-06
+## [0.6.2](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.6.2) - 2024-11-06
 
 ### Bug Fixes
 
@@ -15,14 +15,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Features
 
+- Add fn for decoded 1559 params ([#236](https://github.com/alloy-rs/op-alloy/issues/236))
 - [book] Engine RPC Types ([#229](https://github.com/alloy-rs/op-alloy/issues/229))
 
 ### Miscellaneous Tasks
 
+- Move eip1559 impls ([#237](https://github.com/alloy-rs/op-alloy/issues/237))
 - [rpc-types] Clean up Exports ([#231](https://github.com/alloy-rs/op-alloy/issues/231))
 - [book] Consolidate Links ([#230](https://github.com/alloy-rs/op-alloy/issues/230))
 - [book] RPC Types ([#228](https://github.com/alloy-rs/op-alloy/issues/228))
 - [book] Protocol Docs ([#225](https://github.com/alloy-rs/op-alloy/issues/225))
+
+### Other
+
+- V0.6.1 ([#238](https://github.com/alloy-rs/op-alloy/issues/238))
 
 ## [0.6.0](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.6.0) - 2024-11-06
