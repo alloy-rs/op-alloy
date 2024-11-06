@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.1](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.6.1) - 2024-11-06
+
+### Bug Fixes
+
+- [protocol] Batch Decoding ([#235](https://github.com/alloy-rs/op-alloy/issues/235))
+- [book] Links Imports ([#227](https://github.com/alloy-rs/op-alloy/issues/227))
+
+### Features
+
+- [book] Engine RPC Types ([#229](https://github.com/alloy-rs/op-alloy/issues/229))
+
+### Miscellaneous Tasks
+
+- [rpc-types] Clean up Exports ([#231](https://github.com/alloy-rs/op-alloy/issues/231))
+- [book] Consolidate Links ([#230](https://github.com/alloy-rs/op-alloy/issues/230))
+- [book] RPC Types ([#228](https://github.com/alloy-rs/op-alloy/issues/228))
+- [book] Protocol Docs ([#225](https://github.com/alloy-rs/op-alloy/issues/225))
+
 ## [0.6.0](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.6.0) - 2024-11-06
 
@@ -51,6 +70,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.6.0
 - [book] Load Rollup Config Example ([#224](https://github.com/alloy-rs/op-alloy/issues/224))
 - [book] Genesis Docs ([#223](https://github.com/alloy-rs/op-alloy/issues/223))
 - [book] Consensus Docs ([#222](https://github.com/alloy-rs/op-alloy/issues/222))
