@@ -8,7 +8,7 @@ use alloy_rpc_types_engine::PayloadAttributes;
 use op_alloy_protocol::{fee::decode_eip_1559_params, L2BlockInfo};
 
 /// Optimism Payload Attributes
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct OpPayloadAttributes {
