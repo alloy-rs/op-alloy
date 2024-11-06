@@ -6,13 +6,13 @@ essential for interfacing with any OP Stack chain.
 The most succinct way to work with `op-alloy` is to add the [`op-alloy`][op-alloy-crate] crate
 with the `full` feature flag from the command-line using Cargo.
 
-```bash
+```txt
 cargo add op-alloy --features full
 ```
 
 Alternatively, you can add the following to your `Cargo.toml` file.
 
-```bash
+```txt
 op-alloy = { version = "0.5", features = ["full"] }
 ```
 
@@ -84,4 +84,4 @@ To add `no_std` support to a crate, ensure the [check_no_std][check-no-std]
 script is updated to include this crate once `no_std` compatible.
 
 
-{{#include ./links.md}}
+{{#include ../links.md}}
