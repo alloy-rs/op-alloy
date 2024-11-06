@@ -24,3 +24,5 @@ impl core::fmt::Display for EIP1559ParamError {
         }
     }
 }
+
+impl core::error::Error for EIP1559ParamError {}
