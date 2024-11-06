@@ -2,7 +2,8 @@
 
 Rollup configurations are a consensus construct used to configure an Optimism Consensus client.
 When an OP Stack chain is deployed into production or consensus nodes are configured to sync the chain,
-certain consensus parameters can be configured. These parameters are defined in the [OP Stack specs][config].
+certain consensus parameters can be configured. These parameters are defined in the
+[OP Stack specs][spec-configurability].
 
 Consensus parameters are consumed by OP Stack software through the `RollupConfig` type defined in the
 [`op-alloy-genesis`][genesis] crate.
@@ -30,9 +31,7 @@ the following.
 - `BASE_MAINNET_CONFIG`
 - `BASE_SEPOLIA_CONFIG`
 
+
 <!-- Links -->
 
-[rcid]: https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/rollup/fn.rollup_config_from_chain_id.html
-[rc]: https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/rollup/struct.RollupConfig.html
-[genesis]: https://crates.io/crates/op-alloy-genesis
-[config]: https://specs.optimism.io/protocol/configurability.html
+{{#include ../../links.md}}

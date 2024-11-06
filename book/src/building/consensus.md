@@ -16,7 +16,7 @@ the `alloy-consensus` types should be used instead.
 
 ## Block
 
-[`op-alloy-consensus`][consensus] exports an Optimism block type, [`OpBlock`][block].
+[`op-alloy-consensus`][consensus] exports an Optimism block type, [`OpBlock`][op-block].
 
 This type simply re-uses the `alloy-consensus` block type, with `OpTxEnvelope`
 as the type of transactions in the block.
@@ -81,19 +81,4 @@ are the following.
 - [`Hardforks::fjord_txs()`][fjord]
 
 
-<!-- Links -->
-
-[deposit]: https://specs.optimism.io/protocol/deposits.html
-[alloy]: https://github.com/alloy-rs/alloy
-[fjord]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/hardforks/struct.Hardforks.html#method.fjord_txs
-[ecotone]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/hardforks/struct.Hardforks.html#method.ecotone_txs
-[hardforks]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/hardforks/struct.Hardforks.html
-[odr]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/struct.OpDepositReceipt.html
-[ore]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/enum.OpReceiptEnvelope.html
-[block]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/type.OpBlock.html
-[ty]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/enum.OpTxType.html
-[specs]: https://specs.optimism.io/protocol/deposits.html
-[tx-envelope]: https://docs.rs/alloy-consensus/latest/alloy_consensus/transaction/enum.TxEnvelope.html
-[envelope]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/enum.OpTxEnvelope.html
-[2718]: https://eips.ethereum.org/EIPS/eip-2718
-[consensus]: https://crates.io/crates/op-alloy-consensus
+{{#include ../links.md}}
