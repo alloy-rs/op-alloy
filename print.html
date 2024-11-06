@@ -215,6 +215,10 @@ members of <a href="https://github.com/ethereum-optimism">OP Labs</a>, and the b
 <p>op-alloy is licensed under the combined Apache 2.0 and MIT License, along
 with a SNAPPY license for snappy encoding use.</p>
 <!-- op-alloy -->
+<!-- op-alloy-genesis -->
+<!-- op-alloy-consensus -->
+<!-- Hardforks -->
+<!-- OP Stack Specs -->
 <!-- External -->
 <!-- Alloy -->
 <!-- Kona links -->
@@ -295,6 +299,10 @@ so <code>op-alloy-consensus</code> types can be used from <code>op-alloy</code> 
 <p>To add <code>no_std</code> support to a crate, ensure the <a href="https://github.com/alloy-rs/op-alloy/blob/main/scripts/check_no_std.sh">check_no_std</a>
 script is updated to include this crate once <code>no_std</code> compatible.</p>
 <!-- op-alloy -->
+<!-- op-alloy-genesis -->
+<!-- op-alloy-consensus -->
+<!-- Hardforks -->
+<!-- OP Stack Specs -->
 <!-- External -->
 <!-- Alloy -->
 <!-- Kona links -->
@@ -309,10 +317,20 @@ script is updated to include this crate once <code>no_std</code> compatible.</p>
 <li><a href="building/genesis/./system-config.html">The System Config</a></li>
 </ul>
 <!-- Links -->
+<!-- op-alloy -->
+<!-- op-alloy-genesis -->
+<!-- op-alloy-consensus -->
+<!-- Hardforks -->
+<!-- OP Stack Specs -->
+<!-- External -->
+<!-- Alloy -->
+<!-- Kona links -->
+<!-- People -->
 <div style="break-before: page; page-break-before: always;"></div><h1 id="rollup-configs"><a class="header" href="#rollup-configs">Rollup Configs</a></h1>
 <p>Rollup configurations are a consensus construct used to configure an Optimism Consensus client.
 When an OP Stack chain is deployed into production or consensus nodes are configured to sync the chain,
-certain consensus parameters can be configured. These parameters are defined in the <a href="https://specs.optimism.io/protocol/configurability.html">OP Stack specs</a>.</p>
+certain consensus parameters can be configured. These parameters are defined in the
+<a href="https://specs.optimism.io/protocol/configurability.html">OP Stack specs</a>.</p>
 <p>Consensus parameters are consumed by OP Stack software through the <code>RollupConfig</code> type defined in the
 <a href="https://crates.io/crates/op-alloy-genesis"><code>op-alloy-genesis</code></a> crate.</p>
 <h2 id="rollupconfig-type"><a class="header" href="#rollupconfig-type"><code>RollupConfig</code> Type</a></h2>
@@ -336,22 +354,43 @@ the following.</p>
 <li><code>BASE_SEPOLIA_CONFIG</code></li>
 </ul>
 <!-- Links -->
+<!-- op-alloy -->
+<!-- op-alloy-genesis -->
+<!-- op-alloy-consensus -->
+<!-- Hardforks -->
+<!-- OP Stack Specs -->
+<!-- External -->
+<!-- Alloy -->
+<!-- Kona links -->
+<!-- People -->
 <div style="break-before: page; page-break-before: always;"></div><h1 id="system-config"><a class="header" href="#system-config">System Config</a></h1>
 <p>The system configuration is a set of configurable chain parameters
 defined in a contract on L1. These parameters can be changed through
 the system config contract, emitting events that are picked up by
 the <a href="https://specs.optimism.io/protocol/derivation.html">rollup node derivation process</a>. To dive deeper
-into the System Config, visit the <a href="https://specs.optimism.io/protocol/system-config.html#system-config">OP Stack Specifications</a>.</p>
+into the System Config, visit the
+<a href="https://specs.optimism.io/protocol/system-config.html#system-config">OP Stack Specifications</a>.</p>
 <h2 id="systemconfig-type"><a class="header" href="#systemconfig-type"><code>SystemConfig</code> Type</a></h2>
-<p>The <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html"><code>SystemConfig</code></a> type is defined in <a href="https://crates.io/crates/op-alloy-genesis"><code>op-alloy-genesis</code></a>.</p>
-<p>Parameters defined in the <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html"><code>SystemConfig</code></a> are expected to be updated
-through L1 receipts, using the <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html#method.update_with_receipts"><code>update_with_receipts</code></a> method.</p>
+<p>The <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html"><code>SystemConfig</code></a> type is defined in
+<a href="https://crates.io/crates/op-alloy-genesis"><code>op-alloy-genesis</code></a>.</p>
+<p>Parameters defined in the <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html"><code>SystemConfig</code></a> are expected to be
+updated through L1 receipts, using the <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html#method.update_with_receipts"><code>update_with_receipts</code></a> method.</p>
 <h2 id="holocene-updates"><a class="header" href="#holocene-updates">Holocene Updates</a></h2>
-<p>The <a href="https://specs.optimism.io/protocol/holocene/overview.html">Holocene Hardfork</a> introduced an update to the <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html"><code>SystemConfig</code></a>
-type, adding EIP-1559 parameters to the config.</p>
-<p>The <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html"><code>SystemConfig</code></a> type in <a href="https://crates.io/crates/op-alloy-genesis"><code>op-alloy-genesis</code></a> provides a method
-called <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html#method.eip_1559_params"><code>eip_1559_params</code></a> that returns the EIP-1559 parameters encoded as
-a <a href="https://docs.rs/alloy-primitives/latest/alloy_primitives/aliases/type.B64.html"><code>B64</code></a>.</p>
+<p>The <a href="https://specs.optimism.io/protocol/holocene/overview.html">Holocene Hardfork</a> introduced an update to the
+<a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html"><code>SystemConfig</code></a> type, adding EIP-1559 parameters to the config.</p>
+<p>The <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html"><code>SystemConfig</code></a> type in <a href="https://crates.io/crates/op-alloy-genesis"><code>op-alloy-genesis</code></a> provides
+a method called <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html#method.eip_1559_params"><code>eip_1559_params</code></a> that returns the EIP-1559 parameters
+encoded as a <a href="https://docs.rs/alloy-primitives/latest/alloy_primitives/aliases/type.B64.html"><code>B64</code></a>.</p>
+<!-- Links -->
+<!-- op-alloy -->
+<!-- op-alloy-genesis -->
+<!-- op-alloy-consensus -->
+<!-- Hardforks -->
+<!-- OP Stack Specs -->
+<!-- External -->
+<!-- Alloy -->
+<!-- Kona links -->
+<!-- People -->
 <div style="break-before: page; page-break-before: always;"></div><h1 id="consensus"><a class="header" href="#consensus">Consensus</a></h1>
 <p><a href="https://crates.io/crates/op-alloy-consensus"><img src="https://img.shields.io/crates/v/op-alloy-consensus.svg" alt="op-alloy-consensus crate"></a></p>
 <p>The <code>op-alloy-consensus</code> crate provides an Optimism consensus interface.
@@ -412,7 +451,15 @@ are the following.</p>
 <li><a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/hardforks/struct.Hardforks.html#method.ecotone_txs"><code>Hardforks::ecotone_txs()</code></a></li>
 <li><a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/hardforks/struct.Hardforks.html#method.fjord_txs"><code>Hardforks::fjord_txs()</code></a></li>
 </ul>
-<!-- Links -->
+<!-- op-alloy -->
+<!-- op-alloy-genesis -->
+<!-- op-alloy-consensus -->
+<!-- Hardforks -->
+<!-- OP Stack Specs -->
+<!-- External -->
+<!-- Alloy -->
+<!-- Kona links -->
+<!-- People -->
 <div style="break-before: page; page-break-before: always;"></div><h1 id="rpc-engine-types"><a class="header" href="#rpc-engine-types">RPC Engine Types</a></h1>
 <p>The <a href="https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/struct.OpAttributesWithParent.html"><code>op-alloy-rpc-types-engine</code></a> crate provides Optimism types for interfacing
 with the Engine API in the OP Stack.</p>

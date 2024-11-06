@@ -195,17 +195,29 @@
 defined in a contract on L1. These parameters can be changed through
 the system config contract, emitting events that are picked up by
 the <a href="https://specs.optimism.io/protocol/derivation.html">rollup node derivation process</a>. To dive deeper
-into the System Config, visit the <a href="https://specs.optimism.io/protocol/system-config.html#system-config">OP Stack Specifications</a>.</p>
+into the System Config, visit the
+<a href="https://specs.optimism.io/protocol/system-config.html#system-config">OP Stack Specifications</a>.</p>
 <h2 id="systemconfig-type"><a class="header" href="#systemconfig-type"><code>SystemConfig</code> Type</a></h2>
-<p>The <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html"><code>SystemConfig</code></a> type is defined in <a href="https://crates.io/crates/op-alloy-genesis"><code>op-alloy-genesis</code></a>.</p>
-<p>Parameters defined in the <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html"><code>SystemConfig</code></a> are expected to be updated
-through L1 receipts, using the <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html#method.update_with_receipts"><code>update_with_receipts</code></a> method.</p>
+<p>The <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html"><code>SystemConfig</code></a> type is defined in
+<a href="https://crates.io/crates/op-alloy-genesis"><code>op-alloy-genesis</code></a>.</p>
+<p>Parameters defined in the <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html"><code>SystemConfig</code></a> are expected to be
+updated through L1 receipts, using the <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html#method.update_with_receipts"><code>update_with_receipts</code></a> method.</p>
 <h2 id="holocene-updates"><a class="header" href="#holocene-updates">Holocene Updates</a></h2>
-<p>The <a href="https://specs.optimism.io/protocol/holocene/overview.html">Holocene Hardfork</a> introduced an update to the <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html"><code>SystemConfig</code></a>
-type, adding EIP-1559 parameters to the config.</p>
-<p>The <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html"><code>SystemConfig</code></a> type in <a href="https://crates.io/crates/op-alloy-genesis"><code>op-alloy-genesis</code></a> provides a method
-called <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html#method.eip_1559_params"><code>eip_1559_params</code></a> that returns the EIP-1559 parameters encoded as
-a <a href="https://docs.rs/alloy-primitives/latest/alloy_primitives/aliases/type.B64.html"><code>B64</code></a>.</p>
+<p>The <a href="https://specs.optimism.io/protocol/holocene/overview.html">Holocene Hardfork</a> introduced an update to the
+<a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html"><code>SystemConfig</code></a> type, adding EIP-1559 parameters to the config.</p>
+<p>The <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html"><code>SystemConfig</code></a> type in <a href="https://crates.io/crates/op-alloy-genesis"><code>op-alloy-genesis</code></a> provides
+a method called <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html#method.eip_1559_params"><code>eip_1559_params</code></a> that returns the EIP-1559 parameters
+encoded as a <a href="https://docs.rs/alloy-primitives/latest/alloy_primitives/aliases/type.B64.html"><code>B64</code></a>.</p>
+<!-- Links -->
+<!-- op-alloy -->
+<!-- op-alloy-genesis -->
+<!-- op-alloy-consensus -->
+<!-- Hardforks -->
+<!-- OP Stack Specs -->
+<!-- External -->
+<!-- Alloy -->
+<!-- Kona links -->
+<!-- People -->
 
                     </main>
 
