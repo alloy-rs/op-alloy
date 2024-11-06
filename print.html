@@ -92,7 +92,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="starting/installation.html"><strong aria-hidden="true">2.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="building/index.html"><strong aria-hidden="true">3.</strong> Building</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="building/genesis/index.html"><strong aria-hidden="true">3.1.</strong> Genesis</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="building/genesis/rollup-config.html"><strong aria-hidden="true">3.1.1.</strong> Rollup Config</a></li><li class="chapter-item expanded "><a href="building/genesis/system-config.html"><strong aria-hidden="true">3.1.2.</strong> System Config</a></li></ol></li><li class="chapter-item expanded "><a href="building/consensus.html"><strong aria-hidden="true">3.2.</strong> Consensus</a></li></ol></li><li class="chapter-item expanded "><a href="examples/index.html"><strong aria-hidden="true">4.</strong> Examples</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="examples/load-a-rollup-config.html"><strong aria-hidden="true">4.1.</strong> Load a Rollup Config</a></li></ol></li><li class="chapter-item expanded "><a href="CONTRIBUTING.html"><strong aria-hidden="true">5.</strong> Contributing</a></li><li class="chapter-item expanded "><a href="LICENSE.html"><strong aria-hidden="true">6.</strong> Licensing</a></li><li class="chapter-item expanded "><a href="glossary.html"><strong aria-hidden="true">7.</strong> Glossary</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="starting/installation.html"><strong aria-hidden="true">2.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="building/index.html"><strong aria-hidden="true">3.</strong> Building</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="building/genesis/index.html"><strong aria-hidden="true">3.1.</strong> Genesis</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="building/genesis/rollup-config.html"><strong aria-hidden="true">3.1.1.</strong> Rollup Config</a></li><li class="chapter-item expanded "><a href="building/genesis/system-config.html"><strong aria-hidden="true">3.1.2.</strong> System Config</a></li></ol></li><li class="chapter-item expanded "><a href="building/consensus.html"><strong aria-hidden="true">3.2.</strong> Consensus</a></li><li class="chapter-item expanded "><a href="building/protocol/index.html"><strong aria-hidden="true">3.3.</strong> Protocol</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="building/protocol/block-info.html"><strong aria-hidden="true">3.3.1.</strong> BlockInfo and L2BlockInfo Types</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="examples/index.html"><strong aria-hidden="true">4.</strong> Examples</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="examples/load-a-rollup-config.html"><strong aria-hidden="true">4.1.</strong> Load a Rollup Config</a></li></ol></li><li class="chapter-item expanded "><a href="CONTRIBUTING.html"><strong aria-hidden="true">5.</strong> Contributing</a></li><li class="chapter-item expanded "><a href="LICENSE.html"><strong aria-hidden="true">6.</strong> Licensing</a></li><li class="chapter-item expanded "><a href="glossary.html"><strong aria-hidden="true">7.</strong> Glossary</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -220,14 +220,14 @@ with a SNAPPY license for snappy encoding use.</p>
 <!-- Kona links -->
 <!-- People -->
 <div style="break-before: page; page-break-before: always;"></div><h1 id="installation"><a class="header" href="#installation">Installation</a></h1>
-<p>[op-alloy][op-alloy] consists of a number of crates that provide a range of functionality
+<p><a href="https://github.com/alloy-rs/op-alloy">op-alloy</a> consists of a number of crates that provide a range of functionality
 essential for interfacing with any OP Stack chain.</p>
-<p>The most succinct way to work with <code>op-alloy</code> is to add the [<code>op-alloy</code>][op-alloy-crate] crate
+<p>The most succinct way to work with <code>op-alloy</code> is to add the <a href="https://crates.io/crates/op-alloy"><code>op-alloy</code></a> crate
 with the <code>full</code> feature flag from the command-line using Cargo.</p>
-<pre><code class="language-bash">cargo add op-alloy --features full
+<pre><code class="language-txt">cargo add op-alloy --features full
 </code></pre>
 <p>Alternatively, you can add the following to your <code>Cargo.toml</code> file.</p>
-<pre><code class="language-bash">op-alloy = { version = "0.5", features = ["full"] }
+<pre><code class="language-txt">op-alloy = { version = "0.5", features = ["full"] }
 </code></pre>
 <p>For more fine-grained control over the features you wish to include, you can add the individual
 crates to your <code>Cargo.toml</code> file, or use the <code>op-alloy</code> crate with the features you need.</p>
@@ -246,7 +246,7 @@ crates to your <code>Cargo.toml</code> file, or use the <code>op-alloy</code> cr
 };
 <span class="boring">}</span></code></pre></pre>
 <h2 id="features"><a class="header" href="#features">Features</a></h2>
-<p>The [<code>op-alloy</code>][op-alloy-crate] defines many [feature flags][op-alloy-ff] including the following.</p>
+<p>The <a href="https://crates.io/crates/op-alloy"><code>op-alloy</code></a> defines many [feature flags][op-alloy-ff] including the following.</p>
 <p>Default</p>
 <ul>
 <li><code>std</code></li>
@@ -274,27 +274,31 @@ For example, the <code>consensus</code> feature flag provides the <code>op-alloy
 so <code>op-alloy-consensus</code> types can be used from <code>op-alloy</code> through <code>op_alloy::consensus::InsertTypeHere</code>.</p>
 <h2 id="crates"><a class="header" href="#crates">Crates</a></h2>
 <ul>
-<li>[<code>op-alloy-network</code>][op-alloy-network]</li>
-<li>[<code>op-alloy-genesis</code>][op-alloy-genesis] (supports <code>no_std</code>)</li>
-<li>[<code>op-alloy-protocol</code>][op-alloy-protocol] (supports <code>no_std</code>)</li>
-<li>[<code>op-alloy-provider</code>][op-alloy-provider]</li>
-<li>[<code>op-alloy-consensus</code>][op-alloy-consensus] (supports <code>no_std</code>)</li>
-<li>[<code>op-alloy-rpc-jsonrpsee</code>][op-alloy-rpc-jsonrpsee]</li>
-<li>[<code>op-alloy-rpc-types</code>][op-alloy-rpc-types] (supports <code>no_std</code>)</li>
-<li>[<code>op-alloy-rpc-types-engine</code>][op-alloy-rpc-types-engine] (supports <code>no_std</code>)</li>
+<li><a href="https://crates.io/crates/op-alloy-network"><code>op-alloy-network</code></a></li>
+<li><a href="https://crates.io/crates/op-alloy-genesis"><code>op-alloy-genesis</code></a> (supports <code>no_std</code>)</li>
+<li><a href="https://crates.io/crates/op-alloy-protocol"><code>op-alloy-protocol</code></a> (supports <code>no_std</code>)</li>
+<li><a href="https://crates.io/crates/op-alloy-provider"><code>op-alloy-provider</code></a></li>
+<li><a href="https://crates.io/crates/op-alloy-consensus"><code>op-alloy-consensus</code></a> (supports <code>no_std</code>)</li>
+<li><a href="https://crates.io/crates/op-alloy-rpc-jsonrpsee"><code>op-alloy-rpc-jsonrpsee</code></a></li>
+<li><a href="https://crates.io/crates/op-alloy-rpc-types"><code>op-alloy-rpc-types</code></a> (supports <code>no_std</code>)</li>
+<li><a href="https://crates.io/crates/op-alloy-rpc-types-engine"><code>op-alloy-rpc-types-engine</code></a> (supports <code>no_std</code>)</li>
 </ul>
 <h2 id="no_std"><a class="header" href="#no_std"><code>no_std</code></a></h2>
 <p>As noted above, the following crates are <code>no_std</code> compatible.</p>
 <ul>
-<li>[<code>op-alloy-consensus</code>][op-alloy-consensus]</li>
-<li>[<code>op-alloy-genesis</code>][op-alloy-genesis]</li>
-<li>[<code>op-alloy-protocol</code>][op-alloy-protocol]</li>
-<li>[<code>op-alloy-rpc-types-engine</code>][op-alloy-rpc-types-engine]</li>
-<li>[<code>op-alloy-rpc-types</code>][op-alloy-rpc-types]</li>
+<li><a href="https://crates.io/crates/op-alloy-consensus"><code>op-alloy-consensus</code></a></li>
+<li><a href="https://crates.io/crates/op-alloy-genesis"><code>op-alloy-genesis</code></a></li>
+<li><a href="https://crates.io/crates/op-alloy-protocol"><code>op-alloy-protocol</code></a></li>
+<li><a href="https://crates.io/crates/op-alloy-rpc-types-engine"><code>op-alloy-rpc-types-engine</code></a></li>
+<li><a href="https://crates.io/crates/op-alloy-rpc-types"><code>op-alloy-rpc-types</code></a></li>
 </ul>
-<p>To add <code>no_std</code> support to a crate, ensure the [check_no_std][check-no-std]
+<p>To add <code>no_std</code> support to a crate, ensure the <a href="https://github.com/alloy-rs/op-alloy/blob/main/scripts/check_no_std.sh">check_no_std</a>
 script is updated to include this crate once <code>no_std</code> compatible.</p>
-<p>{{#include ./links.md}}</p>
+<!-- op-alloy -->
+<!-- External -->
+<!-- Alloy -->
+<!-- Kona links -->
+<!-- People -->
 <div style="break-before: page; page-break-before: always;"></div><h1 id="building"><a class="header" href="#building">Building</a></h1>
 <p>This section offers in-depth documentation into the various <code>op-alloy</code> crates.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="genesis"><a class="header" href="#genesis">Genesis</a></h1>
@@ -408,6 +412,51 @@ are the following.</p>
 <li><a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/hardforks/struct.Hardforks.html#method.ecotone_txs"><code>Hardforks::ecotone_txs()</code></a></li>
 <li><a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/hardforks/struct.Hardforks.html#method.fjord_txs"><code>Hardforks::fjord_txs()</code></a></li>
 </ul>
+<!-- Links -->
+<div style="break-before: page; page-break-before: always;"></div><h1 id="protocol"><a class="header" href="#protocol">Protocol</a></h1>
+<p>The <a href="https://crates.io/crates/op-alloy-protocol"><code>op-alloy-protocol</code></a> crate contains types, constants, and methods
+specific to Optimism derivation and batch-submission.</p>
+<p><a href="https://crates.io/crates/op-alloy-protocol"><code>op-alloy-protocol</code></a> supports <code>no_std</code>.</p>
+<h2 id="background"><a class="header" href="#background">Background</a></h2>
+<p>Protocol types are primarily used for L2 chain derivation. This section will
+break down L2 chain derivation as it relates to types defined in
+<code>op-alloy-protocol</code> - that is, from the raw L2 chain data posted to L1, to the
+<a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>Batch</code></a> type. And since the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>Batch</code></a> type naively breaks up
+into the payload attributes, once executed, it becomes the canonical L2 block!
+Note though, this provides an incredibly simplified introduction. It is advised
+to reference <a href="https://specs.optimism.io/protocol/derivation.html#overview">the specs</a> for the most up-to-date information regarding
+derivation.</p>
+<p>The L2 chain is derived from data posted to the L1 chain - either as calldata
+or blob data. Data is iteratively pulled from each L1 block and translated
+into the first type defined by <code>op-alloy-protocol</code>: the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a> type.</p>
+<p><a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>s are <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#method.parse_frames">parsed</a> from the raw data. Each <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>
+is a part of a <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html"><code>Channel</code></a>, the next type one level up in deriving
+L2 blocks. <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html"><code>Channel</code></a>s have IDs that frames reference. <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>s
+are <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html#method.add_frame">added</a> iteratively to the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html"><code>Channel</code></a>. Once a
+<a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html"><code>Channel</code></a> <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html#method.is_ready">is ready</a>, it can be used to read a <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>Batch</code></a>.</p>
+<p>Since a <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html"><code>Channel</code></a> stitches together frames, it contains the raw frame
+data. In order to turn this <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html"><code>Channel</code></a> data into a <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>Batch</code></a>,
+it needs to be decompressed using the respective (de)compression algorithm
+(see <a href="https://specs.optimism.io/protocol/derivation.html#channel-format">the channel specs</a> for more detail on this). Once
+decompressed, the raw data can be <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html#method.decode">decoded</a> into the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>Batch</code></a>
+type.</p>
+<h2 id="sections-1"><a class="header" href="#sections-1">Sections</a></h2>
+<ul>
+<li><a href="building/protocol/./block-info.html">BlockInfo and L2BlockInfo Types</a></li>
+</ul>
+<!-- Links -->
+<div style="break-before: page; page-break-before: always;"></div><h1 id="blockinfo-and-l2blockinfo-types"><a class="header" href="#blockinfo-and-l2blockinfo-types">BlockInfo and L2BlockInfo Types</a></h1>
+<p>Optimism defines block info types that encapsulate minimal block header
+information needed by protocol operations.</p>
+<h2 id="blockinfo"><a class="header" href="#blockinfo">BlockInfo</a></h2>
+<p>The <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.BlockInfo.html"><code>BlockInfo</code></a> type is straightforward, containing the block hash,
+number, parent hash, and timestamp.</p>
+<h2 id="l2blockinfo"><a class="header" href="#l2blockinfo">L2BlockInfo</a></h2>
+<p>The <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.L2BlockInfo.html"><code>L2BlockInfo</code></a> extends the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.BlockInfo.html"><code>BlockInfo</code></a> type for the canonical
+L2 chain. It contains the "L1 origin" which is a set of block info for the L1
+block that this L2 block "originated".</p>
+<p><a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.L2BlockInfo.html"><code>L2BlockInfo</code></a> provides a <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.L2BlockInfo.html#method.from_block_and_genesis"><code>from_block_and_gensis</code></a> method to
+construct the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.L2BlockInfo.html"><code>L2BlockInfo</code></a> from a block and <code>ChainGenesis</code>.</p>
 <!-- Links -->
 <div style="break-before: page; page-break-before: always;"></div><h1 id="examples-1"><a class="header" href="#examples-1">Examples</a></h1>
 <p>Examples for working with <code>op-alloy-*</code> crates.</p>
