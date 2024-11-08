@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.3](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.6.3) - 2024-11-08
+
+### Dependencies
+
+- Bump Alloy Deps ([#239](https://github.com/alloy-rs/op-alloy/issues/239))
+
+### Features
+
+- Bump alloy ([#240](https://github.com/alloy-rs/op-alloy/issues/240))
+
 ## [0.6.2](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.6.2) - 2024-11-06
 
@@ -20,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.6.2
 - Move eip1559 impls ([#237](https://github.com/alloy-rs/op-alloy/issues/237))
 - [rpc-types] Clean up Exports ([#231](https://github.com/alloy-rs/op-alloy/issues/231))
 - [book] Consolidate Links ([#230](https://github.com/alloy-rs/op-alloy/issues/230))
