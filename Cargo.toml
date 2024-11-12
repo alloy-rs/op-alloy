@@ -61,8 +61,8 @@ alloy-network-primitives = { version = "0.6.3", default-features = false }
 alloy-rlp = { version = "0.3", default-features = false }
 
 # Alloy Core
-alloy-sol-types = { version = "0.8.11", default-features = false }
-alloy-primitives = { version = "0.8.11", default-features = false }
+alloy-sol-types = { version = "0.8.12", default-features = false }
+alloy-primitives = { version = "0.8.12", default-features = false }
 
 # Revm
 revm = "18.0.0"
