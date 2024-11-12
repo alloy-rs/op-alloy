@@ -2,6 +2,7 @@
 
 use super::OpTxType;
 use crate::DepositTransaction;
+use alloc::vec::Vec;
 use alloy_consensus::{Sealable, Transaction};
 use alloy_eips::eip2930::AccessList;
 use alloy_primitives::{
