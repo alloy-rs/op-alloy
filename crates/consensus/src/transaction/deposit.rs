@@ -2,10 +2,10 @@
 
 use super::OpTxType;
 use crate::DepositTransaction;
-use alloy_consensus::Transaction;
+use alloy_consensus::{Sealable, Transaction};
 use alloy_eips::eip2930::AccessList;
 use alloy_primitives::{
-    Address, Bytes, ChainId, PrimitiveSignature as Signature, TxKind, B256, U256,
+    keccak256, Address, Bytes, ChainId, PrimitiveSignature as Signature, TxHash, TxKind, B256, U256,
 };
 use alloy_rlp::{
     Buf, BufMut, Decodable, Encodable, Error as DecodeError, Header, EMPTY_STRING_CODE,
@@ -214,6 +214,13 @@ impl TxDeposit {
         self.eip2718_encode(out);
     }
 
+    /// Calculate the transaction hash for the given signature.
+    pub fn tx_hash(&self) -> TxHash {
+        let mut buf = Vec::with_capacity(self.eip2718_encoded_length());
+        self.eip2718_encode(&mut buf);
+        keccak256(&buf)
+    }
+
     /// Returns the signature for the optimism deposit transactions, which don't include a
     /// signature.
     pub fn signature() -> Signature {
@@ -302,6 +309,12 @@ impl Encodable for TxDeposit {
 impl Decodable for TxDeposit {
     fn decode(data: &mut &[u8]) -> alloy_rlp::Result<Self> {
         Self::rlp_decode(data)
+    }
+}
+
+impl Sealable for TxDeposit {
+    fn hash_slow(&self) -> B256 {
+        self.tx_hash()
     }
 }
 
