@@ -214,7 +214,7 @@ impl TxDeposit {
         self.eip2718_encode(out);
     }
 
-    /// Calculate the transaction hash for the given signature.
+    /// Calculate the transaction hash.
     pub fn tx_hash(&self) -> TxHash {
         let mut buf = Vec::with_capacity(self.eip2718_encoded_length());
         self.eip2718_encode(&mut buf);
