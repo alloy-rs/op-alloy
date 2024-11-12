@@ -97,6 +97,7 @@ async-trait = "0.1.83"
 unsigned-varint = "0.8.0"
 spin = { version = "0.9.8", features = ["mutex"] }
 derive_more = { version = "1.0", default-features = false }
+similar-asserts = "1.6"
 
 # tracing
 tracing-subscriber = "0.3.18"
