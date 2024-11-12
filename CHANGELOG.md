@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.5](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.6.5) - 2024-11-12
+
+### Dependencies
+
+- Bump alloy 064 ([#249](https://github.com/alloy-rs/op-alloy/issues/249))
+
+### Features
+
+- Wrap `TxDeposit` into `Sealed` in `OpTxEnvelope` ([#247](https://github.com/alloy-rs/op-alloy/issues/247))
+- Add nonce to RPC transaction ([#246](https://github.com/alloy-rs/op-alloy/issues/246))
+
+### Miscellaneous Tasks
+
+- Add deserde test ([#248](https://github.com/alloy-rs/op-alloy/issues/248))
+
 ## [0.6.4](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.6.4) - 2024-11-12
 
@@ -15,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.6.4
 - Add is dynamic fee ([#245](https://github.com/alloy-rs/op-alloy/issues/245))
 
 ## [0.6.3](https://github.com/alloy-rs/op-alloy
