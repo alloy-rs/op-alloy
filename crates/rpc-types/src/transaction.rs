@@ -267,6 +267,9 @@ mod tx_serde {
                 return Err(serde_json::Error::custom("missing `from` field"));
             };
 
+            // Only serialize deposit_nonce if inner transaction is deposit to avoid duplicated keys
+            let deposit_nonce = other.deposit_nonce.filter(|_| inner.is_deposit());
+
             let effective_gas_price = other.effective_gas_price.or(inner.gas_price());
 
             Ok(Self {
@@ -279,7 +282,7 @@ mod tx_serde {
                     effective_gas_price,
                 },
                 deposit_receipt_version,
-                deposit_nonce: other.deposit_nonce,
+                deposit_nonce,
             })
         }
     }
