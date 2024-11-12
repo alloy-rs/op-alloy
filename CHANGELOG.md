@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.4](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.6.4) - 2024-11-12
+
+### Bug Fixes
+
+- [consensus] Add conversion for `OpTxType::Eip7702` ([#244](https://github.com/alloy-rs/op-alloy/issues/244))
+- [consensus] Fix arbitrary impl for `OpTxType` ([#242](https://github.com/alloy-rs/op-alloy/issues/242))
+
+### Miscellaneous Tasks
+
+- Add is dynamic fee ([#245](https://github.com/alloy-rs/op-alloy/issues/245))
+
 ## [0.6.3](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.6.3) - 2024-11-08
 
@@ -15,6 +27,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Features
 
 - Bump alloy ([#240](https://github.com/alloy-rs/op-alloy/issues/240))
+
+### Miscellaneous Tasks
+
+- Release 0.6.3
 
 ## [0.6.2](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.6.2) - 2024-11-06
