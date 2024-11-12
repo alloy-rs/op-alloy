@@ -325,16 +325,16 @@ impl Sealable for TxDeposit {
 /// This function can be used as `serialize_with` serde attribute for the [`TxDeposit`] and will
 /// flatten [`TxDeposit::signature`] into response.
 #[cfg(feature = "serde")]
-pub fn serde_deposit_tx_rpc<S: serde::Serializer>(
-    value: &TxDeposit,
+pub fn serde_deposit_tx_rpc<T: serde::Serialize, S: serde::Serializer>(
+    value: &T,
     serializer: S,
 ) -> Result<S::Ok, S::Error> {
     use serde::Serialize;
 
     #[derive(Serialize)]
-    struct SerdeHelper<'a> {
+    struct SerdeHelper<'a, T> {
         #[serde(flatten)]
-        value: &'a TxDeposit,
+        value: &'a T,
         #[serde(flatten)]
         signature: Signature,
     }
