@@ -135,6 +135,12 @@ impl From<Signed<TxEip7702>> for OpTxEnvelope {
     }
 }
 
+impl From<TxDeposit> for OpTxEnvelope {
+    fn from(v: TxDeposit) -> Self {
+        v.seal_slow().into()
+    }
+}
+
 impl From<Sealed<TxDeposit>> for OpTxEnvelope {
     fn from(v: Sealed<TxDeposit>) -> Self {
         Self::Deposit(v)
