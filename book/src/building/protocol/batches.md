@@ -42,6 +42,28 @@ providing the rollup config, l1 blocks, l2 safe head, and inclusion block.
 
 ### `SpanBatch` Type
 
+The [`SpanBatch`][span-batch] type (available since the [Delta hardfork][delta])
+comprises the data needed to build a "span" of multiple L2 blocks. It contains
+the following data.
+- The parent check (the first 20 bytes of the block's parent hash).
+- The l1 origin check (the first 20 bytes of the last block's l1 origin hash).
+- The genesis timestamp.
+- The chain id.
+- A list of [`SpanBatchElement`][span-batch-element]s. These are similar to
+  the [`SingleBatch`][single-batch] type but don't contain the parent hash
+  and epoch hash for this L2 block.
+- Origin bits.
+- Block transaction counts.
+- Span batch transactions which contain information for transactions in a span batch.
+
+Similar to the `SingleBatch` type discussed above, the [`SpanBatch`][span-batch] type
+must be validated once decoded. For this, the [`SpanBatch::check_batch`][check-batch-span]
+method is available.
+
+After the [Holocene hardfork][holocene] was introduced, span batch validation is greatly
+simplified to be forwards-invalidating instead of backwards-invalidating, so a new
+[`SpanBatch::check_batch_prefix`][check-batch-prefix] method provides a way to validate
+each batch as it is loaded, in an iterative fashion.
 
 
 ## Batch Encoding
@@ -69,6 +91,10 @@ more functionality.
 
 <!-- Links -->
 
+[holocene]: https://specs.optimism.io/protocol/holocene/overview.html
+[check-batch-prefix]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SpanBatch.html#method.check_batch_prefix
+[check-batch-span]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SpanBatch.html#method.check_batch
+[span-batch-element]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SpanBatchElement.html
 [check-batch-single]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html#method.check_batch
 
 [bytes]: https://docs.rs/alloy-primitives/latest/alloy_primitives/struct.Bytes.html
