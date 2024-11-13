@@ -1,5 +1,7 @@
 # Protocol
 
+<a href="https://crates.io/crates/op-alloy-protocol"><img src="https://img.shields.io/crates/v/op-alloy-protocol.svg" alt="op-alloy-protocol crate"></a>
+
 The [`op-alloy-protocol`][protocol] crate contains types, constants, and methods
 specific to Optimism derivation and batch-submission.
 

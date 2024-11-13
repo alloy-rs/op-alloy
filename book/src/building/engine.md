@@ -1,5 +1,7 @@
 # RPC Engine Types
 
+<a href="https://crates.io/crates/op-alloy-rpc-types-engine"><img src="https://img.shields.io/crates/v/op-alloy-rpc-types-engine.svg" alt="op-alloy-rpc-types-engine crate"></a>
+
 The [`op-alloy-rpc-types-engine`][engine] crate provides Optimism types for interfacing
 with the Engine API in the OP Stack.
 
