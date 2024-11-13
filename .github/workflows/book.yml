@@ -1,8 +1,11 @@
 name: Book Deployment
+
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -11,16 +14,12 @@ jobs:
       deployments: write
     name: Publish to GitHub Pages
     steps:
-      - name: Checkout sources
-        uses: actions/checkout@v4
-      - name: Install Rust stable toolchain
-        uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
-        with:
-          cache-on-failure: true
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
       - name: Setup mdbook
         run: |
-          cargo install mdbook mdbook-mermaid mdbook-template
+          cargo install --version 0.4.40 mdbook
+          cargo install mdbook-mermaid mdbook-template
       - name: Build book
         working-directory: ./book
         run: mdbook build
