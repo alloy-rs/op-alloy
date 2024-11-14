@@ -1,11 +1,11 @@
-# op-alloy Book
+# op-alloy
 
 <a href="https://github.com/alloy-rs/op-alloy"><img src="https://img.shields.io/github/stars/alloy-rs/op-alloy"></a>
 
-Welcome to the hands-on guide for getting started with op-alloy!
+Welcome to the hands-on guide for getting started with `op-alloy`!
 
-op-alloy connects applications to the OP Stack, leveraging high
-performance types, traits, and middleware from [alloy][alloy].
+`op-alloy` connects applications to the OP Stack, leveraging high
+performance types, traits, and middleware from [Alloy][alloy].
 
 > 📖 Development Status
 >
@@ -19,26 +19,28 @@ performance types, traits, and middleware from [alloy][alloy].
 
 ### [Getting Started](./starting/installation.md)
 
-To get started with op-alloy, add op-alloy crates as a dependency and take your first steps.
+To get started with op-alloy, add its crates as a dependency and take your first steps.
 
 ### [Building with op-alloy](./building/README.md)
 
-A walkthrough of building with op-alloy.
+Walk through types and functionality available in different `op-alloy` crates.
 
 ### [Examples](./examples/README.md)
 
-This section will give you practical examples of how Alloy can be used in your codebase.
+Get hands-on experience using `op-alloy` crates for critical OP Stack functionality.
 
 ### [Contributing](./CONTRIBUTING.md)
 
 Contributors are welcome! It is built and maintained by Alloy contributors,
 members of [OP Labs][op-labs], and the broader open source community.
 
-Please see the [contributing guide][contributing] to get involved.
+`op-alloy` follows and expands the OP Stack standards set in the [specs].
+The [contributing guide][contributing] breaks down how the [specs]
+integrate with `op-alloy` and how to contribute to `op-alloy`.
 
 ### [Licensing](./LICENSE.md)
 
-op-alloy is licensed under the combined Apache 2.0 and MIT License, along
+`op-alloy` is licensed under the combined Apache 2.0 and MIT License, along
 with a SNAPPY license for snappy encoding use.
 
 

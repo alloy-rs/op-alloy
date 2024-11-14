@@ -41,7 +41,7 @@
 
 <!-- OP Stack Specs -->
 
-[specs]: https://specs.optimism.io/protocol/deposits.html
+[specs]: https://specs.optimism.io
 [deposit]: https://specs.optimism.io/protocol/deposits.html
 [derivation]: https://specs.optimism.io/protocol/derivation.html
 [fp-specs]: https://specs.optimism.io/experimental/fault-proof/index.html
