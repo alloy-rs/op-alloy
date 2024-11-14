@@ -92,7 +92,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="starting/installation.html"><strong aria-hidden="true">2.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="building/index.html"><strong aria-hidden="true">3.</strong> Building</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="building/genesis/index.html"><strong aria-hidden="true">3.1.</strong> Genesis</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="building/genesis/rollup-config.html"><strong aria-hidden="true">3.1.1.</strong> Rollup Config</a></li><li class="chapter-item expanded "><a href="building/genesis/system-config.html"><strong aria-hidden="true">3.1.2.</strong> System Config</a></li></ol></li><li class="chapter-item expanded "><a href="building/consensus.html"><strong aria-hidden="true">3.2.</strong> Consensus</a></li><li class="chapter-item expanded "><a href="building/engine.html"><strong aria-hidden="true">3.3.</strong> Engine RPC Types</a></li><li class="chapter-item expanded "><a href="building/protocol/index.html"><strong aria-hidden="true">3.4.</strong> Protocol</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="building/protocol/block-info.html"><strong aria-hidden="true">3.4.1.</strong> BlockInfo and L2BlockInfo Types</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="examples/index.html"><strong aria-hidden="true">4.</strong> Examples</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="examples/load-a-rollup-config.html"><strong aria-hidden="true">4.1.</strong> Load a Rollup Config</a></li></ol></li><li class="chapter-item expanded "><a href="CONTRIBUTING.html"><strong aria-hidden="true">5.</strong> Contributing</a></li><li class="chapter-item expanded "><a href="LICENSE.html"><strong aria-hidden="true">6.</strong> Licensing</a></li><li class="chapter-item expanded "><a href="glossary.html"><strong aria-hidden="true">7.</strong> Glossary</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="starting.html"><strong aria-hidden="true">2.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="building/index.html"><strong aria-hidden="true">3.</strong> Building</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="building/genesis/index.html"><strong aria-hidden="true">3.1.</strong> Genesis</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="building/genesis/rollup-config.html"><strong aria-hidden="true">3.1.1.</strong> Rollup Config</a></li><li class="chapter-item expanded "><a href="building/genesis/system-config.html"><strong aria-hidden="true">3.1.2.</strong> System Config</a></li></ol></li><li class="chapter-item expanded "><a href="building/consensus.html"><strong aria-hidden="true">3.2.</strong> Consensus</a></li><li class="chapter-item expanded "><a href="building/engine.html"><strong aria-hidden="true">3.3.</strong> Engine RPC Types</a></li><li class="chapter-item expanded "><a href="building/protocol/index.html"><strong aria-hidden="true">3.4.</strong> Protocol</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="building/protocol/block-info.html"><strong aria-hidden="true">3.4.1.</strong> BlockInfo and L2BlockInfo Types</a></li><li class="chapter-item expanded "><a href="building/protocol/frames.html"><strong aria-hidden="true">3.4.2.</strong> Frames</a></li><li class="chapter-item expanded "><a href="building/protocol/channels.html"><strong aria-hidden="true">3.4.3.</strong> Channels</a></li><li class="chapter-item expanded "><a href="building/protocol/batches.html"><strong aria-hidden="true">3.4.4.</strong> Batches</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="examples/index.html"><strong aria-hidden="true">4.</strong> Examples</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="examples/load-a-rollup-config.html"><strong aria-hidden="true">4.1.</strong> Load a Rollup Config</a></li></ol></li><li class="chapter-item expanded "><a href="CONTRIBUTING.html"><strong aria-hidden="true">5.</strong> Contributing</a></li><li class="chapter-item expanded "><a href="LICENSE.html"><strong aria-hidden="true">6.</strong> Licensing</a></li><li class="chapter-item expanded "><a href="glossary.html"><strong aria-hidden="true">7.</strong> Glossary</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -226,9 +226,9 @@ with a SNAPPY license for snappy encoding use.</p>
 <!-- Kona links -->
 <!-- People -->
 <div style="break-before: page; page-break-before: always;"></div><h1 id="installation"><a class="header" href="#installation">Installation</a></h1>
-<p><a href="https://github.com/alloy-rs/op-alloy">op-alloy</a> consists of a number of crates that provide a range of functionality
+<p>[op-alloy][op-alloy] consists of a number of crates that provide a range of functionality
 essential for interfacing with any OP Stack chain.</p>
-<p>The most succinct way to work with <code>op-alloy</code> is to add the <a href="https://crates.io/crates/op-alloy"><code>op-alloy</code></a> crate
+<p>The most succinct way to work with <code>op-alloy</code> is to add the [<code>op-alloy</code>][op-alloy-crate] crate
 with the <code>full</code> feature flag from the command-line using Cargo.</p>
 <pre><code class="language-txt">cargo add op-alloy --features full
 </code></pre>
@@ -252,7 +252,7 @@ crates to your <code>Cargo.toml</code> file, or use the <code>op-alloy</code> cr
 };
 <span class="boring">}</span></code></pre></pre>
 <h2 id="features"><a class="header" href="#features">Features</a></h2>
-<p>The <a href="https://crates.io/crates/op-alloy"><code>op-alloy</code></a> defines many [feature flags][op-alloy-ff] including the following.</p>
+<p>The [<code>op-alloy</code>][op-alloy-crate] defines many [feature flags][op-alloy-ff] including the following.</p>
 <p>Default</p>
 <ul>
 <li><code>std</code></li>
@@ -280,35 +280,27 @@ For example, the <code>consensus</code> feature flag provides the <code>op-alloy
 so <code>op-alloy-consensus</code> types can be used from <code>op-alloy</code> through <code>op_alloy::consensus::InsertTypeHere</code>.</p>
 <h2 id="crates"><a class="header" href="#crates">Crates</a></h2>
 <ul>
-<li><a href="https://crates.io/crates/op-alloy-network"><code>op-alloy-network</code></a></li>
-<li><a href="https://crates.io/crates/op-alloy-genesis"><code>op-alloy-genesis</code></a> (supports <code>no_std</code>)</li>
-<li><a href="https://crates.io/crates/op-alloy-protocol"><code>op-alloy-protocol</code></a> (supports <code>no_std</code>)</li>
-<li><a href="https://crates.io/crates/op-alloy-provider"><code>op-alloy-provider</code></a></li>
-<li><a href="https://crates.io/crates/op-alloy-consensus"><code>op-alloy-consensus</code></a> (supports <code>no_std</code>)</li>
-<li><a href="https://crates.io/crates/op-alloy-rpc-jsonrpsee"><code>op-alloy-rpc-jsonrpsee</code></a></li>
-<li><a href="https://crates.io/crates/op-alloy-rpc-types"><code>op-alloy-rpc-types</code></a> (supports <code>no_std</code>)</li>
-<li><a href="https://crates.io/crates/op-alloy-rpc-types-engine"><code>op-alloy-rpc-types-engine</code></a> (supports <code>no_std</code>)</li>
+<li>[<code>op-alloy-network</code>][op-alloy-network]</li>
+<li>[<code>op-alloy-genesis</code>][op-alloy-genesis] (supports <code>no_std</code>)</li>
+<li>[<code>op-alloy-protocol</code>][op-alloy-protocol] (supports <code>no_std</code>)</li>
+<li>[<code>op-alloy-provider</code>][op-alloy-provider]</li>
+<li>[<code>op-alloy-consensus</code>][op-alloy-consensus] (supports <code>no_std</code>)</li>
+<li>[<code>op-alloy-rpc-jsonrpsee</code>][op-alloy-rpc-jsonrpsee]</li>
+<li>[<code>op-alloy-rpc-types</code>][op-alloy-rpc-types] (supports <code>no_std</code>)</li>
+<li>[<code>op-alloy-rpc-types-engine</code>][op-alloy-rpc-types-engine] (supports <code>no_std</code>)</li>
 </ul>
 <h2 id="no_std"><a class="header" href="#no_std"><code>no_std</code></a></h2>
 <p>As noted above, the following crates are <code>no_std</code> compatible.</p>
 <ul>
-<li><a href="https://crates.io/crates/op-alloy-consensus"><code>op-alloy-consensus</code></a></li>
-<li><a href="https://crates.io/crates/op-alloy-genesis"><code>op-alloy-genesis</code></a></li>
-<li><a href="https://crates.io/crates/op-alloy-protocol"><code>op-alloy-protocol</code></a></li>
-<li><a href="https://crates.io/crates/op-alloy-rpc-types-engine"><code>op-alloy-rpc-types-engine</code></a></li>
-<li><a href="https://crates.io/crates/op-alloy-rpc-types"><code>op-alloy-rpc-types</code></a></li>
+<li>[<code>op-alloy-consensus</code>][op-alloy-consensus]</li>
+<li>[<code>op-alloy-genesis</code>][op-alloy-genesis]</li>
+<li>[<code>op-alloy-protocol</code>][op-alloy-protocol]</li>
+<li>[<code>op-alloy-rpc-types-engine</code>][op-alloy-rpc-types-engine]</li>
+<li>[<code>op-alloy-rpc-types</code>][op-alloy-rpc-types]</li>
 </ul>
-<p>To add <code>no_std</code> support to a crate, ensure the <a href="https://github.com/alloy-rs/op-alloy/blob/main/scripts/check_no_std.sh">check_no_std</a>
+<p>To add <code>no_std</code> support to a crate, ensure the [check_no_std][check-no-std]
 script is updated to include this crate once <code>no_std</code> compatible.</p>
-<!-- op-alloy -->
-<!-- op-alloy-genesis -->
-<!-- op-alloy-consensus -->
-<!-- Hardforks -->
-<!-- OP Stack Specs -->
-<!-- External -->
-<!-- Alloy -->
-<!-- Kona links -->
-<!-- People -->
+<p>{{#include ../links.md}}</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="building"><a class="header" href="#building">Building</a></h1>
 <p>This section offers in-depth documentation into the various <code>op-alloy</code> crates.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="genesis"><a class="header" href="#genesis">Genesis</a></h1>
@@ -532,6 +524,208 @@ block that this L2 block "originated".</p>
 <p><a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.L2BlockInfo.html"><code>L2BlockInfo</code></a> provides a <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.L2BlockInfo.html#method.from_block_and_genesis"><code>from_block_and_gensis</code></a> method to
 construct the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.L2BlockInfo.html"><code>L2BlockInfo</code></a> from a block and <code>ChainGenesis</code>.</p>
 <!-- Links -->
+<div style="break-before: page; page-break-before: always;"></div><h1 id="frames"><a class="header" href="#frames">Frames</a></h1>
+<p><a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>s are the lowest level data format in the OP Stack protocol.</p>
+<h2 id="where-frames-fit-in-the-op-stack"><a class="header" href="#where-frames-fit-in-the-op-stack">Where Frames fit in the OP Stack</a></h2>
+<p>Transactions posted to the data availability layer of the rollup
+contain one or multiple <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html">Frame</a>s. Frames are chunks of raw data that
+belong to a given <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html">Channel</a>, the next, higher up data format in the
+OP Stack protocol. Importantly, a given transaction can contain
+a variety of frames from <em>different</em> channels, allowing maximum flexibility
+when breaking up channels into batcher transactions.</p>
+<h2 id="contents-of-a-frame"><a class="header" href="#contents-of-a-frame">Contents of a Frame</a></h2>
+<p>A <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html">Frame</a> is comprised of the following items.</p>
+<ul>
+<li>A <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/type.ChannelId.html"><code>ChannelId</code></a> which is a 16 byte long identifier for the channel that
+the given frame belongs to.</li>
+<li>A <code>number</code> that identifies the index of the frame within the channel. Frames
+are 0-indexed and are bound to <code>u16</code> size limit.</li>
+<li><code>data</code> contains the raw data within the frame.</li>
+<li><code>is_last</code> marks if the frame is the last within the channel.</li>
+</ul>
+<h2 id="frame-encoding"><a class="header" href="#frame-encoding">Frame Encoding</a></h2>
+<p>When frames are posted through a batcher transaction, they are encoded as a
+contiguous list with a single byte prefix denoting the derivation version.
+The encoding can be represented as the following concatenated bytes.</p>
+<pre><code>encoded = DERIVATION_VERSION_0 ++ encoded_frame_0 ++ encoded_frame_1 ++ ..
+</code></pre>
+<p>Where <code>DERIVATION_VERSION_0</code> is a single byte (<code>0x00</code>) indicating the derivation
+version including how the frames are encoded. Currently, the only supported
+derivation version is <code>0</code>.</p>
+<p><code>encoded_frame_0</code>, <code>encoded_frame_1</code>, and so on, are all <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>s encoded
+as raw bytes. A single encoded <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a> can be represented by the following
+concatenation of it's fields.</p>
+<pre><code>encoded_frame = channel_id ++ frame_number ++ frame_data_length ++ frame_data ++ is_last
+</code></pre>
+<p>Where <code>++</code> represents concatenation. The frame's fields map to it's encoding.</p>
+<ul>
+<li><code>channel_id</code> is the 16 byte long <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#structfield.id"><code>Frame::id</code></a>.</li>
+<li><code>frame_number</code> is the 2 byte long (or <code>u16</code>) <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#structfield.number"><code>Frame::number</code></a>.</li>
+<li><code>frame_data_length</code> and <code>frame_data</code> provide the necessary details to decode
+the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#structfield.data"><code>Frame::data</code></a>, where <code>frame_data_length</code> is 4 bytes long (or <code>u32</code>).</li>
+<li><code>is_last</code> is a single byte <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#structfield.is_last"><code>Frame::is_last</code></a>.</li>
+</ul>
+<h2 id="op-alloys-frame-type"><a class="header" href="#op-alloys-frame-type">op-alloy's <code>Frame</code> Type</a></h2>
+<p><a href="https://crates.io/crate/op-alloy-protocol"><code>op-alloy-protocol</code></a> provides the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a> type with a few useful
+methods. <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>s can be encoded and decoded using the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#method.encode"><code>Frame::encode</code></a>
+and <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#method.decode"><code>Frame::decode</code></a> methods. Given the raw batcher transaction data or blob data
+containing the concatenated derivation version and contiguous list of encoded frames,
+the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#method.parse_frame"><code>Frame::parse_frame</code></a> and <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#method.parse_frames"><code>Frame::parse_frames</code></a> methods
+provide ways to decode single and multiple frames, respectively.</p>
+<!-- Links -->
+<div style="break-before: page; page-break-before: always;"></div><h1 id="channels"><a class="header" href="#channels">Channels</a></h1>
+<p>Taken from the <a href="https://specs.optimism.io/protocol/derivation.html#batch-submission-wire-format">OP Stack specs</a>, <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html"><code>Channel</code></a>s are a set of
+sequencer batches (for any L2 blocks) compressed together.</p>
+<h2 id="where-channels-fit-in-the-op-stack"><a class="header" href="#where-channels-fit-in-the-op-stack">Where Channels fit in the OP Stack</a></h2>
+<p>L2 transactions are grouped into what are called <a href="https://specs.optimism.io/glossary.html#sequencer-batch">sequencer batches</a>.
+In order to obtain a better compression ratio when posting these L2 transactions
+to the data availability layer, <a href="https://specs.optimism.io/glossary.html#sequencer-batch">sequencer batches</a> are compressed
+together into what is called a <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html">Channel</a>. This ultimately reduces
+data availability costs. As previously noted in the <a href="building/protocol/./frames.html">Frame</a> section,
+<a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html">Channel</a>s may not "fit" in a single batcher transaction, posting the
+data to the data availability layer. In order to accommodate large
+<a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html">Channel</a>s, a tertiary <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html">Frame</a> data type breaks the
+<a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html">Channel</a> up into multiple <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html">Frame</a>s where a batcher transaction
+then consists of one or multiple <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html">Frame</a>s.</p>
+<h2 id="contents-of-a-channel"><a class="header" href="#contents-of-a-channel">Contents of a Channel</a></h2>
+<p>A <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html">Channel</a> is comprised of the following items.</p>
+<ul>
+<li>A <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/type.ChannelId.html"><code>ChannelId</code></a> which is a 16 byte long identifier for the channel.
+Notice, <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html">Frame</a>s also contain a <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/type.ChannelId.html"><code>ChannelId</code></a>, which is the
+identical to this identifier, since frames "belong" to a given channel.</li>
+<li>A <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.BlockInfo.html"><code>BlockInfo</code></a> that marks the L1 block at which the channel
+is "opened" at.</li>
+<li>The estimated size of the channel (as a <code>usize</code>) used to drop the channel
+if there is a data overflow.</li>
+<li>A <code>boolean</code> if the channel is "closed". This indicates if the last frame
+has been buffered, and added to the channel.</li>
+<li>A <code>u16</code> indicating the highest frame number within the channel.</li>
+<li>The frame number of the last frame (where <code>is_last</code> set to <code>true</code>).</li>
+<li>A mapping from Frame number to the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a> itself.</li>
+<li>A <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.BlockInfo.html"><code>BlockInfo</code></a> for highest L1 inclusion block that a frame
+was included in.</li>
+</ul>
+<h2 id="channel-encoding"><a class="header" href="#channel-encoding">Channel Encoding</a></h2>
+<p><a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html"><code>Channel</code></a> encoding is even more straightforward than that of a
+<a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>. Simply, a <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html"><code>Channel</code></a> is the concatenated list
+of encoded <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>s.</p>
+<p>Since each <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a> contains the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/type.ChannelId.html"><code>ChannelId</code></a> that corresponds
+to the given <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html"><code>Channel</code></a>, constructing a <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html"><code>Channel</code></a> is as
+simple as calling the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html#method.add_frame"><code>Channel::add_frame</code></a> method for each of
+its <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>s.</p>
+<p>Once the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html"><code>Channel</code></a> has ingested all of it's <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>s,
+it will be marked as "ready", with the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html#method.is_ready"><code>Channel::is_ready</code></a>
+method returning <code>true</code>.</p>
+<h2 id="the-channel-type"><a class="header" href="#the-channel-type">The <code>Channel</code> Type</a></h2>
+<p>As discussed <a href="building/protocol/channels.html#-channel-encoding">above</a>, the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html"><code>Channel</code></a> type is
+expected to be populated with <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>s using its
+<a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html#method.add_frame"><code>Channel::add_frame</code></a> method. Below we demonstrate constructing
+a minimal <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html"><code>Channel</code></a> using a few frames.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use op_alloy_protocol::{Channel, Frame};
+
+// Construct a channel at the given L1 block.
+let id = [0xee; 16];
+let block = BlockInfo::default();
+let mut channel = Channel::new(id, block);
+
+// The channel will consist of 3 frames.
+let frame_0 = Frame { id: [0xee; 16], number: 0, ..Default::default() };
+let frame_1 = Frame { id: [0xee; 16], number: 1, ..Default::default() };
+let frame_2 = Frame { id: [0xee; 16], number: 2, is_last: true, ..Default::default() };
+
+// Add the frames to the channel.
+channel.add_frame(frame_0);
+channel.add_frame(frame_1);
+channel.add_frame(frame_2);
+
+// Since the last frame was ingested,
+// the channel should be ready.
+assert!(channel.is_ready());
+<span class="boring">}</span></code></pre></pre>
+<p>There are a few rules when adding a <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a> to a <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html"><code>Channel</code></a>.</p>
+<ul>
+<li>The <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>'s id must be the same <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/type.ChannelId.html"><code>ChannelId</code></a> as the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html"><code>Channel</code></a>s.</li>
+<li><a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>s cannot be added once a <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html"><code>Channel</code></a> is closed.</li>
+<li><a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>s within a <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html"><code>Channel</code></a> must have distinct numbers.</li>
+</ul>
+<p>Notice, <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>s can be added out-of-order so long as the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html"><code>Channel</code></a> is
+still open, and the frame hasn't already been added.</p>
+<!-- Links -->
+<div style="break-before: page; page-break-before: always;"></div><h1 id="batches"><a class="header" href="#batches">Batches</a></h1>
+<p>A <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html">Batch</a> contains a list of transactions to be included in a specific
+L2 block. Since the <a href="https://specs.optimism.io/protocol/delta/overview.html">Delta hardfork</a>, there are two Batch types or
+variants: <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html"><code>SingleBatch</code></a> and <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SpanBatch.html"><code>SpanBatch</code></a>.</p>
+<h2 id="where-batches-fit-in-the-op-stack"><a class="header" href="#where-batches-fit-in-the-op-stack">Where Batches fit in the OP Stack</a></h2>
+<p>The <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html">Batch</a> is the highest-level data type in the OP Stack
+derivation process that comes prior to building payload attributes.
+A <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html">Batch</a> is constructed by taking the raw data from a
+<a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html">Channel</a>, decompressing it, and decoding the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html">Batch</a>
+from this decompressed data.</p>
+<p>Alternatively, when looking at the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html">Batch</a> type from a batching
+perspective, and not from the derivation perspective, the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html">Batch</a>
+type contains a list of L2 transactions and is compressed into the
+<a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html"><code>Channel</code></a> type. In turn, the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html"><code>Channel</code></a> is split
+into frames which are posted to the data availability layer through batcher
+transactions.</p>
+<h2 id="contents-of-a-batch"><a class="header" href="#contents-of-a-batch">Contents of a <code>Batch</code></a></h2>
+<p>A <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>Batch</code></a> is either a <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html"><code>SingleBatch</code></a> or a
+<a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SpanBatch.html"><code>SpanBatch</code></a>, each with their own contents. Below,
+these types are broken down in their respective sections.</p>
+<h3 id="singlebatch-type"><a class="header" href="#singlebatch-type"><code>SingleBatch</code> Type</a></h3>
+<p>The <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html"><code>SingleBatch</code></a> type contains the following.</p>
+<ul>
+<li>A <a href="https://docs.rs/alloy-primitives/latest/alloy_primitives/aliases/type.BlockHash.html"><code>BlockHash</code></a> parent hash that represents the parent L2 block.</li>
+<li>A <code>u64</code> epoch number that identifies the <a href="https://specs.optimism.io/glossary.html?highlight=Epoch#sequencing-epoch">epoch</a> for this batch.</li>
+<li>A <a href="https://docs.rs/alloy-primitives/latest/alloy_primitives/aliases/type.BlockHash.html"><code>BlockHash</code></a> epoch hash.</li>
+<li>The timestamp for the batch as a <code>u64</code>.</li>
+<li>A list of EIP-2718 encoded transactions (represented as <a href="https://docs.rs/alloy-primitives/latest/alloy_primitives/struct.Bytes.html"><code>Bytes</code></a>).</li>
+</ul>
+<p>In order to validate the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html"><code>SingleBatch</code></a> once decoded,
+the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html#method.check_batch"><code>SingleBatch::check_batch</code></a> method should be used,
+providing the rollup config, l1 blocks, l2 safe head, and inclusion block.</p>
+<h3 id="spanbatch-type"><a class="header" href="#spanbatch-type"><code>SpanBatch</code> Type</a></h3>
+<p>The <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SpanBatch.html"><code>SpanBatch</code></a> type (available since the <a href="https://specs.optimism.io/protocol/delta/overview.html">Delta hardfork</a>)
+comprises the data needed to build a "span" of multiple L2 blocks. It contains
+the following data.</p>
+<ul>
+<li>The parent check (the first 20 bytes of the block's parent hash).</li>
+<li>The l1 origin check (the first 20 bytes of the last block's l1 origin hash).</li>
+<li>The genesis timestamp.</li>
+<li>The chain id.</li>
+<li>A list of <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SpanBatchElement.html"><code>SpanBatchElement</code></a>s. These are similar to
+the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html"><code>SingleBatch</code></a> type but don't contain the parent hash
+and epoch hash for this L2 block.</li>
+<li>Origin bits.</li>
+<li>Block transaction counts.</li>
+<li>Span batch transactions which contain information for transactions in a span batch.</li>
+</ul>
+<p>Similar to the <code>SingleBatch</code> type discussed above, the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SpanBatch.html"><code>SpanBatch</code></a> type
+must be validated once decoded. For this, the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SpanBatch.html#method.check_batch"><code>SpanBatch::check_batch</code></a>
+method is available.</p>
+<p>After the <a href="https://specs.optimism.io/protocol/holocene/overview.html">Holocene hardfork</a> was introduced, span batch validation is greatly
+simplified to be forwards-invalidating instead of backwards-invalidating, so a new
+<a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SpanBatch.html#method.check_batch_prefix"><code>SpanBatch::check_batch_prefix</code></a> method provides a way to validate
+each batch as it is loaded, in an iterative fashion.</p>
+<h2 id="batch-encoding"><a class="header" href="#batch-encoding">Batch Encoding</a></h2>
+<p>The first byte of the decompressed channel data is the
+<a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.BatchType.html"><code>BatchType</code></a>, which identifies whether the batch is a
+<a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html"><code>SingleBatch</code></a> or a <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SpanBatch.html"><code>SpanBatch</code></a>.
+From there, the respective type is decoded, and <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.RawSpanBatch.html#method.derive">derived</a>
+in the case of the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SpanBatch.html"><code>SpanBatch</code></a>.</p>
+<p>The <code>Batch</code> encoding format for the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html"><code>SingleBatch</code></a> is
+broken down <a href="https://specs.optimism.io/protocol/derivation.html#batch-format">in the specs</a>.</p>
+<h2 id="the-batch-type"><a class="header" href="#the-batch-type">The <code>Batch</code> Type</a></h2>
+<p>The <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>Batch</code></a> type itself only provides two useful methods.</p>
+<ul>
+<li><a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html#method.timestamp"><code>timestamp</code></a> returns the timestamp of the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>Batch</code></a></li>
+<li><a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html#method.decode"><code>deocde</code></a>, constructs a new <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>Batch</code></a> from the provided
+raw, decompressed batch data and rollup config.</li>
+</ul>
+<p>Within each <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>Batch</code></a> variant, the individual types contain
+more functionality.</p>
+<!-- Links -->
 <div style="break-before: page; page-break-before: always;"></div><h1 id="examples-1"><a class="header" href="#examples-1">Examples</a></h1>
 <p>Examples for working with <code>op-alloy-*</code> crates.</p>
 <ul>
@@ -566,10 +760,10 @@ dynamically provides all rollup configs from the <a href="https://github.com/eth
 for their respective chain ids.</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="contributing-1"><a class="header" href="#contributing-1">Contributing</a></h1>
-<p>Thank you for wanting to contribute! Before contributing to this repository, please read through this document and
-discuss the change you wish to make via issue.</p>
+<p>Thank you for wanting to contribute! Before contributing to this repository,
+please read through this document and discuss the change you wish to make via issue.</p>
 <h2 id="dependencies"><a class="header" href="#dependencies">Dependencies</a></h2>
-<p>Before working with this repository locally, you'll need to install several dependencies:</p>
+<p>Before working with this repository locally, you'll need to install a few dependencies:</p>
 <ul>
 <li><a href="https://github.com/casey/just">Just</a> for our command-runner scripts.</li>
 <li><a href="https://rustup.rs/">The Rust toolchain</a>.</li>
@@ -585,15 +779,35 @@ discuss the change you wish to make via issue.</p>
 </ul>
 <h2 id="pull-request-process"><a class="header" href="#pull-request-process">Pull Request Process</a></h2>
 <ol>
-<li>Before anything, <a href="https://github.com/alloy-rs/op-alloy/issues/new">create an issue</a> to discuss the change you're
-wanting to make, if it is significant or changes functionality. Feel free to skip this step for trivial changes.</li>
-<li>Once your change is implemented, ensure that all checks are passing before creating a PR. The full CI pipeline can
-be run locally via the <code>Justfile</code>s in the repository.</li>
-<li>Make sure to update any documentation that has gone stale as a result of the change, in the <code>README</code> files, the [book][book],
-and in rustdoc comments.</li>
-<li>Once you have sign-off from a maintainer, you may merge your pull request yourself if you have permissions to do so.
-If not, the maintainer who approves your pull request will add it to the merge queue.</li>
+<li><a href="https://github.com/alloy-rs/op-alloy/issues/new">Create an issue</a> for any significant changes. Trivial changes may skip this step.</li>
+<li>Once the change is implemented, ensure that all checks are passing before creating a PR.
+The full CI pipeline can be run locally via the <code>Justfile</code>s in the repository.</li>
+<li>Be sure to update any documentation that has gone stale as a result of the change,
+in the <code>README</code> files, the <a href="https://github.com/alloy-rs/op-alloy/tree/main/book">book</a>, and in rustdoc comments.</li>
+<li>Once your PR is approved by a maintainer, you may merge your pull request yourself
+if you have permissions to do so. Otherwise, the maintainer who approves your pull
+request will add it to the merge queue.</li>
 </ol>
+<h2 id="working-with-op-stack-specs"><a class="header" href="#working-with-op-stack-specs">Working with OP Stack Specs</a></h2>
+<p>The <a href="https://docs.optimism.io/stack/getting-started">OP Stack</a> is a set of standardized open-source specifications
+that powers Optimism, developed by the Optimism Collective.</p>
+<p><code>op-alloy</code> is a rust implementation of core OP Stack types, transports,
+middleware and more. Not all types and implementation details in <code>op-alloy</code>
+are present in the OP Stack <a href="https://specs.optimism.io/">specs</a>, and on the flipside, not all
+specifications are implemented by <code>op-alloy</code>. That said, <code>op-alloy</code> is
+entirely <em>based off</em> of the <a href="https://specs.optimism.io/">specs</a>, and new functionality or
+core modifications to <code>op-alloy</code> must be reflected in the <a href="https://specs.optimism.io/">specs</a>.</p>
+<p>As such, the first step for introducing changes to the OP Stack is to
+<a href="https://github.com/ethereum-optimism/specs/pulls">open a pr</a> in the <a href="https://github.com/ethereum-optimism/specs">specs repository</a>. These
+changes should target a <a href="https://specs.optimism.io/protocol/isthmus/overview.html">protocol upgrade</a> so that all
+implementations of the OP Stack are able to synchronize and implement
+the changes.</p>
+<p>Once changes are merged in the OP Stack <a href="https://specs.optimism.io/">specs</a> repo, they
+may be added to <code>op-alloy</code> in a <strong>backwards-compatible</strong> way such
+that pre-upgrade functionality persists. The primary way to enable
+backwards-compatibility is by using timestamp-based activation for
+protocol upgrades.</p>
+<!-- Links -->
 <div style="break-before: page; page-break-before: always;"></div><h1 id="licensing-1"><a class="header" href="#licensing-1">Licensing</a></h1>
 <p>op-alloy is dually licensed under the <a href="https://github.com/alloy-rs/op-alloy/blob/main/LICENSE-APACHE">Apache 2.0</a> and the <a href="https://github.com/alloy-rs/op-alloy/blob/main/LICENSE-MIT">MIT</a> license.</p>
 <p>The <a href="https://github.com/alloy-rs/op-alloy/blob/main/SNAPPY-LICENSE">SNAPPY license</a> is added for the use of <a href="https://github.com/BurntSushi/rust-snappy">snap</a> in <code>op-alloy-rpc-types-engine</code>.</p>

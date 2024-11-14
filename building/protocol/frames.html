@@ -4,7 +4,7 @@
 <head>
     <!-- Book generated using mdBook -->
     <meta charset="UTF-8">
-    <title>Genesis - The op-alloy Book</title>
+    <title>Frames - The op-alloy Book</title>
 
 
     <!-- Custom HTML head -->
@@ -91,7 +91,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../../intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../../starting.html"><strong aria-hidden="true">2.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="../../building/index.html"><strong aria-hidden="true">3.</strong> Building</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../building/genesis/index.html" class="active"><strong aria-hidden="true">3.1.</strong> Genesis</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../building/genesis/rollup-config.html"><strong aria-hidden="true">3.1.1.</strong> Rollup Config</a></li><li class="chapter-item expanded "><a href="../../building/genesis/system-config.html"><strong aria-hidden="true">3.1.2.</strong> System Config</a></li></ol></li><li class="chapter-item expanded "><a href="../../building/consensus.html"><strong aria-hidden="true">3.2.</strong> Consensus</a></li><li class="chapter-item expanded "><a href="../../building/engine.html"><strong aria-hidden="true">3.3.</strong> Engine RPC Types</a></li><li class="chapter-item expanded "><a href="../../building/protocol/index.html"><strong aria-hidden="true">3.4.</strong> Protocol</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../building/protocol/block-info.html"><strong aria-hidden="true">3.4.1.</strong> BlockInfo and L2BlockInfo Types</a></li><li class="chapter-item expanded "><a href="../../building/protocol/frames.html"><strong aria-hidden="true">3.4.2.</strong> Frames</a></li><li class="chapter-item expanded "><a href="../../building/protocol/channels.html"><strong aria-hidden="true">3.4.3.</strong> Channels</a></li><li class="chapter-item expanded "><a href="../../building/protocol/batches.html"><strong aria-hidden="true">3.4.4.</strong> Batches</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../../examples/index.html"><strong aria-hidden="true">4.</strong> Examples</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../examples/load-a-rollup-config.html"><strong aria-hidden="true">4.1.</strong> Load a Rollup Config</a></li></ol></li><li class="chapter-item expanded "><a href="../../CONTRIBUTING.html"><strong aria-hidden="true">5.</strong> Contributing</a></li><li class="chapter-item expanded "><a href="../../LICENSE.html"><strong aria-hidden="true">6.</strong> Licensing</a></li><li class="chapter-item expanded "><a href="../../glossary.html"><strong aria-hidden="true">7.</strong> Glossary</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../../intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../../starting.html"><strong aria-hidden="true">2.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="../../building/index.html"><strong aria-hidden="true">3.</strong> Building</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../building/genesis/index.html"><strong aria-hidden="true">3.1.</strong> Genesis</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../building/genesis/rollup-config.html"><strong aria-hidden="true">3.1.1.</strong> Rollup Config</a></li><li class="chapter-item expanded "><a href="../../building/genesis/system-config.html"><strong aria-hidden="true">3.1.2.</strong> System Config</a></li></ol></li><li class="chapter-item expanded "><a href="../../building/consensus.html"><strong aria-hidden="true">3.2.</strong> Consensus</a></li><li class="chapter-item expanded "><a href="../../building/engine.html"><strong aria-hidden="true">3.3.</strong> Engine RPC Types</a></li><li class="chapter-item expanded "><a href="../../building/protocol/index.html"><strong aria-hidden="true">3.4.</strong> Protocol</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../building/protocol/block-info.html"><strong aria-hidden="true">3.4.1.</strong> BlockInfo and L2BlockInfo Types</a></li><li class="chapter-item expanded "><a href="../../building/protocol/frames.html" class="active"><strong aria-hidden="true">3.4.2.</strong> Frames</a></li><li class="chapter-item expanded "><a href="../../building/protocol/channels.html"><strong aria-hidden="true">3.4.3.</strong> Channels</a></li><li class="chapter-item expanded "><a href="../../building/protocol/batches.html"><strong aria-hidden="true">3.4.4.</strong> Batches</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../../examples/index.html"><strong aria-hidden="true">4.</strong> Examples</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../examples/load-a-rollup-config.html"><strong aria-hidden="true">4.1.</strong> Load a Rollup Config</a></li></ol></li><li class="chapter-item expanded "><a href="../../CONTRIBUTING.html"><strong aria-hidden="true">5.</strong> Contributing</a></li><li class="chapter-item expanded "><a href="../../LICENSE.html"><strong aria-hidden="true">6.</strong> Licensing</a></li><li class="chapter-item expanded "><a href="../../glossary.html"><strong aria-hidden="true">7.</strong> Glossary</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -160,7 +160,7 @@
                         <a href="https://github.com/alloy-rs/op-alloy" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
-                        <a href="https://github.com/alloy-rs/op-alloy/edit/main/book/src/building/genesis/README.md" title="Suggest an edit" aria-label="Suggest an edit">
+                        <a href="https://github.com/alloy-rs/op-alloy/edit/main/book/src/building/protocol/frames.md" title="Suggest an edit" aria-label="Suggest an edit">
                             <i id="git-edit-button" class="fa fa-edit"></i>
                         </a>
 
@@ -190,35 +190,66 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="genesis"><a class="header" href="#genesis">Genesis</a></h1>
-<p><a href="https://crates.io/crates/op-alloy-genesis"><img src="https://img.shields.io/crates/v/op-alloy-genesis.svg" alt="op-alloy-genesis crate"></a></p>
-<p>The genesis crate contains types related to chain genesis.</p>
-<p>This section contains in-depth sections on building with <a href="https://crates.io/crates/op-alloy-genesis"><code>op-alloy-genesis</code></a> crate types.</p>
+                        <h1 id="frames"><a class="header" href="#frames">Frames</a></h1>
+<p><a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>s are the lowest level data format in the OP Stack protocol.</p>
+<h2 id="where-frames-fit-in-the-op-stack"><a class="header" href="#where-frames-fit-in-the-op-stack">Where Frames fit in the OP Stack</a></h2>
+<p>Transactions posted to the data availability layer of the rollup
+contain one or multiple <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html">Frame</a>s. Frames are chunks of raw data that
+belong to a given <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html">Channel</a>, the next, higher up data format in the
+OP Stack protocol. Importantly, a given transaction can contain
+a variety of frames from <em>different</em> channels, allowing maximum flexibility
+when breaking up channels into batcher transactions.</p>
+<h2 id="contents-of-a-frame"><a class="header" href="#contents-of-a-frame">Contents of a Frame</a></h2>
+<p>A <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html">Frame</a> is comprised of the following items.</p>
 <ul>
-<li><a href="./rollup-config.html">The Rollup Config</a></li>
-<li><a href="./system-config.html">The System Config</a></li>
+<li>A <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/type.ChannelId.html"><code>ChannelId</code></a> which is a 16 byte long identifier for the channel that
+the given frame belongs to.</li>
+<li>A <code>number</code> that identifies the index of the frame within the channel. Frames
+are 0-indexed and are bound to <code>u16</code> size limit.</li>
+<li><code>data</code> contains the raw data within the frame.</li>
+<li><code>is_last</code> marks if the frame is the last within the channel.</li>
 </ul>
+<h2 id="frame-encoding"><a class="header" href="#frame-encoding">Frame Encoding</a></h2>
+<p>When frames are posted through a batcher transaction, they are encoded as a
+contiguous list with a single byte prefix denoting the derivation version.
+The encoding can be represented as the following concatenated bytes.</p>
+<pre><code>encoded = DERIVATION_VERSION_0 ++ encoded_frame_0 ++ encoded_frame_1 ++ ..
+</code></pre>
+<p>Where <code>DERIVATION_VERSION_0</code> is a single byte (<code>0x00</code>) indicating the derivation
+version including how the frames are encoded. Currently, the only supported
+derivation version is <code>0</code>.</p>
+<p><code>encoded_frame_0</code>, <code>encoded_frame_1</code>, and so on, are all <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>s encoded
+as raw bytes. A single encoded <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a> can be represented by the following
+concatenation of it's fields.</p>
+<pre><code>encoded_frame = channel_id ++ frame_number ++ frame_data_length ++ frame_data ++ is_last
+</code></pre>
+<p>Where <code>++</code> represents concatenation. The frame's fields map to it's encoding.</p>
+<ul>
+<li><code>channel_id</code> is the 16 byte long <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#structfield.id"><code>Frame::id</code></a>.</li>
+<li><code>frame_number</code> is the 2 byte long (or <code>u16</code>) <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#structfield.number"><code>Frame::number</code></a>.</li>
+<li><code>frame_data_length</code> and <code>frame_data</code> provide the necessary details to decode
+the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#structfield.data"><code>Frame::data</code></a>, where <code>frame_data_length</code> is 4 bytes long (or <code>u32</code>).</li>
+<li><code>is_last</code> is a single byte <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#structfield.is_last"><code>Frame::is_last</code></a>.</li>
+</ul>
+<h2 id="op-alloys-frame-type"><a class="header" href="#op-alloys-frame-type">op-alloy's <code>Frame</code> Type</a></h2>
+<p><a href="https://crates.io/crate/op-alloy-protocol"><code>op-alloy-protocol</code></a> provides the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a> type with a few useful
+methods. <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>s can be encoded and decoded using the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#method.encode"><code>Frame::encode</code></a>
+and <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#method.decode"><code>Frame::decode</code></a> methods. Given the raw batcher transaction data or blob data
+containing the concatenated derivation version and contiguous list of encoded frames,
+the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#method.parse_frame"><code>Frame::parse_frame</code></a> and <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#method.parse_frames"><code>Frame::parse_frames</code></a> methods
+provide ways to decode single and multiple frames, respectively.</p>
 <!-- Links -->
-<!-- op-alloy -->
-<!-- op-alloy-genesis -->
-<!-- op-alloy-consensus -->
-<!-- Hardforks -->
-<!-- OP Stack Specs -->
-<!-- External -->
-<!-- Alloy -->
-<!-- Kona links -->
-<!-- People -->
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                        <a rel="prev" href="../../building/index.html" class="mobile-nav-chapters previous"
+                        <a rel="prev" href="../../building/protocol/block-info.html" class="mobile-nav-chapters previous"
                             title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                             <i class="fa fa-angle-left"></i>
                         </a>
 
-                        <a rel="next prefetch" href="../../building/genesis/rollup-config.html" class="mobile-nav-chapters next"
+                        <a rel="next prefetch" href="../../building/protocol/channels.html" class="mobile-nav-chapters next"
                             title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                             <i class="fa fa-angle-right"></i>
                         </a>
@@ -229,12 +260,12 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                <a rel="prev" href="../../building/index.html" class="nav-chapters previous" title="Previous chapter"
+                <a rel="prev" href="../../building/protocol/block-info.html" class="nav-chapters previous" title="Previous chapter"
                     aria-label="Previous chapter" aria-keyshortcuts="Left">
                     <i class="fa fa-angle-left"></i>
                 </a>
 
-                <a rel="next prefetch" href="../../building/genesis/rollup-config.html" class="nav-chapters next" title="Next chapter"
+                <a rel="next prefetch" href="../../building/protocol/channels.html" class="nav-chapters next" title="Next chapter"
                     aria-label="Next chapter" aria-keyshortcuts="Right">
                     <i class="fa fa-angle-right"></i>
                 </a>
