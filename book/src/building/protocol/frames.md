@@ -3,7 +3,7 @@
 [`Frame`][frame]s are the lowest level data format in the OP Stack protocol.
 
 
-## Where Frames Fit in the OP Stack
+## Where Frames fit in the OP Stack
 
 Transactions posted to the data availability layer of the rollup
 contain one or multiple [Frame][frame]s. Frames are chunks of raw data that
