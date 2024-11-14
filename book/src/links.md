@@ -3,6 +3,7 @@
 [check-no-std]: https://github.com/alloy-rs/op-alloy/blob/main/scripts/check_no_std.sh
 [contributing]: https://alloy-rs.github.io/op-alloy
 [op-alloy-crate]: https://crates.io/crates/op-alloy
+[op-alloy-ff]: https://docs.rs/crate/op-alloy/latest/features
 
 [op-alloy-consensus]: https://crates.io/crates/op-alloy-consensus
 [op-alloy-genesis]: https://crates.io/crates/op-alloy-genesis
