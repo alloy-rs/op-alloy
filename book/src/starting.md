@@ -84,4 +84,4 @@ To add `no_std` support to a crate, ensure the [check_no_std][check-no-std]
 script is updated to include this crate once `no_std` compatible.
 
 
-{{#include ../links.md}}
+{{#include ./links.md}}
