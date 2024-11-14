@@ -38,7 +38,16 @@ type.
 
 ## Sections
 
+#### Core Derviation Types (discussed above)
+
+- [Frames](./frames.md)
+- [Channels](./channels.md)
+- [Batches](./batches.md)
+
+#### Other Critical Protocol Types
+
 - [BlockInfo and L2BlockInfo Types](./block-info.md)
+- [L1BlockInfo Types](./l1-block-info.md)
 
 
 <!-- Links -->
