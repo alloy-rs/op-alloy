@@ -1,7 +1,7 @@
 # Summary
 
 - [Introduction](./intro.md)
-- [Getting Started](./starting/installation.md)
+- [Getting Started](./starting.md)
 - [Building](./building/README.md)
   - [Genesis](./building/genesis/README.md)
     - [Rollup Config](./building/genesis/rollup-config.md)
@@ -10,6 +10,9 @@
   - [Engine RPC Types](./building/engine.md)
   - [Protocol](./building/protocol/README.md)
     - [BlockInfo and L2BlockInfo Types](./building/protocol/block-info.md)
+    - [Frames](./building/protocol/frames.md)
+    - [Channels](./building/protocol/channels.md)
+    - [Batches](./building/protocol/batches.md)
 - [Examples](./examples/README.md)
   - [Load a Rollup Config](./examples/load-a-rollup-config.md)
 - [Contributing](./CONTRIBUTING.md)
