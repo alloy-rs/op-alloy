@@ -10,7 +10,7 @@ command = "mdbook-mermaid"
 
 [preprocessor.template]
 
-[preprocessor.callouts]
+[preprocessor.alerts]
 
 [output.html]
 default-theme = "ferra"

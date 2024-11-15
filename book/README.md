@@ -6,7 +6,7 @@ This repository contains the source code for the op-alloy book, which is availab
 
 To build the book locally, a few dependencies are required:
 ```sh
-cargo install mdbook mdbook-mermaid mdbook-template mdbook-callouts
+cargo install mdbook mdbook-mermaid mdbook-template mdbook-alerts
 ```
 
 Then, to run the book locally during development, run:

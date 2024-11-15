@@ -74,7 +74,6 @@ table tbody tr:nth-child(2n) {
     --searchresults-header-fg: #fce2d4;
     --searchresults-border-color: #feceb454;
     --search-mark-bg: #f6b6c9ba;
-
 }
 
 .ferra .content .header {
@@ -103,6 +102,13 @@ table tbody tr:nth-child(2n) {
 :where(.ferra) .hljs-template-variable,
 :where(.ferra) .hljs-variable {
     color: #fecdb2;
+}
+
+:where(.ferra) .mdbook-callouts-info {
+    background-color: #f0f0f0;
+    border-left: 4px solid #3498db;
+    padding: 1em;
+    margin: 1em 0;
 }
 
 :where(.ferra) .hljs-built_in,

@@ -1,6 +1,6 @@
 # Transform Frames into a Batch
 
-> [!INFO]
+> [!NOTE]
 >
 > This example performs the reverse transformation as the [batch-to-frames][batch-to-frames] example.
 
