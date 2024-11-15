@@ -15,6 +15,8 @@
     - [Batches](./building/protocol/batches.md)
 - [Examples](./examples/README.md)
   - [Load a Rollup Config](./examples/load-a-rollup-config.md)
+  - [Transform Frames to a Batch](./examples/frames-to-batch.md)
+  - [Transform a Batch into Frames](./examples/batch-to-frames.md)
 - [Contributing](./CONTRIBUTING.md)
 - [Licensing](./LICENSE.md)
 - [Glossary](./glossary.md)

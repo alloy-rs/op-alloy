@@ -10,6 +10,8 @@ command = "mdbook-mermaid"
 
 [preprocessor.template]
 
+[preprocessor.alerts]
+
 [output.html]
 default-theme = "ferra"
 preferred-dark-theme = "ferra"

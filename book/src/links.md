@@ -23,6 +23,26 @@
 [update]: https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html#method.update_with_receipts
 [system-config]: https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html
 
+<!-- op-alloy-protocol -->
+
+[encode-batch]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html#method.encode
+[encode-frame]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#method.encode
+[add-frame]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html#method.add_frame
+[decode-batch]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html#method.decode
+[single-batch]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html
+[bytes]: https://docs.rs/alloy-primitives/latest/alloy_primitives/struct.Bytes.html
+[channel-id]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/type.ChannelId.html
+[channel]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html
+[channel-out]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.ChannelOut.html
+[ready-bytes]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.ChannelOut.html#method.ready_bytes
+[output-frame]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.ChannelOut.html#method.output_frame
+[decode-frame]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#method.decode
+[hex]: https://docs.rs/hex-literal/latest/hex_literal/macro.hex.html
+[fjord]: https://specs.optimism.io/protocol/fjord/overview.html
+[frame-data]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html#method.frame_data
+[is-ready]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html#method.is_ready
+[frame]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html
+[batch]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html
 
 <!-- op-alloy-consensus -->
 
