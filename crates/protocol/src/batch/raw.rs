@@ -1,6 +1,7 @@
 //! Module containing the [RawSpanBatch] struct.
 
 use alloc::{vec, vec::Vec};
+use alloy_primitives::bytes;
 
 use crate::{
     BatchType, SpanBatch, SpanBatchElement, SpanBatchError, SpanBatchPayload, SpanBatchPrefix,
@@ -52,7 +53,7 @@ impl RawSpanBatch {
     }
 
     /// Encodes the [RawSpanBatch] into a writer.
-    pub fn encode(&self, w: &mut Vec<u8>) -> Result<(), SpanBatchError> {
+    pub fn encode(&self, w: &mut dyn bytes::BufMut) -> Result<(), SpanBatchError> {
         self.prefix.encode_prefix(w);
         self.payload.encode_payload(w)
     }

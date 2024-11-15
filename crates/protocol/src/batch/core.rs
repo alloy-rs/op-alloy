@@ -3,7 +3,7 @@
 use crate::{
     BatchDecodingError, BatchEncodingError, BatchType, RawSpanBatch, SingleBatch, SpanBatch,
 };
-use alloc::vec::Vec;
+use alloy_primitives::bytes;
 use alloy_rlp::{Buf, Decodable, Encodable};
 use op_alloy_genesis::RollupConfig;
 
@@ -53,14 +53,14 @@ impl Batch {
     }
 
     /// Attempts to encode the batch to a writer.
-    pub fn encode(&self, out: &mut Vec<u8>) -> Result<(), BatchEncodingError> {
+    pub fn encode(&self, out: &mut dyn bytes::BufMut) -> Result<(), BatchEncodingError> {
         match self {
             Self::Single(sb) => {
-                out.push(BatchType::Single as u8);
+                out.put_u8(BatchType::Single as u8);
                 sb.encode(out);
             }
             Self::Span(sb) => {
-                out.push(BatchType::Span as u8);
+                out.put_u8(BatchType::Span as u8);
                 let raw_span_batch =
                     RawSpanBatch::try_from(sb).map_err(BatchEncodingError::SpanBatchError)?;
                 raw_span_batch.encode(out).map_err(BatchEncodingError::SpanBatchError)?;
