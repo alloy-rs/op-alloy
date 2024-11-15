@@ -26,7 +26,6 @@ alloy-eips.workspace = true
 alloy-consensus.workspace = true
 
 # Misc
-rand.workspace = true
 tracing.workspace = true
 derive_more.workspace = true
 async-trait.workspace = true

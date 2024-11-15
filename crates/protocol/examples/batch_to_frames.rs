@@ -19,7 +19,7 @@ use alloy_rlp::{Decodable, Encodable};
 use brotli::enc::{BrotliCompress, BrotliEncoderParams};
 use op_alloy_consensus::OpTxEnvelope;
 use op_alloy_genesis::RollupConfig;
-use op_alloy_protocol::{random_channel_id, ChannelOut, SingleBatch};
+use op_alloy_protocol::{ChannelId, ChannelOut, SingleBatch, CHANNEL_ID_LENGTH};
 
 fn main() {
     // Use the example transaction
@@ -64,6 +64,13 @@ fn main() {
     }
 
     assert!(channel_out.closed);
+}
+
+/// Creates a random [ChannelId].
+pub fn random_channel_id() -> ChannelId {
+    let mut id = [0; CHANNEL_ID_LENGTH];
+    id.iter_mut().for_each(|b| *b = rand::random());
+    id
 }
 
 /// Compresses the given bytes data using the Brotli compressor implemented

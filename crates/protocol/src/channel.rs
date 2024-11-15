@@ -16,13 +16,6 @@ pub const CHANNEL_ID_LENGTH: usize = 16;
 /// [ChannelId] is an opaque identifier for a channel.
 pub type ChannelId = [u8; CHANNEL_ID_LENGTH];
 
-/// Creates a random [ChannelId].
-pub fn random_channel_id() -> ChannelId {
-    let mut id = [0; CHANNEL_ID_LENGTH];
-    id.iter_mut().for_each(|b| *b = rand::random());
-    id
-}
-
 /// An error returned by the [ChannelOut] when adding single batches.
 #[derive(Debug, Clone, Copy, derive_more::Display, PartialEq, Eq, Hash)]
 pub enum ChannelOutError {
