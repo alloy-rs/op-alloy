@@ -5,11 +5,120 @@ use alloy_primitives::{map::HashMap, Bytes};
 
 use crate::{block::BlockInfo, frame::Frame};
 
+/// The frame overhead.
+const FRAME_V0_OVERHEAD: usize = 23;
+
 /// [CHANNEL_ID_LENGTH] is the length of the channel ID.
 pub const CHANNEL_ID_LENGTH: usize = 16;
 
 /// [ChannelId] is an opaque identifier for a channel.
 pub type ChannelId = [u8; CHANNEL_ID_LENGTH];
+
+impl ChannelId {
+    /// Creates a random [ChannelId].
+    pub fn random() -> Self {
+        let mut id = [0; CHANNEL_ID_LENGTH];
+        id.iter_mut().for_each(|b| *b = rand::random());
+        id
+    }
+}
+
+/// An error returned by the [ChannelOut] when adding single batches.
+#[derive(Debug, Clone, Copy, derive_more::Display, PartialEq, Eq, Hash)]
+pub enum ChannelOutError {
+    /// The channel is closed.
+    ChannelClosed,
+    /// The max frame size is too small.
+    MaxFrameSizeTooSmall,
+}
+
+impl core::error::Error for ChannelOutError {}
+
+/// [ChannelOut] constructs a channel from compressed, encoded batch data.
+#[derive(Debug, Clone, Default)]
+pub struct ChannelOut<'a> {
+    /// The unique identifier for the channel.
+    pub id: ChannelId,
+    /// A reference to the [RollupConfig] used to
+    /// check the max RLP bytes per channel when
+    /// encoding and accepting the
+    pub config: &'a RollupConfig,
+    /// The rlp length of the channel.
+    pub rlp_length: u64,
+    /// Whether the channel is closed.
+    pub closed: bool,
+    /// The frame number.
+    pub frame_number: u16,
+    /// Compressed batch data.
+    pub compressed: Option<Bytes>,
+}
+
+impl<'a> ChannelOut<'a> {
+    /// Creates a new [ChannelOut] with the given [ChannelId].
+    pub fn new(id: ChannelId, config: &'a RollupConfig) -> Self {
+        Self { id, config, rlp_length: 0, frame_number: 0, closed: false, compressed: None }
+    }
+
+    /// Accepts the given [SingleBatch] data into the [ChannelOut], compressing it
+    /// into frames.
+    pub fn add_single_batch(&mut self, batch: SingleBatch) -> Result<(), ChanneOutError> {
+        if self.closed {
+            return Err(ChannelOutError::ChannelClosed);
+        }
+
+        // Encode the batch.
+        let mut buf = vec![];
+        batch.encode_2718(&mut buf);
+
+        // Validate that the RLP length is within the channel's limits.
+        let max_rlp_bytes_per_channel = self.config.max_rlp_bytes_per_channel(batch.timestamp);
+        if self.rlp_length + buf.len() as u64 > max_rlp_bytes_per_channel {
+            return Err(ChannelOutError::ChannelClosed);
+        }
+
+        // Compress the batch.
+        // TODO: change compression algorithm based on rollup config.
+
+        todo!()
+    }
+
+    /// Returns the number of bytes ready to be output to a frame.
+    pub fn ready_bytes(&self) -> usize {
+        self.compressed.as_ref().map_or(0, |c| c.len())
+    }
+
+    /// Accepts the raw compressed batch data into the [ChannelOut].
+    pub fn add_raw_compressed_batch(&mut self, compressed: Bytes) {
+        self.compressed = Some(compressed);
+    }
+
+    /// Outputs a [Frame] from the [ChannelOut].
+    pub fn output_frame(&mut self, max_size: usize) -> Result<Frame, ChannelOutError> {
+        if max_size < FRAME_V0_OVERHEAD {
+            return Err(ChannelOutError::MaxFrameSizeTooSmall);
+        }
+
+        // Construct an empty frame.
+        let frame =
+            Frame { id: self.id, number: self.frame_number, is_last: self.closed, data: vec![] };
+
+        let mut max_size = max_size - FRAME_V0_OVERHEAD;
+        if max_size > self.ready_bytes() {
+            max_size = self.ready_bytes();
+        }
+
+        // Read `max_size` bytes from the compressed data.
+        let data = self.compressed.as_ref().unwrap();
+        let data = data.as_ref();
+        let data = &data[..max_size];
+        frame.data.extend_from_slice(data);
+
+        // Update the compressed data.
+        self.compressed = Some(Bytes::from(&data[max_size..]));
+        self.frame_number += 1;
+        Ok(frame)
+    }
+}
 
 /// [MAX_RLP_BYTES_PER_CHANNEL] is the maximum amount of bytes that will be read from
 /// a channel. This limit is set when decoding the RLP.
