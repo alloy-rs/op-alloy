@@ -272,17 +272,17 @@
 </p>
 <p>Steps and handling of types with respect to chain tip, ordering of frames, re-orgs, and
 more are not covered by this example. This example solely demonstrates the most trivial
-way to transform an individual <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>SingleBatch</code></a> into <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>s.</p>
+way to transform an individual <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>Batch</code></a> into <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>s.</p>
 </div>
-<p>This example walks through transforming a <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html"><code>SingleBatch</code></a> into <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>s.</p>
+<p>This example walks through transforming a <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>Batch</code></a> into <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>s.</p>
 <p>Effectively, this example demonstrates the <em>encoding</em> process from an L2 batch into the
 serialized bytes that are posted to the data availability layer.</p>
 <h2 id="walkthrough"><a class="header" href="#walkthrough">Walkthrough</a></h2>
 <p>The high level transformation is the following.</p>
-<pre><code>SingleBatch -&gt; decompressed batch data -&gt; ChannelOut -&gt; frames[] -&gt; bytes[]
+<pre><code>Batch -&gt; decompressed batch data -&gt; ChannelOut -&gt; frames[] -&gt; bytes[]
 </code></pre>
-<p>Given the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html"><code>SingleBatch</code></a>, the first step to encode the batch
-using the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html#method.encode"><code>SingleBatch::encode()</code></a> method. The output bytes
+<p>Given the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>Batch</code></a>, the first step to encode the batch
+using the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html#method.encode"><code>Batch::encode()</code></a> method. The output bytes
 need to then be compressed prior to adding them to the
 <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.ChannelOut.html"><code>ChannelOut</code></a>.</p>
 <div class="mdbook-alerts mdbook-alerts-note">
@@ -291,8 +291,8 @@ need to then be compressed prior to adding them to the
   note
 </p>
 <p>The <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.ChannelOut.html"><code>ChannelOut</code></a> type also provides a method for adding
-the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html"><code>SingleBatch</code></a> itself, handling encoding and
-compression, but this method is not available yet.</p>
+the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>Batch</code></a> itself, handling encoding and compression, but
+this method is not available yet.</p>
 </div>
 <p>Once compressed using the helper <code>compress_brotli</code> method, the compressed
 bytes can be added to a newly constructed <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.ChannelOut.html"><code>ChannelOut</code></a>.
@@ -333,11 +333,10 @@ methods are helper functions that can be ignored for the sake of the example.</p
 use alloy_consensus::{SignableTransaction, TxEip1559};
 use alloy_eips::eip2718::{Decodable2718, Encodable2718};
 use alloy_primitives::{hex, Address, BlockHash, Bytes, PrimitiveSignature, U256};
-use alloy_rlp::{Decodable, Encodable};
 use brotli::enc::{BrotliCompress, BrotliEncoderParams};
 use op_alloy_consensus::OpTxEnvelope;
 use op_alloy_genesis::RollupConfig;
-use op_alloy_protocol::{ChannelId, ChannelOut, SingleBatch, CHANNEL_ID_LENGTH};
+use op_alloy_protocol::{Batch, ChannelId, ChannelOut, SingleBatch, CHANNEL_ID_LENGTH};
 
 fn main() {
     // Use the example transaction
@@ -350,23 +349,24 @@ fn main() {
     let timestamp = 1;
 
     let single_batch = SingleBatch { parent_hash, epoch_num, epoch_hash, timestamp, transactions };
+    let batch = Batch::Single(single_batch);
 
     // Encode the batch.
     let mut encoded = Vec::new();
-    single_batch.encode(&amp;mut encoded);
-    let decoded = SingleBatch::decode(&amp;mut encoded.as_slice()).unwrap();
-    assert_eq!(single_batch, decoded);
+    batch.encode(&amp;mut encoded).unwrap();
+    let config = RollupConfig::default();
+    let decoded = Batch::decode(&amp;mut encoded.as_slice(), &amp;config).unwrap();
+    assert_eq!(batch, decoded);
     println!("Encoded Batch: {}", hex::encode(&amp;encoded));
 
     // Compress the encoded batch.
     let compressed = compress_brotli(&amp;encoded);
-    let expected = hex!("1b1201f82f0f6c3734f4821cd090ef3979d71a98e7e483b1dccdd525024c0ef16f425c7b4976a7acc0c94a0514b72c096d4dcc52f0b22dae193c70c86d0790a304a08152c8250031d011fe80c23600004009b67bf33d17f4b6831018ad78018613b3403bc2fc6da91e8fc8a29031b3417774a33bf1f30534ea695b09eb3bf26cb553530e9fa2120e755ec5bd3a2bc75b2ee300");
+    let expected = hex!("1b1301f82f0f6c3734f4821cd090ef3979d71a98e7e483b1dccdd525024c0ef16f425c7b4976a7acc0c94a0514b72c096d4dcc52f0b22dae193c70c86d0790a304a08152c8250031d091063ea0b00d00005082edde7ccf05bded2004462b5e80e1c42cd08e307f5baac723b22864cc6cd01ddde84efc7c018d7ada56c2fa8e3c5bedd494c3a7a884439d5771afcecaf196cb38");
     assert_eq!(compressed, expected);
     println!("Brotli-compressed batch: {}", hex::encode(&amp;compressed));
 
     // Create a new channel.
     let id = random_channel_id();
-    let config = RollupConfig::default();
     let mut channel_out = ChannelOut::new(id, &amp;config);
 
     // Add the compressed batch to the `ChannelOut`.
