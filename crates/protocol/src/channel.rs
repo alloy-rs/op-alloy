@@ -2,8 +2,10 @@
 
 use alloc::vec::Vec;
 use alloy_primitives::{map::HashMap, Bytes};
+use op_alloy_genesis::RollupConfig;
+use alloy_rlp::Encodable;
 
-use crate::{block::BlockInfo, frame::Frame};
+use crate::{block::BlockInfo, SingleBatch, frame::Frame};
 
 /// The frame overhead.
 const FRAME_V0_OVERHEAD: usize = 23;
@@ -14,14 +16,13 @@ pub const CHANNEL_ID_LENGTH: usize = 16;
 /// [ChannelId] is an opaque identifier for a channel.
 pub type ChannelId = [u8; CHANNEL_ID_LENGTH];
 
-impl ChannelId {
-    /// Creates a random [ChannelId].
-    pub fn random() -> Self {
-        let mut id = [0; CHANNEL_ID_LENGTH];
-        id.iter_mut().for_each(|b| *b = rand::random());
-        id
-    }
+/// Creates a random [ChannelId].
+pub fn random_channel_id() -> ChannelId {
+    let mut id = [0; CHANNEL_ID_LENGTH];
+    id.iter_mut().for_each(|b| *b = rand::random());
+    id
 }
+
 
 /// An error returned by the [ChannelOut] when adding single batches.
 #[derive(Debug, Clone, Copy, derive_more::Display, PartialEq, Eq, Hash)]
@@ -30,12 +31,14 @@ pub enum ChannelOutError {
     ChannelClosed,
     /// The max frame size is too small.
     MaxFrameSizeTooSmall,
+    /// Missing compressed batch data.
+    MissingData,
 }
 
 impl core::error::Error for ChannelOutError {}
 
 /// [ChannelOut] constructs a channel from compressed, encoded batch data.
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone)]
 pub struct ChannelOut<'a> {
     /// The unique identifier for the channel.
     pub id: ChannelId,
@@ -61,14 +64,14 @@ impl<'a> ChannelOut<'a> {
 
     /// Accepts the given [SingleBatch] data into the [ChannelOut], compressing it
     /// into frames.
-    pub fn add_single_batch(&mut self, batch: SingleBatch) -> Result<(), ChanneOutError> {
+    pub fn add_single_batch(&mut self, batch: SingleBatch) -> Result<(), ChannelOutError> {
         if self.closed {
             return Err(ChannelOutError::ChannelClosed);
         }
 
         // Encode the batch.
         let mut buf = vec![];
-        batch.encode_2718(&mut buf);
+        batch.encode(&mut buf);
 
         // Validate that the RLP length is within the channel's limits.
         let max_rlp_bytes_per_channel = self.config.max_rlp_bytes_per_channel(batch.timestamp);
@@ -77,9 +80,7 @@ impl<'a> ChannelOut<'a> {
         }
 
         // Compress the batch.
-        // TODO: change compression algorithm based on rollup config.
-
-        todo!()
+        todo!("compress the batch with a compression algorithm based on the rollup config")
     }
 
     /// Returns the number of bytes ready to be output to a frame.
@@ -92,6 +93,11 @@ impl<'a> ChannelOut<'a> {
         self.compressed = Some(compressed);
     }
 
+    /// Closes the channel if not already closed.
+    pub fn close(&mut self) {
+        self.closed = true;
+    }
+
     /// Outputs a [Frame] from the [ChannelOut].
     pub fn output_frame(&mut self, max_size: usize) -> Result<Frame, ChannelOutError> {
         if max_size < FRAME_V0_OVERHEAD {
@@ -99,7 +105,7 @@ impl<'a> ChannelOut<'a> {
         }
 
         // Construct an empty frame.
-        let frame =
+        let mut frame =
             Frame { id: self.id, number: self.frame_number, is_last: self.closed, data: vec![] };
 
         let mut max_size = max_size - FRAME_V0_OVERHEAD;
@@ -108,13 +114,17 @@ impl<'a> ChannelOut<'a> {
         }
 
         // Read `max_size` bytes from the compressed data.
-        let data = self.compressed.as_ref().unwrap();
-        let data = data.as_ref();
-        let data = &data[..max_size];
+        let data = if let Some(data) = &self.compressed {
+            &data[..max_size]
+        } else {
+            return Err(ChannelOutError::MissingData)
+        };
+        #[cfg(test)]
+        println!("Read data: {:?}", data);
         frame.data.extend_from_slice(data);
 
         // Update the compressed data.
-        self.compressed = Some(Bytes::from(&data[max_size..]));
+        self.compressed = self.compressed.as_mut().map(|b| b.split_off(max_size));
         self.frame_number += 1;
         Ok(frame)
     }
