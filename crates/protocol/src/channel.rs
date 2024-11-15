@@ -84,6 +84,7 @@ impl<'a> ChannelOut<'a> {
             self.compressed =
                 Some(miniz_oxide::deflate::compress_to_vec(&buf, BEST_COMPRESSION).into());
         }
+
         Ok(())
     }
 
