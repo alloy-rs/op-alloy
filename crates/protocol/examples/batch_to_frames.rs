@@ -15,11 +15,10 @@
 use alloy_consensus::{SignableTransaction, TxEip1559};
 use alloy_eips::eip2718::{Decodable2718, Encodable2718};
 use alloy_primitives::{hex, Address, BlockHash, Bytes, PrimitiveSignature, U256};
-use alloy_rlp::{Decodable, Encodable};
 use brotli::enc::{BrotliCompress, BrotliEncoderParams};
 use op_alloy_consensus::OpTxEnvelope;
 use op_alloy_genesis::RollupConfig;
-use op_alloy_protocol::{ChannelId, ChannelOut, Batch, SingleBatch, CHANNEL_ID_LENGTH};
+use op_alloy_protocol::{Batch, ChannelId, ChannelOut, SingleBatch, CHANNEL_ID_LENGTH};
 
 fn main() {
     // Use the example transaction

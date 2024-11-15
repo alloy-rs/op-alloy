@@ -5,7 +5,7 @@ use alloy_eips::eip2718::{Decodable2718, Encodable2718};
 use alloy_primitives::{hex, Address, BlockHash, Bytes, PrimitiveSignature, U256};
 use op_alloy_consensus::OpTxEnvelope;
 use op_alloy_genesis::RollupConfig;
-use op_alloy_protocol::{BlockInfo, Channel, Frame, Batch, SingleBatch};
+use op_alloy_protocol::{Batch, BlockInfo, Channel, Frame, SingleBatch};
 use std::io::Read;
 
 fn main() {
