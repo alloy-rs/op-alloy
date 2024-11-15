@@ -1,6 +1,7 @@
 //! Channel Types
 
 use alloc::vec::Vec;
+use alloc::vec;
 use alloy_primitives::{map::HashMap, Bytes};
 use op_alloy_genesis::RollupConfig;
 use alloy_rlp::Encodable;
@@ -119,8 +120,6 @@ impl<'a> ChannelOut<'a> {
         } else {
             return Err(ChannelOutError::MissingData)
         };
-        #[cfg(test)]
-        println!("Read data: {:?}", data);
         frame.data.extend_from_slice(data);
 
         // Update the compressed data.
@@ -335,8 +334,8 @@ mod test {
     }
 
     fn run_frame_validity_test(test_case: FrameValidityTestCase) {
-        #[cfg(feature = "std")]
-        println!("Running test: {}", test_case.name);
+        // #[cfg(feature = "std")]
+        // println!("Running test: {}", test_case.name);
 
         let id = [0xFF; 16];
         let block = BlockInfo::default();

@@ -1,5 +1,5 @@
 //! An example encoding and decoding a [SingleBatch].
-
+//!
 //! This example demonstrates EIP-2718 encoding a [SingleBatch]
 //! through a [ChannelOut] and into individual [Frame]s.
 //!

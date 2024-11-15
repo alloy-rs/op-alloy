@@ -29,10 +29,11 @@ fn main() {
 
     // Get the frame data from the channel.
     let frame_data = channel.frame_data().expect("some frame data");
+    println!("Frame data: {}", hex::encode(&frame_data));
 
     // Decompress the frame data with brotli.
     let decompressed = decompress_brotli(&frame_data);
-    // println!("Decompressed: {:?}", hex::encode(decompressed));
+    println!("Decompressed frame data: {}", hex::encode(&decompressed));
 
     // Decode the single batch from the decompressed data.
     let batch = SingleBatch::decode(&mut decompressed.as_slice()).expect("batch decodes");
