@@ -3,6 +3,7 @@
 use crate::{
     BatchDecodingError, BatchEncodingError, BatchType, RawSpanBatch, SingleBatch, SpanBatch,
 };
+use alloc::vec::Vec;
 use alloy_rlp::{Buf, Decodable, Encodable};
 use op_alloy_genesis::RollupConfig;
 
