@@ -8,9 +8,9 @@
 >
 > Steps and handling of types with respect to chain tip, ordering of frames, re-orgs, and
 > more are not covered by this example. This example solely demonstrates the most trivial
-> way to transform an individual [`SingleBatch`][batch] into [`Frame`][frame]s.
+> way to transform an individual [`Batch`][batch] into [`Frame`][frame]s.
 
-This example walks through transforming a [`SingleBatch`][single-batch] into [`Frame`][frame]s.
+This example walks through transforming a [`Batch`][batch] into [`Frame`][frame]s.
 
 Effectively, this example demonstrates the _encoding_ process from an L2 batch into the
 serialized bytes that are posted to the data availability layer.
@@ -20,19 +20,19 @@ serialized bytes that are posted to the data availability layer.
 The high level transformation is the following.
 
 ```
-SingleBatch -> decompressed batch data -> ChannelOut -> frames[] -> bytes[]
+Batch -> decompressed batch data -> ChannelOut -> frames[] -> bytes[]
 ```
 
-Given the [`SingleBatch`][single-batch], the first step to encode the batch
-using the [`SingleBatch::encode()`][encode-batch] method. The output bytes
+Given the [`Batch`][batch], the first step to encode the batch
+using the [`Batch::encode()`][encode-batch] method. The output bytes
 need to then be compressed prior to adding them to the
 [`ChannelOut`][channel-out].
 
 > [!NOTE]
 >
 > The [`ChannelOut`][channel-out] type also provides a method for adding
-> the [`SingleBatch`][single-batch] itself, handling encoding and
-> compression, but this method is not available yet.
+> the [`Batch`][batch] itself, handling encoding and compression, but
+> this method is not available yet.
 
 Once compressed using the helper `compress_brotli` method, the compressed
 bytes can be added to a newly constructed [`ChannelOut`][channel-out].
