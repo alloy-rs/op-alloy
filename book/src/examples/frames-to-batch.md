@@ -8,17 +8,16 @@
 >
 > Steps and handling of types with respect to chain tip, ordering of frames, re-orgs, and
 > more are not covered by this example. This example solely demonstrates the most trivial
-> way to transform individual [`Frame`][frame]s into a [`SingleBatch`][batch] type.
+> way to transform individual [`Frame`][frame]s into a [`Batch`][batch] type.
 
-This example walks through transforming [`Frame`][frame]s into the [`SingleBatch`][single-batch]
-types.
+This example walks through transforming [`Frame`][frame]s into the [`Batch`][batch] types.
 
 ## Walkthrough
 
 The high level transformation is the following.
 
 ```
-raw bytes[] -> frames[] -> channel -> decompressed channel data -> SingleBatch
+raw bytes[] -> frames[] -> channel -> decompressed channel data -> Batch
 ```
 
 Given the raw, batch-submitted frame data as bytes (read in with the [`hex!` macro][hex]),
@@ -38,8 +37,8 @@ the frame data can taken from the [`Channel`][channel] using
 and needs to be decompressed using the respective compression algorithm depending on
 which hardforks are activated (using the `RollupConfig`). For the sake of this example,
 `brotli` is used (which was activated in the [Fjord hardfork][fjord]). Decompressed
-brotli bytes can then be passed right into [`SingleBatch::decode`][decode-batch]
-to wind up with the example's desired [`SingleBatch`][single-batch].
+brotli bytes can then be passed right into [`Batch::decode`][decode-batch]
+to wind up with the example's desired [`Batch`][batch].
 
 
 > [!Note]
