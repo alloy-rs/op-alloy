@@ -30,7 +30,6 @@ brotli.workspace = true
 miniz_oxide.workspace = true
 
 # Misc
-brotli.workspace = true
 tracing.workspace = true
 derive_more.workspace = true
 async-trait.workspace = true
