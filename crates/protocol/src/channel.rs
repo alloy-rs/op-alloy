@@ -4,7 +4,7 @@ use alloc::{vec, vec::Vec};
 use alloy_primitives::{map::HashMap, Bytes};
 use op_alloy_genesis::RollupConfig;
 
-use crate::{block::BlockInfo, frame::Frame, Batch};
+use crate::{block::BlockInfo, frame::Frame};
 
 /// The frame overhead.
 const FRAME_V0_OVERHEAD: usize = 23;
@@ -26,7 +26,7 @@ pub enum ChannelOutError {
     MissingData,
     /// An error from brotli compression.
     BrotliCompression,
-    /// An error encoding the [Batch].
+    /// An error encoding the `Batch`.
     BatchEncoding,
 }
 
@@ -57,10 +57,10 @@ impl<'a> ChannelOut<'a> {
         Self { id, config, rlp_length: 0, frame_number: 0, closed: false, compressed: None }
     }
 
-    /// Accepts the given [Batch] data into the [ChannelOut], compressing it
+    /// Accepts the given [crate::Batch] data into the [ChannelOut], compressing it
     /// into frames.
     #[cfg(feature = "std")]
-    pub fn add_batch(&mut self, batch: Batch) -> Result<(), ChannelOutError> {
+    pub fn add_batch(&mut self, batch: crate::Batch) -> Result<(), ChannelOutError> {
         if self.closed {
             return Err(ChannelOutError::ChannelClosed);
         }

@@ -12,17 +12,12 @@
 //! Finally, once [Frame]s are built from the [ChannelOut], they are encoded and ready
 //! to be batch-submitted to the data availability layer.
 
-#[cfg(not(feature = "std"))]
-panic!("The `std` feature flag must be enabled for this example");
-
-use alloy_consensus::{SignableTransaction, TxEip1559};
-use alloy_eips::eip2718::{Decodable2718, Encodable2718};
-use alloy_primitives::{Address, BlockHash, Bytes, PrimitiveSignature, U256};
-use op_alloy_consensus::OpTxEnvelope;
-use op_alloy_genesis::RollupConfig;
-use op_alloy_protocol::{Batch, ChannelId, ChannelOut, SingleBatch};
-
+#[cfg(feature = "std")]
 fn main() {
+    use alloy_primitives::BlockHash;
+    use op_alloy_genesis::RollupConfig;
+    use op_alloy_protocol::{Batch, ChannelId, ChannelOut, SingleBatch};
+
     // Use the example transaction
     let transactions = example_transactions();
 
@@ -55,7 +50,13 @@ fn main() {
     println!("Successfully encoded Batch to frames");
 }
 
-fn example_transactions() -> Vec<Bytes> {
+#[cfg(feature = "std")]
+fn example_transactions() -> Vec<alloy_primitives::Bytes> {
+    use alloy_consensus::{SignableTransaction, TxEip1559};
+    use alloy_eips::eip2718::{Decodable2718, Encodable2718};
+    use alloy_primitives::{Address, PrimitiveSignature, U256};
+    use op_alloy_consensus::OpTxEnvelope;
+
     let mut transactions = Vec::new();
 
     // First Transaction in the batch.
@@ -101,4 +102,9 @@ fn example_transactions() -> Vec<Bytes> {
     assert!(matches!(decoded, OpTxEnvelope::Eip1559(_)));
 
     transactions
+}
+
+#[cfg(not(feature = "std"))]
+fn main() {
+    /* not implemented for no_std */
 }
