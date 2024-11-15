@@ -93,12 +93,6 @@ impl<'a> ChannelOut<'a> {
         self.compressed.as_ref().map_or(0, |c| c.len())
     }
 
-    /// Accepts the raw compressed batch data into the [ChannelOut].
-    #[deprecated]
-    pub fn add_raw_compressed_batch(&mut self, compressed: Bytes) {
-        self.compressed = Some(compressed);
-    }
-
     /// Closes the channel if not already closed.
     pub fn close(&mut self) {
         self.closed = true;
