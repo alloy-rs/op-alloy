@@ -1,12 +1,12 @@
 //! This example decodes raw [Frame]s and reads them into a [Channel] and into a [SingleBatch].
 
-use std::io::Read;
-use alloy_rlp::Decodable;
-use op_alloy_consensus::OpTxEnvelope;
 use alloy_consensus::{SignableTransaction, TxEip1559};
 use alloy_eips::eip2718::{Decodable2718, Encodable2718};
-use op_alloy_protocol::{Frame, Channel, SingleBatch, BlockInfo};
 use alloy_primitives::{hex, Address, BlockHash, Bytes, PrimitiveSignature, U256};
+use alloy_rlp::Decodable;
+use op_alloy_consensus::OpTxEnvelope;
+use op_alloy_protocol::{BlockInfo, Channel, Frame, SingleBatch};
+use std::io::Read;
 
 fn main() {
     // Raw frame data taken from the `encode_channel` example.
@@ -37,13 +37,16 @@ fn main() {
 
     // Decode the single batch from the decompressed data.
     let batch = SingleBatch::decode(&mut decompressed.as_slice()).expect("batch decodes");
-    assert_eq!(batch, SingleBatch {
-        parent_hash: BlockHash::ZERO,
-        epoch_num: 1,
-        epoch_hash: BlockHash::ZERO,
-        timestamp: 1,
-        transactions: example_transactions(),
-    });
+    assert_eq!(
+        batch,
+        SingleBatch {
+            parent_hash: BlockHash::ZERO,
+            epoch_num: 1,
+            epoch_hash: BlockHash::ZERO,
+            timestamp: 1,
+            transactions: example_transactions(),
+        }
+    );
 
     println!("Successfully decoded frames into a SingleBatch");
 }
@@ -122,4 +125,3 @@ fn example_transactions() -> Vec<Bytes> {
 
     transactions
 }
-

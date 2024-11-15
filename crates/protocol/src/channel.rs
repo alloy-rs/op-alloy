@@ -1,12 +1,11 @@
 //! Channel Types
 
-use alloc::vec::Vec;
-use alloc::vec;
+use alloc::{vec, vec::Vec};
 use alloy_primitives::{map::HashMap, Bytes};
-use op_alloy_genesis::RollupConfig;
 use alloy_rlp::Encodable;
+use op_alloy_genesis::RollupConfig;
 
-use crate::{block::BlockInfo, SingleBatch, frame::Frame};
+use crate::{block::BlockInfo, frame::Frame, SingleBatch};
 
 /// The frame overhead.
 const FRAME_V0_OVERHEAD: usize = 23;
@@ -23,7 +22,6 @@ pub fn random_channel_id() -> ChannelId {
     id.iter_mut().for_each(|b| *b = rand::random());
     id
 }
-
 
 /// An error returned by the [ChannelOut] when adding single batches.
 #[derive(Debug, Clone, Copy, derive_more::Display, PartialEq, Eq, Hash)]
@@ -59,7 +57,7 @@ pub struct ChannelOut<'a> {
 
 impl<'a> ChannelOut<'a> {
     /// Creates a new [ChannelOut] with the given [ChannelId].
-    pub fn new(id: ChannelId, config: &'a RollupConfig) -> Self {
+    pub const fn new(id: ChannelId, config: &'a RollupConfig) -> Self {
         Self { id, config, rlp_length: 0, frame_number: 0, closed: false, compressed: None }
     }
 
@@ -118,7 +116,7 @@ impl<'a> ChannelOut<'a> {
         let data = if let Some(data) = &self.compressed {
             &data[..max_size]
         } else {
-            return Err(ChannelOutError::MissingData)
+            return Err(ChannelOutError::MissingData);
         };
         frame.data.extend_from_slice(data);
 

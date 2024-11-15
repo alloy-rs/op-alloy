@@ -12,14 +12,14 @@
 //! Finally, once [Frame]s are built from the [ChannelOut], they are encoded and ready
 //! to be batch-submitted to the data availability layer.
 
-use op_alloy_genesis::RollupConfig;
-use op_alloy_consensus::OpTxEnvelope;
-use alloy_rlp::{Decodable, Encodable};
 use alloy_consensus::{SignableTransaction, TxEip1559};
-use brotli::enc::{BrotliCompress, BrotliEncoderParams};
 use alloy_eips::eip2718::{Decodable2718, Encodable2718};
-use op_alloy_protocol::{random_channel_id, ChannelOut, SingleBatch};
 use alloy_primitives::{hex, Address, BlockHash, Bytes, PrimitiveSignature, U256};
+use alloy_rlp::{Decodable, Encodable};
+use brotli::enc::{BrotliCompress, BrotliEncoderParams};
+use op_alloy_consensus::OpTxEnvelope;
+use op_alloy_genesis::RollupConfig;
+use op_alloy_protocol::{random_channel_id, ChannelOut, SingleBatch};
 
 fn main() {
     // Use the example transaction
@@ -57,7 +57,7 @@ fn main() {
     // Output frames
     while channel_out.ready_bytes() > 0 {
         let frame = channel_out.output_frame(100).expect("outputs frame");
-        println!("Frame: {}", alloy_primitives::hex::encode(&frame.encode()));
+        println!("Frame: {}", alloy_primitives::hex::encode(frame.encode()));
         if channel_out.ready_bytes() <= 100 {
             channel_out.close();
         }
