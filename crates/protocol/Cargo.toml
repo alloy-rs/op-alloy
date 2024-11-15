@@ -27,7 +27,6 @@ alloy-consensus.workspace = true
 
 # Misc
 brotli.workspace = true
-alloc-no-stdlib.workspace = true
 tracing.workspace = true
 derive_more.workspace = true
 async-trait.workspace = true

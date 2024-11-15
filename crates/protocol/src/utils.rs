@@ -1,26 +1,9 @@
 //! Utility methods used by protocol types.
 
-use alloc::{boxed::Box, vec, vec::Vec};
-use alloc_no_stdlib::*;
+use alloc::{vec, vec::Vec};
 use alloy_consensus::TxType;
 use alloy_primitives::B256;
 use alloy_rlp::{Buf, Header};
-use brotli::{
-    enc::{
-        cluster::HistogramPair,
-        command::Command,
-        compress_multi,
-        entropy_encode::HuffmanTree,
-        histogram::{ContextType, HistogramCommand, HistogramDistance, HistogramLiteral},
-        pdf::PDF,
-        s16,
-        threading::SendAlloc,
-        v8, BrotliEncoderParams, BrotliEncoderThreadError, Owned, StaticCommand, UnionHasher,
-        ZopfliNode,
-    },
-    CombiningAllocator, SliceWrapper,
-};
-use core::ops;
 use op_alloy_consensus::{OpBlock, OpTxEnvelope};
 use op_alloy_genesis::{RollupConfig, SystemConfig};
 
@@ -37,101 +20,6 @@ pub fn compress_brotli(mut input: &[u8]) -> Vec<u8> {
     let mut output = vec![];
     BrotliCompress(&mut input, &mut output, &BrotliEncoderParams::default()).expect("succeeds");
     output
-}
-
-/// Compresses the given bytes data using the Brotli compressor implemented
-/// in the [`brotli`][brotli] crate.
-///
-/// [brotli]: https://crates.io/crates/brotli
-#[allow(clippy::too_many_arguments)]
-pub fn compress_brotli_nostd(
-    data: &'static [u8],
-    u8_buffer: &'static mut Box<[u8]>,
-    u16_buffer: &'static mut Box<[u16]>,
-    i32_buffer: &'static mut Box<[i32]>,
-    u32_buffer: &'static mut Box<[u32]>,
-    u64_buffer: &'static mut Box<[u64]>,
-    cmd_buffer: &'static mut Box<[Command]>,
-    pdf_buffer: &'static mut Box<[PDF]>,
-    static_buffer: &'static mut Box<[StaticCommand]>,
-    hist_buffer: &'static mut Box<[HistogramLiteral]>,
-    hcmd_buffer: &'static mut Box<[HistogramCommand]>,
-    hdist_buffer: &'static mut Box<[HistogramDistance]>,
-    hpair_buffer: &'static mut Box<[HistogramPair]>,
-    ctx_buffer: &'static mut Box<[ContextType]>,
-    huff_buffer: &'static mut Box<[HuffmanTree]>,
-    zop_buffer: &'static mut Box<[ZopfliNode]>,
-) -> Result<Vec<u8>, BrotliEncoderThreadError> {
-    // Construct the allocator
-    declare_stack_allocator_struct!(MemPool, 4096, stack);
-
-    let u8_allocator = MemPool::<u8>::new_allocator(u8_buffer, bzero);
-    let u16_allocator = MemPool::<u16>::new_allocator(u16_buffer, bzero);
-    let i32_allocator = MemPool::<i32>::new_allocator(i32_buffer, bzero);
-    let u32_allocator = MemPool::<u32>::new_allocator(u32_buffer, bzero);
-    let u64_allocator = MemPool::<u64>::new_allocator(u64_buffer, bzero);
-    let command_allocator = MemPool::<Command>::new_allocator(cmd_buffer, bzero);
-    let float_allocator = MemPool::<f32>::new_allocator(&mut [], bzero);
-    let v8_allocator = MemPool::<v8>::new_allocator(&mut [], bzero);
-    let s16_allocator = MemPool::<s16>::new_allocator(&mut [], bzero);
-    let pdf_allocator = MemPool::<PDF>::new_allocator(pdf_buffer, bzero);
-    let static_allocator = MemPool::<StaticCommand>::new_allocator(static_buffer, bzero);
-    let hist_allocator = MemPool::<HistogramLiteral>::new_allocator(hist_buffer, bzero);
-    let hcmd_allocator = MemPool::<HistogramCommand>::new_allocator(hcmd_buffer, bzero);
-    let hdist_allocator = MemPool::<HistogramDistance>::new_allocator(hdist_buffer, bzero);
-    let hpair_allocator = MemPool::<HistogramPair>::new_allocator(hpair_buffer, bzero);
-    let ctx_allocator = MemPool::<ContextType>::new_allocator(ctx_buffer, bzero);
-    let huff_allocator = MemPool::<HuffmanTree>::new_allocator(huff_buffer, bzero);
-    let zop_allocator = MemPool::<ZopfliNode>::new_allocator(zop_buffer, bzero);
-
-    let alloc = CombiningAllocator::new(
-        u8_allocator,
-        u16_allocator,
-        i32_allocator,
-        u32_allocator,
-        u64_allocator,
-        command_allocator,
-        float_allocator,
-        v8_allocator,
-        s16_allocator,
-        pdf_allocator,
-        static_allocator,
-        hist_allocator,
-        hcmd_allocator,
-        hdist_allocator,
-        hpair_allocator,
-        ctx_allocator,
-        huff_allocator,
-        zop_allocator,
-    );
-    let alloc = SendAlloc::new(alloc, UnionHasher::default());
-
-    // Need a wrapper type around the input
-    struct SliceRef<'a>(&'a [u8]);
-    impl<'a> SliceWrapper<u8> for SliceRef<'a> {
-        fn slice(&self) -> &[u8] {
-            self.0
-        }
-    }
-
-    // Compression inputs
-    let params = BrotliEncoderParams::default();
-    let mut output = vec![];
-    let mut input = Owned::new(SliceRef(data));
-    match compress_multi(&params, &mut input, output.as_mut_slice(), &mut [alloc]) {
-        Ok(_) => {
-            // if written == 0 {
-            //     break;
-            // }
-            // continue;
-        }
-        Err(e) => {
-            // TODO: on out of space, resize the output buffer?
-            return Err(e);
-        }
-    }
-
-    Ok(output)
 }
 
 /// Returns if the given `value` is a deposit transaction.

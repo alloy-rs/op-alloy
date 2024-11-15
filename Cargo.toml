@@ -81,7 +81,6 @@ snap = "1.1.1"
 bincode = "1.3.3"
 ethereum_ssz = "0.8"
 brotli = { version = "7.0.0", default-features = false }
-alloc-no-stdlib = "2.0.4"
 
 # rpc
 jsonrpsee = { version = "0.24", features = [
