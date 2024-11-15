@@ -16,10 +16,10 @@ pub struct RawSpanBatch {
     pub payload: SpanBatchPayload,
 }
 
-impl TryFrom<SpanBatch> for RawSpanBatch {
+impl TryFrom<&SpanBatch> for RawSpanBatch {
     type Error = SpanBatchError;
 
-    fn try_from(value: SpanBatch) -> Result<Self, Self::Error> {
+    fn try_from(value: &SpanBatch) -> Result<Self, Self::Error> {
         if value.batches.is_empty() {
             return Err(SpanBatchError::EmptySpanBatch);
         }
@@ -129,7 +129,7 @@ mod test {
     #[test]
     fn test_try_from_span_batch_empty_batches_errors() {
         let span_batch = SpanBatch::default();
-        let raw_span_batch = RawSpanBatch::try_from(span_batch).unwrap_err();
+        let raw_span_batch = RawSpanBatch::try_from(&span_batch).unwrap_err();
         assert_eq!(raw_span_batch, SpanBatchError::EmptySpanBatch);
     }
 
@@ -153,7 +153,7 @@ mod test {
             l1_origin_check,
         };
         let expected_payload = SpanBatchPayload { block_count: 2, ..Default::default() };
-        let raw_span_batch = RawSpanBatch::try_from(span_batch).unwrap();
+        let raw_span_batch = RawSpanBatch::try_from(&span_batch).unwrap();
         assert_eq!(raw_span_batch.prefix, expected_prefix);
         assert_eq!(raw_span_batch.payload, expected_payload);
     }
