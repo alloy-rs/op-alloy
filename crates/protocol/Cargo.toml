@@ -26,7 +26,6 @@ alloy-eips.workspace = true
 alloy-consensus.workspace = true
 
 # Misc
-brotli.workspace = true
 tracing.workspace = true
 derive_more.workspace = true
 async-trait.workspace = true
