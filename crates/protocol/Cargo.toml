@@ -26,8 +26,8 @@ alloy-eips.workspace = true
 alloy-consensus.workspace = true
 
 # Compression
-brotli.workspace = true
-miniz_oxide.workspace = true
+brotli = { workspace = true, optional = true }
+miniz_oxide = { workspace = true, optional = true }
 
 # Misc
 tracing.workspace = true
@@ -66,5 +66,5 @@ test-utils = [
   "dep:tracing-subscriber",
 ]
 arbitrary = ["std", "dep:arbitrary", "alloy-consensus/arbitrary", "alloy-eips/arbitrary", "alloy-primitives/rand"]
-std = ["dep:brotli", "op-alloy-consensus/std", "op-alloy-genesis/std", "brotli/std"]
+std = ["dep:brotli", "dep:miniz_oxide", "op-alloy-consensus/std", "op-alloy-genesis/std", "brotli/std"]
 serde = ["dep:serde", "dep:alloy-serde", "op-alloy-consensus/serde", "op-alloy-genesis/serde"]
