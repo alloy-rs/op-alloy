@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.6](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.6.6) - 2024-11-16
+
+### Bug Fixes
+
+- Protected bits handling ([#270](https://github.com/alloy-rs/op-alloy/issues/270))
+- [book] Batch over SingleBatch ([#260](https://github.com/alloy-rs/op-alloy/issues/260))
+- [book] Getting Start Links ([#256](https://github.com/alloy-rs/op-alloy/issues/256))
+- [book] Broken Mdbook Version ([#250](https://github.com/alloy-rs/op-alloy/issues/250))
+
+### Features
+
+- [protocol] Brotli Compression behind `std` ([#263](https://github.com/alloy-rs/op-alloy/issues/263))
+- [protocol] Batch Encoding ([#259](https://github.com/alloy-rs/op-alloy/issues/259))
+- Add missing OpTxType trait impls ([#258](https://github.com/alloy-rs/op-alloy/issues/258))
+- [book] Frames ([#226](https://github.com/alloy-rs/op-alloy/issues/226))
+- [book] Add Badges for Crates ([#253](https://github.com/alloy-rs/op-alloy/issues/253))
+
+### Miscellaneous Tasks
+
+- [protocol] Re-organizes Modules and Errors ([#261](https://github.com/alloy-rs/op-alloy/issues/261))
+- [book] Building Docs ([#257](https://github.com/alloy-rs/op-alloy/issues/257))
+- [book] Frames to Batches Example ([#232](https://github.com/alloy-rs/op-alloy/issues/232))
+- [book] Missing Sections and Enhancements ([#255](https://github.com/alloy-rs/op-alloy/issues/255))
+- [book] Touchup Introduction ([#254](https://github.com/alloy-rs/op-alloy/issues/254))
+
 ## [0.6.5](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.6.5) - 2024-11-12
 
@@ -19,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.6.5
 - Add deserde test ([#248](https://github.com/alloy-rs/op-alloy/issues/248))
 
 ## [0.6.4](https://github.com/alloy-rs/op-alloy
