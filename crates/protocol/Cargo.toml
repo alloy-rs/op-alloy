@@ -25,15 +25,16 @@ alloy-rlp.workspace = true
 alloy-eips.workspace = true
 alloy-consensus.workspace = true
 
-# Compression
-brotli = { workspace = true, optional = true }
-miniz_oxide = { workspace = true, optional = true }
-
 # Misc
 tracing.workspace = true
 thiserror.workspace = true
 async-trait.workspace = true
 unsigned-varint.workspace = true
+
+# Compression
+brotli = { workspace = true, optional = true }
+miniz_oxide = { workspace = true, optional = true }
+alloc-no-stdlib = { workspace = true, optional = true }
 
 # `arbitrary` feature
 arbitrary = { workspace = true, features = ["derive"], optional = true }
@@ -66,5 +67,5 @@ test-utils = [
   "dep:tracing-subscriber",
 ]
 arbitrary = ["std", "dep:arbitrary", "alloy-consensus/arbitrary", "alloy-eips/arbitrary", "alloy-primitives/rand"]
-std = ["dep:brotli", "dep:miniz_oxide", "op-alloy-consensus/std", "op-alloy-genesis/std", "brotli/std"]
+std = ["dep:brotli", "dep:miniz_oxide", "dep:alloc-no-stdlib", "op-alloy-consensus/std", "op-alloy-genesis/std", "brotli/std"]
 serde = ["dep:serde", "dep:alloy-serde", "op-alloy-consensus/serde", "op-alloy-genesis/serde"]
