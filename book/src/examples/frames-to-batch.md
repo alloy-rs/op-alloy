@@ -41,13 +41,6 @@ brotli bytes can then be passed right into [`Batch::decode`][decode-batch]
 to wind up with the example's desired [`Batch`][batch].
 
 
-> [!Note]
->
-> In the example below, the additional `example_transactions()` and `decompress_brotli()`
-> methods are helper functions that can be ignored for the sake of the example.
-
-
-
 ## Running this example:
 
 - Clone the examples repository: `git clone git@github.com:alloy-rs/op-alloy.git`
