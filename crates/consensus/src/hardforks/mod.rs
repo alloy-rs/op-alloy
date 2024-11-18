@@ -39,7 +39,7 @@ pub struct Hardforks;
 
 impl Hardforks {
     /// UpgradeTo Function 4Byte Signature
-    pub const UPGRADE_TO_FUNC_BYTES_4: &[u8] = &[0x36, 0x59, 0xcf, 0xe6];
+    pub const UPGRADE_TO_FUNC_BYTES_4: [u8; 4] = alloy_primitives::hex!("3659cfe6");
 
     /// Turns the given address into calldata for the `upgradeTo` function.
     pub(crate) fn upgrade_to_calldata(addr: alloy_primitives::Address) -> alloy_primitives::Bytes {

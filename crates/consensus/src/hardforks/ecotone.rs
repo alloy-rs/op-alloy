@@ -5,7 +5,8 @@
 use alloc::{string::String, vec, vec::Vec};
 use alloy_consensus::Sealable;
 use alloy_eips::eip2718::Encodable2718;
-use alloy_primitives::{address, bytes, Address, Bytes, TxKind, B256, U256};
+use alloy_primitives::{address, bytes, hex, Address, Bytes, TxKind, U256};
+use spin::Lazy;
 
 use crate::{OpTxEnvelope, TxDeposit, UpgradeDepositSource, GAS_PRICE_ORACLE};
 
@@ -25,7 +26,7 @@ pub const EIP4788_FROM: Address = address!("0B799C86a49DEeb90402691F1041aa3AF2d3
 
 impl super::Hardforks {
     /// The Enable Ecotone Input Method 4Byte Signature
-    pub const ENABLE_ECOTONE_INPUT: &[u8] = &[0x22, 0xb9, 0x08, 0xb3];
+    pub const ENABLE_ECOTONE_INPUT: [u8; 4] = hex!("22b908b3");
 
     /// Returns the source hash for the deployment of the l1 block contract.
     pub fn deploy_l1_block_source() -> B256 {
