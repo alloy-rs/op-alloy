@@ -26,6 +26,7 @@ The following crates are provided by `op-alloy`.
 
 `op-alloy` is currently in active development, and is not yet ready for use in production.
 
+
 ## Supported Rust Versions (MSRV)
 
 The current MSRV (minimum supported rust version) is 1.81.
@@ -76,11 +77,9 @@ This would not be possible without the hard work from open source contributors. 
 Licensed under either of <a href="LICENSE-APACHE">Apache License, Version
 2.0</a> or <a href="LICENSE-MIT">MIT license</a> at your option.
 
-<sub>
 Unless you explicitly state otherwise, any contribution intentionally submitted
 for inclusion in these crates by you, as defined in the Apache-2.0 license,
 shall be dual licensed as above, without any additional terms or conditions.
-</sub>
 
 
 <!-- Hyperlinks -->
