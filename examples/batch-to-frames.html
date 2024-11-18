@@ -294,8 +294,8 @@ need to then be compressed prior to adding them to the
 the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>Batch</code></a> itself, handling encoding and compression, but
 this method is not available yet.</p>
 </div>
-<p>Once compressed using the helper <code>compress_brotli</code> method, the compressed
-bytes can be added to a newly constructed <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.ChannelOut.html"><code>ChannelOut</code></a>.
+<p>Once compressed using the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/fn.compress_brotli.html"><code>compress_brotli</code></a> method, the
+compressed bytes can be added to a newly constructed <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.ChannelOut.html"><code>ChannelOut</code></a>.
 As long as the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.ChannelOut.html"><code>ChannelOut</code></a> has <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.ChannelOut.html#method.ready_bytes"><code>ready_bytes()</code></a>,
 <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>s can be constructed using the
 <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.ChannelOut.html#method.output_frame"><code>ChannelOut::output_frame()</code></a> method, specifying the maximum
@@ -303,14 +303,6 @@ frame size.</p>
 <p>Once <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>s are returned from the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.ChannelOut.html"><code>ChannelOut</code></a>,
 they can be <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#method.encode"><code>Frame::encode</code></a> into raw, serialized data
 ready to be batch-submitted to the data-availability layer.</p>
-<div class="mdbook-alerts mdbook-alerts-note">
-<p class="mdbook-alerts-title">
-  <span class="mdbook-alerts-icon"></span>
-  note
-</p>
-<p>In the example below, the additional <code>example_transactions()</code> and <code>compress_brotli()</code>
-methods are helper functions that can be ignored for the sake of the example.</p>
-</div>
 <h2 id="running-this-example"><a class="header" href="#running-this-example">Running this example:</a></h2>
 <ul>
 <li>Clone the examples repository: <code>git clone git@github.com:alloy-rs/op-alloy.git</code></li>

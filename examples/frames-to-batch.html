@@ -300,14 +300,6 @@ which hardforks are activated (using the <code>RollupConfig</code>). For the sak
 <code>brotli</code> is used (which was activated in the <a href="https://specs.optimism.io/protocol/fjord/overview.html">Fjord hardfork</a>). Decompressed
 brotli bytes can then be passed right into <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html#method.decode"><code>Batch::decode</code></a>
 to wind up with the example's desired <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>Batch</code></a>.</p>
-<div class="mdbook-alerts mdbook-alerts-note">
-<p class="mdbook-alerts-title">
-  <span class="mdbook-alerts-icon"></span>
-  note
-</p>
-<p>In the example below, the additional <code>example_transactions()</code> and <code>decompress_brotli()</code>
-methods are helper functions that can be ignored for the sake of the example.</p>
-</div>
 <h2 id="running-this-example"><a class="header" href="#running-this-example">Running this example:</a></h2>
 <ul>
 <li>Clone the examples repository: <code>git clone git@github.com:alloy-rs/op-alloy.git</code></li>
@@ -320,8 +312,7 @@ use alloy_eips::eip2718::{Decodable2718, Encodable2718};
 use alloy_primitives::{hex, Address, BlockHash, Bytes, PrimitiveSignature, U256};
 use op_alloy_consensus::OpTxEnvelope;
 use op_alloy_genesis::RollupConfig;
-use op_alloy_protocol::{Batch, BlockInfo, Channel, Frame, SingleBatch};
-use std::io::Read;
+use op_alloy_protocol::{decompress_brotli, Batch, BlockInfo, Channel, Frame, SingleBatch};
 
 fn main() {
     // Raw frame data taken from the `encode_channel` example.
@@ -347,11 +338,12 @@ fn main() {
     println!("Frame data: {}", hex::encode(&amp;frame_data));
 
     // Decompress the frame data with brotli.
-    let decompressed = decompress_brotli(&amp;frame_data);
+    let config = RollupConfig::default();
+    let max = config.max_rlp_bytes_per_channel(open_block.timestamp) as usize;
+    let decompressed = decompress_brotli(&amp;frame_data, max).expect("decompresses brotli");
     println!("Decompressed frame data: {}", hex::encode(&amp;decompressed));
 
     // Decode the single batch from the decompressed data.
-    let config = RollupConfig::default();
     let batch = Batch::decode(&amp;mut decompressed.as_slice(), &amp;config).expect("batch decodes");
     assert_eq!(
         batch,
@@ -365,33 +357,6 @@ fn main() {
     );
 
     println!("Successfully decoded frames into a Batch");
-}
-
-/// Decompresses the given bytes data using the Brotli decompressor implemented
-/// in the [`brotli`](https://crates.io/crates/brotli) crate.
-pub fn decompress_brotli(data: &amp;[u8]) -&gt; Vec&lt;u8&gt; {
-    let mut reader = brotli::Decompressor::new(data, 4096);
-    let mut buf = [0u8; 4096];
-    let mut written = 0;
-    loop {
-        match reader.read(&amp;mut buf[..]) {
-            Err(e) =&gt; {
-                panic!("{}", e);
-            }
-            Ok(size) =&gt; {
-                if size == 0 {
-                    break;
-                }
-                written += size;
-                // Re-size the buffer if needed
-            }
-        }
-    }
-
-    // Truncate the output buffer to the written bytes
-    let mut output: Vec&lt;u8&gt; = buf.into();
-    output.truncate(written);
-    output
 }
 
 fn example_transactions() -&gt; Vec&lt;Bytes&gt; {
