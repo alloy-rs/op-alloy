@@ -5,8 +5,7 @@
 use alloc::{string::String, vec, vec::Vec};
 use alloy_consensus::Sealable;
 use alloy_eips::eip2718::Encodable2718;
-use alloy_primitives::{address, bytes, hex, Address, Bytes, TxKind, U256};
-use spin::Lazy;
+use alloy_primitives::{address, bytes, hex, Address, Bytes, TxKind, B256, U256};
 
 use crate::{OpTxEnvelope, TxDeposit, UpgradeDepositSource, GAS_PRICE_ORACLE};
 

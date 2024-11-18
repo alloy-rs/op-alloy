@@ -6,7 +6,7 @@ use crate::{OpTxEnvelope, TxDeposit};
 use alloc::{string::String, vec, vec::Vec};
 use alloy_consensus::Sealable;
 use alloy_eips::eip2718::Encodable2718;
-use alloy_primitives::{address, hex, Address, Bytes, TxKind, U256};
+use alloy_primitives::{address, hex, Address, Bytes, TxKind, B256, U256};
 
 use crate::{UpgradeDepositSource, GAS_PRICE_ORACLE};
 
@@ -41,7 +41,7 @@ impl super::Hardforks {
         UpgradeDepositSource { intent: String::from("Fjord: Gas Price Oracle Set Fjord") }
             .source_hash()
     }
-  
+
     /// Returns the fjord gas price oracle deployment bytecode.
     pub fn gas_price_oracle_deployment_bytecode() -> alloy_primitives::Bytes {
         include_bytes!("./gas_price_oracle_bytecode.hex").into()
