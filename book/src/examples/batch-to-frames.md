@@ -34,8 +34,8 @@ need to then be compressed prior to adding them to the
 > the [`Batch`][batch] itself, handling encoding and compression, but
 > this method is not available yet.
 
-Once compressed using the helper `compress_brotli` method, the compressed
-bytes can be added to a newly constructed [`ChannelOut`][channel-out].
+Once compressed using the [`compress_brotli`][compress-brotli] method, the
+compressed bytes can be added to a newly constructed [`ChannelOut`][channel-out].
 As long as the [`ChannelOut`][channel-out] has [`ready_bytes()`][ready-bytes],
 [`Frame`][frame]s can be constructed using the
 [`ChannelOut::output_frame()`][output-frame] method, specifying the maximum
@@ -44,12 +44,6 @@ frame size.
 Once [`Frame`][frame]s are returned from the [`ChannelOut`][channel-out],
 they can be [`Frame::encode`][encode-frame] into raw, serialized data
 ready to be batch-submitted to the data-availability layer.
-
-
-> [!Note]
->
-> In the example below, the additional `example_transactions()` and `compress_brotli()`
-> methods are helper functions that can be ignored for the sake of the example.
 
 
 ## Running this example:

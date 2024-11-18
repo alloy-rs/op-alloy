@@ -25,6 +25,7 @@
 
 <!-- op-alloy-protocol -->
 
+[compress-brotli]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/fn.compress_brotli.html
 [encode-batch]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html#method.encode
 [encode-frame]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#method.encode
 [add-frame]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html#method.add_frame
