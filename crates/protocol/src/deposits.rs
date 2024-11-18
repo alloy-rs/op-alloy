@@ -353,10 +353,10 @@ pub(crate) fn unmarshal_deposit_version0(
     let raw_mint: [u8; 16] = data[offset + 16..offset + 32].try_into().map_err(|_| {
         DepositError::MintDecode(Bytes::copy_from_slice(&data[offset + 16..offset + 32]))
     })?;
-    let mint = u128::from_be_bytes(raw_mint);
+    let mint = U256::from_be_bytes(raw_mint);
 
     // 0 mint is represented as nil to skip minting code
-    if mint == 0 {
+    if mint == U256::ZERO {
         tx.mint = None;
     } else {
         tx.mint = Some(mint);
@@ -617,7 +617,7 @@ mod test {
             to: TxKind::Call(address!("2222222222222222222222222222222222222222")),
             value: U256::from(100),
             gas_limit: 1000,
-            mint: Some(10),
+            mint: Some(U256::from(10)),
             ..Default::default()
         };
         let to = address!("5555555555555555555555555555555555555555");

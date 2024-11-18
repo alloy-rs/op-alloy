@@ -24,7 +24,7 @@ pub(super) mod serde_bincode_compat {
     pub use super::deposit::serde_bincode_compat::TxDeposit;
 }
 
-use alloy_primitives::B256;
+use alloy_primitives::{B256, U256};
 
 /// A trait representing a deposit transaction with specific attributes.
 pub trait DepositTransaction {
@@ -38,7 +38,7 @@ pub trait DepositTransaction {
     ///
     /// # Returns
     /// An `Option<u128>` representing the ETH value to mint on L2, if any.
-    fn mint(&self) -> Option<u128>;
+    fn mint(&self) -> Option<U256>;
 
     /// Indicates whether the transaction is exempt from the L2 gas limit.
     ///
