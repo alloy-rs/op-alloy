@@ -5,8 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.6.6](https://github.com/alloy-rs/op-alloy
-/releases/tag/v0.6.6) - 2024-11-16
+## [0.6.7](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.6.7) - 2024-11-18
 
 ### Bug Fixes
 
@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Features
 
+- [genesis] Holocene Timestamps on Sepolia ([#285](https://github.com/alloy-rs/op-alloy/issues/285))
+- Add missing txtype tryfroms ([#272](https://github.com/alloy-rs/op-alloy/issues/272))
+- [protocol] Batch Reader ([#265](https://github.com/alloy-rs/op-alloy/issues/265))
+- [protocol] ZLIB Compression ([#264](https://github.com/alloy-rs/op-alloy/issues/264))
 - [protocol] Brotli Compression behind `std` ([#263](https://github.com/alloy-rs/op-alloy/issues/263))
 - [protocol] Batch Encoding ([#259](https://github.com/alloy-rs/op-alloy/issues/259))
 - Add missing OpTxType trait impls ([#258](https://github.com/alloy-rs/op-alloy/issues/258))
@@ -25,11 +29,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- [consensus] Re-export and Hardfork Cleanup ([#274](https://github.com/alloy-rs/op-alloy/issues/274))
+- [consensus] Signature Definitions ([#281](https://github.com/alloy-rs/op-alloy/issues/281))
+- [consensus] OpTxType Conversion ([#283](https://github.com/alloy-rs/op-alloy/issues/283))
+- [protocol] Batch Transaction Mod ([#284](https://github.com/alloy-rs/op-alloy/issues/284))
+- [consensus] Move OpTxType and add tests ([#282](https://github.com/alloy-rs/op-alloy/issues/282))
+- [protocol] Cleanup Examples ([#278](https://github.com/alloy-rs/op-alloy/issues/278))
+- [op-alloy] Docs ([#277](https://github.com/alloy-rs/op-alloy/issues/277))
+- [genesis] Remove Re-exports ([#276](https://github.com/alloy-rs/op-alloy/issues/276))
+- Remove Error Impls ([#273](https://github.com/alloy-rs/op-alloy/issues/273))
+- [workspace] Use thiserror for Error Types ([#269](https://github.com/alloy-rs/op-alloy/issues/269))
+- [protocol] Remove TryFrom ([#268](https://github.com/alloy-rs/op-alloy/issues/268))
 - [protocol] Re-organizes Modules and Errors ([#261](https://github.com/alloy-rs/op-alloy/issues/261))
 - [book] Building Docs ([#257](https://github.com/alloy-rs/op-alloy/issues/257))
 - [book] Frames to Batches Example ([#232](https://github.com/alloy-rs/op-alloy/issues/232))
 - [book] Missing Sections and Enhancements ([#255](https://github.com/alloy-rs/op-alloy/issues/255))
 - [book] Touchup Introduction ([#254](https://github.com/alloy-rs/op-alloy/issues/254))
+
+### Other
+
+- V0.6.6 ([#271](https://github.com/alloy-rs/op-alloy/issues/271))
 
 ## [0.6.5](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.6.5) - 2024-11-12

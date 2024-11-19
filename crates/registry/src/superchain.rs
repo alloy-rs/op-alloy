@@ -112,7 +112,7 @@ impl Registry {
 }
 
 #[cfg(test)]
-pub(crate) mod tests {
+mod tests {
     use super::*;
     use alloy_eips::BlockNumHash;
     use alloy_primitives::{address, b256, uint};
