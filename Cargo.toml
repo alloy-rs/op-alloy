@@ -101,6 +101,7 @@ cfg-if = "1"
 async-trait = "0.1.83"
 unsigned-varint = "0.8.0"
 spin = { version = "0.9.8", features = ["mutex"] }
+lazy_static = { version = "1.5.0", default-features = false }
 derive_more = { version = "1.0", default-features = false }
 thiserror = { version = "2.0", default-features = false }
 similar-asserts = "1.6"

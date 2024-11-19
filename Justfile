@@ -54,3 +54,11 @@ check:
 # Runs `cargo hack check` against the workspace
 hack:
   cargo hack check --feature-powerset --no-dev-deps --exclude op-alloy --workspace
+
+# Updates the git submodule source
+source:
+  git submodule update --remote
+
+# Generate file bindings for super-registry
+bind:
+  @just --justfile ./crates/registry/Justfile bind
