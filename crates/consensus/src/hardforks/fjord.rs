@@ -54,13 +54,10 @@ impl Fjord {
     pub fn gas_price_oracle_deployment_bytecode() -> alloy_primitives::Bytes {
         include_bytes!("./bytecode/gpo_fjord.hex").into()
     }
-}
 
-impl super::Hardfork for Fjord {
-    /// Constructs the Fjord network upgrade transactions.
-    fn txs(&self) -> impl Iterator<Item = Bytes> + '_ {
-        let mut tx_1 = Vec::new();
-        OpTxEnvelope::Deposit(
+    /// Returns the list of [TxDeposit]s for the Fjord network upgrade.
+    pub fn deposits() -> impl Iterator<Item = TxDeposit> {
+        ([
             TxDeposit {
                 source_hash: Self::deploy_fjord_gas_price_oracle_source(),
                 from: Self::GAS_PRICE_ORACLE_FJORD_DEPLOYER,
@@ -70,14 +67,7 @@ impl super::Hardfork for Fjord {
                 gas_limit: 1_450_000,
                 is_system_transaction: false,
                 input: Self::gas_price_oracle_deployment_bytecode(),
-            }
-            .seal_slow(),
-        )
-        .encode_2718(&mut tx_1);
-
-        // Update the gas price oracle proxy.
-        let mut tx_2 = Vec::new();
-        OpTxEnvelope::Deposit(
+            },
             TxDeposit {
                 source_hash: Self::update_fjord_gas_price_oracle_source(),
                 from: Address::ZERO,
@@ -87,14 +77,8 @@ impl super::Hardfork for Fjord {
                 gas_limit: 50_000,
                 is_system_transaction: false,
                 input: super::upgrade_to_calldata(Self::FJORD_GAS_PRICE_ORACLE),
-            }
-            .seal_slow(),
-        )
-        .encode_2718(&mut tx_2);
-
-        // Enable Fjord
-        let mut tx_3 = Vec::new();
-        OpTxEnvelope::Deposit(
+            },
+            // Enable Fjord
             TxDeposit {
                 source_hash: Self::enable_fjord_source(),
                 from: Self::L1_INFO_DEPOSITER,
@@ -104,11 +88,24 @@ impl super::Hardfork for Fjord {
                 gas_limit: 90_000,
                 is_system_transaction: false,
                 input: Self::SET_FJORD_METHOD_SIGNATURE.into(),
-            }
-            .seal_slow(),
-        )
-        .encode_2718(&mut tx_3);
+            },
+        ])
+        .into_iter()
+    }
 
-        [tx_1, tx_2, tx_3].into_iter().map(Bytes::from)
+    /// Returns the list of [OpTxEnvelope]s for the Fjord network upgrade.
+    pub fn enveloped_txs() -> impl Iterator<Item = OpTxEnvelope> {
+        Self::deposits().map(|deposit| OpTxEnvelope::Deposit(deposit.seal_slow()))
+    }
+}
+
+impl super::Hardfork for Fjord {
+    /// Constructs the Fjord network upgrade transactions.
+    fn txs(&self) -> impl Iterator<Item = Bytes> + '_ {
+        Self::enveloped_txs().map(|tx| {
+            let mut encoded = Vec::new();
+            tx.encode_2718(&mut encoded);
+            Bytes::from(encoded)
+        })
     }
 }

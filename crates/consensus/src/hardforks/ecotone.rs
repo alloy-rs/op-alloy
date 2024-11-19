@@ -89,89 +89,76 @@ impl Ecotone {
         include_bytes!("./bytecode/gpo_ecotone.hex").into()
     }
 
-    /// Returns the list of [OpTxEnvelope]s for the Ecotone network upgrade.
-    pub fn enveloped_txs() -> impl Iterator<Item = OpTxEnvelope> {
+    /// Returns the list of [TxDeposit]s for the Ecotone network upgrade.
+    pub fn deposits() -> impl Iterator<Item = TxDeposit> {
         ([
-            OpTxEnvelope::Deposit(
-                TxDeposit {
-                    source_hash: Self::deploy_l1_block_source(),
-                    from: Self::L1_BLOCK_DEPLOYER,
-                    to: TxKind::Create,
-                    mint: 0.into(),
-                    value: U256::ZERO,
-                    gas_limit: 375_000,
-                    is_system_transaction: false,
-                    input: Self::l1_block_deployment_bytecode(),
-                }
-                .seal_slow(),
-            ),
-            OpTxEnvelope::Deposit(
-                TxDeposit {
-                    source_hash: Self::deploy_gas_price_oracle_source(),
-                    from: Self::GAS_PRICE_ORACLE_DEPLOYER,
-                    to: TxKind::Create,
-                    mint: 0.into(),
-                    value: U256::ZERO,
-                    gas_limit: 1_000_000,
-                    is_system_transaction: false,
-                    input: Self::ecotone_gas_price_oracle_deployment_bytecode(),
-                }
-                .seal_slow(),
-            ),
-            OpTxEnvelope::Deposit(
-                TxDeposit {
-                    source_hash: Self::update_l1_block_source(),
-                    from: Address::default(),
-                    to: TxKind::Call(Self::L1_BLOCK_DEPLOYER),
-                    mint: 0.into(),
-                    value: U256::ZERO,
-                    gas_limit: 50_000,
-                    is_system_transaction: false,
-                    input: super::upgrade_to_calldata(Self::NEW_L1_BLOCK),
-                }
-                .seal_slow(),
-            ),
-            OpTxEnvelope::Deposit(
-                TxDeposit {
-                    source_hash: Self::update_gas_price_oracle_source(),
-                    from: Address::default(),
-                    to: TxKind::Call(Self::GAS_PRICE_ORACLE_DEPLOYER),
-                    mint: 0.into(),
-                    value: U256::ZERO,
-                    gas_limit: 50_000,
-                    is_system_transaction: false,
-                    input: super::upgrade_to_calldata(Self::GAS_PRICE_ORACLE),
-                }
-                .seal_slow(),
-            ),
-            OpTxEnvelope::Deposit(
-                TxDeposit {
-                    source_hash: Self::enable_ecotone_source(),
-                    from: Self::L1_BLOCK_DEPLOYER,
-                    to: TxKind::Call(Self::GAS_PRICE_ORACLE),
-                    mint: 0.into(),
-                    value: U256::ZERO,
-                    gas_limit: 80_000,
-                    is_system_transaction: false,
-                    input: Self::ENABLE_ECOTONE_INPUT.into(),
-                }
-                .seal_slow(),
-            ),
-            OpTxEnvelope::Deposit(
-                TxDeposit {
-                    source_hash: Self::beacon_roots_source(),
-                    from: Self::EIP4788_FROM,
-                    to: TxKind::Create,
-                    mint: 0.into(),
-                    value: U256::ZERO,
-                    gas_limit: 250_000,
-                    is_system_transaction: false,
-                    input: Self::eip4788_creation_data(),
-                }
-                .seal_slow(),
-            ),
+            TxDeposit {
+                source_hash: Self::deploy_l1_block_source(),
+                from: Self::L1_BLOCK_DEPLOYER,
+                to: TxKind::Create,
+                mint: 0.into(),
+                value: U256::ZERO,
+                gas_limit: 375_000,
+                is_system_transaction: false,
+                input: Self::l1_block_deployment_bytecode(),
+            },
+            TxDeposit {
+                source_hash: Self::deploy_gas_price_oracle_source(),
+                from: Self::GAS_PRICE_ORACLE_DEPLOYER,
+                to: TxKind::Create,
+                mint: 0.into(),
+                value: U256::ZERO,
+                gas_limit: 1_000_000,
+                is_system_transaction: false,
+                input: Self::ecotone_gas_price_oracle_deployment_bytecode(),
+            },
+            TxDeposit {
+                source_hash: Self::update_l1_block_source(),
+                from: Address::default(),
+                to: TxKind::Call(Self::L1_BLOCK_DEPLOYER),
+                mint: 0.into(),
+                value: U256::ZERO,
+                gas_limit: 50_000,
+                is_system_transaction: false,
+                input: super::upgrade_to_calldata(Self::NEW_L1_BLOCK),
+            },
+            TxDeposit {
+                source_hash: Self::update_gas_price_oracle_source(),
+                from: Address::default(),
+                to: TxKind::Call(Self::GAS_PRICE_ORACLE_DEPLOYER),
+                mint: 0.into(),
+                value: U256::ZERO,
+                gas_limit: 50_000,
+                is_system_transaction: false,
+                input: super::upgrade_to_calldata(Self::GAS_PRICE_ORACLE),
+            },
+            TxDeposit {
+                source_hash: Self::enable_ecotone_source(),
+                from: Self::L1_BLOCK_DEPLOYER,
+                to: TxKind::Call(Self::GAS_PRICE_ORACLE),
+                mint: 0.into(),
+                value: U256::ZERO,
+                gas_limit: 80_000,
+                is_system_transaction: false,
+                input: Self::ENABLE_ECOTONE_INPUT.into(),
+            },
+            TxDeposit {
+                source_hash: Self::beacon_roots_source(),
+                from: Self::EIP4788_FROM,
+                to: TxKind::Create,
+                mint: 0.into(),
+                value: U256::ZERO,
+                gas_limit: 250_000,
+                is_system_transaction: false,
+                input: Self::eip4788_creation_data(),
+            },
         ])
         .into_iter()
+    }
+
+    /// Returns the list of [OpTxEnvelope]s for the Ecotone network upgrade.
+    pub fn enveloped_txs() -> impl Iterator<Item = OpTxEnvelope> {
+        Self::deposits().map(|deposit| OpTxEnvelope::from(deposit.seal_slow()))
     }
 }
 
