@@ -1,5 +1,6 @@
 //! Contains all hardforks represented in the [Hardfork] type.
 
+use alloc::vec::Vec;
 use crate::{Ecotone, Fjord, Hardfork};
 
 /// Optimism Hardforks
