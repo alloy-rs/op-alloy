@@ -48,6 +48,7 @@ spin = { workspace = true, optional = true }
 tracing-subscriber = { workspace = true, features = ["fmt"], optional = true }
 
 [dev-dependencies]
+alloy-primitives = { workspace = true, features = ["arbitrary"] }
 brotli = { workspace = true, features = ["std"] }
 revm.workspace = true
 spin.workspace = true
