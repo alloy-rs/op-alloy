@@ -5,11 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.6.7](https://github.com/alloy-rs/op-alloy
-/releases/tag/v0.6.7) - 2024-11-18
+## [0.6.8](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.6.8) - 2024-11-20
 
 ### Bug Fixes
 
+- [genesis] Base Fee Params ([#292](https://github.com/alloy-rs/op-alloy/issues/292))
 - Protected bits handling ([#270](https://github.com/alloy-rs/op-alloy/issues/270))
 - [book] Batch over SingleBatch ([#260](https://github.com/alloy-rs/op-alloy/issues/260))
 - [book] Getting Start Links ([#256](https://github.com/alloy-rs/op-alloy/issues/256))
@@ -17,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Features
 
+- Introduce op-alloy-registry ([#290](https://github.com/alloy-rs/op-alloy/issues/290))
 - [genesis] Holocene Timestamps on Sepolia ([#285](https://github.com/alloy-rs/op-alloy/issues/285))
 - Add missing txtype tryfroms ([#272](https://github.com/alloy-rs/op-alloy/issues/272))
 - [protocol] Batch Reader ([#265](https://github.com/alloy-rs/op-alloy/issues/265))
@@ -29,6 +31,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- [consensus] Trait Abstracted Hardforks ([#289](https://github.com/alloy-rs/op-alloy/issues/289))
+- [genesis] Remove hardcoded configs ([#291](https://github.com/alloy-rs/op-alloy/issues/291))
+- [consensus] Cleanup Hardforks ([#288](https://github.com/alloy-rs/op-alloy/issues/288))
 - [consensus] Re-export and Hardfork Cleanup ([#274](https://github.com/alloy-rs/op-alloy/issues/274))
 - [consensus] Signature Definitions ([#281](https://github.com/alloy-rs/op-alloy/issues/281))
 - [consensus] OpTxType Conversion ([#283](https://github.com/alloy-rs/op-alloy/issues/283))
@@ -48,6 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Other
 
+- 0.6.7 ([#287](https://github.com/alloy-rs/op-alloy/issues/287))
 - V0.6.6 ([#271](https://github.com/alloy-rs/op-alloy/issues/271))
 
 ## [0.6.5](https://github.com/alloy-rs/op-alloy
