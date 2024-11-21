@@ -12,16 +12,6 @@ use crate::{
     SpanDecodingError,
 };
 
-/// Compresses the given bytes data using the Brotli compressor implemented
-/// in the [`brotli`](https://crates.io/crates/brotli) crate.
-#[cfg(feature = "std")]
-pub fn compress_brotli(mut input: &[u8]) -> Vec<u8> {
-    use brotli::enc::{BrotliCompress, BrotliEncoderParams};
-    let mut output = alloc::vec![];
-    BrotliCompress(&mut input, &mut output, &BrotliEncoderParams::default()).expect("succeeds");
-    output
-}
-
 /// Returns if the given `value` is a deposit transaction.
 pub fn starts_with_2718_deposit<B>(value: &B) -> bool
 where
