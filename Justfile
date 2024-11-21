@@ -5,6 +5,7 @@ alias f := fmtf
 alias b := build
 alias h := hack
 alias c := check
+alias e := examples
 
 # default recipe to display help information
 default:
@@ -62,3 +63,11 @@ source:
 # Generate file bindings for super-registry
 bind:
   @just --justfile ./crates/registry/Justfile bind
+
+# List all available examples and run each one
+examples:
+  example_list=$(cargo build --example 2>&1); \
+  example_list=$(echo "$example_list" | tail -n +3 | sed 's/^[ \t]*//;s/[ \t]*$//'); \
+  for example in $example_list; do \
+    cargo run --example $example; \
+  done
