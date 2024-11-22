@@ -15,20 +15,23 @@ body:
       description: What component is the bug in?
       multiple: true
       options:
-        - contract
-        - consensus, eips, genesis
-        - network, json-rpc
-        - nodes
-        - provider, pubsub
-        - rpc
-        - signers
-        - transports
+        - consensus
+        - network
+        - genesis
+        - protocol
+        - provider
+        - op-alloy
+        - registry
+        - rpc-jsonrpsee
+        - rpc-types
+        - rpc-types-engine
+        - other
     validations:
       required: true
   - type: input
     attributes:
-      label: What version of Alloy are you on?
-      placeholder: "Run `cargo tree | grep alloy` and paste the output here"
+      label: What version of op-alloy are you on?
+      placeholder: "Run `cargo tree | grep op-alloy` and paste the output here"
   - type: dropdown
     attributes:
       label: Operating System
