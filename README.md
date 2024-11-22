@@ -16,6 +16,7 @@ The following crates are provided by `op-alloy`.
 - [`op-alloy-genesis`][op-alloy-genesis]
 - [`op-alloy-network`][op-alloy-network]
 - [`op-alloy-protocol`][op-alloy-protocol]
+- [`op-alloy-registry`][op-alloy-registry]
 - [`op-alloy-provider`][op-alloy-provider]
 - [`op-alloy-rpc-jsonrpsee`][op-alloy-rpc-jsonrpsee]
 - [`op-alloy-rpc-types-engine`][op-alloy-rpc-types-engine]
@@ -55,11 +56,12 @@ op-alloy is intended to be `no_std` compatible, initially for use in [kona][kona
 The following crates support `no_std`.
 Notice, provider crates do not support `no_std` compatibility.
 
-- [`op-alloy-consensus`][op-alloy-consensus]
 - [`op-alloy-genesis`][op-alloy-genesis]
 - [`op-alloy-protocol`][op-alloy-protocol]
-- [`op-alloy-rpc-types-engine`][op-alloy-rpc-types-engine]
+- [`op-alloy-registry`][op-alloy-registry] (note: requires `serde`)
+- [`op-alloy-consensus`][op-alloy-consensus]
 - [`op-alloy-rpc-types`][op-alloy-rpc-types]
+- [`op-alloy-rpc-types-engine`][op-alloy-rpc-types-engine]
 
 If you would like to add no_std support to a crate,
 please make sure to update [scripts/check_no_std.sh][check-no-std].
@@ -94,6 +96,7 @@ shall be dual licensed as above, without any additional terms or conditions.
 [op-alloy-genesis]: https://crates.io/crates/op-alloy-genesis
 [op-alloy-network]: https://crates.io/crates/op-alloy-network
 [op-alloy-protocol]: https://crates.io/crates/op-alloy-protocol
+[op-alloy-registry]: https://crates.io/crates/op-alloy-registry
 [op-alloy-provider]: https://crates.io/crates/op-alloy-provider
 [op-alloy-rpc-jsonrpsee]: https://crates.io/crates/op-alloy-rpc-jsonrpsee
 [op-alloy-rpc-types-engine]: https://crates.io/crates/op-alloy-rpc-types-engine
