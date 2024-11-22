@@ -14,12 +14,16 @@ body:
       multiple: true
       options:
         - consensus
-        - network 
-        - genesis 
-        - protocol 
+        - network
+        - genesis
+        - protocol
+        - provider
+        - op-alloy
+        - registry
         - rpc-jsonrpsee
         - rpc-types
         - rpc-types-engine
+        - other
     validations:
       required: true
   - type: textarea
