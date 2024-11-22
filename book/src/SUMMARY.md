@@ -15,6 +15,7 @@
     - [Batches](./building/protocol/batches.md)
 - [Examples](./examples/README.md)
   - [Load a Rollup Config](./examples/load-a-rollup-config.md)
+  - [Create a new L1BlockInfoTx Hardfork Variant](./examples/new-l1-block-info-tx-hardfork.md)
   - [Transform Frames to a Batch](./examples/frames-to-batch.md)
   - [Transform a Batch into Frames](./examples/batch-to-frames.md)
 - [Contributing](./CONTRIBUTING.md)
