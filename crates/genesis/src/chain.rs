@@ -55,6 +55,19 @@ pub struct HardForkConfiguration {
     pub holocene_time: Option<u64>,
 }
 
+impl From<&RollupConfig> for HardForkConfiguration {
+    fn from(config: &RollupConfig) -> Self {
+        Self {
+            canyon_time: config.canyon_time,
+            delta_time: config.delta_time,
+            ecotone_time: config.ecotone_time,
+            fjord_time: config.fjord_time,
+            granite_time: config.granite_time,
+            holocene_time: config.holocene_time,
+        }
+    }
+}
+
 /// Defines core blockchain settings per block.
 ///
 /// Tailors unique settings for each network based on
