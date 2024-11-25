@@ -134,7 +134,7 @@ mod tests {
             batch_inbox_addr: address!("ff00000000000000000000000000000000008453"),
             superchain: String::from("mainnet"),
             chain: String::new(),
-            hardfork_configuration: (&crate::configs::BASE_MAINNET_CONFIG).into(),
+            hardfork_configuration: crate::configs::BASE_MAINNET_CONFIG.hardfork_config(),
             block_time: 2,
             seq_window_size: 3600,
             max_sequencer_drift: 600,
