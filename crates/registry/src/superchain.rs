@@ -134,14 +134,14 @@ mod tests {
             batch_inbox_addr: address!("ff00000000000000000000000000000000008453"),
             superchain: String::from("mainnet"),
             chain: String::new(),
-            hardfork_configuration: crate::configs::BASE_MAINNET_CONFIG.hardfork_config(),
+            hardfork_configuration: crate::test_utils::BASE_MAINNET_CONFIG.hardfork_config(),
             block_time: 2,
             seq_window_size: 3600,
             max_sequencer_drift: 600,
             data_availability_type: "eth-da".to_string(),
             optimism: Some(OP_MAINNET_BASE_FEE_PARAMS),
             alt_da: None,
-            genesis: crate::configs::BASE_MAINNET_CONFIG.genesis,
+            genesis: crate::test_utils::BASE_MAINNET_CONFIG.genesis,
             addresses: Some(AddressList {
                 address_manager: address!("8EfB6B5c4767B09Dc9AA6Af4eAA89F749522BaE2"),
                 l1_cross_domain_messenger_proxy: address!(
