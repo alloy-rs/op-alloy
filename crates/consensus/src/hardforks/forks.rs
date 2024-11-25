@@ -39,6 +39,7 @@ impl Hardforks {
 mod tests {
     use super::*;
     use crate::Hardfork;
+    use alloc::vec::Vec;
 
     #[test]
     fn test_hardforks() {
