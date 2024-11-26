@@ -2,23 +2,27 @@
 
 use alloy_consensus::{Receipt, ReceiptWithBloom};
 use alloy_serde::OtherFields;
-use op_alloy_consensus::{OpDepositReceipt, OpDepositReceiptWithBloom, OpReceiptEnvelope};
+use op_alloy_consensus::{OpDepositReceipt, OpDepositReceiptWithBloom, OpReceiptEnvelope, OpTxReceipt};
 use serde::{Deserialize, Serialize};
 
 /// OP Transaction Receipt type
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 #[doc(alias = "OpTxReceipt")]
-pub struct OpTransactionReceipt {
+pub struct OpTransactionReceipt<T = OpDepositReceipt<alloy_rpc_types_eth::Log>> {
     /// Regular eth transaction receipt including deposit receipts
     #[serde(flatten)]
-    pub inner: alloy_rpc_types_eth::TransactionReceipt<OpReceiptEnvelope<alloy_rpc_types_eth::Log>>,
+    pub inner: alloy_rpc_types_eth::TransactionReceipt<OpReceiptEnvelope<T>>,
     /// L1 block info of the transaction.
     #[serde(flatten)]
     pub l1_block_info: L1BlockInfo,
 }
 
-impl alloy_network_primitives::ReceiptResponse for OpTransactionReceipt {
+
+impl<T> alloy_network_primitives::ReceiptResponse for OpTransactionReceipt<T>
+where
+    T: OpTxReceipt,
+{
     fn contract_address(&self) -> Option<alloy_primitives::Address> {
         self.inner.contract_address
     }
@@ -40,39 +44,39 @@ impl alloy_network_primitives::ReceiptResponse for OpTransactionReceipt {
     }
 
     fn transaction_index(&self) -> Option<u64> {
-        self.inner.transaction_index()
+        self.inner.transaction_index
     }
 
     fn gas_used(&self) -> u128 {
-        self.inner.gas_used()
+        self.inner.gas_used
     }
 
     fn effective_gas_price(&self) -> u128 {
-        self.inner.effective_gas_price()
+        self.inner.effective_gas_price
     }
 
     fn blob_gas_used(&self) -> Option<u128> {
-        self.inner.blob_gas_used()
+        self.inner.blob_gas_used
     }
 
     fn blob_gas_price(&self) -> Option<u128> {
-        self.inner.blob_gas_price()
+        self.inner.blob_gas_price
     }
 
     fn from(&self) -> alloy_primitives::Address {
-        self.inner.from()
+        self.inner.from
     }
 
     fn to(&self) -> Option<alloy_primitives::Address> {
-        self.inner.to()
+        self.inner.to
     }
 
     fn authorization_list(&self) -> Option<&[alloy_eips::eip7702::SignedAuthorization]> {
-        self.inner.authorization_list()
+        self.inner.authorization_list.as_deref()
     }
 
     fn cumulative_gas_used(&self) -> u128 {
-        self.inner.cumulative_gas_used()
+        self.inner.inner.cumulative_gas_used()
     }
 
     fn state_root(&self) -> Option<alloy_primitives::B256> {
