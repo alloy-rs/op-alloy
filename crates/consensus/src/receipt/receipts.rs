@@ -117,7 +117,7 @@ pub struct OpDepositReceiptWithBloom<T = OpDepositReceipt<Log>> {
 
 impl<T> TxReceipt for OpDepositReceiptWithBloom<T>
 where
-    T: OpTxReceipt,
+    T: TxReceipt,
 {
     type Log = T::Log;
 
@@ -158,7 +158,7 @@ impl OpTxReceipt for OpDepositReceiptWithBloom {
 
 impl<R> From<R> for OpDepositReceiptWithBloom<R>
 where
-    R: OpTxReceipt<Log: Borrow<Log>>,
+    R: TxReceipt<Log: Borrow<Log>>,
 {
     fn from(receipt: R) -> Self {
         let bloom = receipt.logs().iter().map(Borrow::borrow).collect();
