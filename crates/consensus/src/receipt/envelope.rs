@@ -64,7 +64,7 @@ impl OpReceiptEnvelope<OpDepositReceipt<Log>> {
         let inner_receipt =
             Receipt { status: Eip658Value::Eip658(status), cumulative_gas_used, logs };
         let op_receipt = OpDepositReceipt {
-                inner: inner_receipt.clone(),
+                inner: inner_receipt,
                 deposit_nonce,
                 deposit_receipt_version,
             };
@@ -83,11 +83,7 @@ impl OpReceiptEnvelope<OpDepositReceipt<Log>> {
             }
             OpTxType::Deposit => {
                 let inner = OpDepositReceiptWithBloom {
-                    receipt: OpDepositReceipt {
-                        inner: inner_receipt,
-                        deposit_nonce,
-                        deposit_receipt_version,
-                    },
+                    receipt: op_receipt,
                     logs_bloom,
                 };
                 Self::Deposit(inner)
