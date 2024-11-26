@@ -61,10 +61,12 @@ impl<T> AsRef<Receipt<T>> for OpDepositReceipt<T> {
     }
 }
 
-impl<T> TxReceipt<T> for OpDepositReceipt<T>
+impl<T> TxReceipt for OpDepositReceipt<T>
 where
     T: Borrow<Log> + Clone + core::fmt::Debug + PartialEq + Eq + Send + Sync,
 {
+    type Log = T;
+
     fn status_or_post_state(&self) -> Eip658Value {
         self.inner.status_or_post_state()
     }
@@ -81,7 +83,7 @@ where
         self.inner.cumulative_gas_used()
     }
 
-    fn logs(&self) -> &[T] {
+    fn logs(&self) -> &[Self::Log] {
         self.inner.logs()
     }
 }
@@ -105,15 +107,20 @@ impl OpTxReceipt for OpDepositReceipt {
 #[derive(Clone, Debug, PartialEq, Eq, Default)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
-pub struct OpDepositReceiptWithBloom<T = Log> {
+pub struct OpDepositReceiptWithBloom<T = OpDepositReceipt<Log>> {
     #[cfg_attr(feature = "serde", serde(flatten))]
     /// The receipt.
-    pub receipt: OpDepositReceipt<T>,
+    pub receipt: T,
     /// The bloom filter.
     pub logs_bloom: Bloom,
 }
 
-impl TxReceipt for OpDepositReceiptWithBloom {
+impl<T> TxReceipt for OpDepositReceiptWithBloom<T>
+where
+    T: OpTxReceipt,
+{
+    type Log = T::Log;
+
     fn status_or_post_state(&self) -> Eip658Value {
         self.receipt.status_or_post_state()
     }
@@ -131,11 +138,11 @@ impl TxReceipt for OpDepositReceiptWithBloom {
     }
 
     fn cumulative_gas_used(&self) -> u128 {
-        self.receipt.inner.cumulative_gas_used
+        self.receipt.cumulative_gas_used()
     }
 
-    fn logs(&self) -> &[Log] {
-        &self.receipt.inner.logs
+    fn logs(&self) -> &[Self::Log] {
+        self.receipt.logs()
     }
 }
 
@@ -149,9 +156,12 @@ impl OpTxReceipt for OpDepositReceiptWithBloom {
     }
 }
 
-impl From<OpDepositReceipt> for OpDepositReceiptWithBloom {
-    fn from(receipt: OpDepositReceipt) -> Self {
-        let bloom = receipt.bloom_slow();
+impl<R> From<R> for OpDepositReceiptWithBloom<R>
+where
+    R: OpTxReceipt<Log: Borrow<Log>>,
+{
+    fn from(receipt: R) -> Self {
+        let bloom = receipt.logs().iter().map(Borrow::borrow).collect();
         Self { receipt, logs_bloom: bloom }
     }
 }
@@ -292,7 +302,7 @@ where
     T: arbitrary::Arbitrary<'a>,
 {
     fn arbitrary(u: &mut arbitrary::Unstructured<'a>) -> arbitrary::Result<Self> {
-        Ok(Self { receipt: OpDepositReceipt::<T>::arbitrary(u)?, logs_bloom: Bloom::arbitrary(u)? })
+        Ok(Self { receipt: T::arbitrary(u)?, logs_bloom: Bloom::arbitrary(u)? })
     }
 }
 
