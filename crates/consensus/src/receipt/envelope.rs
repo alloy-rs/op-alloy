@@ -200,16 +200,18 @@ impl OpReceiptEnvelope {
     }
 }
 
-impl<T> TxReceipt<T> for OpReceiptEnvelope<T>
+impl<T> TxReceipt for OpReceiptEnvelope<T>
 where
-    T: Clone + core::fmt::Debug + PartialEq + Eq + Send + Sync,
+    T: OpTxReceipt,
 {
+
+    type Log = T::Log;
     fn status_or_post_state(&self) -> Eip658Value {
-        self.as_receipt().unwrap().status
+        self.as_receipt().unwrap().status_or_post_state()
     }
 
     fn status(&self) -> bool {
-        self.as_receipt().unwrap().status.coerce_status()
+        self.as_receipt().unwrap().status_or_post_state().coerce_status()
     }
 
     /// Return the receipt's bloom.
@@ -223,12 +225,12 @@ where
 
     /// Returns the cumulative gas used at this receipt.
     fn cumulative_gas_used(&self) -> u128 {
-        self.as_receipt().unwrap().cumulative_gas_used
+        self.as_receipt().unwrap().cumulative_gas_used()
     }
 
     /// Return the receipt logs.
-    fn logs(&self) -> &[T] {
-        &self.as_receipt().unwrap().logs
+    fn logs(&self) -> &[T::Log] {
+        &self.as_receipt().unwrap().logs()
     }
 }
 
