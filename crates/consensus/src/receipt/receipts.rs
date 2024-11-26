@@ -1,7 +1,7 @@
 //! Transaction receipt types for Optimism.
 
 use super::OpTxReceipt;
-use alloy_consensus::{Eip658Value, Receipt, TxReceipt};
+use alloy_consensus::{Eip658Value, Receipt, ReceiptWithBloom, RlpReceipt, TxReceipt};
 use alloy_primitives::{Bloom, Log};
 use alloy_rlp::{length_of_length, BufMut, Decodable, Encodable};
 
@@ -85,6 +85,20 @@ where
 
     fn logs(&self) -> &[Self::Log] {
         self.inner.logs()
+    }
+}
+
+impl <T: Encodable + Decodable> RlpReceipt for OpDepositReceipt<T> {
+    fn rlp_encoded_fields_length_with_bloom(&self, bloom: Bloom) -> usize {
+        self.inner.rlp_encoded_fields_length_with_bloom(bloom)
+    }
+
+    fn rlp_encode_fields_with_bloom(&self, bloom: Bloom, out: &mut dyn BufMut) {
+        self.inner.rlp_encode_fields_with_bloom(bloom, out);
+    }
+
+    fn rlp_decode_fields_with_bloom(buf: &mut &[u8]) -> alloy_rlp::Result<ReceiptWithBloom<Self>> {
+       Self::rlp_decode_with_bloom(buf)
     }
 }
 
