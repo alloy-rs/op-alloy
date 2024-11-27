@@ -107,7 +107,8 @@ impl<T: Encodable + Decodable> RlpReceipt for OpDepositReceipt<T> {
     }
 
     fn rlp_decode_fields_with_bloom(buf: &mut &[u8]) -> alloy_rlp::Result<ReceiptWithBloom<Self>> {
-        let inner = RlpReceipt::rlp_decode_fields_with_bloom(buf)?;
+        let ReceiptWithBloom { receipt: inner, logs_bloom } =
+            RlpReceipt::rlp_decode_fields_with_bloom(buf)?;
 
         let deposit_nonce =
             (!buf.is_empty()).then(|| alloy_rlp::Decodable::decode(buf)).transpose()?;
