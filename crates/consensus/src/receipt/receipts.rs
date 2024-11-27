@@ -351,7 +351,7 @@ mod tests {
         // Deposit Receipt (post-regolith)
         let expected = OpDepositReceiptWithBloom {
             receipt: OpDepositReceipt {
-                inner: Receipt { cumulative_gas_used: 46913, logs: vec![], status: true.into() },
+                inner: Receipt::<Log> { cumulative_gas_used: 46913, logs: vec![], status: true.into() },
                 deposit_nonce: Some(4012991),
                 deposit_receipt_version: None,
             },
@@ -373,7 +373,7 @@ mod tests {
         // Deposit Receipt (post-regolith)
         let expected = OpDepositReceiptWithBloom {
             receipt: OpDepositReceipt {
-                inner: Receipt { cumulative_gas_used: 46913, logs: vec![], status: true.into() },
+                inner: Receipt::<Log> { cumulative_gas_used: 46913, logs: vec![], status: true.into() },
                 deposit_nonce: Some(4012991),
                 deposit_receipt_version: Some(1),
             },

@@ -333,10 +333,11 @@ mod tests {
         let mut data = vec![];
         let receipt =
             OpReceiptEnvelope::Legacy(ReceiptWithBloom {
-                receipt: Receipt {
-                    status: false.into(),
-                    cumulative_gas_used: 0x1u128,
-                    logs: vec![Log {
+                receipt: OpDepositReceipt {
+                    inner: Receipt {
+                        status: false.into(),
+                        cumulative_gas_used: 0x1u128,
+                        logs: vec![Log {
                         address: address!("0000000000000000000000000000000000000011"),
                         data: LogData::new_unchecked(
                             vec![
@@ -347,8 +348,11 @@ mod tests {
                         ),
                     }],
                 },
-                logs_bloom: [0; 256].into(),
-            });
+                deposit_nonce: None,
+                deposit_receipt_version: None,
+            },
+            logs_bloom: [0; 256].into(),
+        });
 
         receipt.network_encode(&mut data);
 
