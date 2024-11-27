@@ -22,15 +22,19 @@ impl alloy_network_primitives::ReceiptResponse for OpTransactionReceipt {
     fn contract_address(&self) -> Option<alloy_primitives::Address> {
         self.inner.contract_address
     }
+
     fn status(&self) -> bool {
         self.inner.inner.status()
     }
+
     fn block_hash(&self) -> Option<alloy_primitives::BlockHash> {
         self.inner.block_hash
     }
+
     fn block_number(&self) -> Option<u64> {
         self.inner.block_number
     }
+
     fn transaction_hash(&self) -> alloy_primitives::TxHash {
         self.inner.transaction_hash
     }
