@@ -2,7 +2,7 @@
 
 use crate::{OpDepositReceipt, OpDepositReceiptWithBloom, OpTxType};
 use alloc::vec::Vec;
-use alloy_consensus::{Eip658Value, Receipt, ReceiptWithBloom, RlpReceipt, TxReceipt};
+use alloy_consensus::{Eip658Value, Receipt, ReceiptWithBloom, TxReceipt};
 use alloy_eips::eip2718::{Decodable2718, Eip2718Error, Eip2718Result, Encodable2718};
 use alloy_primitives::{logs_bloom, Bloom, Log};
 use alloy_rlp::{length_of_length, BufMut, Decodable, Encodable};

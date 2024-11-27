@@ -3,7 +3,7 @@
 use super::OpTxReceipt;
 use alloy_consensus::{Eip658Value, Receipt, ReceiptWithBloom, RlpReceipt, TxReceipt};
 use alloy_primitives::{Bloom, Log};
-use alloy_rlp::{length_of_length, BufMut, Decodable, Encodable};
+use alloy_rlp::{ BufMut, Decodable, Encodable};
 
 use core::borrow::Borrow;
 
@@ -180,110 +180,49 @@ where
     }
 }
 
-impl OpDepositReceiptWithBloom {
+impl<R> OpDepositReceiptWithBloom<R>
+
+{
     /// Create new [OpDepositReceiptWithBloom]
-    pub const fn new(receipt: OpDepositReceipt, bloom: Bloom) -> Self {
+    pub const fn new(receipt: R, bloom: Bloom) -> Self {
         Self { receipt, logs_bloom: bloom }
     }
 
     /// Consume the structure, returning only the receipt
     #[allow(clippy::missing_const_for_fn)] // false positive
-    pub fn into_receipt(self) -> OpDepositReceipt {
+    pub fn into_receipt(self) -> R {
         self.receipt
     }
 
     /// Consume the structure, returning the receipt and the bloom filter
     #[allow(clippy::missing_const_for_fn)] // false positive
-    pub fn into_components(self) -> (OpDepositReceipt, Bloom) {
+    pub fn into_components(self) -> (R, Bloom) {
         (self.receipt, self.logs_bloom)
     }
 
-    fn payload_len(&self) -> usize {
-        self.receipt.inner.status.length()
-            + self.receipt.inner.cumulative_gas_used.length()
-            + self.logs_bloom.length()
-            + self.receipt.inner.logs.length()
-            + self.receipt.deposit_nonce.map_or(0, |nonce| nonce.length())
-            + self.receipt.deposit_receipt_version.map_or(0, |version| version.length())
-    }
-
-    /// Returns the rlp header for the receipt payload.
-    fn receipt_rlp_header(&self) -> alloy_rlp::Header {
-        alloy_rlp::Header { list: true, payload_length: self.payload_len() }
-    }
-
-    /// Encodes the receipt data.
-    fn encode_fields(&self, out: &mut dyn BufMut) {
-        self.receipt_rlp_header().encode(out);
-        self.receipt.inner.status.encode(out);
-        self.receipt.inner.cumulative_gas_used.encode(out);
-        self.logs_bloom.encode(out);
-        self.receipt.inner.logs.encode(out);
-        if let Some(nonce) = self.receipt.deposit_nonce {
-            nonce.encode(out);
-        }
-        if let Some(version) = self.receipt.deposit_receipt_version {
-            version.encode(out);
-        }
-    }
-
-    /// Decodes the receipt payload
-    fn decode_receipt(buf: &mut &[u8]) -> alloy_rlp::Result<Self> {
-        let b: &mut &[u8] = &mut &**buf;
-        let rlp_head = alloy_rlp::Header::decode(b)?;
-        if !rlp_head.list {
-            return Err(alloy_rlp::Error::UnexpectedString);
-        }
-        let started_len = b.len();
-
-        let success = Decodable::decode(b)?;
-        let cumulative_gas_used = Decodable::decode(b)?;
-        let bloom = Decodable::decode(b)?;
-        let logs = Decodable::decode(b)?;
-
-        let remaining = |b: &[u8]| rlp_head.payload_length - (started_len - b.len()) > 0;
-        let deposit_nonce = remaining(b).then(|| alloy_rlp::Decodable::decode(b)).transpose()?;
-        let deposit_receipt_version =
-            remaining(b).then(|| alloy_rlp::Decodable::decode(b)).transpose()?;
-
-        let receipt = OpDepositReceipt {
-            inner: Receipt { status: success, cumulative_gas_used, logs },
-            deposit_nonce,
-            deposit_receipt_version,
-        };
-
-        let this = Self { receipt, logs_bloom: bloom };
-        let consumed = started_len - b.len();
-        if consumed != rlp_head.payload_length {
-            return Err(alloy_rlp::Error::ListLengthMismatch {
-                expected: rlp_head.payload_length,
-                got: consumed,
-            });
-        }
-        *buf = *b;
-        Ok(this)
-    }
+   
 }
 
-impl alloy_rlp::Encodable for OpDepositReceiptWithBloom {
+impl<R> alloy_rlp::Encodable for OpDepositReceiptWithBloom<R>
+where
+    R: RlpReceipt,
+{
     fn encode(&self, out: &mut dyn BufMut) {
-        self.encode_fields(out);
+        self.receipt.rlp_encode_with_bloom(self.logs_bloom, out);
     }
 
     fn length(&self) -> usize {
-        let payload_length = self.receipt.inner.status.length()
-            + self.receipt.inner.cumulative_gas_used.length()
-            + self.logs_bloom.length()
-            + self.receipt.inner.logs.length()
-            + self.receipt.deposit_nonce.map_or(0, |nonce| nonce.length())
-            + self.receipt.deposit_receipt_version.map_or(0, |version| version.length());
-        payload_length + length_of_length(payload_length)
+        self.receipt.rlp_encoded_length_with_bloom(self.logs_bloom)
     }
 }
 
-impl alloy_rlp::Decodable for OpDepositReceiptWithBloom {
+impl<R> alloy_rlp::Decodable for OpDepositReceiptWithBloom<R>
+where
+    R: RlpReceipt,
+{
     fn decode(buf: &mut &[u8]) -> alloy_rlp::Result<Self> {
-        Self::decode_receipt(buf)
+        let receipt = R::rlp_decode_with_bloom(buf)?;
+        Ok(Self::new(receipt.receipt, receipt.logs_bloom))
     }
 }
 
