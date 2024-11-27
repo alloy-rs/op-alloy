@@ -1,10 +1,8 @@
 //! Receipt types for RPC
 
-use alloy_consensus::{Receipt, ReceiptWithBloom, TxReceipt};
+use alloy_consensus::{Receipt, ReceiptWithBloom};
 use alloy_serde::OtherFields;
-use op_alloy_consensus::{
-    OpDepositReceipt, OpDepositReceiptWithBloom, OpReceiptEnvelope,
-};
+use op_alloy_consensus::{OpDepositReceipt, OpDepositReceiptWithBloom, OpReceiptEnvelope};
 use serde::{Deserialize, Serialize};
 
 /// OP Transaction Receipt type
@@ -24,61 +22,57 @@ impl alloy_network_primitives::ReceiptResponse for OpTransactionReceipt {
     fn contract_address(&self) -> Option<alloy_primitives::Address> {
         self.inner.contract_address
     }
-
     fn status(&self) -> bool {
         self.inner.inner.status()
     }
-
     fn block_hash(&self) -> Option<alloy_primitives::BlockHash> {
         self.inner.block_hash
     }
-
     fn block_number(&self) -> Option<u64> {
         self.inner.block_number
     }
-
     fn transaction_hash(&self) -> alloy_primitives::TxHash {
         self.inner.transaction_hash
     }
 
     fn transaction_index(&self) -> Option<u64> {
-        self.inner.transaction_index
+        self.inner.transaction_index()
     }
 
     fn gas_used(&self) -> u128 {
-        self.inner.gas_used
+        self.inner.gas_used()
     }
 
     fn effective_gas_price(&self) -> u128 {
-        self.inner.effective_gas_price
+        self.inner.effective_gas_price()
     }
 
     fn blob_gas_used(&self) -> Option<u128> {
-        self.inner.blob_gas_used
+        self.inner.blob_gas_used()
     }
 
     fn blob_gas_price(&self) -> Option<u128> {
-        self.inner.blob_gas_price
+        self.inner.blob_gas_price()
     }
 
     fn from(&self) -> alloy_primitives::Address {
-        self.inner.from
+        self.inner.from()
     }
 
     fn to(&self) -> Option<alloy_primitives::Address> {
-        self.inner.to
+        self.inner.to()
     }
 
     fn authorization_list(&self) -> Option<&[alloy_eips::eip7702::SignedAuthorization]> {
-        self.inner.authorization_list.as_deref()
+        self.inner.authorization_list()
     }
 
     fn cumulative_gas_used(&self) -> u128 {
-        self.inner.inner.cumulative_gas_used()
+        self.inner.cumulative_gas_used()
     }
 
     fn state_root(&self) -> Option<alloy_primitives::B256> {
-        self.inner.inner.status_or_post_state().as_post_state()
+        self.inner.state_root()
     }
 }
 

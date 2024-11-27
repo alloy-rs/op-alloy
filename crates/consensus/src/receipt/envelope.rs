@@ -75,7 +75,7 @@ impl OpReceiptEnvelope<Log> {
                 Self::Eip7702(ReceiptWithBloom { receipt: inner_receipt, logs_bloom })
             }
             OpTxType::Deposit => {
-                let inner = ReceiptWithBloom {
+                let inner = OpDepositReceiptWithBloom {
                     receipt: OpDepositReceipt {
                         inner: inner_receipt,
                         deposit_nonce,
