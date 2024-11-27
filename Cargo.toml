@@ -125,14 +125,14 @@ c-kzg = { version = "1.0", default-features = false }
 k256 = { version = "0.13", default-features = false, features = ["ecdsa"] }
 
 [patch.crates-io]
-alloy-consensus = { git = "https://github.com/alloy-rs/alloy", rev = "4284bb5" }
-alloy-network = { git = "https://github.com/alloy-rs/alloy", rev = "4284bb5" }
-alloy-network-primitives = { git = "https://github.com/alloy-rs/alloy", rev = "4284bb5" }
-alloy-rpc-types = { git = "https://github.com/alloy-rs/alloy", rev = "4284bb5" }
-alloy-rpc-types-eth = { git = "https://github.com/alloy-rs/alloy", rev = "4284bb5" }
-alloy-rpc-types-engine = { git = "https://github.com/alloy-rs/alloy", rev = "4284bb5" }
-alloy-eips = { git = "https://github.com/alloy-rs/alloy", rev = "4284bb5" }
-alloy-serde = { git = "https://github.com/alloy-rs/alloy", rev = "4284bb5" }
-alloy-signer = { git = "https://github.com/alloy-rs/alloy", rev = "4284bb5" }
-alloy-provider = { git = "https://github.com/alloy-rs/alloy", rev = "4284bb5" }
-alloy-transport = { git = "https://github.com/alloy-rs/alloy", rev = "4284bb5" }
+alloy-consensus = { git = "https://github.com/alloy-rs/alloy", rev = "3e24958" }
+alloy-network = { git = "https://github.com/alloy-rs/alloy", rev = "3e24958" }
+alloy-network-primitives = { git = "https://github.com/alloy-rs/alloy", rev = "3e24958" }
+alloy-rpc-types = { git = "https://github.com/alloy-rs/alloy", rev = "3e24958" }
+alloy-rpc-types-eth = { git = "https://github.com/alloy-rs/alloy", rev = "3e24958" }
+alloy-rpc-types-engine = { git = "https://github.com/alloy-rs/alloy", rev = "3e24958" }
+alloy-eips = { git = "https://github.com/alloy-rs/alloy", rev = "3e24958" }
+alloy-serde = { git = "https://github.com/alloy-rs/alloy", rev = "3e24958" }
+alloy-signer = { git = "https://github.com/alloy-rs/alloy", rev = "3e24958" }
+alloy-provider = { git = "https://github.com/alloy-rs/alloy", rev = "3e24958" }
+alloy-transport = { git = "https://github.com/alloy-rs/alloy", rev = "3e24958" }

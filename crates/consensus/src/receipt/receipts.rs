@@ -90,15 +90,46 @@ where
 
 impl<T: Encodable + Decodable> RlpReceipt for OpDepositReceipt<T> {
     fn rlp_encoded_fields_length_with_bloom(&self, bloom: Bloom) -> usize {
-        self.inner.rlp_encoded_fields_length_with_bloom(bloom)
+        self.inner.status.length()
+            + self.inner.cumulative_gas_used.length()
+            + bloom.length()
+            + self.inner.logs.length()
+            + self.deposit_nonce.map_or(0, |nonce| nonce.length())
+            + self.deposit_receipt_version.map_or(0, |version| version.length())
     }
 
     fn rlp_encode_fields_with_bloom(&self, bloom: Bloom, out: &mut dyn BufMut) {
-        self.inner.rlp_encode_fields_with_bloom(bloom, out);
+        self.inner.status.encode(out);
+        self.inner.cumulative_gas_used.encode(out);
+        bloom.encode(out);
+        self.inner.logs.encode(out);
+        if let Some(nonce) = self.deposit_nonce {
+            nonce.encode(out);
+        }
+        if let Some(version) = self.deposit_receipt_version {
+            version.encode(out);
+        }
     }
 
     fn rlp_decode_fields_with_bloom(buf: &mut &[u8]) -> alloy_rlp::Result<ReceiptWithBloom<Self>> {
-        Self::rlp_decode_with_bloom(buf)
+        let status = Decodable::decode(buf)?;
+        let cumulative_gas_used = Decodable::decode(buf)?;
+        let logs_bloom = Decodable::decode(buf)?;
+        let logs = Decodable::decode(buf)?;
+
+        let deposit_nonce =
+            (!buf.is_empty()).then(|| alloy_rlp::Decodable::decode(buf)).transpose()?;
+        let deposit_receipt_version =
+            (!buf.is_empty()).then(|| alloy_rlp::Decodable::decode(buf)).transpose()?;
+
+        Ok(ReceiptWithBloom {
+            receipt: Self {
+                inner: Receipt { status, cumulative_gas_used, logs },
+                deposit_nonce,
+                deposit_receipt_version,
+            },
+            logs_bloom,
+        })
     }
 }
 
