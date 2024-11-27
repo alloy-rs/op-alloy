@@ -2,27 +2,25 @@
 
 use alloy_consensus::{Receipt, ReceiptWithBloom, TxReceipt};
 use alloy_serde::OtherFields;
-use op_alloy_consensus::{OpDepositReceipt, OpDepositReceiptWithBloom, OpReceiptEnvelope, OpTxReceipt};
+use op_alloy_consensus::{
+    OpDepositReceipt, OpDepositReceiptWithBloom, OpReceiptEnvelope,
+};
 use serde::{Deserialize, Serialize};
 
 /// OP Transaction Receipt type
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 #[doc(alias = "OpTxReceipt")]
-pub struct OpTransactionReceipt<T = OpDepositReceipt<alloy_rpc_types_eth::Log>> {
+pub struct OpTransactionReceipt {
     /// Regular eth transaction receipt including deposit receipts
     #[serde(flatten)]
-    pub inner: alloy_rpc_types_eth::TransactionReceipt<OpReceiptEnvelope<T>>,
+    pub inner: alloy_rpc_types_eth::TransactionReceipt<OpReceiptEnvelope<alloy_rpc_types_eth::Log>>,
     /// L1 block info of the transaction.
     #[serde(flatten)]
     pub l1_block_info: L1BlockInfo,
 }
 
-
-impl<T> alloy_network_primitives::ReceiptResponse for OpTransactionReceipt<T>
-where
-    T: OpTxReceipt,
-{
+impl alloy_network_primitives::ReceiptResponse for OpTransactionReceipt {
     fn contract_address(&self) -> Option<alloy_primitives::Address> {
         self.inner.contract_address
     }
@@ -189,7 +187,7 @@ pub struct L1BlockInfo {
 
 impl Eq for L1BlockInfo {}
 
-impl From<OpTransactionReceipt> for OpReceiptEnvelope<OpDepositReceipt<alloy_primitives::Log>> {
+impl From<OpTransactionReceipt> for OpReceiptEnvelope<alloy_primitives::Log> {
     fn from(value: OpTransactionReceipt) -> Self {
         let inner_envelope = value.inner.inner;
 
@@ -197,21 +195,16 @@ impl From<OpTransactionReceipt> for OpReceiptEnvelope<OpDepositReceipt<alloy_pri
         /// consensus types.
         #[inline(always)]
         fn convert_standard_receipt(
-            receipt: ReceiptWithBloom<OpDepositReceipt<alloy_rpc_types_eth::Log>>,
-        ) -> ReceiptWithBloom<OpDepositReceipt<alloy_primitives::Log>> {
+            receipt: ReceiptWithBloom<Receipt<alloy_rpc_types_eth::Log>>,
+        ) -> ReceiptWithBloom<Receipt<alloy_primitives::Log>> {
             let ReceiptWithBloom { logs_bloom, receipt } = receipt;
 
-            let consensus_logs = receipt.inner.logs.into_iter().map(|log| log.inner).collect();
-
+            let consensus_logs = receipt.logs.into_iter().map(|log| log.inner).collect();
             ReceiptWithBloom {
-                receipt: OpDepositReceipt {
-                    inner: Receipt {
-                        status: receipt.inner.status,
-                        cumulative_gas_used: receipt.inner.cumulative_gas_used,
-                        logs: consensus_logs,
-                    },
-                    deposit_nonce: receipt.deposit_nonce,
-                    deposit_receipt_version: receipt.deposit_receipt_version,
+                receipt: Receipt {
+                    status: receipt.status,
+                    cumulative_gas_used: receipt.cumulative_gas_used,
+                    logs: consensus_logs,
                 },
                 logs_bloom,
             }

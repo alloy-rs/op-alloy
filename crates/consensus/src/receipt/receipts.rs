@@ -3,7 +3,7 @@
 use super::OpTxReceipt;
 use alloy_consensus::{Eip658Value, Receipt, ReceiptWithBloom, RlpReceipt, TxReceipt};
 use alloy_primitives::{Bloom, Log};
-use alloy_rlp::{ BufMut, Decodable, Encodable};
+use alloy_rlp::{BufMut, Decodable, Encodable};
 
 use core::borrow::Borrow;
 
@@ -88,7 +88,7 @@ where
     }
 }
 
-impl <T: Encodable + Decodable> RlpReceipt for OpDepositReceipt<T> {
+impl<T: Encodable + Decodable> RlpReceipt for OpDepositReceipt<T> {
     fn rlp_encoded_fields_length_with_bloom(&self, bloom: Bloom) -> usize {
         self.inner.rlp_encoded_fields_length_with_bloom(bloom)
     }
@@ -98,7 +98,7 @@ impl <T: Encodable + Decodable> RlpReceipt for OpDepositReceipt<T> {
     }
 
     fn rlp_decode_fields_with_bloom(buf: &mut &[u8]) -> alloy_rlp::Result<ReceiptWithBloom<Self>> {
-       Self::rlp_decode_with_bloom(buf)
+        Self::rlp_decode_with_bloom(buf)
     }
 }
 
@@ -118,113 +118,7 @@ impl OpTxReceipt for OpDepositReceipt {
 /// receipt, similar to [`Sealed`].
 ///
 /// [`Sealed`]: alloy_consensus::Sealed
-#[derive(Clone, Debug, PartialEq, Eq, Default)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
-pub struct OpDepositReceiptWithBloom<T = OpDepositReceipt<Log>> {
-    #[cfg_attr(feature = "serde", serde(flatten))]
-    /// The receipt.
-    pub receipt: T,
-    /// The bloom filter.
-    pub logs_bloom: Bloom,
-}
-
-impl<T> TxReceipt for OpDepositReceiptWithBloom<T>
-where
-    T: TxReceipt,
-{
-    type Log = T::Log;
-
-    fn status_or_post_state(&self) -> Eip658Value {
-        self.receipt.status_or_post_state()
-    }
-
-    fn status(&self) -> bool {
-        self.receipt.status()
-    }
-
-    fn bloom(&self) -> Bloom {
-        self.logs_bloom
-    }
-
-    fn bloom_cheap(&self) -> Option<Bloom> {
-        Some(self.logs_bloom)
-    }
-
-    fn cumulative_gas_used(&self) -> u128 {
-        self.receipt.cumulative_gas_used()
-    }
-
-    fn logs(&self) -> &[Self::Log] {
-        self.receipt.logs()
-    }
-}
-
-impl OpTxReceipt for OpDepositReceiptWithBloom {
-    fn deposit_nonce(&self) -> Option<u64> {
-        self.receipt.deposit_nonce
-    }
-
-    fn deposit_receipt_version(&self) -> Option<u64> {
-        self.receipt.deposit_receipt_version
-    }
-}
-
-impl<R> From<R> for OpDepositReceiptWithBloom<R>
-where
-    R: TxReceipt<Log: Borrow<Log>>,
-{
-    fn from(receipt: R) -> Self {
-        let bloom = receipt.logs().iter().map(Borrow::borrow).collect();
-        Self { receipt, logs_bloom: bloom }
-    }
-}
-
-impl<R> OpDepositReceiptWithBloom<R>
-
-{
-    /// Create new [OpDepositReceiptWithBloom]
-    pub const fn new(receipt: R, bloom: Bloom) -> Self {
-        Self { receipt, logs_bloom: bloom }
-    }
-
-    /// Consume the structure, returning only the receipt
-    #[allow(clippy::missing_const_for_fn)] // false positive
-    pub fn into_receipt(self) -> R {
-        self.receipt
-    }
-
-    /// Consume the structure, returning the receipt and the bloom filter
-    #[allow(clippy::missing_const_for_fn)] // false positive
-    pub fn into_components(self) -> (R, Bloom) {
-        (self.receipt, self.logs_bloom)
-    }
-
-   
-}
-
-impl<R> alloy_rlp::Encodable for OpDepositReceiptWithBloom<R>
-where
-    R: RlpReceipt,
-{
-    fn encode(&self, out: &mut dyn BufMut) {
-        self.receipt.rlp_encode_with_bloom(self.logs_bloom, out);
-    }
-
-    fn length(&self) -> usize {
-        self.receipt.rlp_encoded_length_with_bloom(self.logs_bloom)
-    }
-}
-
-impl<R> alloy_rlp::Decodable for OpDepositReceiptWithBloom<R>
-where
-    R: RlpReceipt,
-{
-    fn decode(buf: &mut &[u8]) -> alloy_rlp::Result<Self> {
-        let receipt = R::rlp_decode_with_bloom(buf)?;
-        Ok(Self::new(receipt.receipt, receipt.logs_bloom))
-    }
-}
+pub type OpDepositReceiptWithBloom<T = Log> = ReceiptWithBloom<OpDepositReceipt<T>>;
 
 #[cfg(any(test, feature = "arbitrary"))]
 impl<'a, T> arbitrary::Arbitrary<'a> for OpDepositReceipt<T>
@@ -246,16 +140,6 @@ where
             deposit_nonce,
             deposit_receipt_version,
         })
-    }
-}
-
-#[cfg(any(test, feature = "arbitrary"))]
-impl<'a, T> arbitrary::Arbitrary<'a> for OpDepositReceiptWithBloom<T>
-where
-    T: arbitrary::Arbitrary<'a>,
-{
-    fn arbitrary(u: &mut arbitrary::Unstructured<'a>) -> arbitrary::Result<Self> {
-        Ok(Self { receipt: T::arbitrary(u)?, logs_bloom: Bloom::arbitrary(u)? })
     }
 }
 
@@ -351,7 +235,11 @@ mod tests {
         // Deposit Receipt (post-regolith)
         let expected = OpDepositReceiptWithBloom {
             receipt: OpDepositReceipt {
-                inner: Receipt::<Log> { cumulative_gas_used: 46913, logs: vec![], status: true.into() },
+                inner: Receipt::<Log> {
+                    cumulative_gas_used: 46913,
+                    logs: vec![],
+                    status: true.into(),
+                },
                 deposit_nonce: Some(4012991),
                 deposit_receipt_version: None,
             },
@@ -373,7 +261,11 @@ mod tests {
         // Deposit Receipt (post-regolith)
         let expected = OpDepositReceiptWithBloom {
             receipt: OpDepositReceipt {
-                inner: Receipt::<Log> { cumulative_gas_used: 46913, logs: vec![], status: true.into() },
+                inner: Receipt::<Log> {
+                    cumulative_gas_used: 46913,
+                    logs: vec![],
+                    status: true.into(),
+                },
                 deposit_nonce: Some(4012991),
                 deposit_receipt_version: Some(1),
             },
