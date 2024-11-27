@@ -90,19 +90,14 @@ where
 
 impl<T: Encodable + Decodable> RlpReceipt for OpDepositReceipt<T> {
     fn rlp_encoded_fields_length_with_bloom(&self, bloom: Bloom) -> usize {
-        self.inner.status.length()
-            + self.inner.cumulative_gas_used.length()
-            + bloom.length()
-            + self.inner.logs.length()
+        self.inner.rlp_encoded_fields_length_with_bloom(bloom)
             + self.deposit_nonce.map_or(0, |nonce| nonce.length())
             + self.deposit_receipt_version.map_or(0, |version| version.length())
     }
 
     fn rlp_encode_fields_with_bloom(&self, bloom: Bloom, out: &mut dyn BufMut) {
-        self.inner.status.encode(out);
-        self.inner.cumulative_gas_used.encode(out);
-        bloom.encode(out);
-        self.inner.logs.encode(out);
+        self.inner.rlp_encode_fields_with_bloom(bloom, out);
+
         if let Some(nonce) = self.deposit_nonce {
             nonce.encode(out);
         }
@@ -112,10 +107,7 @@ impl<T: Encodable + Decodable> RlpReceipt for OpDepositReceipt<T> {
     }
 
     fn rlp_decode_fields_with_bloom(buf: &mut &[u8]) -> alloy_rlp::Result<ReceiptWithBloom<Self>> {
-        let status = Decodable::decode(buf)?;
-        let cumulative_gas_used = Decodable::decode(buf)?;
-        let logs_bloom = Decodable::decode(buf)?;
-        let logs = Decodable::decode(buf)?;
+        let inner = RlpReceipt::rlp_decode_fields_with_bloom(buf)?;
 
         let deposit_nonce =
             (!buf.is_empty()).then(|| alloy_rlp::Decodable::decode(buf)).transpose()?;
@@ -123,11 +115,7 @@ impl<T: Encodable + Decodable> RlpReceipt for OpDepositReceipt<T> {
             (!buf.is_empty()).then(|| alloy_rlp::Decodable::decode(buf)).transpose()?;
 
         Ok(ReceiptWithBloom {
-            receipt: Self {
-                inner: Receipt { status, cumulative_gas_used, logs },
-                deposit_nonce,
-                deposit_receipt_version,
-            },
+            receipt: Self { inner, deposit_nonce, deposit_receipt_version },
             logs_bloom,
         })
     }
