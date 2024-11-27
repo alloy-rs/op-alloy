@@ -110,10 +110,9 @@ impl<T: Encodable + Decodable> RlpReceipt for OpDepositReceipt<T> {
         let ReceiptWithBloom { receipt: inner, logs_bloom } =
             RlpReceipt::rlp_decode_fields_with_bloom(buf)?;
 
-        let deposit_nonce =
-            (!buf.is_empty()).then(|| alloy_rlp::Decodable::decode(buf)).transpose()?;
+        let deposit_nonce = (!buf.is_empty()).then(|| Decodable::decode(buf)).transpose()?;
         let deposit_receipt_version =
-            (!buf.is_empty()).then(|| alloy_rlp::Decodable::decode(buf)).transpose()?;
+            (!buf.is_empty()).then(|| Decodable::decode(buf)).transpose()?;
 
         Ok(ReceiptWithBloom {
             receipt: Self { inner, deposit_nonce, deposit_receipt_version },
