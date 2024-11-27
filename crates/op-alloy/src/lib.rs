@@ -5,6 +5,7 @@
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg, doc_auto_cfg))]
+#![cfg_attr(not(any(feature = "full", feature = "std")), no_std)]
 
 #[cfg(feature = "consensus")]
 #[doc(inline)]
@@ -21,6 +22,10 @@ pub use op_alloy_network as network;
 #[cfg(feature = "protocol")]
 #[doc(inline)]
 pub use op_alloy_protocol as protocol;
+
+#[cfg(feature = "registry")]
+#[doc(inline)]
+pub use op_alloy_registry as registry;
 
 #[cfg(feature = "provider")]
 #[doc(inline)]
