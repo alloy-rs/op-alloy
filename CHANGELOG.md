@@ -5,8 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.7.0](https://github.com/alloy-rs/op-alloy
-/releases/tag/v0.7.0) - 2024-11-28
+## [0.7.1](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.7.1) - 2024-11-28
 
 ### Bug Fixes
 
@@ -36,6 +36,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- [workspace] Remove Deprecated Methods ([#313](https://github.com/alloy-rs/op-alloy/issues/313))
+- Release 0.7.0
 - [registry] Dogfood Test Rollup Config ([#308](https://github.com/alloy-rs/op-alloy/issues/308))
 - [workspace] Remove Hand-rolled Display Error Impls ([#312](https://github.com/alloy-rs/op-alloy/issues/312))
 - [workspace] Touchup crate docs with badges ([#309](https://github.com/alloy-rs/op-alloy/issues/309))
