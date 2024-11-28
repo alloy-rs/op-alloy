@@ -5,11 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.6.8](https://github.com/alloy-rs/op-alloy
-/releases/tag/v0.6.8) - 2024-11-20
+## [0.7.0](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.7.0) - 2024-11-28
 
 ### Bug Fixes
 
+- [op-alloy] Add Missing Registry Crate ([#311](https://github.com/alloy-rs/op-alloy/issues/311))
+- [protocol] Remove panic in brotli compress method ([#296](https://github.com/alloy-rs/op-alloy/issues/296))
 - [genesis] Base Fee Params ([#292](https://github.com/alloy-rs/op-alloy/issues/292))
 - Protected bits handling ([#270](https://github.com/alloy-rs/op-alloy/issues/270))
 - [book] Batch over SingleBatch ([#260](https://github.com/alloy-rs/op-alloy/issues/260))
@@ -18,6 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Features
 
+- Bump alloy ([#314](https://github.com/alloy-rs/op-alloy/issues/314))
+- [protocol] Compressors ([#299](https://github.com/alloy-rs/op-alloy/issues/299))
+- [book] Hardfork Change Example ([#306](https://github.com/alloy-rs/op-alloy/issues/306))
 - Introduce op-alloy-registry ([#290](https://github.com/alloy-rs/op-alloy/issues/290))
 - [genesis] Holocene Timestamps on Sepolia ([#285](https://github.com/alloy-rs/op-alloy/issues/285))
 - Add missing txtype tryfroms ([#272](https://github.com/alloy-rs/op-alloy/issues/272))
@@ -31,6 +36,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- [registry] Dogfood Test Rollup Config ([#308](https://github.com/alloy-rs/op-alloy/issues/308))
+- [workspace] Remove Hand-rolled Display Error Impls ([#312](https://github.com/alloy-rs/op-alloy/issues/312))
+- [workspace] Touchup crate docs with badges ([#309](https://github.com/alloy-rs/op-alloy/issues/309))
+- [registry] Small Cleanup ([#307](https://github.com/alloy-rs/op-alloy/issues/307))
+- [ci] Add missing no_std crates ([#310](https://github.com/alloy-rs/op-alloy/issues/310))
+- [consensus] EIP-2718 Encoding Trait Impls ([#300](https://github.com/alloy-rs/op-alloy/issues/300))
+- [protocol] Refactor Block Info Txs ([#303](https://github.com/alloy-rs/op-alloy/issues/303))
+- [readme] Add op-alloy-registry ([#301](https://github.com/alloy-rs/op-alloy/issues/301))
+- Issue Template Update ([#304](https://github.com/alloy-rs/op-alloy/issues/304))
+- [protocol] Move and Extend Brotli Compression ([#298](https://github.com/alloy-rs/op-alloy/issues/298))
+- [ci] Run examples in CI ([#297](https://github.com/alloy-rs/op-alloy/issues/297))
+- Add default for txtype ([#295](https://github.com/alloy-rs/op-alloy/issues/295))
 - [consensus] Trait Abstracted Hardforks ([#289](https://github.com/alloy-rs/op-alloy/issues/289))
 - [genesis] Remove hardcoded configs ([#291](https://github.com/alloy-rs/op-alloy/issues/291))
 - [consensus] Cleanup Hardforks ([#288](https://github.com/alloy-rs/op-alloy/issues/288))
@@ -53,6 +70,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Other
 
+- 0.6.8 ([#294](https://github.com/alloy-rs/op-alloy/issues/294))
 - 0.6.7 ([#287](https://github.com/alloy-rs/op-alloy/issues/287))
 - V0.6.6 ([#271](https://github.com/alloy-rs/op-alloy/issues/271))
 
