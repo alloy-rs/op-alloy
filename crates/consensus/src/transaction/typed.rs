@@ -1,6 +1,7 @@
 use crate::{OpTxEnvelope, OpTxType, TxDeposit};
 use alloy_consensus::{
-    SignableTransaction, Signed, Transaction, TxEip1559, TxEip2930, TxEip7702, TxLegacy,
+    transaction::RlpEcdsaTx, SignableTransaction, Signed, Transaction, TxEip1559, TxEip2930,
+    TxEip7702, TxLegacy,
 };
 use alloy_eips::eip2930::AccessList;
 use alloy_primitives::{Address, Bytes, ChainId, PrimitiveSignature as Signature, TxKind, B256};
@@ -365,18 +366,24 @@ impl SignableTransaction<Signature> for OpTypedTransaction {
         Self: Sized,
     {
         match self {
-            Self::Deposit(_) => panic!("TxDeposit is not signable"),
+            Self::Deposit(tx) => {
+                Signed::new_unchecked(Self::Deposit(tx), TxDeposit::signature(), B256::ZERO)
+            }
             Self::Legacy(tx) => {
-                Signed::new_unchecked(Self::Legacy(tx.clone()), signature, tx.signature_hash())
+                let hash = tx.tx_hash(&signature);
+                Signed::new_unchecked(Self::Legacy(tx), signature, hash)
             }
             Self::Eip2930(tx) => {
-                Signed::new_unchecked(Self::Eip2930(tx.clone()), signature, tx.signature_hash())
+                let hash = tx.tx_hash(&signature);
+                Signed::new_unchecked(Self::Eip2930(tx), signature, hash)
             }
             Self::Eip1559(tx) => {
-                Signed::new_unchecked(Self::Eip1559(tx.clone()), signature, tx.signature_hash())
+                let hash = tx.tx_hash(&signature);
+                Signed::new_unchecked(Self::Eip1559(tx), signature, hash)
             }
             Self::Eip7702(tx) => {
-                Signed::new_unchecked(Self::Eip7702(tx.clone()), signature, tx.signature_hash())
+                let hash = tx.tx_hash(&signature);
+                Signed::new_unchecked(Self::Eip7702(tx), signature, hash)
             }
         }
     }
