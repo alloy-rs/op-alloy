@@ -1,7 +1,9 @@
 use crate::{OpTxEnvelope, OpTxType, TxDeposit};
-use alloy_consensus::{Transaction, TxEip1559, TxEip2930, TxEip7702, TxLegacy};
+use alloy_consensus::{
+    SignableTransaction, Signed, Transaction, TxEip1559, TxEip2930, TxEip7702, TxLegacy,
+};
 use alloy_eips::eip2930::AccessList;
-use alloy_primitives::{Address, Bytes, TxKind};
+use alloy_primitives::{Address, Bytes, ChainId, PrimitiveSignature as Signature, TxKind, B256};
 
 /// The TypedTransaction enum represents all Ethereum transaction request types, modified for the OP
 /// Stack.
@@ -111,6 +113,32 @@ impl OpTypedTransaction {
         match self {
             Self::Deposit(tx) => Some(tx),
             _ => None,
+        }
+    }
+
+    fn delegate_signable_mut<F, R>(&mut self, f: F) -> Option<R>
+    where
+        F: FnOnce(&mut dyn SignableTransaction<Signature>) -> R,
+    {
+        match self {
+            Self::Legacy(tx) => Some(f(tx)),
+            Self::Eip2930(tx) => Some(f(tx)),
+            Self::Eip1559(tx) => Some(f(tx)),
+            Self::Eip7702(tx) => Some(f(tx)),
+            Self::Deposit(_) => None,
+        }
+    }
+
+    fn delegate_signable<F, R>(&self, f: F) -> Option<R>
+    where
+        F: FnOnce(&dyn SignableTransaction<Signature>) -> R,
+    {
+        match self {
+            Self::Legacy(tx) => Some(f(tx)),
+            Self::Eip2930(tx) => Some(f(tx)),
+            Self::Eip1559(tx) => Some(f(tx)),
+            Self::Eip7702(tx) => Some(f(tx)),
+            Self::Deposit(_) => None,
         }
     }
 }
@@ -303,6 +331,53 @@ impl Transaction for OpTypedTransaction {
             Self::Eip1559(tx) => tx.effective_gas_price(base_fee),
             Self::Eip7702(tx) => tx.effective_gas_price(base_fee),
             Self::Deposit(tx) => tx.effective_gas_price(base_fee),
+        }
+    }
+}
+
+impl SignableTransaction<Signature> for OpTypedTransaction {
+    fn set_chain_id(&mut self, chain_id: ChainId) {
+        self.delegate_signable_mut(|tx| tx.set_chain_id(chain_id)).unwrap_or(())
+    }
+
+    fn set_chain_id_checked(&mut self, chain_id: ChainId) -> bool {
+        self.delegate_signable_mut(|tx| tx.set_chain_id_checked(chain_id)).unwrap_or(true)
+    }
+
+    fn encode_for_signing(&self, out: &mut dyn alloy_rlp::BufMut) {
+        self.delegate_signable(|tx| tx.encode_for_signing(out)).unwrap_or(())
+    }
+
+    fn payload_len_for_signature(&self) -> usize {
+        self.delegate_signable(|tx| tx.payload_len_for_signature()).unwrap_or(0)
+    }
+
+    fn encoded_for_signing(&self) -> Vec<u8> {
+        self.delegate_signable(|tx| tx.encoded_for_signing()).unwrap_or_default()
+    }
+
+    fn signature_hash(&self) -> B256 {
+        self.delegate_signable(|tx| tx.signature_hash()).unwrap_or(B256::ZERO)
+    }
+
+    fn into_signed(self, signature: Signature) -> Signed<Self, Signature>
+    where
+        Self: Sized,
+    {
+        match self {
+            Self::Deposit(_) => panic!("TxDeposit is not signable"),
+            Self::Legacy(tx) => {
+                Signed::new_unchecked(Self::Legacy(tx.clone()), signature, tx.signature_hash())
+            }
+            Self::Eip2930(tx) => {
+                Signed::new_unchecked(Self::Eip2930(tx.clone()), signature, tx.signature_hash())
+            }
+            Self::Eip1559(tx) => {
+                Signed::new_unchecked(Self::Eip1559(tx.clone()), signature, tx.signature_hash())
+            }
+            Self::Eip7702(tx) => {
+                Signed::new_unchecked(Self::Eip7702(tx.clone()), signature, tx.signature_hash())
+            }
         }
     }
 }
