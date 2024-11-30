@@ -16,9 +16,8 @@ use op_alloy_rpc_types::OpTransactionRequest;
 
 /// Types for an Op-stack network.
 #[derive(Clone, Copy, Debug)]
-pub struct Optimism {
-    _private: (),
-}
+#[non_exhaustive]
+pub struct Optimism;
 
 impl Network for Optimism {
     type TxType = OpTxType;
