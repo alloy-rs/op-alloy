@@ -366,9 +366,11 @@ impl SignableTransaction<Signature> for OpTypedTransaction {
         Self: Sized,
     {
         match self {
-            Self::Deposit(tx) => {
-                Signed::new_unchecked(Self::Deposit(tx), TxDeposit::signature(), B256::ZERO)
-            }
+            Self::Deposit(tx) => Signed::new_unchecked(
+                Self::Deposit(tx.clone()),
+                TxDeposit::signature(),
+                tx.from.into_word(),
+            ),
             Self::Legacy(tx) => {
                 let hash = tx.tx_hash(&signature);
                 Signed::new_unchecked(Self::Legacy(tx), signature, hash)
