@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Bump alloy ([#322](https://github.com/alloy-rs/op-alloy/issues/322))
 
+### Miscellaneous Tasks
+
+- Release 0.7.2
+
 ## [0.7.1](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.7.1) - 2024-11-28
 
