@@ -350,7 +350,7 @@ impl OpTxEnvelope {
     }
 
     /// Returns the inner transaction hash.
-    pub fn hash(&self) -> B256 {
+    pub fn tx_hash(&self) -> B256 {
         match self {
             Self::Legacy(tx) => *tx.hash(),
             Self::Eip1559(tx) => *tx.hash(),
