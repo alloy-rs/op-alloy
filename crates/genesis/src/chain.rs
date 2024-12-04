@@ -181,6 +181,9 @@ impl ChainConfig {
         if cfg.holocene_time.is_none() && defaults.holocene_time.is_some_and(|t| t > super_time) {
             cfg.holocene_time = defaults.holocene_time;
         }
+        if cfg.isthmus_time.is_none() && defaults.isthmus_time.is_some_and(|t| t > super_time) {
+            cfg.isthmus_time = defaults.isthmus_time;
+        }
     }
 
     /// Returns the base fee params for the chain.
