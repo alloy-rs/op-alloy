@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.3](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.7.3) - 2024-12-04
+
+### Dependencies
+
+- Enable alloy-primitives/arbitrary in dev-deps ([#329](https://github.com/alloy-rs/op-alloy/issues/329))
+
+### Features
+
+- [consensus] Tx envelope tx hash ([#324](https://github.com/alloy-rs/op-alloy/issues/324))
+- Add miner extension trait ([#325](https://github.com/alloy-rs/op-alloy/issues/325))
+- [engine] FCU Version ([#321](https://github.com/alloy-rs/op-alloy/issues/321))
+- Add typed 2718 for txtype ([#323](https://github.com/alloy-rs/op-alloy/issues/323))
+
+### Miscellaneous Tasks
+
+- [registry] Update SCR ([#327](https://github.com/alloy-rs/op-alloy/issues/327))
+
+### Other
+
+- Add placeholder for isthmus time to genesis ([#331](https://github.com/alloy-rs/op-alloy/issues/331))
+- Propagate arbitrary ([#330](https://github.com/alloy-rs/op-alloy/issues/330))
+
 ## [0.7.2](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.7.2) - 2024-12-02
 
@@ -14,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.7.2
 - Release 0.7.2
 
 ## [0.7.1](https://github.com/alloy-rs/op-alloy
