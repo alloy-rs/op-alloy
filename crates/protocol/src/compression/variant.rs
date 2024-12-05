@@ -8,7 +8,7 @@ use op_alloy_genesis::RollupConfig;
 
 /// The channel compressor wraps the brotli and zlib compressor types,
 /// implementing the [ChannelCompressor] trait itself.
-#[allow(missing_debug_implementations)]
+#[derive(Debug, Clone)]
 pub enum VariantCompressor {
     /// The brotli compressor.
     Brotli(Box<BrotliCompressor>),

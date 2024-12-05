@@ -16,7 +16,7 @@ use crate::{CompressorResult, CompressorWriter, Config, VariantCompressor};
 ///
 /// The ratio compressor wraps a [VariantCompressor] which dispatches to the
 /// appropriate compression algorithm (ZLIB or Brotli).
-#[allow(missing_debug_implementations)]
+#[derive(Debug, Clone)]
 pub struct RatioCompressor {
     /// The compressor configuration.
     config: Config,

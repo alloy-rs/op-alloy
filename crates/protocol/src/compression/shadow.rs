@@ -28,7 +28,7 @@ const CLOSE_OVERHEAD_ZLIB: u64 = 9;
 /// One exception to the rule is when the first write to the buffer is not checked against
 /// the target. This allows individual blocks larger than the target to be included.
 /// Notice, this will be split across multiple channel frames.
-#[allow(missing_debug_implementations)]
+#[derive(Debug, Clone)]
 pub struct ShadowCompressor {
     /// The compressor configuration.
     config: Config,
