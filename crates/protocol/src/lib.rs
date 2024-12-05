@@ -34,10 +34,12 @@ mod compression;
 pub use compression::{
     compress_zlib, decompress_brotli, decompress_zlib, BrotliDecompressionError, BrotliLevel,
     ChannelCompressor, CompressionAlgo, CompressorError, CompressorResult, CompressorType,
-    CompressorWriter, Config, RatioCompressor, ShadowCompressor, ZlibCompressor,
+    CompressorWriter, Config, ZlibCompressor,
 };
 #[cfg(feature = "std")]
-pub use compression::{BrotliCompressionError, BrotliCompressor, VariantCompressor};
+pub use compression::{
+    BrotliCompressionError, BrotliCompressor, RatioCompressor, ShadowCompressor, VariantCompressor,
+};
 
 mod iter;
 pub use iter::FrameIter;

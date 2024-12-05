@@ -1,6 +1,7 @@
 //! Contains the core `Compressor` trait.
 
 use crate::CompressorResult;
+use alloc::vec::Vec;
 
 /// Compressor Writer
 ///
