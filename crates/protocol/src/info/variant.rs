@@ -10,7 +10,7 @@ use op_alloy_genesis::{RollupConfig, SystemConfig};
 
 use crate::{
     BlockInfoError, DecodeError, DepositSourceDomain, L1BlockInfoBedrock, L1BlockInfoEcotone,
-    L1InfoDepositSource,
+    L1BlockInfoIsthmus, L1InfoDepositSource,
 };
 
 /// The system transaction gas limit post-Regolith
@@ -34,6 +34,8 @@ pub enum L1BlockInfoTx {
     Bedrock(L1BlockInfoBedrock),
     /// An Ecotone L1 info transaction
     Ecotone(L1BlockInfoEcotone),
+    /// An Isthmus L1 info transaction
+    Isthmus(L1BlockInfoIsthmus),
 }
 
 impl L1BlockInfoTx {
@@ -45,6 +47,49 @@ impl L1BlockInfoTx {
         l1_header: &Header,
         l2_block_time: u64,
     ) -> Result<Self, BlockInfoError> {
+        if rollup_config.is_isthmus_active(l2_block_time) {
+            let scalar = system_config.scalar.to_be_bytes::<32>();
+            let blob_base_fee_scalar = (scalar[0] >= L1BlockInfoEcotone::L1_SCALAR)
+                .then(|| {
+                    Ok::<u32, BlockInfoError>(u32::from_be_bytes(
+                        scalar[24..28]
+                            .try_into()
+                            .map_err(|_| BlockInfoError::L1BlobBaseFeeScalar)?,
+                    ))
+                })
+                .transpose()?
+                .unwrap_or_default();
+            let base_fee_scalar = u32::from_be_bytes(
+                scalar[28..32].try_into().map_err(|_| BlockInfoError::BaseFeeScalar)?,
+            );
+            let (operator_fee_scalar, operator_fee_constant) = if scalar[0]
+                == L1BlockInfoIsthmus::L1_SCALAR
+            {
+                let operator_fee_scalar = Ok::<u32, BlockInfoError>(u32::from_be_bytes(
+                    scalar[12..16].try_into().map_err(|_| BlockInfoError::OperatorFeeScalar)?,
+                ))?;
+                let operator_fee_constant = Ok::<u64, BlockInfoError>(u64::from_be_bytes(
+                    scalar[16..24].try_into().map_err(|_| BlockInfoError::OperatorFeeConstant)?,
+                ))?;
+                (operator_fee_scalar, operator_fee_constant)
+            } else {
+                (0, 0)
+            };
+            return Ok(Self::Isthmus(L1BlockInfoIsthmus {
+                number: l1_header.number,
+                time: l1_header.timestamp,
+                base_fee: l1_header.base_fee_per_gas.unwrap_or(0),
+                block_hash: l1_header.hash_slow(),
+                sequence_number,
+                batcher_address: system_config.batcher_address,
+                blob_base_fee: l1_header.blob_fee().unwrap_or(1),
+                blob_base_fee_scalar,
+                base_fee_scalar,
+                operator_fee_scalar,
+                operator_fee_constant,
+            }));
+        }
+
         // In the first block of Ecotone, the L1Block contract has not been upgraded yet due to the
         // upgrade transactions being placed after the L1 info transaction. Because of this,
         // for the first block of Ecotone, we send a Bedrock style L1 block info transaction
@@ -145,6 +190,9 @@ impl L1BlockInfoTx {
             L1BlockInfoEcotone::L1_INFO_TX_SELECTOR => L1BlockInfoEcotone::decode_calldata(r)
                 .map(Self::Ecotone)
                 .map_err(|e| DecodeError::ParseError(format!("Ecotone decode error: {}", e))),
+            L1BlockInfoIsthmus::L1_INFO_TX_SELECTOR => L1BlockInfoIsthmus::decode_calldata(r)
+                .map(Self::Isthmus)
+                .map_err(|e| DecodeError::ParseError(format!("Isthmus decode error: {}", e))),
             _ => Err(DecodeError::InvalidSelector),
         }
     }
@@ -154,6 +202,7 @@ impl L1BlockInfoTx {
         match self {
             Self::Bedrock(ref tx) => tx.block_hash,
             Self::Ecotone(ref tx) => tx.block_hash,
+            Self::Isthmus(ref tx) => tx.block_hash,
         }
     }
 
@@ -162,6 +211,7 @@ impl L1BlockInfoTx {
         match self {
             Self::Bedrock(bedrock_tx) => bedrock_tx.encode_calldata(),
             Self::Ecotone(ecotone_tx) => ecotone_tx.encode_calldata(),
+            Self::Isthmus(isthmus_tx) => isthmus_tx.encode_calldata(),
         }
     }
 
@@ -174,6 +224,9 @@ impl L1BlockInfoTx {
             Self::Bedrock(L1BlockInfoBedrock { number, block_hash, .. }) => {
                 BlockNumHash { number: *number, hash: *block_hash }
             }
+            Self::Isthmus(L1BlockInfoIsthmus { number, block_hash, .. }) => {
+                BlockNumHash { number: *number, hash: *block_hash }
+            }
         }
     }
 
@@ -182,6 +235,7 @@ impl L1BlockInfoTx {
         match self {
             Self::Bedrock(L1BlockInfoBedrock { l1_fee_overhead, .. }) => *l1_fee_overhead,
             Self::Ecotone(_) => U256::ZERO,
+            Self::Isthmus(_) => U256::ZERO,
         }
     }
 
@@ -190,6 +244,7 @@ impl L1BlockInfoTx {
         match self {
             Self::Bedrock(L1BlockInfoBedrock { batcher_address, .. }) => *batcher_address,
             Self::Ecotone(L1BlockInfoEcotone { batcher_address, .. }) => *batcher_address,
+            Self::Isthmus(L1BlockInfoIsthmus { batcher_address, .. }) => *batcher_address,
         }
     }
 
@@ -198,6 +253,7 @@ impl L1BlockInfoTx {
         match self {
             Self::Bedrock(L1BlockInfoBedrock { sequence_number, .. }) => *sequence_number,
             Self::Ecotone(L1BlockInfoEcotone { sequence_number, .. }) => *sequence_number,
+            Self::Isthmus(L1BlockInfoIsthmus { sequence_number, .. }) => *sequence_number,
         }
     }
 }
@@ -210,6 +266,7 @@ mod test {
 
     const RAW_BEDROCK_INFO_TX: [u8; L1BlockInfoBedrock::L1_INFO_TX_LEN] = hex!("015d8eb9000000000000000000000000000000000000000000000000000000000117c4eb0000000000000000000000000000000000000000000000000000000065280377000000000000000000000000000000000000000000000000000000026d05d953392012032675be9f94aae5ab442de73c5f4fb1bf30fa7dd0d2442239899a40fc00000000000000000000000000000000000000000000000000000000000000040000000000000000000000006887246668a3b87f54deb3b94ba47a6f63f3298500000000000000000000000000000000000000000000000000000000000000bc00000000000000000000000000000000000000000000000000000000000a6fe0");
     const RAW_ECOTONE_INFO_TX: [u8; L1BlockInfoEcotone::L1_INFO_TX_LEN] = hex!("440a5e2000000558000c5fc5000000000000000500000000661c277300000000012bec20000000000000000000000000000000000000000000000000000000026e9f109900000000000000000000000000000000000000000000000000000000000000011c4c84c50740386c7dc081efddd644405f04cde73e30a2e381737acce9f5add30000000000000000000000006887246668a3b87f54deb3b94ba47a6f63f32985");
+    const RAW_ISTHMUS_INFO_TX: [u8; L1BlockInfoIsthmus::L1_INFO_TX_LEN] = hex!("098999be00000558000c5fc5000000000000000500000000661c277300000000012bec20000000000000000000000000000000000000000000000000000000026e9f109900000000000000000000000000000000000000000000000000000000000000011c4c84c50740386c7dc081efddd644405f04cde73e30a2e381737acce9f5add30000000000000000000000006887246668a3b87f54deb3b94ba47a6f63f329850000abcd000000000000dcba");
 
     #[test]
     fn bedrock_l1_block_info_invalid_len() {
@@ -298,6 +355,31 @@ mod test {
         };
         assert_eq!(expected, decoded);
         assert_eq!(decoded.encode_calldata().as_ref(), RAW_ECOTONE_INFO_TX);
+    }
+
+    #[test]
+    fn test_isthmus_l1_block_info_tx_roundtrip() {
+        let expected = L1BlockInfoIsthmus {
+            number: 19655712,
+            time: 1713121139,
+            base_fee: 10445852825,
+            block_hash: b256!("1c4c84c50740386c7dc081efddd644405f04cde73e30a2e381737acce9f5add3"),
+            sequence_number: 5,
+            batcher_address: address!("6887246668a3b87f54deb3b94ba47a6f63f32985"),
+            blob_base_fee: 1,
+            blob_base_fee_scalar: 810949,
+            base_fee_scalar: 1368,
+            operator_fee_scalar: 0xabcd,
+            operator_fee_constant: 0xdcba,
+        };
+
+        let L1BlockInfoTx::Isthmus(decoded) =
+            L1BlockInfoTx::decode_calldata(RAW_ISTHMUS_INFO_TX.as_ref()).unwrap()
+        else {
+            panic!("Wrong fork");
+        };
+        assert_eq!(expected, decoded);
+        assert_eq!(decoded.encode_calldata().as_ref(), RAW_ISTHMUS_INFO_TX);
     }
 
     #[test]
