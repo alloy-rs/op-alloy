@@ -18,6 +18,7 @@ workspace = true
 # Workspace
 op-alloy-consensus.workspace = true
 op-alloy-protocol.workspace = true
+op-alloy-genesis.workspace = true
 
 # Alloy
 alloy-primitives.workspace = true
@@ -41,6 +42,7 @@ arbitrary = { workspace = true, features = ["derive"], optional = true }
 arbtest.workspace = true
 serde_json.workspace = true
 arbitrary = { workspace = true, features = ["derive"] }
+alloy-primitives = { workspace = true, features = ["arbitrary"] }
 
 [features]
 default = ["std", "serde"]
@@ -59,4 +61,9 @@ serde = [
   "op-alloy-protocol/serde",
   "alloy-rpc-types-engine/serde",
 ]
-arbitrary = ["std", "dep:arbitrary", "alloy-primitives/arbitrary", "alloy-primitives/rand"]
+arbitrary = [
+  "std",
+  "dep:arbitrary",
+  "alloy-primitives/arbitrary",
+  "alloy-primitives/rand",
+]

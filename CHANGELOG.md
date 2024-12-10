@@ -5,6 +5,45 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.0](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.8.0) - 2024-12-10
+
+### Dependencies
+
+- Bump alloy ([#338](https://github.com/alloy-rs/op-alloy/issues/338))
+- [registry] Bump superchain-registry commit ([#336](https://github.com/alloy-rs/op-alloy/issues/336))
+- Bump alloy to 0.7.3 ([#334](https://github.com/alloy-rs/op-alloy/issues/334))
+- Enable alloy-primitives/arbitrary in dev-deps ([#329](https://github.com/alloy-rs/op-alloy/issues/329))
+
+### Features
+
+- [consensus] Tx envelope tx hash ([#324](https://github.com/alloy-rs/op-alloy/issues/324))
+- Add miner extension trait ([#325](https://github.com/alloy-rs/op-alloy/issues/325))
+- [engine] FCU Version ([#321](https://github.com/alloy-rs/op-alloy/issues/321))
+- Add typed 2718 for txtype ([#323](https://github.com/alloy-rs/op-alloy/issues/323))
+
+### Miscellaneous Tasks
+
+- [registry] Update SCR ([#327](https://github.com/alloy-rs/op-alloy/issues/327))
+
+### Other
+
+- 0.7.3 ([#333](https://github.com/alloy-rs/op-alloy/issues/333))
+- Add placeholder for isthmus time to genesis ([#331](https://github.com/alloy-rs/op-alloy/issues/331))
+- Propagate arbitrary ([#330](https://github.com/alloy-rs/op-alloy/issues/330))
+
+## [0.7.2](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.7.2) - 2024-12-02
+
+### Features
+
+- Bump alloy ([#322](https://github.com/alloy-rs/op-alloy/issues/322))
+
+### Miscellaneous Tasks
+
+- Release 0.7.2
+- Release 0.7.2
+
 ## [0.7.1](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.7.1) - 2024-11-28
 
@@ -36,6 +75,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.7.1
 - [workspace] Remove Deprecated Methods ([#313](https://github.com/alloy-rs/op-alloy/issues/313))
 - Release 0.7.0
 - [registry] Dogfood Test Rollup Config ([#308](https://github.com/alloy-rs/op-alloy/issues/308))

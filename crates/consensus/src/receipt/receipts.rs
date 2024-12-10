@@ -1,11 +1,11 @@
 //! Transaction receipt types for Optimism.
 
 use super::OpTxReceipt;
-use alloy_consensus::{Eip658Value, Receipt, ReceiptWithBloom, RlpReceipt, TxReceipt};
+use alloy_consensus::{
+    Eip658Value, Receipt, ReceiptWithBloom, RlpDecodableReceipt, RlpEncodableReceipt, TxReceipt,
+};
 use alloy_primitives::{Bloom, Log};
-use alloy_rlp::{BufMut, Decodable, Encodable};
-
-use core::borrow::Borrow;
+use alloy_rlp::{Buf, BufMut, Decodable, Encodable, Header};
 
 /// Receipt containing result of transaction execution.
 #[derive(Clone, Debug, PartialEq, Eq, Default)]
@@ -55,6 +55,53 @@ impl OpDepositReceipt {
     }
 }
 
+impl<T: Encodable> OpDepositReceipt<T> {
+    /// Returns length of RLP-encoded receipt fields with the given [`Bloom`] without an RLP header.
+    pub fn rlp_encoded_fields_length_with_bloom(&self, bloom: &Bloom) -> usize {
+        self.inner.rlp_encoded_fields_length_with_bloom(bloom)
+            + self.deposit_nonce.map_or(0, |nonce| nonce.length())
+            + self.deposit_receipt_version.map_or(0, |version| version.length())
+    }
+
+    /// RLP-encodes receipt fields with the given [`Bloom`] without an RLP header.
+    pub fn rlp_encode_fields_with_bloom(&self, bloom: &Bloom, out: &mut dyn BufMut) {
+        self.inner.rlp_encode_fields_with_bloom(bloom, out);
+
+        if let Some(nonce) = self.deposit_nonce {
+            nonce.encode(out);
+        }
+        if let Some(version) = self.deposit_receipt_version {
+            version.encode(out);
+        }
+    }
+
+    /// Returns RLP header for this receipt encoding with the given [`Bloom`].
+    pub fn rlp_header_with_bloom(&self, bloom: &Bloom) -> Header {
+        Header { list: true, payload_length: self.rlp_encoded_fields_length_with_bloom(bloom) }
+    }
+}
+
+impl<T: Decodable> OpDepositReceipt<T> {
+    /// RLP-decodes receipt's field with a [`Bloom`].
+    ///
+    /// Does not expect an RLP header.
+    pub fn rlp_decode_fields_with_bloom(
+        buf: &mut &[u8],
+    ) -> alloy_rlp::Result<ReceiptWithBloom<Self>> {
+        let ReceiptWithBloom { receipt: inner, logs_bloom } =
+            Receipt::rlp_decode_fields_with_bloom(buf)?;
+
+        let deposit_nonce = (!buf.is_empty()).then(|| Decodable::decode(buf)).transpose()?;
+        let deposit_receipt_version =
+            (!buf.is_empty()).then(|| Decodable::decode(buf)).transpose()?;
+
+        Ok(ReceiptWithBloom {
+            logs_bloom,
+            receipt: Self { inner, deposit_nonce, deposit_receipt_version },
+        })
+    }
+}
+
 impl<T> AsRef<Receipt<T>> for OpDepositReceipt<T> {
     fn as_ref(&self) -> &Receipt<T> {
         &self.inner
@@ -63,7 +110,7 @@ impl<T> AsRef<Receipt<T>> for OpDepositReceipt<T> {
 
 impl<T> TxReceipt for OpDepositReceipt<T>
 where
-    T: Borrow<Log> + Clone + core::fmt::Debug + PartialEq + Eq + Send + Sync,
+    T: AsRef<Log> + Clone + core::fmt::Debug + PartialEq + Eq + Send + Sync,
 {
     type Log = T;
 
@@ -88,36 +135,40 @@ where
     }
 }
 
-impl<T: Encodable + Decodable> RlpReceipt for OpDepositReceipt<T> {
-    fn rlp_encoded_fields_length_with_bloom(&self, bloom: Bloom) -> usize {
-        self.inner.rlp_encoded_fields_length_with_bloom(bloom)
-            + self.deposit_nonce.map_or(0, |nonce| nonce.length())
-            + self.deposit_receipt_version.map_or(0, |version| version.length())
+impl<T: Encodable> RlpEncodableReceipt for OpDepositReceipt<T> {
+    fn rlp_encoded_length_with_bloom(&self, bloom: &Bloom) -> usize {
+        self.rlp_header_with_bloom(bloom).length_with_payload()
     }
 
-    fn rlp_encode_fields_with_bloom(&self, bloom: Bloom, out: &mut dyn BufMut) {
-        self.inner.rlp_encode_fields_with_bloom(bloom, out);
-
-        if let Some(nonce) = self.deposit_nonce {
-            nonce.encode(out);
-        }
-        if let Some(version) = self.deposit_receipt_version {
-            version.encode(out);
-        }
+    fn rlp_encode_with_bloom(&self, bloom: &Bloom, out: &mut dyn BufMut) {
+        self.rlp_header_with_bloom(bloom).encode(out);
+        self.rlp_encode_fields_with_bloom(bloom, out);
     }
+}
 
-    fn rlp_decode_fields_with_bloom(buf: &mut &[u8]) -> alloy_rlp::Result<ReceiptWithBloom<Self>> {
-        let ReceiptWithBloom { receipt: inner, logs_bloom } =
-            RlpReceipt::rlp_decode_fields_with_bloom(buf)?;
+impl<T: Decodable> RlpDecodableReceipt for OpDepositReceipt<T> {
+    fn rlp_decode_with_bloom(buf: &mut &[u8]) -> alloy_rlp::Result<ReceiptWithBloom<Self>> {
+        let header = Header::decode(buf)?;
+        if !header.list {
+            return Err(alloy_rlp::Error::UnexpectedString);
+        }
 
-        let deposit_nonce = (!buf.is_empty()).then(|| Decodable::decode(buf)).transpose()?;
-        let deposit_receipt_version =
-            (!buf.is_empty()).then(|| Decodable::decode(buf)).transpose()?;
+        if buf.len() < header.payload_length {
+            return Err(alloy_rlp::Error::InputTooShort);
+        }
 
-        Ok(ReceiptWithBloom {
-            receipt: Self { inner, deposit_nonce, deposit_receipt_version },
-            logs_bloom,
-        })
+        // Note: we pass a separate buffer to `rlp_decode_fields_with_bloom` to allow it decode
+        // optional fields based on the remaining length.
+        let mut fields_buf = &buf[..header.payload_length];
+        let this = Self::rlp_decode_fields_with_bloom(&mut fields_buf)?;
+
+        if !fields_buf.is_empty() {
+            return Err(alloy_rlp::Error::UnexpectedLength);
+        }
+
+        buf.advance(header.payload_length);
+
+        Ok(this)
     }
 }
 

@@ -1,6 +1,6 @@
 use alloy_consensus::{
     transaction::RlpEcdsaTx, Sealable, Sealed, Signed, Transaction, TxEip1559, TxEip2930,
-    TxEip7702, TxLegacy,
+    TxEip7702, TxLegacy, Typed2718,
 };
 use alloy_eips::{
     eip2718::{Decodable2718, Eip2718Error, Eip2718Result, Encodable2718},
@@ -77,6 +77,18 @@ impl From<TxDeposit> for OpTxEnvelope {
 impl From<Sealed<TxDeposit>> for OpTxEnvelope {
     fn from(v: Sealed<TxDeposit>) -> Self {
         Self::Deposit(v)
+    }
+}
+
+impl Typed2718 for OpTxEnvelope {
+    fn ty(&self) -> u8 {
+        match self {
+            Self::Legacy(tx) => tx.tx().ty(),
+            Self::Eip2930(tx) => tx.tx().ty(),
+            Self::Eip1559(tx) => tx.tx().ty(),
+            Self::Eip7702(tx) => tx.tx().ty(),
+            Self::Deposit(tx) => tx.ty(),
+        }
     }
 }
 
@@ -211,16 +223,6 @@ impl Transaction for OpTxEnvelope {
         }
     }
 
-    fn ty(&self) -> u8 {
-        match self {
-            Self::Legacy(tx) => tx.tx().ty(),
-            Self::Eip2930(tx) => tx.tx().ty(),
-            Self::Eip1559(tx) => tx.tx().ty(),
-            Self::Eip7702(tx) => tx.tx().ty(),
-            Self::Deposit(tx) => tx.ty(),
-        }
-    }
-
     fn access_list(&self) -> Option<&AccessList> {
         match self {
             Self::Legacy(tx) => tx.tx().access_list(),
@@ -346,6 +348,17 @@ impl OpTxEnvelope {
             Self::Eip1559(_) => OpTxType::Eip1559,
             Self::Eip7702(_) => OpTxType::Eip7702,
             Self::Deposit(_) => OpTxType::Deposit,
+        }
+    }
+
+    /// Returns the inner transaction hash.
+    pub fn tx_hash(&self) -> B256 {
+        match self {
+            Self::Legacy(tx) => *tx.hash(),
+            Self::Eip1559(tx) => *tx.hash(),
+            Self::Eip2930(tx) => *tx.hash(),
+            Self::Eip7702(tx) => *tx.hash(),
+            Self::Deposit(tx) => tx.tx_hash(),
         }
     }
 
