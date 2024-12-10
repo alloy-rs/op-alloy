@@ -85,7 +85,9 @@ impl<T: Decodable> OpDepositReceipt<T> {
     /// RLP-decodes receipt's field with a [`Bloom`].
     ///
     /// Does not expect an RLP header.
-    pub fn rlp_decode_fields_with_bloom(buf: &mut &[u8]) -> alloy_rlp::Result<ReceiptWithBloom<Self>> {
+    pub fn rlp_decode_fields_with_bloom(
+        buf: &mut &[u8],
+    ) -> alloy_rlp::Result<ReceiptWithBloom<Self>> {
         let ReceiptWithBloom { receipt: inner, logs_bloom } =
             Receipt::rlp_decode_fields_with_bloom(buf)?;
 
