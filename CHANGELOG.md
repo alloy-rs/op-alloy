@@ -5,11 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.7.3](https://github.com/alloy-rs/op-alloy
-/releases/tag/v0.7.3) - 2024-12-04
+## [0.8.0](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.8.0) - 2024-12-10
 
 ### Dependencies
 
+- Bump alloy ([#338](https://github.com/alloy-rs/op-alloy/issues/338))
+- [registry] Bump superchain-registry commit ([#336](https://github.com/alloy-rs/op-alloy/issues/336))
+- Bump alloy to 0.7.3 ([#334](https://github.com/alloy-rs/op-alloy/issues/334))
 - Enable alloy-primitives/arbitrary in dev-deps ([#329](https://github.com/alloy-rs/op-alloy/issues/329))
 
 ### Features
@@ -25,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Other
 
+- 0.7.3 ([#333](https://github.com/alloy-rs/op-alloy/issues/333))
 - Add placeholder for isthmus time to genesis ([#331](https://github.com/alloy-rs/op-alloy/issues/331))
 - Propagate arbitrary ([#330](https://github.com/alloy-rs/op-alloy/issues/330))
 
