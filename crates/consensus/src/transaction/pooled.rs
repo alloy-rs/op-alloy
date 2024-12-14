@@ -1,7 +1,7 @@
 //! Defines the exact transaction variants that are allowed to be propagated over the eth p2p
 //! protocol in op.
 
-use crate::OpTxType;
+use crate::{OpTxEnvelope, OpTxType};
 use alloy_consensus::{
     transaction::{RlpEcdsaTx, TxEip1559, TxEip2930, TxLegacy},
     SignableTransaction, Signed, Transaction, TxEip7702, TxEnvelope, Typed2718,
@@ -104,8 +104,18 @@ impl OpPooledTransaction {
         }
     }
 
-    /// Converts the transaction into [`TxEnvelope`].
+    /// Converts the transaction into the ethereum [`TxEnvelope`].
     pub fn into_envelope(self) -> TxEnvelope {
+        match self {
+            Self::Legacy(tx) => tx.into(),
+            Self::Eip2930(tx) => tx.into(),
+            Self::Eip1559(tx) => tx.into(),
+            Self::Eip7702(tx) => tx.into(),
+        }
+    }
+
+    /// Converts the transaction into the optimism [`OpTxEnvelope`].
+    pub fn into_op_envelope(self) -> OpTxEnvelope {
         match self {
             Self::Legacy(tx) => tx.into(),
             Self::Eip2930(tx) => tx.into(),
@@ -422,6 +432,12 @@ impl Typed2718 for OpPooledTransaction {
 impl From<OpPooledTransaction> for TxEnvelope {
     fn from(tx: OpPooledTransaction) -> Self {
         tx.into_envelope()
+    }
+}
+
+impl From<OpPooledTransaction> for OpTxEnvelope {
+    fn from(tx: OpPooledTransaction) -> Self {
+        tx.into_op_envelope()
     }
 }
 
