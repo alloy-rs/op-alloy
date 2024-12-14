@@ -5,12 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.3](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.8.3) - 2024-12-14
+
+### Documentation
+
+- Fix docs ([#343](https://github.com/alloy-rs/op-alloy/issues/343))
+
+### Features
+
+- Add OpPooledTransaction ([#341](https://github.com/alloy-rs/op-alloy/issues/341))
+
+### Miscellaneous Tasks
+
+- Reorder impl fns ([#342](https://github.com/alloy-rs/op-alloy/issues/342))
+
 ## [0.8.2](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.8.2) - 2024-12-12
 
 ### Features
 
 - Upstream decode extradata fn ([#340](https://github.com/alloy-rs/op-alloy/issues/340))
+
+### Miscellaneous Tasks
+
+- Release 0.8.2
 
 ## [0.8.1](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.8.1) - 2024-12-12
