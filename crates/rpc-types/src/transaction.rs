@@ -1,6 +1,6 @@
 //! Optimism specific types related to transactions.
 
-use alloy_consensus::Transaction as _;
+use alloy_consensus::{Transaction as _, Typed2718};
 use alloy_eips::{eip2930::AccessList, eip7702::SignedAuthorization};
 use alloy_primitives::{Address, BlockHash, Bytes, ChainId, TxKind, B256, U256};
 use alloy_serde::OtherFields;
@@ -29,13 +29,15 @@ pub struct Transaction {
     pub deposit_receipt_version: Option<u64>,
 }
 
+impl Typed2718 for Transaction {
+    fn ty(&self) -> u8 {
+        self.inner.ty()
+    }
+}
+
 impl alloy_consensus::Transaction for Transaction {
     fn chain_id(&self) -> Option<ChainId> {
         self.inner.chain_id()
-    }
-
-    fn is_create(&self) -> bool {
-        self.inner.is_create()
     }
 
     fn nonce(&self) -> u64 {
@@ -78,6 +80,10 @@ impl alloy_consensus::Transaction for Transaction {
         self.inner.kind()
     }
 
+    fn is_create(&self) -> bool {
+        self.inner.is_create()
+    }
+
     fn to(&self) -> Option<Address> {
         self.inner.to()
     }
@@ -88,10 +94,6 @@ impl alloy_consensus::Transaction for Transaction {
 
     fn input(&self) -> &Bytes {
         self.inner.input()
-    }
-
-    fn ty(&self) -> u8 {
-        self.inner.ty()
     }
 
     fn access_list(&self) -> Option<&AccessList> {
@@ -126,10 +128,6 @@ impl alloy_network_primitives::TransactionResponse for Transaction {
 
     fn from(&self) -> Address {
         self.inner.from()
-    }
-
-    fn to(&self) -> Option<Address> {
-        alloy_consensus::Transaction::to(&self.inner)
     }
 }
 
