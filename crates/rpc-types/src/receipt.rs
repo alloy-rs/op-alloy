@@ -181,6 +181,17 @@ pub struct L1BlockInfo {
     /// Always null prior to the Ecotone hardfork.
     #[serde(default, skip_serializing_if = "Option::is_none", with = "alloy_serde::quantity::opt")]
     pub l1_blob_base_fee_scalar: Option<u128>,
+    /* ---------------------------------------- Isthmus ---------------------------------------- */
+    /// Operator fee scalar. Applied to operator fee to compute weighted gas price multiplier.
+    ///
+    /// Always null prior to the Isthmus hardfork.
+    #[serde(default, skip_serializing_if = "Option::is_none", with = "alloy_serde::quantity::opt")]
+    pub operator_fee_scalar: Option<u32>,
+    /// Operator fee constant. Applied to operator fee to compute weighted gas price multiplier.
+    ///
+    /// Always null prior to the Isthmus hardfork.
+    #[serde(default, skip_serializing_if = "Option::is_none", with = "alloy_serde::quantity::opt")]
+    pub operator_fee_constant: Option<u64>,
 }
 
 impl Eq for L1BlockInfo {}
