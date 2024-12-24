@@ -1,5 +1,5 @@
 use crate::{OpTxEnvelope, OpTxType, TxDeposit};
-use alloy_consensus::{Transaction, TxEip1559, TxEip2930, TxEip7702, TxLegacy};
+use alloy_consensus::{Transaction, TxEip1559, TxEip2930, TxEip7702, TxLegacy, Typed2718};
 use alloy_eips::eip2930::AccessList;
 use alloy_primitives::{Address, Bytes, TxKind};
 
@@ -115,6 +115,18 @@ impl OpTypedTransaction {
     }
 }
 
+impl Typed2718 for OpTypedTransaction {
+    fn ty(&self) -> u8 {
+        match self {
+            Self::Legacy(_) => OpTxType::Legacy as u8,
+            Self::Eip2930(_) => OpTxType::Eip2930 as u8,
+            Self::Eip1559(_) => OpTxType::Eip1559 as u8,
+            Self::Eip7702(_) => OpTxType::Eip7702 as u8,
+            Self::Deposit(_) => OpTxType::Deposit as u8,
+        }
+    }
+}
+
 impl Transaction for OpTypedTransaction {
     fn chain_id(&self) -> Option<alloy_primitives::ChainId> {
         match self {
@@ -123,16 +135,6 @@ impl Transaction for OpTypedTransaction {
             Self::Eip1559(tx) => tx.chain_id(),
             Self::Eip7702(tx) => tx.chain_id(),
             Self::Deposit(tx) => tx.chain_id(),
-        }
-    }
-
-    fn is_create(&self) -> bool {
-        match self {
-            Self::Legacy(tx) => tx.is_create(),
-            Self::Eip2930(tx) => tx.is_create(),
-            Self::Eip1559(tx) => tx.is_create(),
-            Self::Eip7702(tx) => tx.is_create(),
-            Self::Deposit(tx) => tx.is_create(),
         }
     }
 
@@ -206,13 +208,23 @@ impl Transaction for OpTypedTransaction {
         }
     }
 
-    fn to(&self) -> Option<Address> {
+    fn effective_gas_price(&self, base_fee: Option<u64>) -> u128 {
         match self {
-            Self::Legacy(tx) => tx.to(),
-            Self::Eip2930(tx) => tx.to(),
-            Self::Eip1559(tx) => tx.to(),
-            Self::Eip7702(tx) => tx.to(),
-            Self::Deposit(tx) => tx.to(),
+            Self::Legacy(tx) => tx.effective_gas_price(base_fee),
+            Self::Eip2930(tx) => tx.effective_gas_price(base_fee),
+            Self::Eip1559(tx) => tx.effective_gas_price(base_fee),
+            Self::Eip7702(tx) => tx.effective_gas_price(base_fee),
+            Self::Deposit(tx) => tx.effective_gas_price(base_fee),
+        }
+    }
+
+    fn is_dynamic_fee(&self) -> bool {
+        match self {
+            Self::Legacy(tx) => tx.is_dynamic_fee(),
+            Self::Eip2930(tx) => tx.is_dynamic_fee(),
+            Self::Eip1559(tx) => tx.is_dynamic_fee(),
+            Self::Eip7702(tx) => tx.is_dynamic_fee(),
+            Self::Deposit(tx) => tx.is_dynamic_fee(),
         }
     }
 
@@ -223,6 +235,26 @@ impl Transaction for OpTypedTransaction {
             Self::Eip1559(tx) => tx.kind(),
             Self::Eip7702(tx) => tx.kind(),
             Self::Deposit(tx) => tx.kind(),
+        }
+    }
+
+    fn is_create(&self) -> bool {
+        match self {
+            Self::Legacy(tx) => tx.is_create(),
+            Self::Eip2930(tx) => tx.is_create(),
+            Self::Eip1559(tx) => tx.is_create(),
+            Self::Eip7702(tx) => tx.is_create(),
+            Self::Deposit(tx) => tx.is_create(),
+        }
+    }
+
+    fn to(&self) -> Option<Address> {
+        match self {
+            Self::Legacy(tx) => tx.to(),
+            Self::Eip2930(tx) => tx.to(),
+            Self::Eip1559(tx) => tx.to(),
+            Self::Eip7702(tx) => tx.to(),
+            Self::Deposit(tx) => tx.to(),
         }
     }
 
@@ -243,16 +275,6 @@ impl Transaction for OpTypedTransaction {
             Self::Eip1559(tx) => tx.input(),
             Self::Eip7702(tx) => tx.input(),
             Self::Deposit(tx) => tx.input(),
-        }
-    }
-
-    fn ty(&self) -> u8 {
-        match self {
-            Self::Legacy(_) => OpTxType::Legacy as u8,
-            Self::Eip2930(_) => OpTxType::Eip2930 as u8,
-            Self::Eip1559(_) => OpTxType::Eip1559 as u8,
-            Self::Eip7702(_) => OpTxType::Eip7702 as u8,
-            Self::Deposit(_) => OpTxType::Deposit as u8,
         }
     }
 
@@ -283,26 +305,6 @@ impl Transaction for OpTypedTransaction {
             Self::Eip1559(tx) => tx.authorization_list(),
             Self::Eip7702(tx) => tx.authorization_list(),
             Self::Deposit(tx) => tx.authorization_list(),
-        }
-    }
-
-    fn is_dynamic_fee(&self) -> bool {
-        match self {
-            Self::Legacy(tx) => tx.is_dynamic_fee(),
-            Self::Eip2930(tx) => tx.is_dynamic_fee(),
-            Self::Eip1559(tx) => tx.is_dynamic_fee(),
-            Self::Eip7702(tx) => tx.is_dynamic_fee(),
-            Self::Deposit(tx) => tx.is_dynamic_fee(),
-        }
-    }
-
-    fn effective_gas_price(&self, base_fee: Option<u64>) -> u128 {
-        match self {
-            Self::Legacy(tx) => tx.effective_gas_price(base_fee),
-            Self::Eip2930(tx) => tx.effective_gas_price(base_fee),
-            Self::Eip1559(tx) => tx.effective_gas_price(base_fee),
-            Self::Eip7702(tx) => tx.effective_gas_price(base_fee),
-            Self::Deposit(tx) => tx.effective_gas_price(base_fee),
         }
     }
 }

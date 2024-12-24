@@ -5,11 +5,64 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.7.3](https://github.com/alloy-rs/op-alloy
-/releases/tag/v0.7.3) - 2024-12-04
+## [0.8.4](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.8.4) - 2024-12-17
 
 ### Dependencies
 
+- Bump alloy 081 ([#344](https://github.com/alloy-rs/op-alloy/issues/344))
+
+### Other
+
+- [Bug] miner_setMaxDASize should return bool type ([#346](https://github.com/alloy-rs/op-alloy/issues/346))
+
+## [0.8.3](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.8.3) - 2024-12-14
+
+### Documentation
+
+- Fix docs ([#343](https://github.com/alloy-rs/op-alloy/issues/343))
+
+### Features
+
+- Add OpPooledTransaction ([#341](https://github.com/alloy-rs/op-alloy/issues/341))
+
+### Miscellaneous Tasks
+
+- Release 0.8.3
+- Reorder impl fns ([#342](https://github.com/alloy-rs/op-alloy/issues/342))
+
+## [0.8.2](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.8.2) - 2024-12-12
+
+### Features
+
+- Upstream decode extradata fn ([#340](https://github.com/alloy-rs/op-alloy/issues/340))
+
+### Miscellaneous Tasks
+
+- Release 0.8.2
+
+## [0.8.1](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.8.1) - 2024-12-12
+
+### Features
+
+- Add serde for OpTxType ([#317](https://github.com/alloy-rs/op-alloy/issues/317))
+
+### Miscellaneous Tasks
+
+- Release 0.8.1
+- Reuse methods for receipt rlp ([#339](https://github.com/alloy-rs/op-alloy/issues/339))
+
+## [0.8.0](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.8.0) - 2024-12-10
+
+### Dependencies
+
+- Bump alloy ([#338](https://github.com/alloy-rs/op-alloy/issues/338))
+- [registry] Bump superchain-registry commit ([#336](https://github.com/alloy-rs/op-alloy/issues/336))
+- Bump alloy to 0.7.3 ([#334](https://github.com/alloy-rs/op-alloy/issues/334))
 - Enable alloy-primitives/arbitrary in dev-deps ([#329](https://github.com/alloy-rs/op-alloy/issues/329))
 
 ### Features
@@ -21,10 +74,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.8.0
 - [registry] Update SCR ([#327](https://github.com/alloy-rs/op-alloy/issues/327))
 
 ### Other
 
+- 0.7.3 ([#333](https://github.com/alloy-rs/op-alloy/issues/333))
 - Add placeholder for isthmus time to genesis ([#331](https://github.com/alloy-rs/op-alloy/issues/331))
 - Propagate arbitrary ([#330](https://github.com/alloy-rs/op-alloy/issues/330))
 
