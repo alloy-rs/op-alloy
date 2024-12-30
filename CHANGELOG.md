@@ -5,12 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.0](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.9.0) - 2024-12-30
+
+### Dependencies
+
+- Bump alloy 0.9 ([#350](https://github.com/alloy-rs/op-alloy/issues/350))
+
+### Miscellaneous Tasks
+
+- Make clippy happy ([#349](https://github.com/alloy-rs/op-alloy/issues/349))
+
 ## [0.8.5](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.8.5) - 2024-12-19
 
 ### Features
 
 - Impl From<TxEip7702> for OpTypedTransaction ([#348](https://github.com/alloy-rs/op-alloy/issues/348))
+
+### Miscellaneous Tasks
+
+- Release 0.8.5
 
 ### Other
 
