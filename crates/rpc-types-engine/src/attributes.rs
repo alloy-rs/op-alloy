@@ -4,7 +4,7 @@ use alloc::vec::Vec;
 use alloy_eips::eip1559::BaseFeeParams;
 use alloy_primitives::{Bytes, B64};
 use alloy_rpc_types_engine::PayloadAttributes;
-use op_alloy_consensus::{decode_eip_1559_params, decode_holocene_extra_data, EIP1559ParamError};
+use op_alloy_consensus::{decode_eip_1559_params, encode_holocene_extra_data, EIP1559ParamError};
 use op_alloy_protocol::L2BlockInfo;
 
 /// Optimism Payload Attributes
@@ -36,13 +36,13 @@ pub struct OpPayloadAttributes {
 }
 
 impl OpPayloadAttributes {
-    /// Extracts the `eip1559` parameters for the payload.
+    /// Encodes the `eip1559` parameters for the payload.
     pub fn get_holocene_extra_data(
         &self,
         default_base_fee_params: BaseFeeParams,
     ) -> Result<Bytes, EIP1559ParamError> {
         self.eip_1559_params
-            .map(|params| decode_holocene_extra_data(params, default_base_fee_params))
+            .map(|params| encode_holocene_extra_data(params, default_base_fee_params))
             .ok_or(EIP1559ParamError::NoEIP1559Params)?
     }
 
@@ -109,8 +109,6 @@ mod test {
                 suggested_fee_recipient: Address::ZERO,
                 withdrawals: Default::default(),
                 parent_beacon_block_root: Some(B256::ZERO),
-                target_blobs_per_block: None,
-                max_blobs_per_block: None,
             },
             transactions: Some(vec![b"hello".to_vec().into()]),
             no_tx_pool: Some(true),
@@ -133,8 +131,6 @@ mod test {
                 suggested_fee_recipient: Address::ZERO,
                 withdrawals: Default::default(),
                 parent_beacon_block_root: Some(B256::ZERO),
-                target_blobs_per_block: None,
-                max_blobs_per_block: None,
             },
             transactions: Some(vec![b"hello".to_vec().into()]),
             no_tx_pool: Some(true),

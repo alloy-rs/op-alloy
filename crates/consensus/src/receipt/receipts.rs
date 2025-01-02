@@ -7,8 +7,6 @@ use alloy_consensus::{
 use alloy_primitives::{Bloom, Log};
 use alloy_rlp::{Buf, BufMut, Decodable, Encodable, Header};
 
-use core::borrow::Borrow;
-
 /// Receipt containing result of transaction execution.
 #[derive(Clone, Debug, PartialEq, Eq, Default)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -58,20 +56,16 @@ impl OpDepositReceipt {
 }
 
 impl<T: Encodable> OpDepositReceipt<T> {
-    fn rlp_encoded_fields_length_with_bloom(&self, bloom: &Bloom) -> usize {
-        self.inner.status.length()
-            + self.inner.cumulative_gas_used.length()
-            + bloom.length()
-            + self.inner.logs.length()
+    /// Returns length of RLP-encoded receipt fields with the given [`Bloom`] without an RLP header.
+    pub fn rlp_encoded_fields_length_with_bloom(&self, bloom: &Bloom) -> usize {
+        self.inner.rlp_encoded_fields_length_with_bloom(bloom)
             + self.deposit_nonce.map_or(0, |nonce| nonce.length())
             + self.deposit_receipt_version.map_or(0, |version| version.length())
     }
 
-    fn rlp_encode_fields_with_bloom(&self, bloom: &Bloom, out: &mut dyn BufMut) {
-        self.inner.status.encode(out);
-        self.inner.cumulative_gas_used.encode(out);
-        bloom.encode(out);
-        self.inner.logs.encode(out);
+    /// RLP-encodes receipt fields with the given [`Bloom`] without an RLP header.
+    pub fn rlp_encode_fields_with_bloom(&self, bloom: &Bloom, out: &mut dyn BufMut) {
+        self.inner.rlp_encode_fields_with_bloom(bloom, out);
 
         if let Some(nonce) = self.deposit_nonce {
             nonce.encode(out);
@@ -81,29 +75,29 @@ impl<T: Encodable> OpDepositReceipt<T> {
         }
     }
 
-    fn rlp_header_with_bloom(&self, bloom: &Bloom) -> Header {
+    /// Returns RLP header for this receipt encoding with the given [`Bloom`].
+    pub fn rlp_header_with_bloom(&self, bloom: &Bloom) -> Header {
         Header { list: true, payload_length: self.rlp_encoded_fields_length_with_bloom(bloom) }
     }
 }
 
 impl<T: Decodable> OpDepositReceipt<T> {
-    fn rlp_decode_fields_with_bloom(buf: &mut &[u8]) -> alloy_rlp::Result<ReceiptWithBloom<Self>> {
-        let status = Decodable::decode(buf)?;
-        let cumulative_gas_used = Decodable::decode(buf)?;
-        let logs_bloom = Decodable::decode(buf)?;
-        let logs = Decodable::decode(buf)?;
+    /// RLP-decodes receipt's field with a [`Bloom`].
+    ///
+    /// Does not expect an RLP header.
+    pub fn rlp_decode_fields_with_bloom(
+        buf: &mut &[u8],
+    ) -> alloy_rlp::Result<ReceiptWithBloom<Self>> {
+        let ReceiptWithBloom { receipt: inner, logs_bloom } =
+            Receipt::rlp_decode_fields_with_bloom(buf)?;
 
         let deposit_nonce = (!buf.is_empty()).then(|| Decodable::decode(buf)).transpose()?;
         let deposit_receipt_version =
             (!buf.is_empty()).then(|| Decodable::decode(buf)).transpose()?;
 
         Ok(ReceiptWithBloom {
-            receipt: Self {
-                inner: Receipt { status, cumulative_gas_used, logs },
-                deposit_nonce,
-                deposit_receipt_version,
-            },
             logs_bloom,
+            receipt: Self { inner, deposit_nonce, deposit_receipt_version },
         })
     }
 }
@@ -116,7 +110,7 @@ impl<T> AsRef<Receipt<T>> for OpDepositReceipt<T> {
 
 impl<T> TxReceipt for OpDepositReceipt<T>
 where
-    T: Borrow<Log> + Clone + core::fmt::Debug + PartialEq + Eq + Send + Sync,
+    T: AsRef<Log> + Clone + core::fmt::Debug + PartialEq + Eq + Send + Sync,
 {
     type Log = T;
 
@@ -132,7 +126,7 @@ where
         self.inner.bloom_slow()
     }
 
-    fn cumulative_gas_used(&self) -> u128 {
+    fn cumulative_gas_used(&self) -> u64 {
         self.inner.cumulative_gas_used()
     }
 
@@ -210,7 +204,7 @@ where
         Ok(Self {
             inner: Receipt {
                 status: Eip658Value::arbitrary(u)?,
-                cumulative_gas_used: u128::arbitrary(u)?,
+                cumulative_gas_used: u64::arbitrary(u)?,
                 logs: Vec::<T>::arbitrary(u)?,
             },
             deposit_nonce,
@@ -240,7 +234,7 @@ mod tests {
                 receipt: OpDepositReceipt {
                     inner: Receipt {
                         status: false.into(),
-                        cumulative_gas_used: 0x1u128,
+                        cumulative_gas_used: 0x1,
                         logs: vec![Log {
                             address: address!("0000000000000000000000000000000000000011"),
                             data: LogData::new_unchecked(

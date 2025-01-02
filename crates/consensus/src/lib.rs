@@ -15,12 +15,15 @@ pub use receipt::{OpDepositReceipt, OpDepositReceiptWithBloom, OpReceiptEnvelope
 mod transaction;
 pub use transaction::{
     DepositSourceDomain, DepositSourceDomainIdentifier, DepositTransaction, L1InfoDepositSource,
-    OpTxEnvelope, OpTxType, OpTypedTransaction, TxDeposit, UpgradeDepositSource, UserDepositSource,
-    DEPOSIT_TX_TYPE_ID,
+    OpPooledTransaction, OpTxEnvelope, OpTxType, OpTypedTransaction, TxDeposit,
+    UpgradeDepositSource, UserDepositSource, DEPOSIT_TX_TYPE_ID,
 };
 
-mod eip1559;
-pub use eip1559::{decode_eip_1559_params, decode_holocene_extra_data, EIP1559ParamError};
+pub mod eip1559;
+pub use eip1559::{
+    decode_eip_1559_params, decode_holocene_extra_data, encode_holocene_extra_data,
+    EIP1559ParamError,
+};
 
 mod hardforks;
 pub use hardforks::{Ecotone, Fjord, Hardfork, Hardforks};
