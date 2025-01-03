@@ -55,6 +55,7 @@ impl From<Log> for MessagePayload {
 /// CrossL2Inbox contract.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct MessageIdentifier {
     /// The account that sent the message.
     pub origin: Address,
@@ -65,6 +66,7 @@ pub struct MessageIdentifier {
     /// The timestamp of the message.
     pub timestamp: u64,
     /// The chain ID of the chain that the message was sent on.
+    #[cfg_attr(feature = "serde", serde(rename = "chainID"))]
     pub chain_id: u64,
 }
 
@@ -102,5 +104,32 @@ impl From<MessageIdentifier> for MessageIdentifierAbi {
 impl From<executeMessageCall> for ExecutingMessage {
     fn from(call: executeMessageCall) -> Self {
         Self { id: call._id, msgHash: keccak256(call._message.as_ref()) }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_message_identifier_serde() {
+        let raw_id = r#"
+            {
+                "origin": "0x6887246668a3b87F54DeB3b94Ba47a6f63F32985",
+                "blockNumber": 123456,
+                "logIndex": 789,
+                "timestamp": 1618932000,
+                "chainID": 420
+            }
+        "#;
+        let id: MessageIdentifier = serde_json::from_str(raw_id).unwrap();
+        let expected = MessageIdentifier {
+            origin: "0x6887246668a3b87F54DeB3b94Ba47a6f63F32985".parse().unwrap(),
+            block_number: 123456,
+            log_index: 789,
+            timestamp: 1618932000,
+            chain_id: 420,
+        };
+        assert_eq!(id, expected);
     }
 }
