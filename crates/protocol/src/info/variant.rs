@@ -374,10 +374,7 @@ mod test {
         };
 
         let L1BlockInfoTx::Isthmus(decoded) =
-            L1BlockInfoTx::decode_calldata(RAW_ISTHMUS_INFO_TX.as_ref()).unwrap()
-        else {
-            panic!("Wrong fork");
-        };
+            L1BlockInfoTx::decode_calldata(RAW_ISTHMUS_INFO_TX.as_ref()).expect("Wrong fork");
         assert_eq!(expected, decoded);
         assert_eq!(decoded.encode_calldata().as_ref(), RAW_ISTHMUS_INFO_TX);
     }
