@@ -35,7 +35,7 @@ sol! {
     ) external;
 }
 
-/// A [MessagePayload] is the raw payload of an initiating message.
+/// A [`MessagePayload`] is the raw payload of an initiating message.
 #[derive(Debug, Clone, From, AsRef, PartialEq, Eq)]
 pub struct MessagePayload(Bytes);
 
@@ -50,7 +50,7 @@ impl From<Log> for MessagePayload {
     }
 }
 
-/// A [MessageIdentifier] uniquely represents a log that is emitted from a chain within
+/// A [`MessageIdentifier`] uniquely represents a log that is emitted from a chain within
 /// the broader dependency set. It is included in the calldata of a transaction sent to the
 /// CrossL2Inbox contract.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -69,7 +69,7 @@ pub struct MessageIdentifier {
 }
 
 impl MessageIdentifier {
-    /// Decode a [MessageIdentifier] from ABI-encoded data.
+    /// Decode a [`MessageIdentifier`] from ABI-encoded data.
     pub fn abi_decode(data: &[u8], validate: bool) -> Result<Self, alloy_sol_types::Error> {
         MessageIdentifierAbi::abi_decode(data, validate).map(|abi| abi.into())
     }
