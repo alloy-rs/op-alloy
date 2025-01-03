@@ -2,9 +2,10 @@
 //!
 //! <https://specs.optimism.io/interop/messaging.html#messaging>
 //! <https://github.com/ethereum-optimism/optimism/blob/34d5f66ade24bd1f3ce4ce7c0a6cfc1a6540eca1/packages/contracts-bedrock/src/L2/CrossL2Inbox.sol>
-use alloc::{vec, vec::Vec};
+use alloc::vec;
 use alloy_primitives::{keccak256, Address, Bytes, Log, U256};
 use alloy_sol_types::{sol, SolType};
+use derive_more::{AsRef, From};
 
 sol! {
     /// @notice The struct for a pointer to a message payload in a remote (or local) chain.
@@ -35,7 +36,7 @@ sol! {
 }
 
 /// A [MessagePayload] is the raw payload of an initiating message.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, From, AsRef, PartialEq, Eq)]
 pub struct MessagePayload(Bytes);
 
 impl From<Log> for MessagePayload {
@@ -45,31 +46,7 @@ impl From<Log> for MessagePayload {
             data[i * 32..(i + 1) * 32].copy_from_slice(topic.as_ref());
         }
         data[(log.topics().len() * 32)..].copy_from_slice(log.data.data.as_ref());
-        data.into()
-    }
-}
-
-impl From<Vec<u8>> for MessagePayload {
-    fn from(data: Vec<u8>) -> Self {
-        Self(Bytes::from(data))
-    }
-}
-
-impl From<Bytes> for MessagePayload {
-    fn from(bytes: Bytes) -> Self {
-        Self(bytes)
-    }
-}
-
-impl From<MessagePayload> for Bytes {
-    fn from(payload: MessagePayload) -> Self {
-        payload.0
-    }
-}
-
-impl AsRef<[u8]> for MessagePayload {
-    fn as_ref(&self) -> &[u8] {
-        self.0.as_ref()
+        Bytes::from(data).into()
     }
 }
 
