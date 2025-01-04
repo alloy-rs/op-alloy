@@ -82,7 +82,7 @@ impl L1BlockInfoTx {
                 block_hash: l1_header.hash_slow(),
                 sequence_number,
                 batcher_address: system_config.batcher_address,
-                blob_base_fee: l1_header.blob_fee().unwrap_or(1),
+                blob_base_fee: l1_header.blob_fee(BlobParams::cancun()).unwrap_or(1),
                 blob_base_fee_scalar,
                 base_fee_scalar,
                 operator_fee_scalar,
@@ -374,7 +374,10 @@ mod test {
         };
 
         let L1BlockInfoTx::Isthmus(decoded) =
-            L1BlockInfoTx::decode_calldata(RAW_ISTHMUS_INFO_TX.as_ref()).expect("Wrong fork");
+            L1BlockInfoTx::decode_calldata(RAW_ISTHMUS_INFO_TX.as_ref()).unwrap()
+        else {
+            panic!("Wrong fork");
+        };
         assert_eq!(expected, decoded);
         assert_eq!(decoded.encode_calldata().as_ref(), RAW_ISTHMUS_INFO_TX);
     }
