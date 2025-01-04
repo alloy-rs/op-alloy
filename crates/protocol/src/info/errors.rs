@@ -17,6 +17,12 @@ pub enum BlockInfoError {
     /// Failed to parse the EIP-1559 elasticity parameter.
     #[error("Failed to parse the EIP-1559 elasticity parameter")]
     Eip1559Elasticity,
+    /// Failed to parse the Operator Fee Scalar.
+    #[error("Failed to parse the Operator fee scalar parameter")]
+    OperatorFeeScalar,
+    /// Failed to parse the Operator Fee Constant.
+    #[error("Failed to parse the Operator fee constant parameter")]
+    OperatorFeeConstant,
 }
 
 /// An error decoding an L1 block info transaction.
