@@ -119,7 +119,7 @@ pub struct ExecutingMessage {
 }
 
 impl ExecutingMessage {
-    /// Decode a [`ExecutingMessage`] from ABI-encoded data.
+    /// Decodes an `ExecutingMessage` from ABI-encoded data.
     pub fn abi_decode(data: &[u8], validate: bool) -> Result<Self, alloy_sol_types::Error> {
         ExecutingMessageAbi::abi_decode_data(data, validate).map(|abi| abi.into())
     }
