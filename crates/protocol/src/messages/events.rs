@@ -4,7 +4,7 @@
 //! <https://github.com/ethereum-optimism/optimism/blob/34d5f66ade24bd1f3ce4ce7c0a6cfc1a6540eca1/packages/contracts-bedrock/src/L2/CrossL2Inbox.sol>
 use alloc::vec;
 use alloy_primitives::{keccak256, Address, Bytes, Log, B256, U256};
-use alloy_sol_types::{sol, SolType};
+use alloy_sol_types::{sol, SolEvent, SolType};
 use derive_more::{AsRef, From};
 
 sol! {
@@ -22,7 +22,7 @@ sol! {
     /// @param msgHash Hash of message payload being executed.
     /// @param id Encoded Identifier of the message.
     #[derive(Default, Debug, PartialEq, Eq)]
-    event ExecutingMessage(bytes32 indexed msgHash, MessageIdentifierAbi id);
+    event ExecutingMessageAbi(bytes32 msgHash, MessageIdentifierAbi id);
 
     /// @notice Executes a cross chain message on the destination chain.
     /// @param _id      Identifier of the message.
@@ -101,7 +101,7 @@ impl From<MessageIdentifier> for MessageIdentifierAbi {
     }
 }
 
-impl From<executeMessageCall> for ExecutingMessage {
+impl From<executeMessageCall> for ExecutingMessageAbi {
     fn from(call: executeMessageCall) -> Self {
         Self { id: call._id, msgHash: keccak256(call._message.as_ref()) }
     }
@@ -111,15 +111,28 @@ impl From<executeMessageCall> for ExecutingMessage {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
-pub struct InteropMessage {
+pub struct ExecutingMessage {
     /// Unique [`MessageIdentifier`].
     pub id: MessageIdentifier,
     /// `Keccak256` hash of message payload being executed.
     pub msg_hash: B256,
 }
 
-impl From<ExecutingMessage> for InteropMessage {
-    fn from(event: ExecutingMessage) -> Self {
+impl ExecutingMessage {
+    /// Decode a [`ExecutingMessage`] from ABI-encoded data.
+    pub fn abi_decode(data: &[u8], validate: bool) -> Result<Self, alloy_sol_types::Error> {
+        ExecutingMessageAbi::abi_decode_data(data, validate).map(|abi| abi.into())
+    }
+}
+
+impl From<(B256, MessageIdentifierAbi)> for ExecutingMessage {
+    fn from((msg_hash, id): (B256, MessageIdentifierAbi)) -> Self {
+        Self { id: id.into(), msg_hash }
+    }
+}
+
+impl From<ExecutingMessageAbi> for ExecutingMessage {
+    fn from(event: ExecutingMessageAbi) -> Self {
         Self { id: event.id.into(), msg_hash: event.msgHash }
     }
 }
