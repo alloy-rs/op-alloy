@@ -3,7 +3,7 @@
 //! <https://specs.optimism.io/interop/messaging.html#messaging>
 //! <https://github.com/ethereum-optimism/optimism/blob/34d5f66ade24bd1f3ce4ce7c0a6cfc1a6540eca1/packages/contracts-bedrock/src/L2/CrossL2Inbox.sol>
 use alloc::vec;
-use alloy_primitives::{keccak256, Address, Bytes, Log, U256};
+use alloy_primitives::{keccak256, Address, Bytes, Log, B256, U256};
 use alloy_sol_types::{sol, SolType};
 use derive_more::{AsRef, From};
 
@@ -53,7 +53,7 @@ impl From<Log> for MessagePayload {
 /// A [`MessageIdentifier`] uniquely represents a log that is emitted from a chain within
 /// the broader dependency set. It is included in the calldata of a transaction sent to the
 /// CrossL2Inbox contract.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct MessageIdentifier {
@@ -104,6 +104,23 @@ impl From<MessageIdentifier> for MessageIdentifierAbi {
 impl From<executeMessageCall> for ExecutingMessage {
     fn from(call: executeMessageCall) -> Self {
         Self { id: call._id, msgHash: keccak256(call._message.as_ref()) }
+    }
+}
+
+/// Solidity event, emitted when a cross chain message is being executed.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct InteropMessage {
+    /// Unique [`MessageIdentifier`].
+    pub id: MessageIdentifier,
+    /// `Keccak256` hash of message payload being executed.
+    pub msg_hash: B256,
+}
+
+impl From<ExecutingMessage> for InteropMessage {
+    fn from(event: ExecutingMessage) -> Self {
+        Self { id: event.id.into(), msg_hash: event.msgHash }
     }
 }
 
