@@ -162,4 +162,36 @@ mod tests {
         };
         assert_eq!(id, expected);
     }
+
+    #[test]
+    fn test_executing_message_serde() {
+        let raw_msg = r#"
+        {
+            "id": {
+                "origin": "0x6887246668a3b87F54DeB3b94Ba47a6f63F32985",
+                "blockNumber": 123456,
+                "logIndex": 789,
+                "timestamp": 1618932000,
+                "chainID": 420
+            },
+            "msgHash": "0xef8cc21bdbab8d2b60b054460768b1db67c8906b6a2bdf9bc287b3654326fc76"
+        }
+    "#;
+
+        let msg: ExecutingMessage = serde_json::from_str(raw_msg).unwrap();
+        let expected = ExecutingMessage {
+            id: MessageIdentifier {
+                origin: "0x6887246668a3b87F54DeB3b94Ba47a6f63F32985".parse().unwrap(),
+                block_number: 123456,
+                log_index: 789,
+                timestamp: 1618932000,
+                chain_id: 420,
+            },
+            msg_hash: "0xef8cc21bdbab8d2b60b054460768b1db67c8906b6a2bdf9bc287b3654326fc76"
+                .parse()
+                .unwrap(),
+        };
+
+        assert_eq!(msg, expected);
+    }
 }
