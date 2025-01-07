@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.1](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.9.1) - 2025-01-07
+
+### Dependencies
+
+- Quick Version Bumps ([#362](https://github.com/alloy-rs/op-alloy/issues/362))
+
+### Features
+
+- [interop] Define `ExecutingMessage` wrapper ([#361](https://github.com/alloy-rs/op-alloy/issues/361))
+- [protocol] Compressors with Mocked Brotli Streaming ([#335](https://github.com/alloy-rs/op-alloy/issues/335))
+- [protocol] Interop Types ([#352](https://github.com/alloy-rs/op-alloy/issues/352))
+
+### Miscellaneous Tasks
+
+- [ci] Check wasm compilation for `op-alloy-rpc-types` in CI ([#357](https://github.com/alloy-rs/op-alloy/issues/357))
+- [ci] Update target `wasm32-wasi` to `wasm32-wasip1` for ci ([#354](https://github.com/alloy-rs/op-alloy/issues/354))
+- [rpc] `no_std` support `op-alloy-rpc-jsonrpsee` ([#356](https://github.com/alloy-rs/op-alloy/issues/356))
+
 ## [0.9.0](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.9.0) - 2024-12-30
 
@@ -14,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.9.0
 - Make clippy happy ([#349](https://github.com/alloy-rs/op-alloy/issues/349))
 
 ## [0.8.5](https://github.com/alloy-rs/op-alloy
