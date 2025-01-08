@@ -65,6 +65,9 @@ alloy-rlp = { version = "0.3", default-features = false }
 alloy-sol-types = { version = "0.8.12", default-features = false }
 alloy-primitives = { version = "0.8.12", default-features = false }
 
+# Maili
+maili-provider = { version = "0.1.0", default-features = false }
+
 # Revm
 revm = "19.0.0"
 
