@@ -68,6 +68,7 @@ alloy-primitives = { version = "0.8.12", default-features = false }
 # Maili
 maili-provider = { version = "0.1.0", default-features = false }
 maili-protocol = { version = "0.1.0", default-features = false }
+maili-registry = { version = "0.1.0", default-features = false }
 
 # Revm
 revm = "19.0.0"
