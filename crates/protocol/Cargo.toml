@@ -1,6 +1,6 @@
 [package]
 name = "op-alloy-protocol"
-description = "Optimism protocol-specific types"
+description = "Re-export of op-rs/maili-protocol"
 
 version.workspace = true
 edition.workspace = true
@@ -16,7 +16,7 @@ workspace = true
 
 [dependencies]
 # Maili
-maili-protocol.workspace = true
+maili-protocol = { workspace = true, default-features = false }
 
 [features]
 default = ["serde", "std"]
