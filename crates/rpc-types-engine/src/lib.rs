@@ -10,7 +10,7 @@
 extern crate alloc;
 
 pub use alloy_rpc_types_engine::ForkchoiceUpdateVersion;
-pub use maili::rpc_types_engine::*;
+pub use maili_rpc_types_engine::*;
 
 mod attributes;
 pub use attributes::{OpAttributesWithParent, OpPayloadAttributes};
