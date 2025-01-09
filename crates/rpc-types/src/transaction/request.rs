@@ -1,12 +1,12 @@
 use alloc::vec::Vec;
 use alloy_consensus::{
-    Sealed, SignableTransaction, Signed, TxEip1559, TxEip4844, TypedTransaction,
+    Sealed, SignableTransaction, Signed, TxEip1559, TxEip4844, TxType, TypedTransaction,
 };
 use alloy_eips::eip7702::SignedAuthorization;
 use alloy_network_primitives::TransactionBuilder7702;
 use alloy_primitives::{Address, PrimitiveSignature as Signature, TxKind, U256};
 use alloy_rpc_types_eth::{AccessList, TransactionInput, TransactionRequest};
-use op_alloy_consensus::{OpTxEnvelope, OpTypedTransaction, TxDeposit};
+use op_alloy_consensus::{OpTxEnvelope, OpTxType, OpTypedTransaction, TxDeposit};
 use serde::{Deserialize, Serialize};
 
 /// Builder for [`OpTypedTransaction`].
@@ -88,6 +88,22 @@ impl OpTransactionRequest {
     pub fn input(mut self, input: TransactionInput) -> Self {
         self.0.input = input;
         self
+    }
+
+    /// Return the tx type this request can be built as. Computed by checking
+    /// the preferred type, and then checking for completeness.
+    pub fn buildable_type(&self) -> Option<OpTxType> {
+        if self.0.chain_id.is_none() {
+            return Some(OpTxType::Deposit);
+        }
+        match self.0.buildable_type() {
+            Some(TxType::Legacy) => Some(OpTxType::Legacy),
+            Some(TxType::Eip1559) => Some(OpTxType::Eip1559),
+            Some(TxType::Eip2930) => Some(OpTxType::Eip2930),
+            Some(TxType::Eip7702) => Some(OpTxType::Eip7702),
+            Some(TxType::Eip4844) => Some(OpTxType::Eip1559),
+            None => None,
+        }
     }
 
     /// Builds [`OpTypedTransaction`] from this builder. See [`TransactionRequest::build_typed_tx`]
