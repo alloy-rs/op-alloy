@@ -16,7 +16,6 @@ The following crates are provided by `op-alloy`.
 - [`op-alloy-genesis`][op-alloy-genesis]
 - [`op-alloy-network`][op-alloy-network]
 - [`op-alloy-protocol`][op-alloy-protocol]
-- [`op-alloy-registry`][op-alloy-registry]
 - [`op-alloy-provider`][op-alloy-provider]
 - [`op-alloy-rpc-jsonrpsee`][op-alloy-rpc-jsonrpsee]
 - [`op-alloy-rpc-types-engine`][op-alloy-rpc-types-engine]
@@ -58,7 +57,6 @@ Notice, provider crates do not support `no_std` compatibility.
 
 - [`op-alloy-genesis`][op-alloy-genesis]
 - [`op-alloy-protocol`][op-alloy-protocol]
-- [`op-alloy-registry`][op-alloy-registry] (note: requires `serde`)
 - [`op-alloy-consensus`][op-alloy-consensus]
 - [`op-alloy-rpc-types`][op-alloy-rpc-types]
 - [`op-alloy-rpc-types-engine`][op-alloy-rpc-types-engine]
@@ -96,7 +94,6 @@ shall be dual licensed as above, without any additional terms or conditions.
 [op-alloy-genesis]: https://crates.io/crates/op-alloy-genesis
 [op-alloy-network]: https://crates.io/crates/op-alloy-network
 [op-alloy-protocol]: https://crates.io/crates/op-alloy-protocol
-[op-alloy-registry]: https://crates.io/crates/op-alloy-registry
 [op-alloy-provider]: https://crates.io/crates/op-alloy-provider
 [op-alloy-rpc-jsonrpsee]: https://crates.io/crates/op-alloy-rpc-jsonrpsee
 [op-alloy-rpc-types-engine]: https://crates.io/crates/op-alloy-rpc-types-engine
