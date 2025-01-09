@@ -19,14 +19,6 @@ pub use op_alloy_genesis as genesis;
 #[doc(inline)]
 pub use op_alloy_network as network;
 
-#[cfg(feature = "registry")]
-#[doc(inline)]
-pub use op_alloy_registry as registry;
-
-#[cfg(feature = "provider")]
-#[doc(inline)]
-pub use op_alloy_provider as provider;
-
 #[cfg(feature = "rpc-types")]
 #[doc(inline)]
 pub use op_alloy_rpc_types as rpc_types;
