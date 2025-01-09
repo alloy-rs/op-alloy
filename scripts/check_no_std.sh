@@ -4,7 +4,6 @@ set -eo pipefail
 no_std_packages=(
   op-alloy
   op-alloy-consensus
-  op-alloy-protocol
   op-alloy-registry
   op-alloy-genesis
   op-alloy-rpc-types

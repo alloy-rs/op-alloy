@@ -19,10 +19,6 @@ pub use op_alloy_genesis as genesis;
 #[doc(inline)]
 pub use op_alloy_network as network;
 
-#[cfg(feature = "protocol")]
-#[doc(inline)]
-pub use op_alloy_protocol as protocol;
-
 #[cfg(feature = "registry")]
 #[doc(inline)]
 pub use op_alloy_registry as registry;

@@ -37,7 +37,6 @@ rustdoc-args = ["--cfg", "docsrs"]
 [workspace.dependencies]
 # Workspace
 op-alloy-genesis = { version = "0.9.2", path = "crates/genesis", default-features = false }
-op-alloy-protocol = { version = "0.9.2", path = "crates/protocol", default-features = false }
 op-alloy-consensus = { version = "0.9.2", path = "crates/consensus", default-features = false }
 op-alloy-network = { version = "0.9.2", path = "crates/network", default-features = false }
 op-alloy-provider = { version = "0.9.2", path = "crates/provider", default-features = false }
