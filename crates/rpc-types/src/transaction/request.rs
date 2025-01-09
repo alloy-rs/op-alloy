@@ -1,12 +1,12 @@
 use alloc::vec::Vec;
 use alloy_consensus::{
-    Sealed, SignableTransaction, Signed, TxEip1559, TxEip4844, TypedTransaction,
+    Sealed, SignableTransaction, Signed, TxEip1559, TxEip4844, TxType, TypedTransaction,
 };
 use alloy_eips::eip7702::SignedAuthorization;
 use alloy_network_primitives::TransactionBuilder7702;
 use alloy_primitives::{Address, PrimitiveSignature as Signature, TxKind, U256};
 use alloy_rpc_types_eth::{AccessList, TransactionInput, TransactionRequest};
-use op_alloy_consensus::{OpTxEnvelope, OpTypedTransaction, TxDeposit};
+use op_alloy_consensus::{OpTxEnvelope, OpTxType, OpTypedTransaction, TxDeposit};
 use serde::{Deserialize, Serialize};
 
 /// Builder for [`OpTypedTransaction`].
@@ -88,6 +88,29 @@ impl OpTransactionRequest {
     pub fn input(mut self, input: TransactionInput) -> Self {
         self.0.input = input;
         self
+    }
+
+    /// Check this builder's preferred type, based on the fields that are set.
+    ///
+    /// Types are preferred as follows:
+    /// - Deposit Transactions if `chain_id` is not set
+    /// - EIP-7702 if authorization_list is set
+    /// - EIP-4844 if sidecar or max_blob_fee_per_gas is set
+    /// - EIP-2930 if access_list is set
+    /// - Legacy if gas_price is set and access_list is unset
+    /// - EIP-1559 in all other cases
+    pub const fn preferred_type(&self) -> OpTxType {
+        if self.0.chain_id.is_none() {
+            return OpTxType::Deposit;
+        }
+        match self.0.preferred_type() {
+            TxType::Legacy => OpTxType::Legacy,
+            TxType::Eip1559 => OpTxType::Eip1559,
+            TxType::Eip2930 => OpTxType::Eip2930,
+            // EIP-4844 transactions are not supported by Optimism.
+            TxType::Eip4844 => OpTxType::Eip1559,
+            TxType::Eip7702 => OpTxType::Eip7702,
+        }
     }
 
     /// Builds [`OpTypedTransaction`] from this builder. See [`TransactionRequest::build_typed_tx`]
