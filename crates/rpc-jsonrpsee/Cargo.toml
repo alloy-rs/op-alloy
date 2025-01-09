@@ -1,6 +1,6 @@
 [package]
 name = "op-alloy-rpc-jsonrpsee"
-description = "Optimism RPC Client"
+description = "Re-export of maili-rpc-jsonrpsee"
 
 version.workspace = true
 edition.workspace = true
@@ -15,25 +15,9 @@ exclude.workspace = true
 workspace = true
 
 [dependencies]
-# Alloy
-op-alloy-rpc-types.workspace = true
-op-alloy-rpc-types-engine = { workspace = true, features = ["serde"] }
-op-alloy-protocol.workspace = true
-alloy-eips.workspace = true
-alloy-primitives.workspace = true
-
-# rpc
-jsonrpsee.workspace = true
+maili-rpc-jsonrpsee = { workspace = true, default-features = false }
 
 [features]
 default = ["std"]
-std = [
-    "op-alloy-rpc-types/std",
-    "op-alloy-rpc-types-engine/std",
-    "alloy-eips/std",
-    "alloy-primitives/std",
-]
-client = [
-    "jsonrpsee/client",
-    "jsonrpsee/async-client",
-]
+std = ["maili-rpc-jsonrpsee/std"]
+client = ["maili-rpc-jsonrpsee/client"]

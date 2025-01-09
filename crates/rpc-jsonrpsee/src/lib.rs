@@ -7,6 +7,4 @@
 #![cfg_attr(docsrs, feature(doc_cfg, doc_auto_cfg))]
 #![cfg_attr(not(feature = "std"), no_std)]
 
-extern crate alloc;
-
-pub mod traits;
+pub use maili_rpc_jsonrpsee::*;

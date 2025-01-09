@@ -7,4 +7,6 @@
 <a href="https://alloy-rs.github.io/op-alloy"><img src="https://img.shields.io/badge/Book-854a15?logo=mdBook&labelColor=2a2f35" alt="Book"></a>
 
 
-Low-level Optimism JSON-RPC server and client implementations.
+See [maili-rpc-jsonrpsee]
+
+[maili-rpc-jsonrpsee]: https://github.com/op-rs/maili/blob/main/crates/rpc-jsonrpsee/README.md
