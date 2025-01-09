@@ -5,8 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.9.1](https://github.com/alloy-rs/op-alloy
-/releases/tag/v0.9.1) - 2025-01-07
+## [0.9.2](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.9.2) - 2025-01-08
 
 ### Dependencies
 
@@ -20,9 +20,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- [provider] Migrate `op-alloy-provider`->`op-rs/maili-provider` ([#365](https://github.com/alloy-rs/op-alloy/issues/365))
+- [protocol] Migrate `op-alloy-protocol`->`op-rs/maili-protocol` ([#364](https://github.com/alloy-rs/op-alloy/issues/364))
 - [ci] Check wasm compilation for `op-alloy-rpc-types` in CI ([#357](https://github.com/alloy-rs/op-alloy/issues/357))
 - [ci] Update target `wasm32-wasi` to `wasm32-wasip1` for ci ([#354](https://github.com/alloy-rs/op-alloy/issues/354))
 - [rpc] `no_std` support `op-alloy-rpc-jsonrpsee` ([#356](https://github.com/alloy-rs/op-alloy/issues/356))
+
+### Other
+
+- 0.9.1 ([#363](https://github.com/alloy-rs/op-alloy/issues/363))
+- Define supervisor API ([#359](https://github.com/alloy-rs/op-alloy/issues/359))
 
 ## [0.9.0](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.9.0) - 2024-12-30
