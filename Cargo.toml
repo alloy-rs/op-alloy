@@ -40,7 +40,6 @@ op-alloy-genesis = { version = "0.9.2", path = "crates/genesis", default-feature
 op-alloy-consensus = { version = "0.9.2", path = "crates/consensus", default-features = false }
 op-alloy-network = { version = "0.9.2", path = "crates/network", default-features = false }
 op-alloy-rpc-types = { version = "0.9.2", path = "crates/rpc-types", default-features = false }
-op-alloy-rpc-jsonrpsee = { version = "0.9.2", path = "crates/rpc-jsonrpsee", default-features = false }
 op-alloy-rpc-types-engine = { version = "0.9.2", path = "crates/rpc-types-engine", default-features = false }
 
 # Alloy
