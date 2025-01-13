@@ -64,6 +64,7 @@ so `op-alloy-consensus` types can be used from `op-alloy` through `op_alloy::con
 - [`op-alloy-network`][op-alloy-network]
 - [`op-alloy-genesis`][op-alloy-genesis] (supports `no_std`)
 - [`op-alloy-protocol`][op-alloy-protocol] (supports `no_std`)
+- [`op-alloy-provider`][op-alloy-protocol]
 - [`op-alloy-consensus`][op-alloy-consensus] (supports `no_std`)
 - [`op-alloy-rpc-types`][op-alloy-rpc-types] (supports `no_std`)
 - [`op-alloy-rpc-types-engine`][op-alloy-rpc-types-engine] (supports `no_std`)
