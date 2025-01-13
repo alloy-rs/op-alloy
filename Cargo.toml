@@ -62,10 +62,10 @@ alloy-sol-types = { version = "0.8.12", default-features = false }
 alloy-primitives = { version = "0.8.12", default-features = false }
 
 # Maili
-maili-provider = { version = "0.1.3", default-features = false }
-maili-protocol = { version = "0.1.3", default-features = false }
-maili-registry = { version = "0.1.3", default-features = false }
-maili-common = { version = "0.1.3", default-features = false }
+maili-provider = { version = "0.1.4", default-features = false }
+maili-protocol = { version = "0.1.4", default-features = false }
+maili-registry = { version = "0.1.4", default-features = false }
+maili-common = { version = "0.1.4", default-features = false }
 
 # Revm
 revm = "19.0.0"
