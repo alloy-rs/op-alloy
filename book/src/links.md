@@ -8,7 +8,6 @@
 [op-alloy-consensus]: https://crates.io/crates/op-alloy-consensus
 [op-alloy-genesis]: https://crates.io/crates/op-alloy-genesis
 [op-alloy-network]: https://crates.io/crates/op-alloy-network
-[op-alloy-protocol]: https://crates.io/crates/op-alloy-protocol
 [op-alloy-rpc-types-engine]: https://crates.io/crates/op-alloy-rpc-types-engine
 [op-alloy-rpc-types]: https://crates.io/crates/op-alloy-rpc-types
 
@@ -20,28 +19,6 @@
 [eip]: https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html#method.eip_1559_params
 [update]: https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html#method.update_with_receipts
 [system-config]: https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html
-
-<!-- op-alloy-protocol -->
-
-[compress-brotli]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/fn.compress_brotli.html
-[encode-batch]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html#method.encode
-[encode-frame]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#method.encode
-[add-frame]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html#method.add_frame
-[decode-batch]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html#method.decode
-[single-batch]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html
-[bytes]: https://docs.rs/alloy-primitives/latest/alloy_primitives/struct.Bytes.html
-[channel-id]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/type.ChannelId.html
-[channel]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html
-[channel-out]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.ChannelOut.html
-[ready-bytes]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.ChannelOut.html#method.ready_bytes
-[output-frame]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.ChannelOut.html#method.output_frame
-[decode-frame]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#method.decode
-[hex]: https://docs.rs/hex-literal/latest/hex_literal/macro.hex.html
-[fjord]: https://specs.optimism.io/protocol/fjord/overview.html
-[frame-data]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html#method.frame_data
-[is-ready]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html#method.is_ready
-[frame]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html
-[batch]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html
 
 <!-- op-alloy-consensus -->
 
@@ -75,9 +52,10 @@
 
 <!-- External -->
 
+[maili]: https://github.com/op-rs/maili
 [revm]: https://github.com/bluealloy/revm
 [2718]: https://eips.ethereum.org/EIPS/eip-2718
-[cannon-rs]: https://github.com/anton-rs/cannon-rs
+[cannon-rs]: https://github.com/op-rs/cannon-rs
 [asterisc]: https://github.com/ethereum-optimism/asterisc
 [op-stack]: https://github.com/ethereum-optimism/optimism
 [op-succinct]: https://github.com/succinctlabs/op-succinct
@@ -93,11 +71,11 @@
 
 <!-- Kona links -->
 
-[kona]: https://github.com/anton-rs/kona
-[book]: https://anton-rs.github.io/kona/
-[issues]: https://github.com/anton-rs/kona/issues
-[new-issue]: https://github.com/anton-rs/kona/issues/new
-[contributing]: https://github.com/anton-rs/kona/tree/main/CONTRIBUTING.md
+[kona]: https://github.com/op-rs/kona
+[book]: https://op-rs.github.io/kona/
+[issues]: https://github.com/op-rs/kona/issues
+[new-issue]: https://github.com/op-rs/kona/issues/new
+[contributing]: https://github.com/op-rs/kona/tree/main/CONTRIBUTING.md
 
 <!-- People -->
 
