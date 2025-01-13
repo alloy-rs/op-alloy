@@ -91,7 +91,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../starting.html"><strong aria-hidden="true">2.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="../building/index.html"><strong aria-hidden="true">3.</strong> Building</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../building/genesis/index.html"><strong aria-hidden="true">3.1.</strong> Genesis</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../building/genesis/rollup-config.html"><strong aria-hidden="true">3.1.1.</strong> Rollup Config</a></li><li class="chapter-item expanded "><a href="../building/genesis/system-config.html"><strong aria-hidden="true">3.1.2.</strong> System Config</a></li></ol></li><li class="chapter-item expanded "><a href="../building/consensus.html"><strong aria-hidden="true">3.2.</strong> Consensus</a></li><li class="chapter-item expanded "><a href="../building/engine.html"><strong aria-hidden="true">3.3.</strong> Engine RPC Types</a></li></ol></li><li class="chapter-item expanded "><a href="../examples/index.html"><strong aria-hidden="true">4.</strong> Examples</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../examples/load-a-rollup-config.html" class="active"><strong aria-hidden="true">4.1.</strong> Load a Rollup Config</a></li></ol></li><li class="chapter-item expanded "><a href="../CONTRIBUTING.html"><strong aria-hidden="true">5.</strong> Contributing</a></li><li class="chapter-item expanded "><a href="../LICENSE.html"><strong aria-hidden="true">6.</strong> Licensing</a></li><li class="chapter-item expanded "><a href="../glossary.html"><strong aria-hidden="true">7.</strong> Glossary</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../starting.html"><strong aria-hidden="true">2.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="../building/index.html"><strong aria-hidden="true">3.</strong> Building</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../building/consensus.html"><strong aria-hidden="true">3.1.</strong> Consensus</a></li><li class="chapter-item expanded "><a href="../building/engine.html"><strong aria-hidden="true">3.2.</strong> Engine RPC Types</a></li></ol></li><li class="chapter-item expanded "><a href="../examples/index.html"><strong aria-hidden="true">4.</strong> Examples</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../examples/load-a-rollup-config.html" class="active"><strong aria-hidden="true">4.1.</strong> Load a Rollup Config</a></li></ol></li><li class="chapter-item expanded "><a href="../CONTRIBUTING.html"><strong aria-hidden="true">5.</strong> Contributing</a></li><li class="chapter-item expanded "><a href="../LICENSE.html"><strong aria-hidden="true">6.</strong> Licensing</a></li><li class="chapter-item expanded "><a href="../glossary.html"><strong aria-hidden="true">7.</strong> Glossary</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -257,34 +257,7 @@
 }
 
 </style>
-<h1 id="loading-a-rollup-config-from-a-chain-id"><a class="header" href="#loading-a-rollup-config-from-a-chain-id">Loading a Rollup Config from a Chain ID</a></h1>
-<p>In this section, the code examples demonstrate loading the
-rollup config for the given L2 Chain ID.</p>
-<p>Let's load the Rollup Config for OP Mainnet which hash chain id 10.</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use op_alloy_genesis::{OP_MAINNET_CONFIG, rollup_config_from_chain_id};
-
-// The chain id for OP Mainnet
-let op_mainnet_id = 10;
-
-// Load a rollup config from the chain id.
-let op_mainnet_config = rollup_config_from_chain_id(op_mainnet_id).expect("infallible");
-
-// The chain id should match the hardcoded chain id.
-assert_eq!(OP_MAINNET_CONFIG, op_mainnet_config);
-<span class="boring">}</span></code></pre></pre>
-<blockquote>
-<p>⚠️ Available Configs</p>
-<p>The <code>rollup_config_from_chain_id</code> method in <code>op-alloy-genesis</code> uses hardcoded
-rollup configs. But, there are only a few of these hardcoded rollup configs in
-<code>op-alloy-genesis</code>. This method and these configs are provided for <code>no_std</code>
-environments where dynamic filesystem loading at runtime is not supported
-in <code>no_std</code> environments.</p>
-<p>In a <code>std</code> environment, the <a href="https://crates.io/crates/superchain">superchain</a> crate may be used which
-dynamically provides all rollup configs from the <a href="https://github.com/ethereum-optimism/superchain-registry">superchain-registry</a>
-for their respective chain ids.</p>
-</blockquote>
+<h1 id="load-a-rollup-config"><a class="header" href="#load-a-rollup-config">Load a Rollup Config</a></h1>
 
                     </main>
 

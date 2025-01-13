@@ -91,7 +91,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="starting.html" class="active"><strong aria-hidden="true">2.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="building/index.html"><strong aria-hidden="true">3.</strong> Building</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="building/genesis/index.html"><strong aria-hidden="true">3.1.</strong> Genesis</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="building/genesis/rollup-config.html"><strong aria-hidden="true">3.1.1.</strong> Rollup Config</a></li><li class="chapter-item expanded "><a href="building/genesis/system-config.html"><strong aria-hidden="true">3.1.2.</strong> System Config</a></li></ol></li><li class="chapter-item expanded "><a href="building/consensus.html"><strong aria-hidden="true">3.2.</strong> Consensus</a></li><li class="chapter-item expanded "><a href="building/engine.html"><strong aria-hidden="true">3.3.</strong> Engine RPC Types</a></li></ol></li><li class="chapter-item expanded "><a href="examples/index.html"><strong aria-hidden="true">4.</strong> Examples</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="examples/load-a-rollup-config.html"><strong aria-hidden="true">4.1.</strong> Load a Rollup Config</a></li></ol></li><li class="chapter-item expanded "><a href="CONTRIBUTING.html"><strong aria-hidden="true">5.</strong> Contributing</a></li><li class="chapter-item expanded "><a href="LICENSE.html"><strong aria-hidden="true">6.</strong> Licensing</a></li><li class="chapter-item expanded "><a href="glossary.html"><strong aria-hidden="true">7.</strong> Glossary</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="intro.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="starting.html" class="active"><strong aria-hidden="true">2.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="building/index.html"><strong aria-hidden="true">3.</strong> Building</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="building/consensus.html"><strong aria-hidden="true">3.1.</strong> Consensus</a></li><li class="chapter-item expanded "><a href="building/engine.html"><strong aria-hidden="true">3.2.</strong> Engine RPC Types</a></li></ol></li><li class="chapter-item expanded "><a href="examples/index.html"><strong aria-hidden="true">4.</strong> Examples</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="examples/load-a-rollup-config.html"><strong aria-hidden="true">4.1.</strong> Load a Rollup Config</a></li></ol></li><li class="chapter-item expanded "><a href="CONTRIBUTING.html"><strong aria-hidden="true">5.</strong> Contributing</a></li><li class="chapter-item expanded "><a href="LICENSE.html"><strong aria-hidden="true">6.</strong> Licensing</a></li><li class="chapter-item expanded "><a href="glossary.html"><strong aria-hidden="true">7.</strong> Glossary</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -313,7 +313,6 @@ so <code>op-alloy-consensus</code> types can be used from <code>op-alloy</code> 
 <h2 id="crates"><a class="header" href="#crates">Crates</a></h2>
 <ul>
 <li><a href="https://crates.io/crates/op-alloy-network"><code>op-alloy-network</code></a></li>
-<li><a href="https://crates.io/crates/op-alloy-genesis"><code>op-alloy-genesis</code></a> (supports <code>no_std</code>)</li>
 <li>[<code>op-alloy-provider</code>][op-alloy-protocol]</li>
 <li><a href="https://crates.io/crates/op-alloy-consensus"><code>op-alloy-consensus</code></a> (supports <code>no_std</code>)</li>
 <li><a href="https://crates.io/crates/op-alloy-rpc-types"><code>op-alloy-rpc-types</code></a> (supports <code>no_std</code>)</li>
@@ -323,14 +322,12 @@ so <code>op-alloy-consensus</code> types can be used from <code>op-alloy</code> 
 <p>As noted above, the following crates are <code>no_std</code> compatible.</p>
 <ul>
 <li><a href="https://crates.io/crates/op-alloy-consensus"><code>op-alloy-consensus</code></a></li>
-<li><a href="https://crates.io/crates/op-alloy-genesis"><code>op-alloy-genesis</code></a></li>
 <li><a href="https://crates.io/crates/op-alloy-rpc-types-engine"><code>op-alloy-rpc-types-engine</code></a></li>
 <li><a href="https://crates.io/crates/op-alloy-rpc-types"><code>op-alloy-rpc-types</code></a></li>
 </ul>
 <p>To add <code>no_std</code> support to a crate, ensure the <a href="https://github.com/alloy-rs/op-alloy/blob/main/scripts/check_no_std.sh">check_no_std</a>
 script is updated to include this crate once <code>no_std</code> compatible.</p>
 <!-- op-alloy -->
-<!-- op-alloy-genesis -->
 <!-- op-alloy-consensus -->
 <!-- Hardforks -->
 <!-- OP Stack Specs -->
