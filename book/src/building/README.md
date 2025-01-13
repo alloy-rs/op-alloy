@@ -10,8 +10,6 @@ Some of the primary crates and their types are listed below.
 - [`op-alloy-rpc-types-engine`][op-alloy-rpc-types-engine] provides the
   [`OpPayloadAttributes`][op-payload-attributes] and
   [`OpAttributesWithParent`][op-attributes-with-parent].
-- [`op-alloy-protocol`][op-alloy-protocol] provides [`Frame`][frame],
-  [`Channel`][channel], [`Batch`][batch] types and more.
 
 
 <!-- Links -->
@@ -24,10 +22,5 @@ Some of the primary crates and their types are listed below.
 [op-payload-attributes]: https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/struct.OpPayloadAttributes.html
 [op-attributes-with-parent]: https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/struct.OpAttributesWithParent.html
 
-[frame]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html
-[channel]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html
-[batch]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html
-
 [op-alloy-consensus]: https://crates.io/crates/op-alloy-consensus
-[op-alloy-protocol]: https://crates.io/crates/op-alloy-protocol
 [op-alloy-rpc-types-engine]: https://crates.io/crates/op-alloy-rpc-types-engine

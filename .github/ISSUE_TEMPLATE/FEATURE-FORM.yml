@@ -15,11 +15,8 @@ body:
       options:
         - consensus
         - network
-        - protocol
         - provider
         - op-alloy
-        - registry
-        - rpc-jsonrpsee
         - rpc-types
         - rpc-types-engine
         - other
