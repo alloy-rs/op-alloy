@@ -6,20 +6,10 @@
 [op-alloy-ff]: https://docs.rs/crate/op-alloy/latest/features
 
 [op-alloy-consensus]: https://crates.io/crates/op-alloy-consensus
-[op-alloy-genesis]: https://crates.io/crates/op-alloy-genesis
 [op-alloy-network]: https://crates.io/crates/op-alloy-network
 [op-alloy-provider]: https://crates.io/crates/op-alloy-provider
 [op-alloy-rpc-types-engine]: https://crates.io/crates/op-alloy-rpc-types-engine
 [op-alloy-rpc-types]: https://crates.io/crates/op-alloy-rpc-types
-
-<!-- op-alloy-genesis -->
-
-[genesis]: https://crates.io/crates/op-alloy-genesis
-[rc]: https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/rollup/struct.RollupConfig.html
-[rcid]: https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/rollup/fn.rollup_config_from_chain_id.html
-[eip]: https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html#method.eip_1559_params
-[update]: https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html#method.update_with_receipts
-[system-config]: https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html
 
 <!-- op-alloy-consensus -->
 
