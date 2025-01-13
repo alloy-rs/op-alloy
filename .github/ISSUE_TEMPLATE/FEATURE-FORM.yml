@@ -15,7 +15,6 @@ body:
       options:
         - consensus
         - network
-        - genesis
         - protocol
         - provider
         - op-alloy

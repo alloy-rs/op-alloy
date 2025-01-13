@@ -62,7 +62,6 @@ so `op-alloy-consensus` types can be used from `op-alloy` through `op_alloy::con
 ## Crates
 
 - [`op-alloy-network`][op-alloy-network]
-- [`op-alloy-genesis`][op-alloy-genesis] (supports `no_std`)
 - [`op-alloy-protocol`][op-alloy-protocol] (supports `no_std`)
 - [`op-alloy-consensus`][op-alloy-consensus] (supports `no_std`)
 - [`op-alloy-rpc-types`][op-alloy-rpc-types] (supports `no_std`)
@@ -73,7 +72,6 @@ so `op-alloy-consensus` types can be used from `op-alloy` through `op_alloy::con
 As noted above, the following crates are `no_std` compatible.
 
 - [`op-alloy-consensus`][op-alloy-consensus]
-- [`op-alloy-genesis`][op-alloy-genesis]
 - [`op-alloy-protocol`][op-alloy-protocol]
 - [`op-alloy-rpc-types-engine`][op-alloy-rpc-types-engine]
 - [`op-alloy-rpc-types`][op-alloy-rpc-types]
