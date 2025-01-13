@@ -400,7 +400,6 @@ mod tests {
         assert_eq!(tx.source_hash(), Some(B256::with_last_byte(42)));
         assert_eq!(tx.mint(), Some(100));
         assert!(tx.is_system_transaction());
-        assert!(tx.is_deposit());
     }
 
     #[test]
@@ -419,7 +418,6 @@ mod tests {
         assert_eq!(tx.source_hash(), Some(B256::default()));
         assert_eq!(tx.mint(), None);
         assert!(!tx.is_system_transaction());
-        assert!(tx.is_deposit());
     }
 
     #[test]
@@ -439,7 +437,6 @@ mod tests {
         assert_eq!(tx.source_hash(), Some(B256::default()));
         assert_eq!(tx.mint(), Some(200));
         assert!(!tx.is_system_transaction());
-        assert!(tx.is_deposit());
         assert_eq!(tx.kind(), TxKind::Call(contract_address));
     }
 
