@@ -27,7 +27,7 @@ alloy-rpc-types-eth = { workspace = true, features = ["serde"] }
 alloy-primitives = { workspace = true, features = ["map", "rlp", "serde"] }
 
 # Maili
-maili-common.workspace = true
+maili-consensus.workspace = true
 
 # Serde
 serde_json.workspace = true
@@ -53,7 +53,7 @@ std = [
   "alloy-eips/std",
   "alloy-primitives/std",
   "alloy-rpc-types-eth/std",
-  "maili-common/std",
+  "maili-consensus/std",
 ]
 arbitrary = [
   "std",
