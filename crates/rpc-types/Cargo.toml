@@ -26,6 +26,9 @@ alloy-eips = { workspace = true, features = ["serde"] }
 alloy-rpc-types-eth = { workspace = true, features = ["serde"] }
 alloy-primitives = { workspace = true, features = ["map", "rlp", "serde"] }
 
+# Maili
+maili-consensus.workspace = true
+
 # Serde
 serde_json.workspace = true
 serde = { workspace = true, features = ["derive"] }
