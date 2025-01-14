@@ -5,11 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.9.2](https://github.com/alloy-rs/op-alloy
-/releases/tag/v0.9.2) - 2025-01-08
+## [0.9.3](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.9.3) - 2025-01-14
 
 ### Dependencies
 
+- [deps] Bump `maili` to 0.1.5 ([#385](https://github.com/alloy-rs/op-alloy/issues/385))
 - Quick Version Bumps ([#362](https://github.com/alloy-rs/op-alloy/issues/362))
 
 ### Features
@@ -20,6 +21,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- [consensus] Migrate deposit tx behaviour to `maili` ([#383](https://github.com/alloy-rs/op-alloy/issues/383))
+- [genesis] Migrate `op-alloy-genesis`->`maili-genesis` ([#381](https://github.com/alloy-rs/op-alloy/issues/381))
+- [provider] Revert [#365](https://github.com/alloy-rs/op-alloy/issues/365) remove `OpEngineApi` ([#379](https://github.com/alloy-rs/op-alloy/issues/379))
+- [consensus] Migrate deposit source to `maili-common` ([#377](https://github.com/alloy-rs/op-alloy/issues/377))
+- [rpc] Migrate rpc types to maili ([#378](https://github.com/alloy-rs/op-alloy/issues/378))
+- [docs] Remove `op-alloy-protocol` from docs ([#380](https://github.com/alloy-rs/op-alloy/issues/380))
+- [genesis] Add `interop_time` to `RollupConfig` + `HardForkConfiguration` ([#382](https://github.com/alloy-rs/op-alloy/issues/382))
+- Remove rpc-jsonrpsee Crate ([#376](https://github.com/alloy-rs/op-alloy/issues/376))
+- [protocol] Remove Protocol Crate ([#371](https://github.com/alloy-rs/op-alloy/issues/371))
+- [registry] Remove the Registry Crate ([#372](https://github.com/alloy-rs/op-alloy/issues/372))
+- [provider] Remove Provider Crate ([#373](https://github.com/alloy-rs/op-alloy/issues/373))
+- [rpc-types-engine] Migrate `op_alloy_rpc_types_engine::superchain`->`op-rs/maili-rpc-types-engine` ([#367](https://github.com/alloy-rs/op-alloy/issues/367))
+- [registry] Migrate `op-alloy-registry`->`op-rs/maili-registry` ([#366](https://github.com/alloy-rs/op-alloy/issues/366))
 - [provider] Migrate `op-alloy-provider`->`op-rs/maili-provider` ([#365](https://github.com/alloy-rs/op-alloy/issues/365))
 - [protocol] Migrate `op-alloy-protocol`->`op-rs/maili-protocol` ([#364](https://github.com/alloy-rs/op-alloy/issues/364))
 - [ci] Check wasm compilation for `op-alloy-rpc-types` in CI ([#357](https://github.com/alloy-rs/op-alloy/issues/357))
@@ -28,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Other
 
+- 0.9.2 ([#368](https://github.com/alloy-rs/op-alloy/issues/368))
 - 0.9.1 ([#363](https://github.com/alloy-rs/op-alloy/issues/363))
 - Define supervisor API ([#359](https://github.com/alloy-rs/op-alloy/issues/359))
 
