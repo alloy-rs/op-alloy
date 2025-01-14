@@ -9,8 +9,6 @@
 
 extern crate alloc;
 
-pub use maili_consensus::{DepositTransaction, DepositTxEnvelope};
-
 mod receipt;
 pub use receipt::{OpDepositReceipt, OpDepositReceiptWithBloom, OpReceiptEnvelope, OpTxReceipt};
 

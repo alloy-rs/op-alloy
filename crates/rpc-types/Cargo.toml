@@ -53,6 +53,7 @@ std = [
   "alloy-eips/std",
   "alloy-primitives/std",
   "alloy-rpc-types-eth/std",
+  "maili-consensus/std",
 ]
 arbitrary = [
   "std",
