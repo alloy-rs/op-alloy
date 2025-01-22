@@ -2,10 +2,10 @@
 //!
 //! [Transaction]: alloy_consensus::Transaction
 
+use crate::UpgradeDepositSource;
 use alloc::{string::String, vec::Vec};
 use alloy_eips::eip2718::Encodable2718;
 use alloy_primitives::{address, hex, Address, Bytes, TxKind, B256, U256};
-use maili_common::UpgradeDepositSource;
 
 use crate::{Hardfork, TxDeposit};
 
