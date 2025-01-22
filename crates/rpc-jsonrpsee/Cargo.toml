@@ -22,10 +22,6 @@ alloy-primitives = { workspace = true, features = ["serde"] }
 jsonrpsee.workspace = true
 
 [features]
-default = ["std"]
-std = [
-    "alloy-primitives/std",
-]
 client = [
     "jsonrpsee/client",
     "jsonrpsee/async-client",
