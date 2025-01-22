@@ -5,8 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.9.5](https://github.com/alloy-rs/op-alloy
-/releases/tag/v0.9.5) - 2025-01-17
+## [0.9.6](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.9.6) - 2025-01-22
 
 ### Bug Fixes
 
@@ -14,18 +14,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Dependencies
 
+- Revert maili deps ([#399](https://github.com/alloy-rs/op-alloy/issues/399))
 - Bump `maili-*` to `0.1.6` ([#393](https://github.com/alloy-rs/op-alloy/issues/393))
 - [deps] Bump `maili` to 0.1.5 ([#385](https://github.com/alloy-rs/op-alloy/issues/385))
 - Quick Version Bumps ([#362](https://github.com/alloy-rs/op-alloy/issues/362))
 
 ### Features
 
+- Add flz ([#400](https://github.com/alloy-rs/op-alloy/issues/400))
+- [consensus] Add is_deposit to OpTxEnvelope ([#396](https://github.com/alloy-rs/op-alloy/issues/396))
 - [interop] Define `ExecutingMessage` wrapper ([#361](https://github.com/alloy-rs/op-alloy/issues/361))
 - [protocol] Compressors with Mocked Brotli Streaming ([#335](https://github.com/alloy-rs/op-alloy/issues/335))
 - [protocol] Interop Types ([#352](https://github.com/alloy-rs/op-alloy/issues/352))
 
 ### Miscellaneous Tasks
 
+- Add serde-bincode-compat for re-export features ([#397](https://github.com/alloy-rs/op-alloy/issues/397))
 - [docs] Update readme ([#392](https://github.com/alloy-rs/op-alloy/issues/392))
 - [consensus] Migrate deposit tx behaviour to `maili` ([#383](https://github.com/alloy-rs/op-alloy/issues/383))
 - [genesis] Migrate `op-alloy-genesis`->`maili-genesis` ([#381](https://github.com/alloy-rs/op-alloy/issues/381))
@@ -48,6 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Other
 
+- 0.9.5 ([#394](https://github.com/alloy-rs/op-alloy/issues/394))
 - 0.9.4 ([#389](https://github.com/alloy-rs/op-alloy/issues/389))
 - 0.9.3 ([#384](https://github.com/alloy-rs/op-alloy/issues/384))
 - 0.9.2 ([#368](https://github.com/alloy-rs/op-alloy/issues/368))
