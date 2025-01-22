@@ -5,9 +5,9 @@
 use alloc::{string::String, vec::Vec};
 use alloy_eips::eip2718::Encodable2718;
 use alloy_primitives::{address, hex, Address, Bytes, TxKind, B256, U256};
-use maili_consensus::{TxDeposit, UpgradeDepositSource};
+use maili_common::UpgradeDepositSource;
 
-use crate::Hardfork;
+use crate::{Hardfork, TxDeposit};
 
 /// The Ecotone network upgrade transactions.
 #[derive(Debug, Default, Clone, Copy)]
