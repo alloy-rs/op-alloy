@@ -8,6 +8,7 @@
 [op-alloy-consensus]: https://crates.io/crates/op-alloy-consensus
 [op-alloy-network]: https://crates.io/crates/op-alloy-network
 [op-alloy-provider]: https://crates.io/crates/op-alloy-provider
+[op-alloy-rpc-jsonrpsee]: https://crates.io/crates/op-alloy-rpc-jsonrpsee
 [op-alloy-rpc-types-engine]: https://crates.io/crates/op-alloy-rpc-types-engine
 [op-alloy-rpc-types]: https://crates.io/crates/op-alloy-rpc-types
 
