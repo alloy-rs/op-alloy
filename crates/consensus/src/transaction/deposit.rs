@@ -14,7 +14,6 @@ use alloy_rlp::{
     Buf, BufMut, Decodable, Encodable, Error as DecodeError, Header, EMPTY_STRING_CODE,
 };
 use core::mem;
-use maili_common::DepositTransaction;
 
 /// Deposit transactions, also known as deposits are initiated on L1, and executed on L2.
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Default)]
@@ -52,23 +51,6 @@ pub struct TxDeposit {
     /// Input has two uses depending if transaction is Create or Call (if `to` field is None or
     /// Some).
     pub input: Bytes,
-}
-
-impl DepositTransaction for TxDeposit {
-    #[inline]
-    fn source_hash(&self) -> Option<B256> {
-        Some(self.source_hash)
-    }
-
-    #[inline]
-    fn mint(&self) -> Option<u128> {
-        self.mint
-    }
-
-    #[inline]
-    fn is_system_transaction(&self) -> bool {
-        self.is_system_transaction
-    }
 }
 
 impl TxDeposit {
@@ -355,6 +337,44 @@ impl Sealable for TxDeposit {
     }
 }
 
+/// A trait representing a deposit transaction with specific attributes.
+pub trait DepositTransaction: Transaction {
+    /// Returns the hash that uniquely identifies the source of the deposit.
+    ///
+    /// # Returns
+    /// An `Option<B256>` containing the source hash if available.
+    fn source_hash(&self) -> Option<B256>;
+
+    /// Returns the optional mint value of the deposit transaction.
+    ///
+    /// # Returns
+    /// An `Option<u128>` representing the ETH value to mint on L2, if any.
+    fn mint(&self) -> Option<u128>;
+
+    /// Indicates whether the transaction is exempt from the L2 gas limit.
+    ///
+    /// # Returns
+    /// A `bool` indicating if the transaction is a system transaction.
+    fn is_system_transaction(&self) -> bool;
+}
+
+impl DepositTransaction for TxDeposit {
+    #[inline]
+    fn source_hash(&self) -> Option<B256> {
+        Some(self.source_hash)
+    }
+
+    #[inline]
+    fn mint(&self) -> Option<u128> {
+        self.mint
+    }
+
+    #[inline]
+    fn is_system_transaction(&self) -> bool {
+        self.is_system_transaction
+    }
+}
+
 /// Deposit transactions don't have a signature, however, we include an empty signature in the
 /// response for better compatibility.
 ///
@@ -400,7 +420,6 @@ mod tests {
         assert_eq!(tx.source_hash(), Some(B256::with_last_byte(42)));
         assert_eq!(tx.mint(), Some(100));
         assert!(tx.is_system_transaction());
-        assert!(tx.is_deposit());
     }
 
     #[test]
@@ -419,7 +438,6 @@ mod tests {
         assert_eq!(tx.source_hash(), Some(B256::default()));
         assert_eq!(tx.mint(), None);
         assert!(!tx.is_system_transaction());
-        assert!(tx.is_deposit());
     }
 
     #[test]
@@ -439,7 +457,6 @@ mod tests {
         assert_eq!(tx.source_hash(), Some(B256::default()));
         assert_eq!(tx.mint(), Some(200));
         assert!(!tx.is_system_transaction());
-        assert!(tx.is_deposit());
         assert_eq!(tx.kind(), TxKind::Call(contract_address));
     }
 

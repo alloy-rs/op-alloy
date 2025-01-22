@@ -9,14 +9,13 @@
 
 extern crate alloc;
 
-pub use maili_common::{DepositTransaction, DepositTxEnvelope};
-
 mod receipt;
 pub use receipt::{OpDepositReceipt, OpDepositReceiptWithBloom, OpReceiptEnvelope, OpTxReceipt};
 
 mod transaction;
 pub use transaction::{
-    OpPooledTransaction, OpTxEnvelope, OpTxType, OpTypedTransaction, TxDeposit, DEPOSIT_TX_TYPE_ID,
+    DepositTransaction, OpPooledTransaction, OpTxEnvelope, OpTxType, OpTypedTransaction, TxDeposit,
+    DEPOSIT_TX_TYPE_ID,
 };
 
 pub mod eip1559;
@@ -25,8 +24,8 @@ pub use eip1559::{
     EIP1559ParamError,
 };
 
-mod hardforks;
-pub use hardforks::{Ecotone, Fjord, Hardfork, Hardforks};
+// mod hardforks;
+// pub use hardforks::{Ecotone, Fjord, Hardfork, Hardforks};
 
 mod block;
 pub use block::OpBlock;

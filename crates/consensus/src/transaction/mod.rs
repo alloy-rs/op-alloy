@@ -1,7 +1,7 @@
 //! Tramsaction types for Optimism.
 
 mod deposit;
-pub use deposit::TxDeposit;
+pub use deposit::{DepositTransaction, TxDeposit};
 
 mod tx_type;
 pub use tx_type::{OpTxType, DEPOSIT_TX_TYPE_ID};

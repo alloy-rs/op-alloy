@@ -1,3 +1,4 @@
+use crate::{OpTxType, TxDeposit};
 use alloy_consensus::{
     transaction::RlpEcdsaTx, Sealable, Sealed, Signed, Transaction, TxEip1559, TxEip2930,
     TxEip7702, TxLegacy, Typed2718,
@@ -9,9 +10,6 @@ use alloy_eips::{
 };
 use alloy_primitives::{Address, Bytes, TxKind, B256, U256};
 use alloy_rlp::{Decodable, Encodable};
-use maili_common::DepositTxEnvelope;
-
-use crate::{OpTxType, TxDeposit};
 
 /// The Ethereum [EIP-2718] Transaction Envelope, modified for OP Stack chains.
 ///
@@ -333,6 +331,14 @@ impl OpTxEnvelope {
         }
     }
 
+    /// Returns the [`TxEip1559`] variant if the transaction is an EIP-1559 transaction.
+    pub const fn as_deposit(&self) -> Option<&Sealed<TxDeposit>> {
+        match self {
+            Self::Deposit(tx) => Some(tx),
+            _ => None,
+        }
+    }
+
     /// Return the [`OpTxType`] of the inner txn.
     pub const fn tx_type(&self) -> OpTxType {
         match self {
@@ -443,24 +449,6 @@ impl Encodable2718 for OpTxEnvelope {
             Self::Eip2930(tx) => *tx.hash(),
             Self::Eip7702(tx) => *tx.hash(),
             Self::Deposit(tx) => tx.seal(),
-        }
-    }
-}
-
-impl DepositTxEnvelope for OpTxEnvelope {
-    type DepositTx = TxDeposit;
-
-    /// Returns true if the transaction is a deposit transaction.
-    #[inline]
-    fn is_deposit(&self) -> bool {
-        matches!(self, Self::Deposit(_))
-    }
-
-    /// Returns the [`TxDeposit`] variant if the transaction is a deposit transaction.
-    fn as_deposit(&self) -> Option<&Sealed<TxDeposit>> {
-        match self {
-            Self::Deposit(tx) => Some(tx),
-            _ => None,
         }
     }
 }
