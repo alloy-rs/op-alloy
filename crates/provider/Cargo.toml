@@ -29,5 +29,9 @@ alloy-rpc-types-engine = { workspace = true, features = ["serde"] }
 async-trait.workspace = true
 
 [features]
-std = []
-serde = []
+std = [
+	"op-alloy-rpc-types-engine/std"
+]
+serde = [
+	"op-alloy-rpc-types-engine/serde"
+]

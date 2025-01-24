@@ -63,4 +63,6 @@ k256 = [
   "alloy-rpc-types-eth/k256",
   "op-alloy-consensus/k256",
 ]
-serde = []
+serde = [
+	"op-alloy-consensus/serde"
+]

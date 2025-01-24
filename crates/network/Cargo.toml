@@ -27,5 +27,11 @@ alloy-rpc-types-eth.workspace = true
 alloy-signer.workspace = true
 
 [features]
-std = []
-serde = []
+std = [
+	"op-alloy-consensus/std",
+	"op-alloy-rpc-types/std"
+]
+serde = [
+	"op-alloy-consensus/serde",
+	"op-alloy-rpc-types/serde"
+]
