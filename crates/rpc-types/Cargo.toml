@@ -46,10 +46,11 @@ similar-asserts.workspace = true
 [features]
 default = ["std"]
 std = [
-  "alloy-network-primitives/std",
-  "alloy-eips/std",
-  "alloy-primitives/std",
-  "alloy-rpc-types-eth/std",
+	"alloy-network-primitives/std",
+	"alloy-eips/std",
+	"alloy-primitives/std",
+	"alloy-rpc-types-eth/std",
+	"op-alloy-consensus/std"
 ]
 arbitrary = [
   "std",
@@ -62,3 +63,4 @@ k256 = [
   "alloy-rpc-types-eth/k256",
   "op-alloy-consensus/k256",
 ]
+serde = []
