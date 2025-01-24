@@ -1,0 +1,22 @@
+name: lint
+
+on:
+  pull_request:
+  merge_group:
+  push:
+    branches: [main]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  # Check crates correctly propagate features
+  feature-propagation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          cargo install zepter
+          zepter --version
+          time zepter run check
