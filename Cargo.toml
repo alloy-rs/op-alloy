@@ -45,16 +45,16 @@ op-alloy-rpc-jsonrpsee = { version = "0.9.6", path = "crates/rpc-jsonrpsee", def
 op-alloy-flz = { version = "0.9.6", path = "crates/flz", default-features = false }
 
 # Alloy
-alloy-eips = { version = "0.10", default-features = false }
-alloy-serde = { version = "0.10", default-features = false }
-alloy-signer = { version = "0.10", default-features = false }
-alloy-network = { version = "0.10", default-features = false }
-alloy-provider = { version = "0.10", default-features = false }
-alloy-transport = { version = "0.10", default-features = false }
-alloy-consensus = { version = "0.10", default-features = false }
-alloy-rpc-types-eth = { version = "0.10", default-features = false }
-alloy-rpc-types-engine = { version = "0.10", default-features = false }
-alloy-network-primitives = { version = "0.10", default-features = false }
+alloy-eips = { version = "0.11", default-features = false }
+alloy-serde = { version = "0.11", default-features = false }
+alloy-signer = { version = "0.11", default-features = false }
+alloy-network = { version = "0.11", default-features = false }
+alloy-provider = { version = "0.11", default-features = false }
+alloy-transport = { version = "0.11", default-features = false }
+alloy-consensus = { version = "0.11", default-features = false }
+alloy-rpc-types-eth = { version = "0.11", default-features = false }
+alloy-rpc-types-engine = { version = "0.11", default-features = false }
+alloy-network-primitives = { version = "0.11", default-features = false }
 
 # Alloy RLP
 alloy-rlp = { version = "0.3", default-features = false }
@@ -116,13 +116,13 @@ c-kzg = { version = "1.0", default-features = false }
 k256 = { version = "0.13", default-features = false, features = ["ecdsa"] }
 
 [patch.crates-io]
-alloy-consensus = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
-alloy-network = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
-alloy-network-primitives = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
-alloy-rpc-types-eth = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
-alloy-rpc-types-engine = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
-alloy-eips = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
-alloy-serde = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
-alloy-signer = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
-alloy-provider = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
-alloy-transport = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
+#alloy-consensus = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
+#alloy-network = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
+#alloy-network-primitives = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
+#alloy-rpc-types-eth = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
+#alloy-rpc-types-engine = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
+#alloy-eips = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
+#alloy-serde = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
+#alloy-signer = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
+#alloy-provider = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
+#alloy-transport = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
