@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.10.0](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.10.0) - 2025-01-31
+
+### Dependencies
+
+- Bump alloy 0.11 ([#403](https://github.com/alloy-rs/op-alloy/issues/403))
+
+### Features
+
+- [ci] Add feature propagation checks ([#402](https://github.com/alloy-rs/op-alloy/issues/402))
+
+### Miscellaneous Tasks
+
+- Rm execution requests from v4 payload fn ([#401](https://github.com/alloy-rs/op-alloy/issues/401))
+
 ## [0.9.6](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.9.6) - 2025-01-22
 
@@ -29,6 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.9.6
 - Add serde-bincode-compat for re-export features ([#397](https://github.com/alloy-rs/op-alloy/issues/397))
 - [docs] Update readme ([#392](https://github.com/alloy-rs/op-alloy/issues/392))
 - [consensus] Migrate deposit tx behaviour to `maili` ([#383](https://github.com/alloy-rs/op-alloy/issues/383))
