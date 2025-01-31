@@ -1,6 +1,6 @@
 //! Contains all hardforks represented in the [crate::Hardfork] type.
 
-use crate::{Isthmus, Ecotone, Fjord};
+use crate::{Ecotone, Fjord, Isthmus};
 
 /// Optimism Hardforks
 ///

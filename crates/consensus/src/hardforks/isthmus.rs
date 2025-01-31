@@ -5,7 +5,7 @@
 use crate::UpgradeDepositSource;
 use alloc::{string::String, vec::Vec};
 use alloy_eips::eip2718::Encodable2718;
-use alloy_primitives::{address, hex, Address, Bytes, TxKind, B256, U256};
+use alloy_primitives::{address, Address, Bytes, TxKind, B256, U256};
 
 use crate::{Hardfork, TxDeposit};
 
@@ -32,18 +32,16 @@ impl Isthmus {
 
     /// Returns the list of [TxDeposit]s for the network upgrade.
     pub fn deposits() -> impl Iterator<Item = TxDeposit> {
-        ([
-            TxDeposit {
-                source_hash: Self::deposits_contract_source(),
-                from: Self::EIP2935_FROM,
-                to: TxKind::Create,
-                mint: 0.into(),
-                value: U256::ZERO,
-                gas_limit: 250_000,
-                is_system_transaction: false,
-                input: Self::eip2935_creation_data(),
-            },
-        ])
+        ([TxDeposit {
+            source_hash: Self::deposit_contract_source(),
+            from: Self::EIP2935_FROM,
+            to: TxKind::Create,
+            mint: 0.into(),
+            value: U256::ZERO,
+            gas_limit: 250_000,
+            is_system_transaction: false,
+            input: Self::eip2935_creation_data(),
+        }])
         .into_iter()
     }
 }
@@ -60,18 +58,19 @@ impl Hardfork for Isthmus {
 }
 
 #[cfg(test)]
+#[cfg(feature = "std")]
 mod tests {
     use super::*;
     use alloc::vec;
+    use alloy_primitives::hex;
 
     #[test]
     fn test_isthmus_txs_encoded() {
         let isthmus_upgrade_tx = Isthmus.txs().collect::<Vec<_>>();
-        assert_eq!(isthmus_upgrade_tx.len(), 6);
+        assert_eq!(isthmus_upgrade_tx.len(), 1);
 
-        let expected_txs: Vec<Bytes> = vec![
-            hex::decode(include_bytes!("./bytecode/isthmus_tx_1.hex")).unwrap().into(),
-        ];
+        let expected_txs: Vec<Bytes> =
+            vec![hex::decode(include_bytes!("./bytecode/isthmus_tx_1.hex")).unwrap().into()];
         for (i, expected) in expected_txs.iter().enumerate() {
             assert_eq!(isthmus_upgrade_tx[i], *expected);
         }
