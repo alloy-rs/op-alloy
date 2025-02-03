@@ -41,7 +41,7 @@ impl OpExecutionPayloadSidecar {
     /// Extracts the [`OpExecutionPayloadSidecar`] from the given [`Block`].
     ///
     /// Returns `OpExecutionPayloadSidecar::default` if the block does not contain any sidecar
-    /// fields (pre-cancun): `requests_hash`, `parent_beacon_block_root`, `blob_versioned_hashes`.
+    /// fields (pre-cancun).
     pub fn from_block<T, H>(block: &Block<T, H>) -> Self
     where
         T: Transaction,
