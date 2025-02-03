@@ -4,7 +4,7 @@ use alloy_rpc_types_engine::{CancunPayloadFields, MaybeCancunPayloadFields};
 use derive_more::{Constructor, From, Into};
 
 /// Container type for all available additional `newPayload` request parameters that are not present
-/// in the `ExecutionPayload` object itself.
+/// in the [`ExecutionPayload`](alloy_rpc_types_engine::ExecutionPayload) object itself.
 ///
 /// Default is equivalent to pre-cancun, payloads v1 and v2.
 #[derive(Debug, Clone, Default)]
@@ -40,8 +40,8 @@ pub struct MaybeIsthmusPayloadFields {
 impl OpExecutionPayloadSidecar {
     /// Extracts the [`OpExecutionPayloadSidecar`] from the given [`Block`].
     ///
-    /// Returns [`OpExecutionPayloadSidecar::none`] if the block does not contain any sidecar fields
-    /// (pre-cancun): `requests_hash`, `parent_beacon_block_root`, `blob_versioned_hashes`.
+    /// Returns `OpExecutionPayloadSidecar::default` if the block does not contain any sidecar
+    /// fields (pre-cancun): `requests_hash`, `parent_beacon_block_root`, `blob_versioned_hashes`.
     pub fn from_block<T, H>(block: &Block<T, H>) -> Self
     where
         T: Transaction,
