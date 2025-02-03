@@ -19,6 +19,12 @@ impl Ecotone {
     /// with the Gas Price Oracle Deployer Address and nonce 0.
     pub const GAS_PRICE_ORACLE: Address = address!("b528d11cc114e026f138fe568744c6d45ce6da7a");
 
+    /// The Gas Price Oracle Proxy Address
+    pub const GAS_PRICE_ORACLE_PROXY: Address = address!("420000000000000000000000000000000000000F");
+
+    /// The L1 Block Proxy Address
+    pub const L1_BLOCK_PROXY: Address = address!("4200000000000000000000000000000000000015");
+
     /// The Enable Ecotone Input Method 4Byte Signature
     pub const ENABLE_ECOTONE_INPUT: [u8; 4] = hex!("22b908b3");
 
@@ -121,7 +127,7 @@ impl Ecotone {
             TxDeposit {
                 source_hash: Self::update_l1_block_source(),
                 from: Address::default(),
-                to: TxKind::Call(Self::L1_BLOCK_DEPLOYER),
+                to: TxKind::Call(Self::L1_BLOCK_PROXY),
                 mint: 0.into(),
                 value: U256::ZERO,
                 gas_limit: 50_000,
@@ -131,7 +137,7 @@ impl Ecotone {
             TxDeposit {
                 source_hash: Self::update_gas_price_oracle_source(),
                 from: Address::default(),
-                to: TxKind::Call(Self::GAS_PRICE_ORACLE_DEPLOYER),
+                to: TxKind::Call(Self::GAS_PRICE_ORACLE_PROXY),
                 mint: 0.into(),
                 value: U256::ZERO,
                 gas_limit: 50_000,
