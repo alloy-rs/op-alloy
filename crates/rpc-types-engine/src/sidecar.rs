@@ -99,4 +99,9 @@ impl OpExecutionPayloadSidecar {
     pub fn parent_beacon_block_root(&self) -> Option<B256> {
         self.canyon.parent_beacon_block_root()
     }
+
+    /// Returns the withdrawals root, if any.
+    pub fn withdrawals_root(&self) -> Option<&B256> {
+        self.isthmus().map(|fields| &fields.withdrawals_root)
+    }
 }
