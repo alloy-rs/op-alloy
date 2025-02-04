@@ -20,23 +20,6 @@ pub struct OpExecutionPayloadSidecar {
     isthmus: MaybeIsthmusPayloadFields,
 }
 
-/// Fields introduced in `engine_newPayloadV4` that are not present in the
-/// [`ExecutionPayload`](alloy_rpc_types_engine::ExecutionPayload) RPC object.
-#[derive(Clone, Debug, Default, PartialEq, Eq, Hash, Constructor)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct IsthmusPayloadFields {
-    /// EIP-7685 requests.
-    pub withdrawals_root: B256,
-}
-
-/// A container type for [`IsthmusPayloadFields`] that may or may not be present.
-#[derive(Clone, Debug, Default, PartialEq, Eq, Hash, From, Into)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[from(IsthmusPayloadFields)]
-pub struct MaybeIsthmusPayloadFields {
-    fields: Option<IsthmusPayloadFields>,
-}
-
 impl OpExecutionPayloadSidecar {
     /// Extracts the [`OpExecutionPayloadSidecar`] from the given [`Block`].
     ///
@@ -104,4 +87,21 @@ impl OpExecutionPayloadSidecar {
     pub fn withdrawals_root(&self) -> Option<&B256> {
         self.isthmus().map(|fields| &fields.withdrawals_root)
     }
+}
+
+/// Fields introduced in `engine_newPayloadV4` that are not present in the
+/// [`ExecutionPayload`](alloy_rpc_types_engine::ExecutionPayload) RPC object.
+#[derive(Clone, Debug, Default, PartialEq, Eq, Hash, Constructor)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct IsthmusPayloadFields {
+    /// EIP-7685 requests.
+    pub withdrawals_root: B256,
+}
+
+/// A container type for [`IsthmusPayloadFields`] that may or may not be present.
+#[derive(Clone, Debug, Default, PartialEq, Eq, Hash, From, Into)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[from(IsthmusPayloadFields)]
+pub struct MaybeIsthmusPayloadFields {
+    fields: Option<IsthmusPayloadFields>,
 }
