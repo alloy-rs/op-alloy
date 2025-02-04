@@ -6,13 +6,13 @@ use derive_more::{Constructor, From, Into};
 /// Container type for all available additional `newPayload` request parameters that are not present
 /// in the [`ExecutionPayload`](alloy_rpc_types_engine::ExecutionPayload) object itself.
 ///
-/// Default is equivalent to pre-cancun, payloads v1 and v2.
+/// Default is equivalent to pre-canyon, payloads v1 and v2.
 #[derive(Debug, Clone, Default)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct OpExecutionPayloadSidecar {
-    /// Cancun request params introduced in `engine_newPayloadV3` that are not present in the
-    /// [`ExecutionPayload`](alloy_rpc_types_engine::ExecutionPayload).
-    cancun: MaybeCancunPayloadFields,
+    /// Canyon request params, inherited from Cancun, introduced in `engine_newPayloadV3` that are
+    /// not present in the [`ExecutionPayload`](alloy_rpc_types_engine::ExecutionPayload).
+    canyon: MaybeCancunPayloadFields,
     /// Storage root of `L2ToL1MessagePasser.sol`, aka l2 withdrawals root, requires state to
     /// compute, hence root is passed in sidecar.
     ///
@@ -41,13 +41,13 @@ impl OpExecutionPayloadSidecar {
     /// Extracts the [`OpExecutionPayloadSidecar`] from the given [`Block`].
     ///
     /// Returns `OpExecutionPayloadSidecar::default` if the block does not contain any sidecar
-    /// fields (pre-cancun).
+    /// fields (pre-canyon).
     pub fn from_block<T, H>(block: &Block<T, H>) -> Self
     where
         T: Transaction,
         H: BlockHeader,
     {
-        let cancun =
+        let canyon =
             block.parent_beacon_block_root().map(|parent_beacon_block_root| CancunPayloadFields {
                 parent_beacon_block_root,
                 versioned_hashes: block.body.blob_versioned_hashes_iter().copied().collect(),
@@ -58,31 +58,31 @@ impl OpExecutionPayloadSidecar {
             .filter(|root| *root != EMPTY_ROOT_HASH)
             .map(IsthmusPayloadFields::new);
 
-        match (cancun, isthmus) {
-            (Some(cancun), Some(isthmus)) => Self::v4(cancun, isthmus),
-            (Some(cancun), None) => Self::v3(cancun),
+        match (canyon, isthmus) {
+            (Some(canyon), Some(isthmus)) => Self::v4(canyon, isthmus),
+            (Some(canyon), None) => Self::v3(canyon),
             _ => Self::default(),
         }
     }
 
-    /// Creates a new instance for cancun with the cancun fields for `engine_newPayloadV3`
-    pub fn v3(cancun: CancunPayloadFields) -> Self {
-        Self { cancun: cancun.into(), ..Default::default() }
+    /// Creates a new instance for canyon with the canyon fields for `engine_newPayloadV3`
+    pub fn v3(canyon: CancunPayloadFields) -> Self {
+        Self { canyon: canyon.into(), ..Default::default() }
     }
 
     /// Creates a new instance post prague for `engine_newPayloadV4`
-    pub fn v4(cancun: CancunPayloadFields, isthmus: IsthmusPayloadFields) -> Self {
-        Self { cancun: cancun.into(), isthmus: isthmus.into() }
+    pub fn v4(canyon: CancunPayloadFields, isthmus: IsthmusPayloadFields) -> Self {
+        Self { canyon: canyon.into(), isthmus: isthmus.into() }
     }
 
     /// Returns a reference to the [`CancunPayloadFields`].
-    pub const fn cancun(&self) -> Option<&CancunPayloadFields> {
-        self.cancun.as_ref()
+    pub const fn canyon(&self) -> Option<&CancunPayloadFields> {
+        self.canyon.as_ref()
     }
 
     /// Consumes the type and returns the [`CancunPayloadFields`]
-    pub fn into_cancun(self) -> Option<CancunPayloadFields> {
-        self.cancun.into_inner()
+    pub fn into_canyon(self) -> Option<CancunPayloadFields> {
+        self.canyon.into_inner()
     }
 
     /// Returns a reference to the [`IsthmusPayloadFields`].
@@ -97,6 +97,6 @@ impl OpExecutionPayloadSidecar {
 
     /// Returns the parent beacon block root, if any.
     pub fn parent_beacon_block_root(&self) -> Option<B256> {
-        self.cancun.parent_beacon_block_root()
+        self.canyon.parent_beacon_block_root()
     }
 }
