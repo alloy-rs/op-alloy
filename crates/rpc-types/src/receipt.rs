@@ -180,10 +180,12 @@ pub struct L1BlockInfo {
     /// Operator fee scalar.
     ///
     /// Always null prior to the Isthmus hardfork.
+    #[serde(default, skip_serializing_if = "Option::is_none", with = "alloy_serde::quantity::opt")]
     pub operator_fee_scalar: Option<u128>,
     /// Operator fee constant.
     ///
     /// Always null prior to the Isthmus hardfork.
+    #[serde(default, skip_serializing_if = "Option::is_none", with = "alloy_serde::quantity::opt")]
     pub operator_fee_constant: Option<u128>,
 }
 
