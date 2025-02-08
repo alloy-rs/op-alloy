@@ -122,7 +122,7 @@ impl OpTypedTransaction {
 
     /// Returns `true` if transaction is deposit transaction.
     pub const fn is_deposit(&self) -> bool {
-        matches!(self, OpTypedTransaction::Deposit(_))
+        matches!(self, Self::Deposit(_))
     }
 }
 
