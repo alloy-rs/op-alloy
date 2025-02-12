@@ -20,7 +20,7 @@ pub struct OpExecutionData {
 }
 
 impl OpExecutionData {
-    /// Creates new instance of [`ExecutionData`].
+    /// Creates new instance of [`OpExecutionData`].
     pub const fn new(payload: OpExecutionPayload, sidecar: OpExecutionPayloadSidecar) -> Self {
         Self { payload, sidecar }
     }
