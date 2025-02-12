@@ -1,6 +1,7 @@
 //! Additional compatibility implementations.
 
 use crate::{TxDeposit, DEPOSIT_TX_TYPE_ID};
+use alloc::string::ToString;
 use alloy_eips::Typed2718;
 use alloy_network::{UnknownTxEnvelope, UnknownTypedTransaction};
 use alloy_rpc_types_eth::ConversionError;

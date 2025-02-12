@@ -53,7 +53,7 @@ std = [
     "alloy-consensus/std",
     "derive_more/std",
 ]
-alloy-compat = ["dep:alloy-network", "dep:alloy-rpc-types-eth"]
+alloy-compat = ["serde", "dep:alloy-network", "dep:alloy-rpc-types-eth"]
 k256 = ["alloy-primitives/k256", "alloy-consensus/k256"]
 kzg = ["alloy-eips/kzg", "alloy-consensus/kzg", "std"]
 arbitrary = [
