@@ -5,8 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.10.2](https://github.com/alloy-rs/op-alloy
-/releases/tag/v0.10.2) - 2025-02-04
+## [0.10.3](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.10.3) - 2025-02-10
 
 ### Bug Fixes
 
@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Features
 
+- Add is-deposit helper ([#422](https://github.com/alloy-rs/op-alloy/issues/422))
+- [isthmus] Define `OpExecutionData` ([#418](https://github.com/alloy-rs/op-alloy/issues/418))
+- Add OpExecutionPayloadV4 ([#414](https://github.com/alloy-rs/op-alloy/issues/414))
+- [isthmus] Define `IsthmusPayloadFields` ([#410](https://github.com/alloy-rs/op-alloy/issues/410))
 - [consensus] Isthmus Network Upgrade Txs ([#405](https://github.com/alloy-rs/op-alloy/issues/405))
 
 ### Miscellaneous Tasks
@@ -23,6 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Other
 
+- Add operator fee to rpc l1 block ([#420](https://github.com/alloy-rs/op-alloy/issues/420))
+- Define `OpExecutionPayload` ([#416](https://github.com/alloy-rs/op-alloy/issues/416))
+- 0.10.2 ([#413](https://github.com/alloy-rs/op-alloy/issues/413))
 - 0.10.1 ([#409](https://github.com/alloy-rs/op-alloy/issues/409))
 
 ## [0.10.0](https://github.com/alloy-rs/op-alloy
