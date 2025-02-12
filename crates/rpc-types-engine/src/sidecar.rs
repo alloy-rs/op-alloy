@@ -1,7 +1,7 @@
-use alloy_consensus::{Block, BlockHeader, Transaction, EMPTY_ROOT_HASH};
+use alloy_consensus::{Block, BlockHeader, Transaction};
 use alloy_primitives::B256;
 use alloy_rpc_types_engine::{CancunPayloadFields, MaybeCancunPayloadFields};
-use derive_more::{Constructor, From, Into};
+use derive_more::Into;
 
 /// Container type for all available additional `newPayload` request parameters that are not present
 /// in the [`ExecutionPayload`](alloy_rpc_types_engine::ExecutionPayload) object itself.
@@ -31,15 +31,12 @@ impl OpExecutionPayloadSidecar {
                 versioned_hashes: block.body.blob_versioned_hashes_iter().copied().collect(),
             });
 
-        match canyon {
-            Some(canyon) => Self::v4(canyon),
-            _ => Self::default(),
-        }
+        canyon.map_or_else(Self::default, Self::v4)
     }
 
     /// Creates a new instance for canyon with the canyon fields for `engine_newPayloadV3`
     pub fn v3(canyon: CancunPayloadFields) -> Self {
-        Self { canyon: canyon.into(), ..Default::default() }
+        Self { canyon: canyon.into() }
     }
 
     /// Creates a new instance post prague for `engine_newPayloadV4`
