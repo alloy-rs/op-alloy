@@ -3,8 +3,8 @@
 pub mod v3;
 pub mod v4;
 
-use crate::{OpExecutionPayloadSidecar, OpExecutionPayloadV4};
-use alloy_consensus::{Block, EMPTY_ROOT_HASH};
+use crate::OpExecutionPayloadV4;
+use alloy_consensus::Block;
 use alloy_eips::Decodable2718;
 use alloy_primitives::B256;
 use alloy_rpc_types_engine::{ExecutionPayloadV2, ExecutionPayloadV3, PayloadError};
@@ -86,26 +86,5 @@ impl OpExecutionPayload {
             Self::V3(payload) => payload.try_into_block(),
             Self::V4(payload) => payload.payload_inner.try_into_block(),
         }
-    }
-
-    /// Tries to create a new unsealed block from the given payload and payload sidecar.
-    ///
-    /// Performs additional validation of `extra_data` and `base_fee_per_gas` fields.
-    ///
-    /// # Note
-    ///
-    /// The log bloom is assumed to be validated during serialization.
-    ///
-    /// See <https://github.com/ethereum/go-ethereum/blob/79a478bb6176425c2400e949890e668a3d9a3d05/core/beacon/types.go#L145>
-    pub fn try_into_block_with_sidecar<T: Decodable2718>(
-        self,
-        sidecar: &OpExecutionPayloadSidecar,
-    ) -> Result<Block<T>, PayloadError> {
-        let mut base_payload = self.try_into_block()?;
-        base_payload.header.parent_beacon_block_root = sidecar.parent_beacon_block_root();
-        base_payload.header.requests_hash = Some(EMPTY_ROOT_HASH);
-        base_payload.header.withdrawals_root = sidecar.withdrawals_root().copied();
-
-        Ok(base_payload)
     }
 }
