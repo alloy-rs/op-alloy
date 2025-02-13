@@ -44,8 +44,8 @@ impl OpExecutionPayload {
     /// Returns a reference to the V3 payload, if any.
     pub const fn as_v3(&self) -> Option<&ExecutionPayloadV3> {
         match self {
-            Self::V2(payload) => None,
-            Self::V3(payload) => Some(&payload),
+            Self::V2(_) => None,
+            Self::V3(payload) => Some(payload),
             Self::V4(payload) => Some(&payload.payload_inner),
         }
     }
@@ -53,7 +53,7 @@ impl OpExecutionPayload {
     /// Returns a mutable reference to the V3 payload, if any.
     pub fn as_v3_mut(&mut self) -> Option<&ExecutionPayloadV3> {
         match self {
-            Self::V2(payload) => None,
+            Self::V2(_) => None,
             Self::V3(payload) => Some(payload),
             Self::V4(payload) => Some(&payload.payload_inner),
         }
