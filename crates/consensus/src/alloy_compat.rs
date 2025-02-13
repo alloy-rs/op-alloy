@@ -32,7 +32,7 @@ impl TryFrom<AnyTxEnvelope> for OpTxEnvelope {
     type Error = AnyTxEnvelope;
 
     fn try_from(value: AnyTxEnvelope) -> Result<Self, Self::Error> {
-        OpTxEnvelope::try_from_any_envelope(value)
+        Self::try_from_any_envelope(value)
     }
 }
 
