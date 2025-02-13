@@ -73,10 +73,11 @@ impl OpExecutionPayload {
         self.as_v2().payload_inner.block_number
     }
 
+    #[allow(rustdoc::broken_intra_doc_links)]
     /// Converts [`OpExecutionPayload`] to [`Block`].
     ///
     /// Caution: This does not set fields that are not part of the payload and only part of the
-    /// [`OpExecutionPayloadSidecar`]:
+    /// [`OpExecutionPayloadSidecar`](crate::OpExecutionPayloadSidecar):
     /// - parent_beacon_block_root
     ///
     /// See also: [`OpExecutionPayload::try_into_block_with_sidecar`]
