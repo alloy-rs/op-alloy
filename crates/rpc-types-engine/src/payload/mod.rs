@@ -84,7 +84,7 @@ impl OpExecutionPayload {
         match self {
             Self::V2(payload) => payload.try_into_block(),
             Self::V3(payload) => payload.try_into_block(),
-            Self::V4(payload) => payload.payload_inner.try_into_block(),
+            Self::V4(payload) => payload.try_into_block(),
         }
     }
 }
