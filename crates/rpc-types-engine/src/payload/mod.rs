@@ -347,7 +347,7 @@ impl OpExecutionPayload {
     /// Converts [`OpExecutionPayload`] to [`Block`].
     ///
     /// Caution: This does not set fields that are not part of the payload and only part of the
-    /// [`OpExecutionPayloadSidecar`](crate::OpExecutionPayloadSidecar):
+    /// [`OpExecutionPayloadSidecar`]:
     /// - parent_beacon_block_root
     ///
     /// See also: [`OpExecutionPayload::try_into_block_with_sidecar`]
