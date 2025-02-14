@@ -13,5 +13,5 @@ pub enum OpPayloadError {
     NonEmptyBlobVersionedHashes,
     /// L1 [`PayloadError`] that can also occur on L2.
     #[error(transparent)]
-    Eth(PayloadError),
+    Eth(#[from] PayloadError),
 }

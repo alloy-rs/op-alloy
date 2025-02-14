@@ -4,14 +4,15 @@ pub mod error;
 pub mod v3;
 pub mod v4;
 
-use crate::OpExecutionPayloadV4;
+use crate::{OpExecutionPayloadSidecar, OpExecutionPayloadV4};
 use alloc::string::String;
-use alloy_consensus::Block;
+use alloy_consensus::{Block, EMPTY_ROOT_HASH};
 use alloy_eips::Decodable2718;
 use alloy_primitives::{map::HashMap, B256};
 use alloy_rpc_types_engine::{
     ExecutionPayloadV1, ExecutionPayloadV2, ExecutionPayloadV3, PayloadError,
 };
+use error::OpPayloadError;
 
 /// An execution payload, which can be either [`ExecutionPayloadV2`], [`ExecutionPayloadV3`], or
 /// [`OpExecutionPayloadV4`].
@@ -356,6 +357,31 @@ impl OpExecutionPayload {
             Self::V3(payload) => payload.try_into_block(),
             Self::V4(payload) => payload.try_into_block(),
         }
+    }
+
+    /// Tries to create a new unsealed block from the given payload and payload sidecar.
+    ///
+    /// See also docs for
+    /// [`ExecutionPayload::try_into_block_with_sidecar`](alloy_rpc_types_engine::ExecutionPayload::try_into_block_with_sidecar).
+    pub fn try_into_block_with_sidecar<T: Decodable2718>(
+        self,
+        sidecar: &OpExecutionPayloadSidecar,
+    ) -> Result<Block<T>, OpPayloadError> {
+        let mut base_payload = self.try_into_block()?;
+        if let Some(blobs_hashes) = sidecar.versioned_hashes() {
+            if !blobs_hashes.is_empty() {
+                return Err(OpPayloadError::NonEmptyBlobVersionedHashes);
+            }
+        }
+        if let Some(reqs_hash) = sidecar.requests_hash() {
+            if reqs_hash != EMPTY_ROOT_HASH {
+                return Err(OpPayloadError::NonEmptyELRequests);
+            }
+            base_payload.header.requests_hash = Some(EMPTY_ROOT_HASH)
+        }
+        base_payload.header.parent_beacon_block_root = sidecar.parent_beacon_block_root();
+
+        Ok(base_payload)
     }
 }
 
