@@ -95,11 +95,11 @@ impl OpTypedTransaction {
     /// Returns `None` if the tx is a deposit transaction.
     pub fn signature_hash(&self) -> Option<B256> {
         match self {
-            OpTypedTransaction::Legacy(tx) => Some(tx.signature_hash()),
-            OpTypedTransaction::Eip2930(tx) => Some(tx.signature_hash()),
-            OpTypedTransaction::Eip1559(tx) => Some(tx.signature_hash()),
-            OpTypedTransaction::Eip7702(tx) => Some(tx.signature_hash()),
-            OpTypedTransaction::Deposit(_) => None,
+            Self::Legacy(tx) => Some(tx.signature_hash()),
+            Self::Eip2930(tx) => Some(tx.signature_hash()),
+            Self::Eip1559(tx) => Some(tx.signature_hash()),
+            Self::Eip7702(tx) => Some(tx.signature_hash()),
+            Self::Deposit(_) => None,
         }
     }
 
