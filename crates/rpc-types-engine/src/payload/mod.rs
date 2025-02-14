@@ -1,5 +1,6 @@
 //! Versioned Optimism execution payloads
 
+pub mod error;
 pub mod v3;
 pub mod v4;
 
