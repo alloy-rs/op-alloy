@@ -5,7 +5,7 @@ pub mod v3;
 pub mod v4;
 
 use crate::{OpExecutionPayloadSidecar, OpExecutionPayloadV4};
-use alloc::string::String;
+use alloc::{string::String, vec::Vec};
 use alloy_consensus::{Block, EMPTY_ROOT_HASH};
 use alloy_eips::Decodable2718;
 use alloy_primitives::{map::HashMap, B256};
