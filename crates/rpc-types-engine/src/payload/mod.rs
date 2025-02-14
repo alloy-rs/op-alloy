@@ -4,6 +4,7 @@ pub mod v3;
 pub mod v4;
 
 use crate::OpExecutionPayloadV4;
+use alloc::string::String;
 use alloy_consensus::Block;
 use alloy_eips::Decodable2718;
 use alloy_primitives::{map::HashMap, B256};
@@ -65,7 +66,7 @@ impl<'de> serde::Deserialize<'de> for OpExecutionPayload {
                     BlobGasUsed,
                     ExcessBlobGas,
                     WithdrawalsRoot,
-                    Unknown(String),
+                    Unknown(alloc::string::String),
                 }
 
                 impl<'de> serde::Deserialize<'de> for Fields {
@@ -75,7 +76,7 @@ impl<'de> serde::Deserialize<'de> for OpExecutionPayload {
                     {
                         struct FieldVisitor;
 
-                        impl<'de> serde::de::Visitor<'de> for FieldVisitor {
+                        impl serde::de::Visitor<'_> for FieldVisitor {
                             type Value = Fields;
 
                             fn expecting(
@@ -108,7 +109,7 @@ impl<'de> serde::Deserialize<'de> for OpExecutionPayload {
                                     "blobGasUsed" => Fields::BlobGasUsed,
                                     "excessBlobGas" => Fields::ExcessBlobGas,
                                     "withdrawalsRoot" => Fields::WithdrawalsRoot,
-                                    _ => Fields::Unknown(value.to_string()),
+                                    _ => Fields::Unknown(value.into()),
                                 })
                             }
                         }
@@ -219,47 +220,41 @@ impl<'de> serde::Deserialize<'de> for OpExecutionPayload {
                         .ok_or_else(|| serde::de::Error::missing_field("transactions"))?,
                 };
 
-                // return V4 is withdrawals_root is present
-                if let Some(withdrawals_root) = withdrawals_root {
-                    if let (Some(blob_gas_used), Some(excess_blob_gas)) =
-                        (blob_gas_used, excess_blob_gas)
-                    {
-                        return Ok(OpExecutionPayload::V4(OpExecutionPayloadV4 {
-                            payload_inner: ExecutionPayloadV3 {
-                                payload_inner: ExecutionPayloadV2 {
-                                    payload_inner: v1,
-                                    withdrawals: withdrawals.unwrap(),
-                                },
-                                blob_gas_used,
-                                excess_blob_gas,
-                            },
-                            withdrawals_root,
-                        }));
-                    };
-                // return V3 is withdrawals_root is absent, but blob_gas_used and excess_blob_gas is present
-                } else if let (Some(blob_gas_used), Some(excess_blob_gas)) =
-                    (blob_gas_used, excess_blob_gas)
-                {
-                    return Ok(OpExecutionPayload::V3(ExecutionPayloadV3 {
-                        payload_inner: ExecutionPayloadV2 {
-                            payload_inner: v1,
-                            withdrawals: withdrawals.unwrap(),
-                        },
-                        blob_gas_used,
-                        excess_blob_gas,
-                    }));
-                }
+                // Ensure `withdrawals` is present before proceeding
+                let withdrawals =
+                    withdrawals.ok_or_else(|| serde::de::Error::missing_field("withdrawals"))?;
 
-                // reject incomplete V3 payloads even if they could construct a valid V2
-                if blob_gas_used.is_some() || excess_blob_gas.is_some() {
-                    return Err(serde::de::Error::custom("invalid enum variant"));
-                }
+                // Construct base V2 payload
+                let payload_v2 = ExecutionPayloadV2 { payload_inner: v1, withdrawals };
 
-                // return V2 if the V4 and V3 not possible
-                Ok(OpExecutionPayload::V2(ExecutionPayloadV2 {
-                    payload_inner: v1,
-                    withdrawals: withdrawals.unwrap(),
-                }))
+                // Ensure `blob_gas_used` and `excess_blob_gas` are either both present or both
+                // absent
+                match (blob_gas_used, excess_blob_gas) {
+                    // If both are present, create V3
+                    (Some(blob_gas_used), Some(excess_blob_gas)) => {
+                        let payload_v3 = ExecutionPayloadV3 {
+                            payload_inner: payload_v2,
+                            blob_gas_used,
+                            excess_blob_gas,
+                        };
+
+                        // If `withdrawals_root` is present, wrap into V4; otherwise, return V3
+                        if let Some(withdrawals_root) = withdrawals_root {
+                            Ok(OpExecutionPayload::V4(OpExecutionPayloadV4 {
+                                payload_inner: payload_v3,
+                                withdrawals_root,
+                            }))
+                        } else {
+                            Ok(OpExecutionPayload::V3(payload_v3))
+                        }
+                    }
+                    // If one is missing, reject as invalid
+                    (Some(_), None) | (None, Some(_)) => {
+                        Err(serde::de::Error::custom("invalid enum variant"))
+                    }
+                    // If neither are present, return V2
+                    (None, None) => Ok(OpExecutionPayload::V2(payload_v2)),
+                }
             }
         }
 
