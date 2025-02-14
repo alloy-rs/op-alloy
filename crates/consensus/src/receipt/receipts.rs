@@ -271,7 +271,7 @@ pub(crate) mod serde_bincode_compat {
         }
     }
 
-    impl<'a, T: Serialize + Clone> SerializeAs<super::OpDepositReceipt<T>> for OpDepositReceipt<'a, T> {
+    impl<T: Serialize + Clone> SerializeAs<super::OpDepositReceipt<T>> for OpDepositReceipt<'_, T> {
         fn serialize_as<S>(
             source: &super::OpDepositReceipt<T>,
             serializer: S,
