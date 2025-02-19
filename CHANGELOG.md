@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.10.5](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.10.5) - 2025-02-19
+
+### Features
+
+- [l2-withdrawals] Add methods for prague payload fields to `OpExecutionPayloadSidecar` ([#445](https://github.com/alloy-rs/op-alloy/issues/445))
+
+### Other
+
+- Add interop time to genesis ([#447](https://github.com/alloy-rs/op-alloy/issues/447))
+
 ## [0.10.4](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.10.4) - 2025-02-19
 
@@ -34,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.10.4
 - Additional envelope conversion ([#437](https://github.com/alloy-rs/op-alloy/issues/437))
 - Make test compile ([#434](https://github.com/alloy-rs/op-alloy/issues/434))
 - Rm bad non_exhaustive ([#404](https://github.com/alloy-rs/op-alloy/issues/404))
