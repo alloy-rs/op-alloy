@@ -5,16 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.10.3](https://github.com/alloy-rs/op-alloy
-/releases/tag/v0.10.3) - 2025-02-10
+## [0.10.4](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.10.4) - 2025-02-19
 
 ### Bug Fixes
 
+- Std leakage ([#432](https://github.com/alloy-rs/op-alloy/issues/432))
 - [consensus] Ecotone Upgrade Txs ([#412](https://github.com/alloy-rs/op-alloy/issues/412))
 - [consensus] L1BlockInfo datas ([#408](https://github.com/alloy-rs/op-alloy/issues/408))
 
 ### Features
 
+- [l2-withdrawals] Add `OpPayloadError` variants for blob transactions and l1 withdrawals ([#442](https://github.com/alloy-rs/op-alloy/issues/442))
+- Add signed conversion ([#443](https://github.com/alloy-rs/op-alloy/issues/443))
+- [l2-withdrawals] Impl conversion payload + sidecar into block  ([#441](https://github.com/alloy-rs/op-alloy/issues/441))
+- Add bincode compat support for depositreceipts ([#440](https://github.com/alloy-rs/op-alloy/issues/440))
+- Add fn for signature hash ([#438](https://github.com/alloy-rs/op-alloy/issues/438))
+- Impl OpExecutionData ([#429](https://github.com/alloy-rs/op-alloy/issues/429))
+- Add tryfrom envelope conversions ([#433](https://github.com/alloy-rs/op-alloy/issues/433))
+- [l2-withdrawals] Impl conversion to block for `OpExecutionPayloadV4` ([#435](https://github.com/alloy-rs/op-alloy/issues/435))
+- Add additional compat impls ([#427](https://github.com/alloy-rs/op-alloy/issues/427))
+- Remove IsthmusPayloadFields ([#431](https://github.com/alloy-rs/op-alloy/issues/431))
 - Add is-deposit helper ([#422](https://github.com/alloy-rs/op-alloy/issues/422))
 - [isthmus] Define `OpExecutionData` ([#418](https://github.com/alloy-rs/op-alloy/issues/418))
 - Add OpExecutionPayloadV4 ([#414](https://github.com/alloy-rs/op-alloy/issues/414))
@@ -23,10 +34,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Additional envelope conversion ([#437](https://github.com/alloy-rs/op-alloy/issues/437))
+- Make test compile ([#434](https://github.com/alloy-rs/op-alloy/issues/434))
 - Rm bad non_exhaustive ([#404](https://github.com/alloy-rs/op-alloy/issues/404))
 
 ### Other
 
+- Custom deserialize impl for OpExecutionPayload ([#436](https://github.com/alloy-rs/op-alloy/issues/436))
+- 0.10.3 ([#426](https://github.com/alloy-rs/op-alloy/issues/426))
 - Add operator fee to rpc l1 block ([#420](https://github.com/alloy-rs/op-alloy/issues/420))
 - Define `OpExecutionPayload` ([#416](https://github.com/alloy-rs/op-alloy/issues/416))
 - 0.10.2 ([#413](https://github.com/alloy-rs/op-alloy/issues/413))
