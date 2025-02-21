@@ -21,13 +21,6 @@
 [ty]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/enum.OpTxType.html
 [envelope]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/enum.OpTxEnvelope.html
 
-<!-- Hardforks -->
-
-[holocene]: https://specs.optimism.io/protocol/holocene/overview.html
-[hardforks]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/hardforks/struct.Hardforks.html
-[fjord]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/hardforks/struct.Hardforks.html#method.fjord_txs
-[ecotone]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/hardforks/struct.Hardforks.html#method.ecotone_txs
-
 <!-- OP Stack Specs -->
 
 [specs]: https://specs.optimism.io

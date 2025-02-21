@@ -68,17 +68,4 @@ There is also an [`OpDepositReceipt`][odr] type, extending the alloy receipt
 type with a deposit nonce and deposit receipt version.
 
 
-## Hardforks
-
-Aside from transactions and receipts, [`op-alloy-consensus`][consensus] exports
-one other core primitive called [`Hardforks`][hardforks].
-
-Hardforks provides hardfork transaction constructors - that is, it provides
-methods that return upgrade transactions for each hardfork. Some of these
-are the following.
-
-- [`Hardforks::ecotone_txs()`][ecotone]
-- [`Hardforks::fjord_txs()`][fjord]
-
-
 {{#include ../links.md}}
