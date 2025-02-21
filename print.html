@@ -285,7 +285,6 @@ integrate with <code>op-alloy</code> and how to contribute to <code>op-alloy</co
 with a SNAPPY license for snappy encoding use.</p>
 <!-- op-alloy -->
 <!-- op-alloy-consensus -->
-<!-- Hardforks -->
 <!-- OP Stack Specs -->
 <!-- External -->
 <!-- Alloy -->
@@ -431,7 +430,6 @@ so <code>op-alloy-consensus</code> types can be used from <code>op-alloy</code> 
 script is updated to include this crate once <code>no_std</code> compatible.</p>
 <!-- op-alloy -->
 <!-- op-alloy-consensus -->
-<!-- Hardforks -->
 <!-- OP Stack Specs -->
 <!-- External -->
 <!-- Alloy -->
@@ -511,7 +509,7 @@ Some of the primary crates and their types are listed below.</p>
 <ul>
 <li><a href="https://crates.io/crates/op-alloy-consensus"><code>op-alloy-consensus</code></a> provides <a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/type.OpBlock.html"><code>OpBlock</code></a>,
 <a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/enum.OpTxEnvelope.html"><code>OpTxEnvelope</code></a>, <a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/enum.OpReceiptEnvelope.html"><code>OpReceiptEnvelope</code></a>,
-<a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/hardforks/struct.Hardforks.html"><code>Hardforks</code></a>, and more.</li>
+and more.</li>
 <li><a href="https://crates.io/crates/op-alloy-rpc-types-engine"><code>op-alloy-rpc-types-engine</code></a> provides the
 <a href="https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/struct.OpPayloadAttributes.html"><code>OpPayloadAttributes</code></a> and
 <a href="https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/struct.OpAttributesWithParent.html"><code>OpAttributesWithParent</code></a>.</li>
@@ -634,19 +632,8 @@ directly to the <code>OpTxEnvelope</code> variants defined above.</p>
 </ul>
 <p>There is also an <a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/struct.OpDepositReceipt.html"><code>OpDepositReceipt</code></a> type, extending the alloy receipt
 type with a deposit nonce and deposit receipt version.</p>
-<h2 id="hardforks"><a class="header" href="#hardforks">Hardforks</a></h2>
-<p>Aside from transactions and receipts, <a href="https://crates.io/crates/op-alloy-consensus"><code>op-alloy-consensus</code></a> exports
-one other core primitive called <a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/hardforks/struct.Hardforks.html"><code>Hardforks</code></a>.</p>
-<p>Hardforks provides hardfork transaction constructors - that is, it provides
-methods that return upgrade transactions for each hardfork. Some of these
-are the following.</p>
-<ul>
-<li><a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/hardforks/struct.Hardforks.html#method.ecotone_txs"><code>Hardforks::ecotone_txs()</code></a></li>
-<li><a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/hardforks/struct.Hardforks.html#method.fjord_txs"><code>Hardforks::fjord_txs()</code></a></li>
-</ul>
 <!-- op-alloy -->
 <!-- op-alloy-consensus -->
-<!-- Hardforks -->
 <!-- OP Stack Specs -->
 <!-- External -->
 <!-- Alloy -->

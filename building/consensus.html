@@ -307,19 +307,8 @@ directly to the <code>OpTxEnvelope</code> variants defined above.</p>
 </ul>
 <p>There is also an <a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/struct.OpDepositReceipt.html"><code>OpDepositReceipt</code></a> type, extending the alloy receipt
 type with a deposit nonce and deposit receipt version.</p>
-<h2 id="hardforks"><a class="header" href="#hardforks">Hardforks</a></h2>
-<p>Aside from transactions and receipts, <a href="https://crates.io/crates/op-alloy-consensus"><code>op-alloy-consensus</code></a> exports
-one other core primitive called <a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/hardforks/struct.Hardforks.html"><code>Hardforks</code></a>.</p>
-<p>Hardforks provides hardfork transaction constructors - that is, it provides
-methods that return upgrade transactions for each hardfork. Some of these
-are the following.</p>
-<ul>
-<li><a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/hardforks/struct.Hardforks.html#method.ecotone_txs"><code>Hardforks::ecotone_txs()</code></a></li>
-<li><a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/hardforks/struct.Hardforks.html#method.fjord_txs"><code>Hardforks::fjord_txs()</code></a></li>
-</ul>
 <!-- op-alloy -->
 <!-- op-alloy-consensus -->
-<!-- Hardforks -->
 <!-- OP Stack Specs -->
 <!-- External -->
 <!-- Alloy -->
