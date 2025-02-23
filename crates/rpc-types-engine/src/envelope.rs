@@ -32,14 +32,14 @@ impl OpExecutionData {
     }
 
     /// Return the withdrawals for the payload or attributes.
-    pub fn withdrawals(&self) -> Option<&Vec<Withdrawal>> {
+    pub const fn withdrawals(&self) -> Option<&Vec<Withdrawal>> {
         match &self.payload {
             OpExecutionPayload::V2(execution_payload_v2) => Some(&execution_payload_v2.withdrawals),
             OpExecutionPayload::V3(execution_payload_v3) => {
-                Some(&execution_payload_v3.payload_inner.withdrawals)
+                Some(execution_payload_v3.withdrawals())
             }
             OpExecutionPayload::V4(op_execution_payload_v4) => {
-                Some(&op_execution_payload_v4.payload_inner.payload_inner.withdrawals)
+                Some(op_execution_payload_v4.withdrawals())
             }
         }
     }
