@@ -2,9 +2,11 @@
 
 use crate::{OpTxEnvelope, TxDeposit, DEPOSIT_TX_TYPE_ID};
 use alloc::string::ToString;
+use alloy_consensus::{Sealed, TxEnvelope};
 use alloy_eips::Typed2718;
-use alloy_network::{AnyTxEnvelope, UnknownTxEnvelope, UnknownTypedTransaction};
-use alloy_rpc_types_eth::ConversionError;
+use alloy_network::{AnyRpcTransaction, AnyTxEnvelope, UnknownTxEnvelope, UnknownTypedTransaction};
+use alloy_rpc_types_eth::{ConversionError, Transaction as AlloyRpcTransaction};
+use alloy_serde::WithOtherFields;
 
 impl TryFrom<UnknownTxEnvelope> for TxDeposit {
     type Error = ConversionError;
@@ -33,6 +35,46 @@ impl TryFrom<AnyTxEnvelope> for OpTxEnvelope {
 
     fn try_from(value: AnyTxEnvelope) -> Result<Self, Self::Error> {
         Self::try_from_any_envelope(value)
+    }
+}
+
+impl TryFrom<AnyRpcTransaction> for OpTxEnvelope {
+    type Error = ConversionError;
+
+    fn try_from(tx: AnyRpcTransaction) -> Result<Self, Self::Error> {
+        let WithOtherFields { inner: AlloyRpcTransaction { inner, from, .. }, other: _ } = tx;
+
+        match inner {
+            AnyTxEnvelope::Ethereum(TxEnvelope::Legacy(tx)) => {
+                Ok(OpTxEnvelope::Legacy(tx.try_into().map_err(|_| {
+                    ConversionError::Custom("Failed to convert Legacy Tx".to_string())
+                })?))
+            }
+            AnyTxEnvelope::Ethereum(TxEnvelope::Eip2930(tx)) => {
+                Ok(OpTxEnvelope::Eip2930(tx.try_into().map_err(|_| {
+                    ConversionError::Custom("Failed to convert Eip2930 Tx".to_string())
+                })?))
+            }
+            AnyTxEnvelope::Ethereum(TxEnvelope::Eip1559(tx)) => {
+                Ok(OpTxEnvelope::Eip1559(tx.try_into().map_err(|_| {
+                    ConversionError::Custom("Failed to convert Eip1559 Tx".to_string())
+                })?))
+            }
+            AnyTxEnvelope::Ethereum(TxEnvelope::Eip7702(tx)) => {
+                Ok(OpTxEnvelope::Eip7702(tx.try_into().map_err(|_| {
+                    ConversionError::Custom("Failed to convert Eip7702 Tx".to_string())
+                })?))
+            }
+            AnyTxEnvelope::Unknown(mut tx) => {
+                tx.inner
+                    .fields
+                    .insert_value("from".to_string(), from)
+                    .map_err(|err| ConversionError::Custom(err.to_string()))?;
+                let hash = tx.hash;
+                Ok(OpTxEnvelope::Deposit(Sealed::new(tx.try_into()?)))
+            }
+            _ => return Err(ConversionError::Custom("unknown transaction type".to_string())),
+        }
     }
 }
 
@@ -71,5 +113,31 @@ mod tests {
 
         let envelope = OpTxEnvelope::try_from(any).unwrap();
         assert!(envelope.is_deposit());
+    }
+
+    #[test]
+    fn test_tx_deposit() {
+        let json = r#"{
+  "blockHash": "0x2c475c5d2d609929cec7be9caaaebd29be53e4ef21b1f7b897cb954469e20d01",
+  "blockNumber": "0x191350d",
+  "depositReceiptVersion": "0x1",
+  "from": "0xdeaddeaddeaddeaddeaddeaddeaddeaddead0001",
+  "gas": "0xf4240",
+  "gasPrice": "0x0",
+  "hash": "0x096c03d72acb06339c9c7860d1c36b6451932ec0ff16fd34aa9e30a73a245e13",
+  "input": "0x440a5e20000008dd00101c1200000000000000030000000067acc63f00000000014d1f2d000000000000000000000000000000000000000000000000000000005ba4c0eb00000000000000000000000000000000000000000000000000000001ce2291bdcbb8f62c15343b39cfacdbf81c4747822ebb16c2518126e47d984422a82defc10000000000000000000000005050f69a9786f081509234f1a7f4684b5e5b76c9",
+  "mint": "0x0",
+  "nonce": "0x191350e",
+  "r": "0x0",
+  "s": "0x0",
+  "sourceHash": "0x990d7122a1f121f3a6bc45723e28f4921c269037a77e77ffee3c8585136d1a92",
+  "to": "0x4200000000000000000000000000000000000015",
+  "transactionIndex": "0x0",
+  "type": "0x7e",
+  "v": "0x0",
+  "value": "0x0"
+}"#;
+        let tx: AnyRpcTransaction = serde_json::from_str(json).unwrap();
+        OpTxEnvelope::try_from(tx).unwrap();
     }
 }
