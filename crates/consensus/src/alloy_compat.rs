@@ -46,24 +46,32 @@ impl TryFrom<AnyRpcTransaction> for OpTxEnvelope {
 
         match inner {
             AnyTxEnvelope::Ethereum(TxEnvelope::Legacy(tx)) => {
-                Ok(OpTxEnvelope::Legacy(tx.try_into().map_err(|_| {
-                    ConversionError::Custom("Failed to convert Legacy Tx".to_string())
-                })?))
+                OpTxEnvelope::try_from_eth_envelope(TxEnvelope::Legacy(tx)).map_err(|_| {
+                    ConversionError::Custom(
+                        "unable to convert from Legacy transaction type".to_string(),
+                    )
+                })
             }
             AnyTxEnvelope::Ethereum(TxEnvelope::Eip2930(tx)) => {
-                Ok(OpTxEnvelope::Eip2930(tx.try_into().map_err(|_| {
-                    ConversionError::Custom("Failed to convert Eip2930 Tx".to_string())
-                })?))
+                OpTxEnvelope::try_from_eth_envelope(TxEnvelope::Eip2930(tx)).map_err(|_| {
+                    ConversionError::Custom(
+                        "unable to convert from Eip2930 transaction type".to_string(),
+                    )
+                })
             }
             AnyTxEnvelope::Ethereum(TxEnvelope::Eip1559(tx)) => {
-                Ok(OpTxEnvelope::Eip1559(tx.try_into().map_err(|_| {
-                    ConversionError::Custom("Failed to convert Eip1559 Tx".to_string())
-                })?))
+                OpTxEnvelope::try_from_eth_envelope(TxEnvelope::Eip1559(tx)).map_err(|_| {
+                    ConversionError::Custom(
+                        "unable to convert from Eip1559 transaction type".to_string(),
+                    )
+                })
             }
             AnyTxEnvelope::Ethereum(TxEnvelope::Eip7702(tx)) => {
-                Ok(OpTxEnvelope::Eip7702(tx.try_into().map_err(|_| {
-                    ConversionError::Custom("Failed to convert Eip7702 Tx".to_string())
-                })?))
+                OpTxEnvelope::try_from_eth_envelope(TxEnvelope::Eip7702(tx)).map_err(|_| {
+                    ConversionError::Custom(
+                        "unable to convert from Eip7702 transaction type".to_string(),
+                    )
+                })
             }
             AnyTxEnvelope::Unknown(mut tx) => {
                 tx.inner
