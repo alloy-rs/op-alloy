@@ -46,9 +46,7 @@ impl TryFrom<AnyRpcTransaction> for OpTxEnvelope {
 
         match inner {
             AnyTxEnvelope::Ethereum(tx) => OpTxEnvelope::try_from_eth_envelope(tx).map_err(|_| {
-                ConversionError::Custom(
-                    "unable to convert from Legacy transaction type".to_string(),
-                )
+                ConversionError::Custom("unable to convert from ethereum type".to_string())
             }),
             AnyTxEnvelope::Unknown(mut tx) => {
                 // Re-insert `from` field which was consumed by outer `Transaction`.
