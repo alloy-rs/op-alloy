@@ -267,11 +267,11 @@ mod tx_serde {
             // error
             let from = if let Some(from) = other.from {
                 from
-            } else if let OpTxEnvelope::Deposit(tx) = &inner {
+            } else { match &inner { OpTxEnvelope::Deposit(tx) => {
                 tx.from
-            } else {
+            } _ => {
                 return Err(serde_json::Error::custom("missing `from` field"));
-            };
+            }}};
 
             // Only serialize deposit_nonce if inner transaction is deposit to avoid duplicated keys
             let deposit_nonce = other.deposit_nonce.filter(|_| inner.is_deposit());
