@@ -11,9 +11,6 @@ authors.workspace = true
 repository.workspace = true
 exclude.workspace = true
 
-[lints]
-workspace = true
-
 [dependencies]
 # Alloy
 alloy-primitives = { workspace = true, features = ["serde"] }
