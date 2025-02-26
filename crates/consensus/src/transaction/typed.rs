@@ -3,7 +3,7 @@ use alloy_consensus::{
     SignableTransaction, Transaction, TxEip1559, TxEip2930, TxEip7702, TxLegacy, Typed2718,
 };
 use alloy_eips::eip2930::AccessList;
-use alloy_primitives::{Address, Bytes, TxKind, B256};
+use alloy_primitives::{Address, B256, Bytes, TxKind};
 
 /// The TypedTransaction enum represents all Ethereum transaction request types, modified for the OP
 /// Stack.
