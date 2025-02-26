@@ -2,8 +2,8 @@
 
 use alloc::vec::Vec;
 use alloy_consensus::Block;
-use alloy_eips::{eip4895::Withdrawal, Decodable2718};
-use alloy_primitives::{Bytes, B256, U256};
+use alloy_eips::{Decodable2718, eip4895::Withdrawal};
+use alloy_primitives::{B256, Bytes, U256};
 use alloy_rpc_types_engine::{BlobsBundleV1, ExecutionPayloadV3, PayloadError};
 
 /// The Opstack execution payload for `newPayloadV4` of the engine API introduced with isthmus.

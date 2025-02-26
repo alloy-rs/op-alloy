@@ -2,7 +2,7 @@
 
 use alloy_consensus::{Transaction as _, Typed2718};
 use alloy_eips::{eip2930::AccessList, eip7702::SignedAuthorization};
-use alloy_primitives::{Address, BlockHash, Bytes, ChainId, TxKind, B256, U256};
+use alloy_primitives::{Address, B256, BlockHash, Bytes, ChainId, TxKind, U256};
 use alloy_serde::OtherFields;
 use op_alloy_consensus::OpTxEnvelope;
 use serde::{Deserialize, Serialize};
