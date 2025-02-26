@@ -2,7 +2,7 @@
 
 use crate::{OpTxEnvelope, TxDeposit, DEPOSIT_TX_TYPE_ID};
 use alloc::string::ToString;
-use alloy_consensus::{Sealed, TxEnvelope};
+use alloy_consensus::Sealed;
 use alloy_eips::Typed2718;
 use alloy_network::{AnyRpcTransaction, AnyTxEnvelope, UnknownTxEnvelope, UnknownTypedTransaction};
 use alloy_rpc_types_eth::{ConversionError, Transaction as AlloyRpcTransaction};
@@ -45,43 +45,20 @@ impl TryFrom<AnyRpcTransaction> for OpTxEnvelope {
         let WithOtherFields { inner: AlloyRpcTransaction { inner, from, .. }, other: _ } = tx;
 
         match inner {
-            AnyTxEnvelope::Ethereum(TxEnvelope::Legacy(tx)) => {
-                OpTxEnvelope::try_from_eth_envelope(TxEnvelope::Legacy(tx)).map_err(|_| {
-                    ConversionError::Custom(
-                        "unable to convert from Legacy transaction type".to_string(),
-                    )
-                })
-            }
-            AnyTxEnvelope::Ethereum(TxEnvelope::Eip2930(tx)) => {
-                OpTxEnvelope::try_from_eth_envelope(TxEnvelope::Eip2930(tx)).map_err(|_| {
-                    ConversionError::Custom(
-                        "unable to convert from Eip2930 transaction type".to_string(),
-                    )
-                })
-            }
-            AnyTxEnvelope::Ethereum(TxEnvelope::Eip1559(tx)) => {
-                OpTxEnvelope::try_from_eth_envelope(TxEnvelope::Eip1559(tx)).map_err(|_| {
-                    ConversionError::Custom(
-                        "unable to convert from Eip1559 transaction type".to_string(),
-                    )
-                })
-            }
-            AnyTxEnvelope::Ethereum(TxEnvelope::Eip7702(tx)) => {
-                OpTxEnvelope::try_from_eth_envelope(TxEnvelope::Eip7702(tx)).map_err(|_| {
-                    ConversionError::Custom(
-                        "unable to convert from Eip7702 transaction type".to_string(),
-                    )
-                })
-            }
+            AnyTxEnvelope::Ethereum(tx) => OpTxEnvelope::try_from_eth_envelope(tx).map_err(|_| {
+                ConversionError::Custom(
+                    "unable to convert from Legacy transaction type".to_string(),
+                )
+            }),
             AnyTxEnvelope::Unknown(mut tx) => {
+                // Re-insert `from` field which was consumed by outer `Transaction`.
+                // Ref hack in op-alloy <https://github.com/alloy-rs/op-alloy/blob/7d50b698631dd73f8d20f9f60ee78cd0597dc278/crates/rpc-types/src/transaction.rs#L236-L237>
                 tx.inner
                     .fields
                     .insert_value("from".to_string(), from)
                     .map_err(|err| ConversionError::Custom(err.to_string()))?;
-                let hash = tx.hash;
                 Ok(OpTxEnvelope::Deposit(Sealed::new(tx.try_into()?)))
             }
-            _ => return Err(ConversionError::Custom("unknown transaction type".to_string())),
         }
     }
 }
@@ -116,6 +93,7 @@ mod tests {
         let unknown_tx_envelope: UnknownTxEnvelope = serde_json::from_str(deposit).unwrap();
 
         let _deposit: TxDeposit = unknown_tx_envelope.try_into().unwrap();
+        dbg!(&_deposit);
 
         let any: AnyTxEnvelope = serde_json::from_str(deposit).unwrap();
 
