@@ -291,7 +291,10 @@ impl<'de> serde::Deserialize<'de> for OpExecutionPayload {
 }
 
 impl OpExecutionPayload {
-    /// Creates a new instance of [`V2`](Self::V2) variant.
+    /// Creates a new instance from `newPayloadV2` payload, i.e. [`V1`](Self::V1) or
+    /// [`V2`](Self::V2) variant.
+    ///
+    /// Spec: <https://specs.optimism.io/protocol/exec-engine.html#engine_newpayloadv2>
     pub fn v2(payload: ExecutionPayloadInputV2) -> Self {
         match payload.into_payload() {
             ExecutionPayload::V1(payload) => Self::V1(payload),
@@ -300,17 +303,21 @@ impl OpExecutionPayload {
         }
     }
 
-    /// Creates a new instance of [`V3`](Self::V3) variant.
+    /// Creates a new instance from `newPayloadV3` payload, i.e. [`V3`](Self::V3) variant.
+    ///
+    /// Spec: <https://specs.optimism.io/protocol/exec-engine.html#engine_newpayloadv3>
     pub const fn v3(payload: ExecutionPayloadV3) -> Self {
         Self::V3(payload)
     }
 
-    /// Creates a new instance of [`V4`](Self::V4) variant.
+    /// Creates a new instance from `newPayloadV4` payload, i.e. [`V4`](Self::V4) variant.
+    ///
+    /// Spec: <https://specs.optimism.io/protocol/exec-engine.html#engine_newpayloadv4>
     pub const fn v4(payload: OpExecutionPayloadV4) -> Self {
         Self::V4(payload)
     }
 
-    /// Returns a reference to the V2 payload, if any.
+    /// Returns a reference to the V1 payload.
     pub const fn as_v1(&self) -> &ExecutionPayloadV1 {
         match self {
             Self::V1(payload) => payload,
@@ -320,7 +327,7 @@ impl OpExecutionPayload {
         }
     }
 
-    /// Returns a mutable reference to the V2 payload, if any.
+    /// Returns a mutable reference to the V1 payload.
     pub fn as_v1_mut(&mut self) -> &mut ExecutionPayloadV1 {
         match self {
             Self::V1(payload) => payload,
@@ -330,7 +337,7 @@ impl OpExecutionPayload {
         }
     }
 
-    /// Returns a reference to the V3 payload, if any.
+    /// Returns a reference to the V2 payload, if any.
     pub const fn as_v2(&self) -> Option<&ExecutionPayloadV2> {
         match self {
             Self::V1(_) => None,
@@ -340,7 +347,7 @@ impl OpExecutionPayload {
         }
     }
 
-    /// Returns a mutable reference to the V3 payload, if any.
+    /// Returns a mutable reference to the V2 payload, if any.
     pub fn as_v2_mut(&mut self) -> Option<&mut ExecutionPayloadV2> {
         match self {
             Self::V1(_) => None,
@@ -375,6 +382,15 @@ impl OpExecutionPayload {
             Self::V4(payload) => Some(payload),
         }
     }
+
+    /// Returns a mutable reference to the V4 payload, if any.
+    pub const fn as_v4_mut(&mut self) -> Option<&mut OpExecutionPayloadV4> {
+        match self {
+            Self::V1(_) | Self::V2(_) | Self::V3(_) => None,
+            Self::V4(payload) => Some(payload),
+        }
+    }
+
     /// Returns the parent hash for the payload.
     pub const fn parent_hash(&self) -> B256 {
         self.as_v1().parent_hash

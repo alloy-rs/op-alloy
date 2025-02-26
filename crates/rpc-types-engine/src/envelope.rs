@@ -30,11 +30,15 @@ impl OpExecutionData {
     }
 
     /// Creates a new instance from args to engine API method `newPayloadV2`.
+    ///
+    /// Spec: <https://specs.optimism.io/protocol/exec-engine.html#engine_newpayloadv2>
     pub fn v2(payload: ExecutionPayloadInputV2) -> Self {
         Self::new(OpExecutionPayload::v2(payload), OpExecutionPayloadSidecar::default())
     }
 
     /// Creates a new instance from args to engine API method `newPayloadV3`.
+    ///
+    /// Spec: <https://specs.optimism.io/protocol/exec-engine.html#engine_newpayloadv3>
     pub fn v3(
         payload: ExecutionPayloadV3,
         versioned_hashes: Vec<B256>,
@@ -50,6 +54,8 @@ impl OpExecutionData {
     }
 
     /// Creates a new instance from args to engine API method `newPayloadV4`.
+    ///
+    /// Spec: <https://specs.optimism.io/protocol/exec-engine.html#engine_newpayloadv4>
     pub fn v4(
         payload: OpExecutionPayloadV4,
         versioned_hashes: Vec<B256>,
