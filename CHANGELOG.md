@@ -5,12 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.10.6](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.10.6) - 2025-02-26
+
+### Features
+
+- [l2-withdrawals-root] Add conversions for `OpExecutionData` ([#455](https://github.com/alloy-rs/op-alloy/issues/455))
+- Impl AnyRpcTransaction for OpTxEnvelope ([#454](https://github.com/alloy-rs/op-alloy/issues/454))
+- Added helpers for opExecutionData ([#451](https://github.com/alloy-rs/op-alloy/issues/451))
+
+### Miscellaneous Tasks
+
+- Fix imports ([#452](https://github.com/alloy-rs/op-alloy/issues/452))
+- [consensus] Remove Hardforks ([#448](https://github.com/alloy-rs/op-alloy/issues/448))
+
+### Testing
+
+- Fix flaky bincode compat rountrip test ([#453](https://github.com/alloy-rs/op-alloy/issues/453))
+
 ## [0.10.5](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.10.5) - 2025-02-19
 
 ### Features
 
 - [l2-withdrawals] Add methods for prague payload fields to `OpExecutionPayloadSidecar` ([#445](https://github.com/alloy-rs/op-alloy/issues/445))
+
+### Miscellaneous Tasks
+
+- Release 0.10.5
 
 ### Other
 
