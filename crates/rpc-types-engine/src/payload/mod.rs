@@ -508,7 +508,7 @@ mod tests {
         assert_eq!(serde_json::to_string(&payload).unwrap(), response_v2);
 
         let payload_v2: ExecutionPayloadV2 = serde_json::from_str(response_v2).unwrap();
-        assert_eq!(payload.as_v2(), &payload_v2);
+        assert_eq!(payload.as_v2(), Some(&payload_v2));
     }
 
     #[test]
