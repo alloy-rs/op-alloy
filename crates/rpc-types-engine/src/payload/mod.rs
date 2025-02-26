@@ -296,7 +296,7 @@ impl OpExecutionPayload {
     }
 
     /// Returns a mutable reference to the V2 payload, if any.
-    pub fn as_v2_mut(&mut self) -> &ExecutionPayloadV2 {
+    pub const fn as_v2_mut(&mut self) -> &ExecutionPayloadV2 {
         match self {
             Self::V2(payload) => payload,
             Self::V3(payload) => &mut payload.payload_inner,
@@ -313,7 +313,7 @@ impl OpExecutionPayload {
     }
 
     /// Returns a mutable reference to the V3 payload, if any.
-    pub fn as_v3_mut(&mut self) -> Option<&ExecutionPayloadV3> {
+    pub const fn as_v3_mut(&mut self) -> Option<&ExecutionPayloadV3> {
         match self {
             Self::V2(_) => None,
             Self::V3(payload) => Some(payload),
