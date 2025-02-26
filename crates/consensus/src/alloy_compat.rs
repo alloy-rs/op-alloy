@@ -122,6 +122,7 @@ mod tests {
   "value": "0x0"
 }"#;
         let tx: AnyRpcTransaction = serde_json::from_str(json).unwrap();
-        OpTxEnvelope::try_from(tx).unwrap();
+        let tx = OpTxEnvelope::try_from(tx).unwrap();
+        assert!(tx.is_deposit());
     }
 }
