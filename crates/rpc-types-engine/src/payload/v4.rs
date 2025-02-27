@@ -26,7 +26,7 @@ impl OpExecutionPayloadV4 {
     /// root.
     ///
     /// See also [`ExecutionPayloadV3::from_block_unchecked`].
-    pub fn from_v3_with_withdrawals_root(
+    pub const fn from_v3_with_withdrawals_root(
         payload: ExecutionPayloadV3,
         withdrawals_root: B256,
     ) -> Self {
