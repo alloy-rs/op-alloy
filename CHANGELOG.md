@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.10.7](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.10.7) - 2025-02-28
+
+### Dependencies
+
+- Bump msrv to 1.82 ([#459](https://github.com/alloy-rs/op-alloy/issues/459))
+
+### Other
+
+- Remove redundant method for v4 payload ([#461](https://github.com/alloy-rs/op-alloy/issues/461))
+- Add conversions from block to payload ([#460](https://github.com/alloy-rs/op-alloy/issues/460))
+
 ## [0.10.6](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.10.6) - 2025-02-26
 
@@ -16,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.10.6
 - Fix imports ([#452](https://github.com/alloy-rs/op-alloy/issues/452))
 - [consensus] Remove Hardforks ([#448](https://github.com/alloy-rs/op-alloy/issues/448))
 
