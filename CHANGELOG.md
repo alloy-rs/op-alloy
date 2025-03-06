@@ -5,12 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.10.8](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.10.8) - 2025-03-06
+
+### Bug Fixes
+
+- [engine] Empty requests hash ([#463](https://github.com/alloy-rs/op-alloy/issues/463))
+
+### Features
+
+- Add signabletx impl for typedtx ([#462](https://github.com/alloy-rs/op-alloy/issues/462))
+
 ## [0.10.7](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.10.7) - 2025-02-28
 
 ### Dependencies
 
 - Bump msrv to 1.82 ([#459](https://github.com/alloy-rs/op-alloy/issues/459))
+
+### Miscellaneous Tasks
+
+- Release 0.10.7
 
 ### Other
 
