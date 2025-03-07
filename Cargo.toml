@@ -60,8 +60,8 @@ alloy-network-primitives = { version = "0.11", default-features = false }
 alloy-rlp = { version = "0.3", default-features = false }
 
 # Alloy Core
-alloy-sol-types = { version = "0.8.12", default-features = false }
-alloy-primitives = { version = "0.8.12", default-features = false }
+alloy-sol-types = { version = "0.8.22", default-features = false }
+alloy-primitives = { version = "0.8.22", default-features = false }
 
 # Serde
 serde_repr = "0.1"
@@ -116,13 +116,13 @@ c-kzg = { version = "1.0", default-features = false }
 k256 = { version = "0.13", default-features = false, features = ["ecdsa"] }
 
 [patch.crates-io]
-#alloy-consensus = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
-#alloy-network = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
-#alloy-network-primitives = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
-#alloy-rpc-types-eth = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
-#alloy-rpc-types-engine = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
-#alloy-eips = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
-#alloy-serde = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
-#alloy-signer = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
-#alloy-provider = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
-#alloy-transport = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
+alloy-eips = { git = "https://github.com/alloy-rs/alloy", rev = "a4e7099" }
+alloy-serde = { git = "https://github.com/alloy-rs/alloy", rev = "a4e7099" }
+alloy-signer = { git = "https://github.com/alloy-rs/alloy", rev = "a4e7099" }
+alloy-network = { git = "https://github.com/alloy-rs/alloy", rev = "a4e7099" }
+alloy-provider = { git = "https://github.com/alloy-rs/alloy", rev = "a4e7099" }
+alloy-transport = { git = "https://github.com/alloy-rs/alloy", rev = "a4e7099" }
+alloy-consensus = { git = "https://github.com/alloy-rs/alloy", rev = "a4e7099" }
+alloy-rpc-types-eth = { git = "https://github.com/alloy-rs/alloy", rev = "a4e7099" }
+alloy-rpc-types-engine = { git = "https://github.com/alloy-rs/alloy", rev = "a4e7099" }
+alloy-network-primitives = { git = "https://github.com/alloy-rs/alloy", rev = "a4e7099" }
