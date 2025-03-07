@@ -347,6 +347,32 @@ impl OpTxEnvelope {
         }
     }
 
+    /// Recover the signer of the transaction.
+    #[cfg(feature = "k256")]
+    pub fn recover_signer(
+        &self,
+    ) -> Result<alloy_primitives::Address, alloy_primitives::SignatureError> {
+        match self {
+            Self::Legacy(tx) => tx.recover_signer(),
+            Self::Eip2930(tx) => tx.recover_signer(),
+            Self::Eip1559(tx) => tx.recover_signer(),
+            Self::Eip7702(tx) => tx.recover_signer(),
+            Self::Deposit(_) => {
+                Err(alloy_primitives::SignatureError::FromBytes("deposit tx has no signer"))
+            }
+        }
+    }
+
+    /// Recover the signer of the transaction.
+    #[cfg(feature = "k256")]
+    pub fn try_into_recovered(
+        self,
+    ) -> Result<alloy_consensus::transaction::Recovered<Self>, alloy_primitives::SignatureError>
+    {
+        let signer = self.recover_signer()?;
+        Ok(alloy_consensus::transaction::Recovered::new_unchecked(self, signer))
+    }
+
     /// Attempts to convert the optimism variant into an ethereum [`TxEnvelope`].
     ///
     /// Returns the envelope as error if it is a variant unsupported on ethereum: [`TxDeposit`]
