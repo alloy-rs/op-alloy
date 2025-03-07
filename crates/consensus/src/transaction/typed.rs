@@ -3,7 +3,7 @@ use alloy_consensus::{
     transaction::RlpEcdsaEncodableTx, SignableTransaction, Signed, Transaction, TxEip1559,
     TxEip2930, TxEip7702, TxLegacy, Typed2718,
 };
-use alloy_eips::eip2930::AccessList;
+use alloy_eips::{eip2930::AccessList, Encodable2718};
 use alloy_primitives::{
     bytes::BufMut, Address, Bytes, ChainId, PrimitiveSignature as Signature, TxHash, TxKind, B256,
 };
@@ -381,7 +381,7 @@ impl RlpEcdsaEncodableTx for OpTypedTransaction {
             Self::Eip2930(tx) => tx.eip2718_encode_with_type(signature, tx.ty(), out),
             Self::Eip1559(tx) => tx.eip2718_encode_with_type(signature, tx.ty(), out),
             Self::Eip7702(tx) => tx.eip2718_encode_with_type(signature, tx.ty(), out),
-            Self::Deposit(tx) => todo!(),
+            Self::Deposit(tx) => tx.encode_2718(out),
         }
     }
 
@@ -391,7 +391,7 @@ impl RlpEcdsaEncodableTx for OpTypedTransaction {
             Self::Eip2930(tx) => tx.eip2718_encode(signature, out),
             Self::Eip1559(tx) => tx.eip2718_encode(signature, out),
             Self::Eip7702(tx) => tx.eip2718_encode(signature, out),
-            Self::Deposit(tx) => todo!(),
+            Self::Deposit(tx) => tx.encode_2718(out),
         }
     }
 
@@ -401,7 +401,7 @@ impl RlpEcdsaEncodableTx for OpTypedTransaction {
             Self::Eip2930(tx) => tx.network_encode_with_type(signature, tx.ty(), out),
             Self::Eip1559(tx) => tx.network_encode_with_type(signature, tx.ty(), out),
             Self::Eip7702(tx) => tx.network_encode_with_type(signature, tx.ty(), out),
-            Self::Deposit(tx) => todo!(),
+            Self::Deposit(tx) => tx.network_encode(out),
         }
     }
 
@@ -411,7 +411,7 @@ impl RlpEcdsaEncodableTx for OpTypedTransaction {
             Self::Eip2930(tx) => tx.network_encode(signature, out),
             Self::Eip1559(tx) => tx.network_encode(signature, out),
             Self::Eip7702(tx) => tx.network_encode(signature, out),
-            Self::Deposit(tx) => todo!(),
+            Self::Deposit(tx) => tx.network_encode(out),
         }
     }
 
@@ -421,7 +421,7 @@ impl RlpEcdsaEncodableTx for OpTypedTransaction {
             Self::Eip2930(tx) => tx.tx_hash_with_type(signature, tx.ty()),
             Self::Eip1559(tx) => tx.tx_hash_with_type(signature, tx.ty()),
             Self::Eip7702(tx) => tx.tx_hash_with_type(signature, tx.ty()),
-            Self::Deposit(tx) => todo!(),
+            Self::Deposit(tx) => tx.tx_hash(),
         }
     }
 
