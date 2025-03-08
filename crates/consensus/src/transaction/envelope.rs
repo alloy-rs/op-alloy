@@ -48,6 +48,12 @@ impl AsRef<Self> for OpTxEnvelope {
     }
 }
 
+impl core::hash::Hash for OpTxEnvelope {
+    fn hash<H: core::hash::Hasher>(&self, state: &mut H) {
+        self.trie_hash().hash(state);
+    }
+}
+
 impl From<Signed<TxLegacy>> for OpTxEnvelope {
     fn from(v: Signed<TxLegacy>) -> Self {
         Self::Legacy(v)
