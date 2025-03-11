@@ -350,7 +350,6 @@ impl OpTxEnvelope {
     /// Attempts to convert the optimism variant into an ethereum [`TxEnvelope`].
     ///
     /// Returns the envelope as error if it is a variant unsupported on ethereum: [`TxDeposit`]
-    #[expect(clippy::result_large_err)]
     pub fn try_into_eth_envelope(self) -> Result<TxEnvelope, Self> {
         match self {
             Self::Legacy(tx) => Ok(tx.into()),
@@ -365,7 +364,6 @@ impl OpTxEnvelope {
     ///
     /// Returns the given envelope as error if [`OpTxEnvelope`] doesn't support the variant
     /// (EIP-4844)
-    #[expect(clippy::result_large_err)]
     pub fn try_from_eth_envelope(tx: TxEnvelope) -> Result<Self, TxEnvelope> {
         match tx {
             TxEnvelope::Legacy(tx) => Ok(tx.into()),
