@@ -1,6 +1,6 @@
 use crate::{OpTxType, OpTypedTransaction, TxDeposit};
 use alloy_consensus::{
-    transaction::RlpEcdsaTx, Sealable, Sealed, Signed, Transaction, TxEip1559, TxEip2930,
+    transaction::RlpEcdsaDecodableTx, Sealable, Sealed, Signed, Transaction, TxEip1559, TxEip2930,
     TxEip7702, TxEnvelope, TxLegacy, Typed2718,
 };
 use alloy_eips::{
@@ -40,6 +40,12 @@ pub enum OpTxEnvelope {
     Eip7702(Signed<TxEip7702>),
     /// A [`TxDeposit`] tagged with type 0x7E.
     Deposit(Sealed<TxDeposit>),
+}
+
+impl AsRef<Self> for OpTxEnvelope {
+    fn as_ref(&self) -> &Self {
+        self
+    }
 }
 
 impl From<Signed<TxLegacy>> for OpTxEnvelope {
@@ -344,6 +350,7 @@ impl OpTxEnvelope {
     /// Attempts to convert the optimism variant into an ethereum [`TxEnvelope`].
     ///
     /// Returns the envelope as error if it is a variant unsupported on ethereum: [`TxDeposit`]
+    #[expect(clippy::result_large_err)]
     pub fn try_into_eth_envelope(self) -> Result<TxEnvelope, Self> {
         match self {
             Self::Legacy(tx) => Ok(tx.into()),
@@ -358,6 +365,7 @@ impl OpTxEnvelope {
     ///
     /// Returns the given envelope as error if [`OpTxEnvelope`] doesn't support the variant
     /// (EIP-4844)
+    #[expect(clippy::result_large_err)]
     pub fn try_from_eth_envelope(tx: TxEnvelope) -> Result<Self, TxEnvelope> {
         match tx {
             TxEnvelope::Legacy(tx) => Ok(tx.into()),
@@ -380,7 +388,7 @@ impl OpTxEnvelope {
             Ok(eth) => {
                 Self::try_from_eth_envelope(eth).map_err(alloy_network::AnyTxEnvelope::Ethereum)
             }
-            Err(err) => match err {
+            Err(err) => match err.into_value() {
                 alloy_network::AnyTxEnvelope::Unknown(unknown) => {
                     let Ok(deposit) = unknown.inner.clone().try_into() else {
                         return Err(alloy_network::AnyTxEnvelope::Unknown(unknown));
