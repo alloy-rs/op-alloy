@@ -5,11 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.11.2](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.11.2) - 2025-03-14
+
+### Bug Fixes
+
+- [l2-withdrawals-root] `OpExecutionPayloadEnvelopeV4` missing v4 payload ([#472](https://github.com/alloy-rs/op-alloy/issues/472))
+
+### Dependencies
+
+- Bump msrv to 1.85 ([#457](https://github.com/alloy-rs/op-alloy/issues/457))
+
+### Features
+
+- [rpc-types-engine] Support V4 network payload ([#471](https://github.com/alloy-rs/op-alloy/issues/471))
+- Derive hash for envelope ([#470](https://github.com/alloy-rs/op-alloy/issues/470))
+
 ## [0.11.1](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.11.1) - 2025-03-12
 
 ### Miscellaneous Tasks
 
+- Release 0.11.1
 - Remove associated constant from RlpEcdsaEncodableTx ([#469](https://github.com/alloy-rs/op-alloy/issues/469))
 
 ## [0.11.0](https://github.com/alloy-rs/op-alloy
