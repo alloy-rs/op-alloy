@@ -30,11 +30,6 @@ exceptions = [
     { allow = ["CC0-1.0"], name = "tiny-keccak" },
 ]
 
-[[licenses.clarify]]
-name = "ring"
-expression = "LicenseRef-ring"
-license-files = [{ path = "LICENSE", hash = 0xbd0eed23 }]
-
 [licenses.private]
 ignore = false
 registries = []
