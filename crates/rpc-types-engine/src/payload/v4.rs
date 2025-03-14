@@ -164,7 +164,7 @@ impl ssz::Encode for OpExecutionPayloadV4 {
 #[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct OpExecutionPayloadEnvelopeV4 {
     /// Execution payload V4
-    pub execution_payload: ExecutionPayloadV3,
+    pub execution_payload: OpExecutionPayloadV4,
     /// The expected value to be received by the feeRecipient in wei
     pub block_value: U256,
     /// The blobs, commitments, and proofs associated with the executed payload.
