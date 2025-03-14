@@ -1,7 +1,7 @@
 use crate::{OpTxType, OpTypedTransaction, TxDeposit};
 use alloy_consensus::{
-    transaction::RlpEcdsaDecodableTx, Sealable, Sealed, Signed, Transaction, TxEip1559, TxEip2930,
-    TxEip7702, TxEnvelope, TxLegacy, Typed2718,
+    Sealable, Sealed, Signed, Transaction, TxEip1559, TxEip2930, TxEip7702, TxEnvelope, TxLegacy,
+    Typed2718, transaction::RlpEcdsaDecodableTx,
 };
 use alloy_eips::{
     eip2718::{Decodable2718, Eip2718Error, Eip2718Result, Encodable2718},

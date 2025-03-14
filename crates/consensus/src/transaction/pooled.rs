@@ -3,9 +3,8 @@
 
 use crate::{OpTxEnvelope, OpTxType};
 use alloy_consensus::{
-    transaction::{RlpEcdsaDecodableTx, TxEip1559, TxEip2930, TxLegacy},
     SignableTransaction, Signed, Transaction, TxEip7702, TxEnvelope, Typed2718,
-    transaction::{RlpEcdsaTx, TxEip1559, TxEip2930, TxLegacy},
+    transaction::{RlpEcdsaDecodableTx, TxEip1559, TxEip2930, TxLegacy},
 };
 use alloy_eips::{
     eip2718::{Decodable2718, Eip2718Error, Eip2718Result, Encodable2718},
