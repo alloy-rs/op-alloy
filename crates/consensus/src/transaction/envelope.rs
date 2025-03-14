@@ -1,7 +1,7 @@
 use crate::{OpTxType, OpTypedTransaction, TxDeposit};
 use alloy_consensus::{
-    Sealable, Sealed, Signed, Transaction, TxEip1559, TxEip2930, TxEip7702, TxEnvelope, TxLegacy,
-    Typed2718, transaction::RlpEcdsaTx,
+    transaction::RlpEcdsaDecodableTx, Sealable, Sealed, Signed, Transaction, TxEip1559, TxEip2930,
+    TxEip7702, TxEnvelope, TxLegacy, Typed2718,
 };
 use alloy_eips::{
     eip2718::{Decodable2718, Eip2718Error, Eip2718Result, Encodable2718},
@@ -22,7 +22,7 @@ use alloy_rlp::{Decodable, Encodable};
 /// flag.
 ///
 /// [EIP-2718]: https://eips.ethereum.org/EIPS/eip-2718
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(
     feature = "serde",
@@ -40,6 +40,12 @@ pub enum OpTxEnvelope {
     Eip7702(Signed<TxEip7702>),
     /// A [`TxDeposit`] tagged with type 0x7E.
     Deposit(Sealed<TxDeposit>),
+}
+
+impl AsRef<Self> for OpTxEnvelope {
+    fn as_ref(&self) -> &Self {
+        self
+    }
 }
 
 impl From<Signed<TxLegacy>> for OpTxEnvelope {
@@ -380,7 +386,7 @@ impl OpTxEnvelope {
             Ok(eth) => {
                 Self::try_from_eth_envelope(eth).map_err(alloy_network::AnyTxEnvelope::Ethereum)
             }
-            Err(err) => match err {
+            Err(err) => match err.into_value() {
                 alloy_network::AnyTxEnvelope::Unknown(unknown) => {
                     let Ok(deposit) = unknown.inner.clone().try_into() else {
                         return Err(alloy_network::AnyTxEnvelope::Unknown(unknown));

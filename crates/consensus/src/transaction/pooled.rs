@@ -3,6 +3,7 @@
 
 use crate::{OpTxEnvelope, OpTxType};
 use alloy_consensus::{
+    transaction::{RlpEcdsaDecodableTx, TxEip1559, TxEip2930, TxLegacy},
     SignableTransaction, Signed, Transaction, TxEip7702, TxEnvelope, Typed2718,
     transaction::{RlpEcdsaTx, TxEip1559, TxEip2930, TxLegacy},
 };
@@ -50,7 +51,7 @@ impl OpPooledTransaction {
     }
 
     /// Reference to transaction hash. Used to identify transaction.
-    pub const fn hash(&self) -> &TxHash {
+    pub fn hash(&self) -> &TxHash {
         match self {
             Self::Legacy(tx) => tx.hash(),
             Self::Eip2930(tx) => tx.hash(),

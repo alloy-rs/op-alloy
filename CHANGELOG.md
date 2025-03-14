@@ -5,12 +5,89 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.11.1](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.11.1) - 2025-03-12
+
+### Miscellaneous Tasks
+
+- Remove associated constant from RlpEcdsaEncodableTx ([#469](https://github.com/alloy-rs/op-alloy/issues/469))
+
+## [0.11.0](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.11.0) - 2025-03-07
+
+### Dependencies
+
+- [deps] Alloy 0.12 ([#466](https://github.com/alloy-rs/op-alloy/issues/466))
+
+### Miscellaneous Tasks
+
+- Release 0.11.0
+- [consensus] AsRef<OpTxEnvelope> ([#464](https://github.com/alloy-rs/op-alloy/issues/464))
+
+### Other
+
+- 0.10.9 ([#465](https://github.com/alloy-rs/op-alloy/issues/465))
+
+## [0.10.8](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.10.8) - 2025-03-06
+
+### Bug Fixes
+
+- [engine] Empty requests hash ([#463](https://github.com/alloy-rs/op-alloy/issues/463))
+
+### Features
+
+- Add signabletx impl for typedtx ([#462](https://github.com/alloy-rs/op-alloy/issues/462))
+
+### Miscellaneous Tasks
+
+- Release 0.10.8
+
+## [0.10.7](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.10.7) - 2025-02-28
+
+### Dependencies
+
+- Bump msrv to 1.82 ([#459](https://github.com/alloy-rs/op-alloy/issues/459))
+
+### Miscellaneous Tasks
+
+- Release 0.10.7
+
+### Other
+
+- Remove redundant method for v4 payload ([#461](https://github.com/alloy-rs/op-alloy/issues/461))
+- Add conversions from block to payload ([#460](https://github.com/alloy-rs/op-alloy/issues/460))
+
+## [0.10.6](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.10.6) - 2025-02-26
+
+### Features
+
+- [l2-withdrawals-root] Add conversions for `OpExecutionData` ([#455](https://github.com/alloy-rs/op-alloy/issues/455))
+- Impl AnyRpcTransaction for OpTxEnvelope ([#454](https://github.com/alloy-rs/op-alloy/issues/454))
+- Added helpers for opExecutionData ([#451](https://github.com/alloy-rs/op-alloy/issues/451))
+
+### Miscellaneous Tasks
+
+- Release 0.10.6
+- Fix imports ([#452](https://github.com/alloy-rs/op-alloy/issues/452))
+- [consensus] Remove Hardforks ([#448](https://github.com/alloy-rs/op-alloy/issues/448))
+
+### Testing
+
+- Fix flaky bincode compat rountrip test ([#453](https://github.com/alloy-rs/op-alloy/issues/453))
+
 ## [0.10.5](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.10.5) - 2025-02-19
 
 ### Features
 
 - [l2-withdrawals] Add methods for prague payload fields to `OpExecutionPayloadSidecar` ([#445](https://github.com/alloy-rs/op-alloy/issues/445))
+
+### Miscellaneous Tasks
+
+- Release 0.10.5
 
 ### Other
 

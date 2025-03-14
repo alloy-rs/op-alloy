@@ -5,11 +5,11 @@
 
 use crate::{OpExecutionPayload, OpExecutionPayloadSidecar, OpExecutionPayloadV4};
 use alloc::vec::Vec;
-use alloy_eips::{eip4895::Withdrawal, eip7685::Requests};
-use alloy_primitives::{B256, PrimitiveSignature as Signature, keccak256};
+use alloy_consensus::{Block, BlockHeader, Sealable, Transaction};
+use alloy_eips::{eip4895::Withdrawal, eip7685::Requests, Encodable2718};
+use alloy_primitives::{keccak256, PrimitiveSignature as Signature, B256};
 use alloy_rpc_types_engine::{
-    CancunPayloadFields, ExecutionPayload, ExecutionPayloadInputV2, ExecutionPayloadV3,
-    PraguePayloadFields,
+    CancunPayloadFields, ExecutionPayloadInputV2, ExecutionPayloadV3, PraguePayloadFields,
 };
 
 /// Struct aggregating [`OpExecutionPayload`] and [`OpExecutionPayloadSidecar`] and encapsulating
@@ -27,6 +27,36 @@ impl OpExecutionData {
     /// Creates new instance of [`OpExecutionData`].
     pub const fn new(payload: OpExecutionPayload, sidecar: OpExecutionPayloadSidecar) -> Self {
         Self { payload, sidecar }
+    }
+
+    /// Conversion from [`alloy_consensus::Block`]. Also returns the [`OpExecutionPayloadSidecar`]
+    /// extracted from the block.
+    ///
+    /// See also [`from_block_unchecked`](OpExecutionPayload::from_block_slow).
+    ///
+    /// Note: This re-calculates the block hash.
+    pub fn from_block_slow<T, H>(block: &Block<T, H>) -> Self
+    where
+        T: Encodable2718 + Transaction,
+        H: BlockHeader + Sealable,
+    {
+        let (payload, sidecar) = OpExecutionPayload::from_block_slow(block);
+
+        Self::new(payload, sidecar)
+    }
+
+    /// Conversion from [`alloy_consensus::Block`]. Also returns the [`OpExecutionPayloadSidecar`]
+    /// extracted from the block.
+    ///
+    /// See also [`OpExecutionPayload::from_block_unchecked`].
+    pub fn from_block_unchecked<T, H>(block_hash: B256, block: &Block<T, H>) -> Self
+    where
+        T: Encodable2718 + Transaction,
+        H: BlockHeader,
+    {
+        let (payload, sidecar) = OpExecutionPayload::from_block_unchecked(block_hash, block);
+
+        Self::new(payload, sidecar)
     }
 
     /// Creates a new instance from args to engine API method `newPayloadV2`.
@@ -85,7 +115,7 @@ impl OpExecutionData {
                 Some(execution_payload_v3.withdrawals())
             }
             OpExecutionPayload::V4(op_execution_payload_v4) => {
-                Some(op_execution_payload_v4.withdrawals())
+                Some(op_execution_payload_v4.payload_inner.withdrawals())
             }
         }
     }
@@ -113,7 +143,7 @@ impl OpExecutionData {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct OpNetworkPayloadEnvelope {
     /// The execution payload.
-    pub payload: ExecutionPayload,
+    pub payload: OpExecutionPayload,
     /// A signature for the payload.
     pub signature: Signature,
     /// The hash of the payload.
@@ -141,7 +171,7 @@ impl OpNetworkPayloadEnvelope {
         let signature = Signature::try_from(sig_data)?;
         let hash = PayloadHash::from(block_data);
 
-        let payload = ExecutionPayload::from(
+        let payload = OpExecutionPayload::V1(
             alloy_rpc_types_engine::ExecutionPayloadV1::from_ssz_bytes(block_data)?,
         );
 
@@ -166,7 +196,7 @@ impl OpNetworkPayloadEnvelope {
         let signature = Signature::try_from(sig_data)?;
         let hash = PayloadHash::from(block_data);
 
-        let payload = ExecutionPayload::from(
+        let payload = OpExecutionPayload::V2(
             alloy_rpc_types_engine::ExecutionPayloadV2::from_ssz_bytes(block_data)?,
         );
 
@@ -193,9 +223,34 @@ impl OpNetworkPayloadEnvelope {
         let parent_beacon_block_root = Some(B256::from_slice(parent_beacon_block_root));
         let hash = PayloadHash::from(block_data);
 
-        let payload = ExecutionPayload::from(
+        let payload = OpExecutionPayload::V3(
             alloy_rpc_types_engine::ExecutionPayloadV3::from_ssz_bytes(block_data)?,
         );
+
+        Ok(Self { payload, signature, payload_hash: hash, parent_beacon_block_root })
+    }
+
+    /// Decode a payload envelope from a snappy-compressed byte array.
+    /// The payload version decoded is `ExecutionPayloadV4` from SSZ bytes.
+    #[cfg(feature = "std")]
+    pub fn decode_v4(data: &[u8]) -> Result<Self, PayloadEnvelopeError> {
+        use ssz::Decode;
+        let mut decoder = snap::raw::Decoder::new();
+        let decompressed = decoder.decompress_vec(data)?;
+
+        if decompressed.len() < 98 {
+            return Err(PayloadEnvelopeError::InvalidLength);
+        }
+
+        let sig_data = &decompressed[..65];
+        let parent_beacon_block_root = &decompressed[65..97];
+        let block_data = &decompressed[97..];
+
+        let signature = Signature::try_from(sig_data)?;
+        let parent_beacon_block_root = Some(B256::from_slice(parent_beacon_block_root));
+        let hash = PayloadHash::from(block_data);
+
+        let payload = OpExecutionPayload::V4(OpExecutionPayloadV4::from_ssz_bytes(block_data)?);
 
         Ok(Self { payload, signature, payload_hash: hash, parent_beacon_block_root })
     }
@@ -309,5 +364,15 @@ mod tests {
         let data = hex::decode("0xf104f0434442b9eb38b259f5b23826e6b623e829d2fb878dac70187a1aecf42a3f9bedfd29793d1fcb5822324be0d3e12340a95855553a65d64b83e5579dffb31470df5d010000006a03000412346a1d00fe0100fe0100fe0100fe0100fe0100fe01004201000cc588d465219504100201067601007cfece77b89685f60e3663b6e0faf2de0734674eb91339700c4858c773a8ff921e014401043e0100").unwrap();
         let payload_envelop = OpNetworkPayloadEnvelope::decode_v3(&data).unwrap();
         assert_eq!(1708427461, payload_envelop.payload.timestamp());
+    }
+
+    #[test]
+    #[cfg(feature = "std")]
+    fn decode_payload_v4() {
+        use alloy_primitives::hex;
+
+        let data = hex::decode("0x9105f043cee25401b6853202950d1d8a082f31a80c4fef5782c049a731f5d104b1b9b9aa7618605b420438ae98b44c8aaaebd482854473c2ae57c079286bb634bece5210000000006a03000412346a1d00fe0100fe0100fe0100fe0100fe0100fe01004201000c5766d26721950430020106f6010001440104b60100049876").unwrap();
+        let payload_envelop = OpNetworkPayloadEnvelope::decode_v4(&data).unwrap();
+        assert_eq!(1741842007, payload_envelop.payload.timestamp());
     }
 }

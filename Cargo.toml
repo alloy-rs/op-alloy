@@ -3,7 +3,7 @@ members = ["crates/*"]
 resolver = "2"
 
 [workspace.package]
-version = "0.10.5"
+version = "0.11.1"
 edition = "2024"
 rust-version = "1.85"
 authors = ["Alloy Contributors"]
@@ -36,32 +36,32 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [workspace.dependencies]
 # Workspace
-op-alloy-consensus = { version = "0.10.5", path = "crates/consensus", default-features = false }
-op-alloy-network = { version = "0.10.5", path = "crates/network", default-features = false }
-op-alloy-provider = { version = "0.10.5", path = "crates/provider", default-features = false }
-op-alloy-rpc-types = { version = "0.10.5", path = "crates/rpc-types", default-features = false }
-op-alloy-rpc-types-engine = { version = "0.10.5", path = "crates/rpc-types-engine", default-features = false }
-op-alloy-rpc-jsonrpsee = { version = "0.10.5", path = "crates/rpc-jsonrpsee", default-features = false }
-op-alloy-flz = { version = "0.10.5", path = "crates/flz", default-features = false }
+op-alloy-consensus = { version = "0.11.1", path = "crates/consensus", default-features = false }
+op-alloy-network = { version = "0.11.1", path = "crates/network", default-features = false }
+op-alloy-provider = { version = "0.11.1", path = "crates/provider", default-features = false }
+op-alloy-rpc-types = { version = "0.11.1", path = "crates/rpc-types", default-features = false }
+op-alloy-rpc-types-engine = { version = "0.11.1", path = "crates/rpc-types-engine", default-features = false }
+op-alloy-rpc-jsonrpsee = { version = "0.11.1", path = "crates/rpc-jsonrpsee", default-features = false }
+op-alloy-flz = { version = "0.11.1", path = "crates/flz", default-features = false }
 
 # Alloy
-alloy-eips = { version = "0.11", default-features = false }
-alloy-serde = { version = "0.11", default-features = false }
-alloy-signer = { version = "0.11", default-features = false }
-alloy-network = { version = "0.11", default-features = false }
-alloy-provider = { version = "0.11", default-features = false }
-alloy-transport = { version = "0.11", default-features = false }
-alloy-consensus = { version = "0.11", default-features = false }
-alloy-rpc-types-eth = { version = "0.11", default-features = false }
-alloy-rpc-types-engine = { version = "0.11", default-features = false }
-alloy-network-primitives = { version = "0.11", default-features = false }
+alloy-eips = { version = "0.12.5", default-features = false }
+alloy-serde = { version = "0.12.5", default-features = false }
+alloy-signer = { version = "0.12.5", default-features = false }
+alloy-network = { version = "0.12.5", default-features = false }
+alloy-provider = { version = "0.12.5", default-features = false }
+alloy-transport = { version = "0.12.5", default-features = false }
+alloy-consensus = { version = "0.12.5", default-features = false }
+alloy-rpc-types-eth = { version = "0.12.5", default-features = false }
+alloy-rpc-types-engine = { version = "0.12.5", default-features = false }
+alloy-network-primitives = { version = "0.12.5", default-features = false }
 
 # Alloy RLP
 alloy-rlp = { version = "0.3", default-features = false }
 
 # Alloy Core
-alloy-sol-types = { version = "0.8.12", default-features = false }
-alloy-primitives = { version = "0.8.12", default-features = false }
+alloy-sol-types = { version = "0.8.22", default-features = false }
+alloy-primitives = { version = "0.8.22", default-features = false }
 
 # Serde
 serde_repr = "0.1"
@@ -115,14 +115,14 @@ rstest = "0.24.0"
 c-kzg = { version = "1.0", default-features = false }
 k256 = { version = "0.13", default-features = false, features = ["ecdsa"] }
 
-[patch.crates-io]
-#alloy-consensus = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
-#alloy-network = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
-#alloy-network-primitives = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
-#alloy-rpc-types-eth = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
-#alloy-rpc-types-engine = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
-#alloy-eips = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
-#alloy-serde = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
-#alloy-signer = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
-#alloy-provider = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
-#alloy-transport = { git = "https://github.com/alloy-rs/alloy", rev = "cfb13aa" }
+# [patch.crates-io]
+# alloy-eips = { git = "https://github.com/alloy-rs/alloy", rev = "a4e7099" }
+# alloy-serde = { git = "https://github.com/alloy-rs/alloy", rev = "a4e7099" }
+# alloy-signer = { git = "https://github.com/alloy-rs/alloy", rev = "a4e7099" }
+# alloy-network = { git = "https://github.com/alloy-rs/alloy", rev = "a4e7099" }
+# alloy-provider = { git = "https://github.com/alloy-rs/alloy", rev = "a4e7099" }
+# alloy-transport = { git = "https://github.com/alloy-rs/alloy", rev = "a4e7099" }
+# alloy-consensus = { git = "https://github.com/alloy-rs/alloy", rev = "a4e7099" }
+# alloy-rpc-types-eth = { git = "https://github.com/alloy-rs/alloy", rev = "a4e7099" }
+# alloy-rpc-types-engine = { git = "https://github.com/alloy-rs/alloy", rev = "a4e7099" }
+# alloy-network-primitives = { git = "https://github.com/alloy-rs/alloy", rev = "a4e7099" }
