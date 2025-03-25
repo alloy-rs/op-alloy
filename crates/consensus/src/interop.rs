@@ -1,8 +1,12 @@
 //! Commonly used types for interop.
 
 use alloc::string::{String, ToString};
+use alloy_primitives::{Address, address};
 use core::str::FromStr;
 use derive_more::Display;
+
+/// The address of the L2 cross chain inbox predeploy proxy.
+pub const CROSS_L2_INBOX_ADDRESS: Address = address!("0x4200000000000000000000000000000000000022");
 
 /// The safety level of a message.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Display)]
