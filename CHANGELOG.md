@@ -5,8 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.11.2](https://github.com/alloy-rs/op-alloy
-/releases/tag/v0.11.2) - 2025-03-14
+## [0.11.3](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.11.3) - 2025-03-26
 
 ### Bug Fixes
 
@@ -14,12 +14,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Dependencies
 
+- Update Dependencies ([#474](https://github.com/alloy-rs/op-alloy/issues/474))
+- Bump edition ([#458](https://github.com/alloy-rs/op-alloy/issues/458))
 - Bump msrv to 1.85 ([#457](https://github.com/alloy-rs/op-alloy/issues/457))
 
 ### Features
 
+- Move safety level ([#477](https://github.com/alloy-rs/op-alloy/issues/477))
+- [op-alloy-rpc-types-engine] Add `superchain` mod ([#476](https://github.com/alloy-rs/op-alloy/issues/476))
 - [rpc-types-engine] Support V4 network payload ([#471](https://github.com/alloy-rs/op-alloy/issues/471))
 - Derive hash for envelope ([#470](https://github.com/alloy-rs/op-alloy/issues/470))
+
+### Miscellaneous Tasks
+
+- Remove deposit context source ([#475](https://github.com/alloy-rs/op-alloy/issues/475))
+
+### Other
+
+- 0.11.2 ([#473](https://github.com/alloy-rs/op-alloy/issues/473))
 
 ## [0.11.1](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.11.1) - 2025-03-12
