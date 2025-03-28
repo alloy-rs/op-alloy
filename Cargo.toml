@@ -3,7 +3,7 @@ members = ["crates/*"]
 resolver = "2"
 
 [workspace.package]
-version = "0.11.3"
+version = "0.12.0"
 edition = "2024"
 rust-version = "1.85"
 authors = ["Alloy Contributors"]
@@ -36,13 +36,13 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [workspace.dependencies]
 # Workspace
-op-alloy-consensus = { version = "0.11.3", path = "crates/consensus", default-features = false }
-op-alloy-network = { version = "0.11.3", path = "crates/network", default-features = false }
-op-alloy-provider = { version = "0.11.3", path = "crates/provider", default-features = false }
-op-alloy-rpc-types = { version = "0.11.3", path = "crates/rpc-types", default-features = false }
-op-alloy-rpc-types-engine = { version = "0.11.3", path = "crates/rpc-types-engine", default-features = false }
-op-alloy-rpc-jsonrpsee = { version = "0.11.3", path = "crates/rpc-jsonrpsee", default-features = false }
-op-alloy-flz = { version = "0.11.3", path = "crates/flz", default-features = false }
+op-alloy-consensus = { version = "0.12.0", path = "crates/consensus", default-features = false }
+op-alloy-network = { version = "0.12.0", path = "crates/network", default-features = false }
+op-alloy-provider = { version = "0.12.0", path = "crates/provider", default-features = false }
+op-alloy-rpc-types = { version = "0.12.0", path = "crates/rpc-types", default-features = false }
+op-alloy-rpc-types-engine = { version = "0.12.0", path = "crates/rpc-types-engine", default-features = false }
+op-alloy-rpc-jsonrpsee = { version = "0.12.0", path = "crates/rpc-jsonrpsee", default-features = false }
+op-alloy-flz = { version = "0.12.0", path = "crates/flz", default-features = false }
 
 # Alloy
 alloy-eips = { version = "0.13.0", default-features = false }
