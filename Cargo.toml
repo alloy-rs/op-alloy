@@ -42,7 +42,6 @@ op-alloy-provider = { version = "0.12.0", path = "crates/provider", default-feat
 op-alloy-rpc-types = { version = "0.12.0", path = "crates/rpc-types", default-features = false }
 op-alloy-rpc-types-engine = { version = "0.12.0", path = "crates/rpc-types-engine", default-features = false }
 op-alloy-rpc-jsonrpsee = { version = "0.12.0", path = "crates/rpc-jsonrpsee", default-features = false }
-op-alloy-flz = { version = "0.12.0", path = "crates/flz", default-features = false }
 
 # Alloy
 alloy-eips = { version = "0.13.0", default-features = false }
