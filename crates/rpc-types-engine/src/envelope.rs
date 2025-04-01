@@ -237,6 +237,27 @@ impl OpNetworkPayloadEnvelope {
         })
     }
 
+    /// Encodes a payload envelope as a snappy-compressed byte array.
+    #[cfg(feature = "std")]
+    pub fn encode_v3(&self) -> Result<Vec<u8>, PayloadEnvelopeEncodeError> {
+        let execution_payload_v3 = match &self.payload {
+            OpExecutionPayload::V3(execution_payload_v3) => execution_payload_v3,
+            _ => return Err(PayloadEnvelopeEncodeError::WrongVersion),
+        };
+
+        use ssz::Encode;
+        let mut data = Vec::new();
+        let sig_bytes = self.signature.as_bytes();
+        data.extend_from_slice(&sig_bytes[..]);
+        data.extend_from_slice(self.parent_beacon_block_root.as_ref().unwrap().as_slice());
+        let block_data = execution_payload_v3.as_ssz_bytes();
+        data.extend_from_slice(block_data.as_slice());
+
+        // Compress the data using snap
+        let compressed = snap::raw::Encoder::new().compress_vec(&data)?;
+        Ok(compressed)
+    }
+
     /// Decode a payload envelope from a snappy-compressed byte array.
     /// The payload version decoded is `ExecutionPayloadV4` from SSZ bytes.
     #[cfg(feature = "std")]
@@ -268,6 +289,17 @@ impl OpNetworkPayloadEnvelope {
             parent_beacon_block_root: Some(parent_beacon_block_root),
         })
     }
+}
+
+/// Errors that can occur when encoding a payload envelope.
+#[derive(Debug, Clone, PartialEq, Eq, thiserror::Error)]
+pub enum PayloadEnvelopeEncodeError {
+    /// Wrong versions of the payload.
+    #[error("Wrong version of the payload")]
+    WrongVersion,
+    /// An error occured during snap encoding.
+    #[error(transparent)]
+    SnapEncoding(#[from] snap::Error),
 }
 
 /// Errors that can occur when decoding a payload envelope.
@@ -351,6 +383,17 @@ mod tests {
             assert_eq!(hash.0, keccak256(inner.as_slice()));
             Ok(())
         });
+    }
+
+    #[test]
+    #[cfg(feature = "std")]
+    fn test_roundtrip_encode_envelope_v3() {
+        use alloy_primitives::{Bytes, hex};
+        let data = hex::decode("0xf104f0434442b9eb38b259f5b23826e6b623e829d2fb878dac70187a1aecf42a3f9bedfd29793d1fcb5822324be0d3e12340a95855553a65d64b83e5579dffb31470df5d010000006a03000412346a1d00fe0100fe0100fe0100fe0100fe0100fe01004201000cc588d465219504100201067601007cfece77b89685f60e3663b6e0faf2de0734674eb91339700c4858c773a8ff921e014401043e0100").unwrap();
+        let payload_envelop = OpNetworkPayloadEnvelope::decode_v3(&data).unwrap();
+        let encoded = payload_envelop.encode_v3().unwrap();
+        let expected = hex::decode("0xf104f0434442b9eb38b259f5b23826e6b623e829d2fb878dac70187a1aecf42a3f9bedfd29793d1fcb5822324be0d3e12340a95855553a65d64b83e5579dffb31470df5d010000006a03000412346a1d00fe0100fe0100fe0100fe0100fe0100fe01004201000cc588d465219504100201067601007cfece77b89685f60e3663b6e0faf2de0734674eb91339700c4858c773a8ff921e014401043e0100").unwrap();
+        assert_eq!(Bytes::from(expected), Bytes::from(encoded));
     }
 
     #[test]
