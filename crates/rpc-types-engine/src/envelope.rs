@@ -299,6 +299,7 @@ pub enum PayloadEnvelopeEncodeError {
     WrongVersion,
     /// An error occured during snap encoding.
     #[error(transparent)]
+    #[cfg(feature = "std")]
     SnapEncoding(#[from] snap::Error),
 }
 
