@@ -181,27 +181,20 @@ impl OpNetworkPayloadEnvelope {
     /// Encodes a payload envelope as a snappy-compressed byte array.
     #[cfg(feature = "std")]
     pub fn encode_v1(&self) -> Result<Vec<u8>, PayloadEnvelopeEncodeError> {
+        use ssz::Encode;
         let execution_payload_v1 = match &self.payload {
             OpExecutionPayload::V1(execution_payload_v1) => execution_payload_v1,
             _ => return Err(PayloadEnvelopeEncodeError::WrongVersion),
         };
 
-        use ssz::Encode;
         let mut data = Vec::new();
-        let mut sig_bytes = self.signature.as_bytes();
-        // Normalize parity bit
-        if self.signature.v() {
-            sig_bytes[64] = 0x01;
-        } else {
-            sig_bytes[64] = 0x00;
-        }
-        data.extend_from_slice(&sig_bytes[..]);
+        let mut sig = self.signature.as_bytes();
+        sig[64] = self.signature.v() as u8;
+        data.extend_from_slice(&sig[..]);
         let block_data = execution_payload_v1.as_ssz_bytes();
         data.extend_from_slice(block_data.as_slice());
 
-        // Compress the data using snap
-        let compressed = snap::raw::Encoder::new().compress_vec(&data)?;
-        Ok(compressed)
+        Ok(snap::raw::Encoder::new().compress_vec(&data)?)
     }
 
     /// Decode a payload envelope from a snappy-compressed byte array.
@@ -232,27 +225,20 @@ impl OpNetworkPayloadEnvelope {
     /// Encodes a payload envelope as a snappy-compressed byte array.
     #[cfg(feature = "std")]
     pub fn encode_v2(&self) -> Result<Vec<u8>, PayloadEnvelopeEncodeError> {
+        use ssz::Encode;
         let execution_payload_v2 = match &self.payload {
             OpExecutionPayload::V2(execution_payload_v2) => execution_payload_v2,
             _ => return Err(PayloadEnvelopeEncodeError::WrongVersion),
         };
 
-        use ssz::Encode;
         let mut data = Vec::new();
-        let mut sig_bytes = self.signature.as_bytes();
-        // Normalize parity bit
-        if self.signature.v() {
-            sig_bytes[64] = 0x01;
-        } else {
-            sig_bytes[64] = 0x00;
-        }
-        data.extend_from_slice(&sig_bytes[..]);
+        let mut sig = self.signature.as_bytes();
+        sig[64] = self.signature.v() as u8;
+        data.extend_from_slice(&sig[..]);
         let block_data = execution_payload_v2.as_ssz_bytes();
         data.extend_from_slice(block_data.as_slice());
 
-        // Compress the data using snap
-        let compressed = snap::raw::Encoder::new().compress_vec(&data)?;
-        Ok(compressed)
+        Ok(snap::raw::Encoder::new().compress_vec(&data)?)
     }
 
     /// Decode a payload envelope from a snappy-compressed byte array.
@@ -292,28 +278,21 @@ impl OpNetworkPayloadEnvelope {
     /// Encodes a payload envelope as a snappy-compressed byte array.
     #[cfg(feature = "std")]
     pub fn encode_v3(&self) -> Result<Vec<u8>, PayloadEnvelopeEncodeError> {
+        use ssz::Encode;
         let execution_payload_v3 = match &self.payload {
             OpExecutionPayload::V3(execution_payload_v3) => execution_payload_v3,
             _ => return Err(PayloadEnvelopeEncodeError::WrongVersion),
         };
 
-        use ssz::Encode;
         let mut data = Vec::new();
-        let mut sig_bytes = self.signature.as_bytes();
-        // Normalize parity bit
-        if self.signature.v() {
-            sig_bytes[64] = 0x01;
-        } else {
-            sig_bytes[64] = 0x00;
-        }
-        data.extend_from_slice(&sig_bytes[..]);
+        let mut sig = self.signature.as_bytes();
+        sig[64] = self.signature.v() as u8;
+        data.extend_from_slice(&sig[..]);
         data.extend_from_slice(self.parent_beacon_block_root.as_ref().unwrap().as_slice());
         let block_data = execution_payload_v3.as_ssz_bytes();
         data.extend_from_slice(block_data.as_slice());
 
-        // Compress the data using snap
-        let compressed = snap::raw::Encoder::new().compress_vec(&data)?;
-        Ok(compressed)
+        Ok(snap::raw::Encoder::new().compress_vec(&data)?)
     }
 
     /// Decode a payload envelope from a snappy-compressed byte array.
@@ -351,28 +330,21 @@ impl OpNetworkPayloadEnvelope {
     /// Encodes a payload envelope as a snappy-compressed byte array.
     #[cfg(feature = "std")]
     pub fn encode_v4(&self) -> Result<Vec<u8>, PayloadEnvelopeEncodeError> {
+        use ssz::Encode;
         let execution_payload_v4 = match &self.payload {
             OpExecutionPayload::V4(execution_payload_v4) => execution_payload_v4,
             _ => return Err(PayloadEnvelopeEncodeError::WrongVersion),
         };
 
-        use ssz::Encode;
         let mut data = Vec::new();
-        let mut sig_bytes = self.signature.as_bytes();
-        // Normalize parity bit
-        if self.signature.v() {
-            sig_bytes[64] = 0x01;
-        } else {
-            sig_bytes[64] = 0x00;
-        }
-        data.extend_from_slice(&sig_bytes[..]);
+        let mut sig = self.signature.as_bytes();
+        sig[64] = self.signature.v() as u8;
+        data.extend_from_slice(&sig[..]);
         data.extend_from_slice(self.parent_beacon_block_root.as_ref().unwrap().as_slice());
         let block_data = execution_payload_v4.as_ssz_bytes();
         data.extend_from_slice(block_data.as_slice());
 
-        // Compress the data using snap
-        let compressed = snap::raw::Encoder::new().compress_vec(&data)?;
-        Ok(compressed)
+        Ok(snap::raw::Encoder::new().compress_vec(&data)?)
     }
 }
 
