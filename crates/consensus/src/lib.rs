@@ -15,16 +15,16 @@ mod alloy_compat;
 mod receipt;
 pub use receipt::{OpDepositReceipt, OpDepositReceiptWithBloom, OpReceiptEnvelope, OpTxReceipt};
 
-mod transaction;
+pub mod transaction;
 pub use transaction::{
-    DEPOSIT_TX_TYPE_ID, DepositTransaction, OpPooledTransaction, OpTxEnvelope, OpTxType,
-    OpTypedTransaction, TxDeposit,
+    DepositTransaction, OpPooledTransaction, OpTxEnvelope, OpTxType, OpTypedTransaction, TxDeposit,
+    DEPOSIT_TX_TYPE_ID,
 };
 
 pub mod eip1559;
 pub use eip1559::{
-    EIP1559ParamError, decode_eip_1559_params, decode_holocene_extra_data,
-    encode_holocene_extra_data,
+    decode_eip_1559_params, decode_holocene_extra_data, encode_holocene_extra_data,
+    EIP1559ParamError,
 };
 
 mod source;
@@ -49,6 +49,6 @@ pub use transaction::serde_deposit_tx_rpc;
 pub mod serde_bincode_compat {
     pub use super::{
         receipt::receipts::serde_bincode_compat::OpDepositReceipt,
-        transaction::serde_bincode_compat::TxDeposit,
+        transaction::{serde_bincode_compat as transaction, serde_bincode_compat::TxDeposit},
     };
 }
