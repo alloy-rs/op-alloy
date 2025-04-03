@@ -1,14 +1,14 @@
 use crate::{OpTxType, OpTypedTransaction, TxDeposit};
 use alloy_consensus::{
-    transaction::RlpEcdsaDecodableTx, Sealable, Sealed, Signed, Transaction, TxEip1559, TxEip2930,
-    TxEip7702, TxEnvelope, TxLegacy, Typed2718,
+    Sealable, Sealed, Signed, Transaction, TxEip1559, TxEip2930, TxEip7702, TxEnvelope, TxLegacy,
+    Typed2718, transaction::RlpEcdsaDecodableTx,
 };
 use alloy_eips::{
     eip2718::{Decodable2718, Eip2718Error, Eip2718Result, Encodable2718},
     eip2930::AccessList,
     eip7702::SignedAuthorization,
 };
-use alloy_primitives::{Address, Bytes, TxKind, B256, U256};
+use alloy_primitives::{Address, B256, Bytes, TxKind, U256};
 use alloy_rlp::{Decodable, Encodable};
 
 /// The Ethereum [EIP-2718] Transaction Envelope, modified for OP Stack chains.
@@ -634,10 +634,10 @@ mod serde_from {
 pub mod serde_bincode_compat {
     use crate::serde_bincode_compat::TxDeposit;
     use alloy_consensus::{
-        transaction::serde_bincode_compat::{TxEip1559, TxEip2930, TxEip7702, TxLegacy},
         Sealed, Signed,
+        transaction::serde_bincode_compat::{TxEip1559, TxEip2930, TxEip7702, TxLegacy},
     };
-    use alloy_primitives::{PrimitiveSignature as Signature, B256};
+    use alloy_primitives::{B256, PrimitiveSignature as Signature};
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use serde_with::{DeserializeAs, SerializeAs};
 
@@ -795,7 +795,7 @@ mod tests {
     use super::*;
     use alloc::vec;
     use alloy_consensus::SignableTransaction;
-    use alloy_primitives::{hex, Address, Bytes, PrimitiveSignature, TxKind, B256, U256};
+    use alloy_primitives::{Address, B256, Bytes, PrimitiveSignature, TxKind, U256, hex};
 
     #[test]
     fn test_tx_gas_limit() {
