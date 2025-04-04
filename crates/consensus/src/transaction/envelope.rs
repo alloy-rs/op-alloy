@@ -374,7 +374,22 @@ impl OpTxEnvelope {
         }
     }
 
-    /// Attempts to convert an ethereum [`TxEnvelope`] into the optimism variant.
+    /// Returns mutable access to the input bytes.
+    /// 
+    /// Caution: modifying this will cause side-effects on the hash.
+    pub fn input_mut(&mut self) -> &mut Bytes {
+        match self {
+            Self::Eip1559(tx) => &mut tx.tx_mut().input,
+            Self::Eip2930(tx) => &mut tx.tx_mut().input,
+            Self::Legacy(tx) => &mut tx.tx_mut().input,
+            Self::Eip7702(tx) => &mut tx.tx_mut().input,
+            Self::Deposit(tx) => {
+                &mut tx.inner_mut().input
+            }
+        }
+    }
+
+        /// Attempts to convert an ethereum [`TxEnvelope`] into the optimism variant.
     ///
     /// Returns the given envelope as error if [`OpTxEnvelope`] doesn't support the variant
     /// (EIP-4844)
