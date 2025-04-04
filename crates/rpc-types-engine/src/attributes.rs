@@ -76,7 +76,10 @@ impl OpPayloadAttributes {
             let recovered = txenv.try_into_recovered().ok()?;
             // Convert EthereumTxEnvelope back to OpTxEnvelope
             match OpTxEnvelope::try_from_eth_envelope(recovered.inner().clone()) {
-                Ok(op_tx) => Some(WithEncoded::new(tx_bytes.clone(), Recovered::new_unchecked(op_tx, recovered.signer().clone()))),
+                Ok(op_tx) => Some(WithEncoded::new(
+                    tx_bytes.clone(),
+                    Recovered::new_unchecked(op_tx, recovered.signer().clone()),
+                )),
                 Err(_) => None,
             }
         })
