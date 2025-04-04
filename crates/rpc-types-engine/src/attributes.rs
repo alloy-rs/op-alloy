@@ -1,10 +1,13 @@
 //! Optimism-specific payload attributes.
 
 use alloc::vec::Vec;
-use alloy_eips::eip1559::BaseFeeParams;
+use alloy_consensus::transaction::Recovered;
+use alloy_eips::{Decodable2718, eip1559::BaseFeeParams, eip2718::WithEncoded};
 use alloy_primitives::{B64, Bytes};
 use alloy_rpc_types_engine::PayloadAttributes;
-use op_alloy_consensus::{EIP1559ParamError, decode_eip_1559_params, encode_holocene_extra_data};
+use op_alloy_consensus::{
+    EIP1559ParamError, OpTxEnvelope, decode_eip_1559_params, encode_holocene_extra_data,
+};
 
 /// Optimism Payload Attributes
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
@@ -51,6 +54,48 @@ impl OpPayloadAttributes {
     /// Returns (`elasticity`, `denominator`)
     pub fn decode_eip_1559_params(&self) -> Option<(u32, u32)> {
         self.eip_1559_params.map(decode_eip_1559_params)
+    }
+    /// Returns the `Recovered<OpTxEnvelope>`` from the given transaction bytes
+    fn try_into_recovered(&self, tx_bytes: &[u8]) -> Option<Recovered<OpTxEnvelope>> {
+        let env = OpTxEnvelope::decode_2718(&mut tx_bytes.as_ref()).ok()?;
+        let txenv = env.try_into_eth_envelope().ok()?;
+        let recovered = txenv.try_into_recovered().ok()?;
+
+        let recovered_op_tx =
+            OpTxEnvelope::try_from_eth_envelope(recovered.inner().clone()).ok()?;
+
+        Some(Recovered::new_unchecked(recovered_op_tx, recovered.signer().clone()))
+    }
+
+    /// Returns an iterator over `Result<WithEncoded<OpTxEnvelope>>`
+    pub fn decoded_transactions_with_encoded(
+        &self,
+    ) -> impl Iterator<Item = Result<WithEncoded<OpTxEnvelope>, Box<dyn std::error::Error>>> + '_
+    {
+        self.transactions.iter().flatten().map(|tx_bytes| {
+            let env = OpTxEnvelope::decode_2718(&mut tx_bytes.as_ref())
+                .map_err(|e| Box::<dyn std::error::Error>::from(format!("Decode error: {}", e)))?;
+
+            let op_tx = OpTxEnvelope::try_from(env).map_err(|e| {
+                Box::<dyn std::error::Error>::from(format!("Conversion error: {}", e))
+            })?;
+
+            Ok(WithEncoded::new(tx_bytes.clone(), op_tx))
+        })
+    }
+    /// Returns an iterator over `WithEncoded<Recovered<OpTxEnvelope>>`
+    pub fn recovered_transactions_with_encoded(
+        &self,
+    ) -> impl Iterator<Item = WithEncoded<Recovered<OpTxEnvelope>>> + '_ {
+        self.transactions.iter().flatten().filter_map(|tx_bytes| {
+            let recovered = self.try_into_recovered(tx_bytes)?;
+            Some(WithEncoded::new(tx_bytes.clone(), recovered))
+        })
+    }
+
+    /// Returns an iterator over `Recovered<OpTxEnvelope>`
+    pub fn recovered_transactions(&self) -> impl Iterator<Item = Recovered<OpTxEnvelope>> + '_ {
+        self.transactions.iter().flatten().filter_map(|tx_bytes| self.try_into_recovered(tx_bytes))
     }
 }
 
