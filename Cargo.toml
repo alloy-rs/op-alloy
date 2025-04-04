@@ -29,6 +29,7 @@ missing-const-for-fn = "warn"
 use-self = "warn"
 option-if-let-else = "warn"
 redundant-clone = "warn"
+result_large_err = "allow"
 
 [workspace.metadata.docs.rs]
 all-features = true
