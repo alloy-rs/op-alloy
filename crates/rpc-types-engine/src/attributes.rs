@@ -1,10 +1,13 @@
 //! Optimism-specific payload attributes.
 
 use alloc::vec::Vec;
-use alloy_eips::eip1559::BaseFeeParams;
+use alloy_consensus::transaction::Recovered;
+use alloy_eips::{Decodable2718, eip1559::BaseFeeParams, eip2718::WithEncoded};
 use alloy_primitives::{B64, Bytes};
 use alloy_rpc_types_engine::PayloadAttributes;
-use op_alloy_consensus::{EIP1559ParamError, decode_eip_1559_params, encode_holocene_extra_data};
+use op_alloy_consensus::{
+    EIP1559ParamError, OpTxEnvelope, decode_eip_1559_params, encode_holocene_extra_data,
+};
 
 /// Optimism Payload Attributes
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
@@ -51,6 +54,41 @@ impl OpPayloadAttributes {
     /// Returns (`elasticity`, `denominator`)
     pub fn decode_eip_1559_params(&self) -> Option<(u32, u32)> {
         self.eip_1559_params.map(decode_eip_1559_params)
+    }
+    /// Returns an iterator over `WithEncoded<OpTxEnvelope>`
+    pub fn decoded_transactions_with_encoded(
+        &self,
+    ) -> impl Iterator<Item = WithEncoded<OpTxEnvelope>> + '_ {
+        self.transactions.iter().flatten().filter_map(|tx_bytes| {
+            OpTxEnvelope::decode_2718(&mut tx_bytes.as_ref())
+                .ok()
+                .and_then(|env| OpTxEnvelope::try_from(env).ok())
+                .map(|env| WithEncoded::new(tx_bytes.clone(), env))
+        })
+    }
+    /// Returns an iterator over `WithEncoded<Recovered<OpTxEnvelope>>`
+    pub fn recovered_transactions_with_encoded(
+        &self,
+    ) -> impl Iterator<Item = WithEncoded<Recovered<OpTxEnvelope>>> + '_ {
+        self.transactions
+            .iter()
+            .flatten()
+            .zip(self.recovered_transactions())
+            .map(|(tx_bytes, recovered)| WithEncoded::new(tx_bytes.clone(), recovered))
+    }
+    /// Returns an iterator over `Recovered<OpTxEnvelope>`
+    pub fn recovered_transactions(&self) -> impl Iterator<Item = Recovered<OpTxEnvelope>> + '_ {
+        self.transactions.iter().flatten().filter_map(|tx_bytes| {
+            let env = OpTxEnvelope::decode_2718(&mut tx_bytes.as_ref()).ok()?;
+            let txenv = env.try_into_eth_envelope().ok()?;
+            let recovered = txenv.try_into_recovered().ok()?;
+
+            // Convert EthereumTxEnvelope back to OpTxEnvelope
+            match OpTxEnvelope::try_from_eth_envelope(recovered.inner().clone()) {
+                Ok(op_tx) => Some(Recovered::new_unchecked(op_tx, recovered.signer().clone())),
+                Err(_) => None,
+            }
+        })
     }
 }
 
