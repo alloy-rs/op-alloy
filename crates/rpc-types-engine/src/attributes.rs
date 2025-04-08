@@ -8,6 +8,7 @@ use alloy_rpc_types_engine::PayloadAttributes;
 use op_alloy_consensus::{
     EIP1559ParamError, OpTxEnvelope, decode_eip_1559_params, encode_holocene_extra_data,
 };
+use std::boxed::Box;
 
 /// Optimism Payload Attributes
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
@@ -55,7 +56,7 @@ impl OpPayloadAttributes {
     pub fn decode_eip_1559_params(&self) -> Option<(u32, u32)> {
         self.eip_1559_params.map(decode_eip_1559_params)
     }
-    /// Returns the `Recovered<OpTxEnvelope>`` from the given transaction bytes
+    /// Returns the `Recovered<OpTxEnvelope>` from the given transaction bytes
     fn try_into_recovered(&self, tx_bytes: &[u8]) -> Option<Recovered<OpTxEnvelope>> {
         let env = OpTxEnvelope::decode_2718(&mut tx_bytes.as_ref()).ok()?;
         let txenv = env.try_into_eth_envelope().ok()?;
@@ -64,7 +65,7 @@ impl OpPayloadAttributes {
         let recovered_op_tx =
             OpTxEnvelope::try_from_eth_envelope(recovered.inner().clone()).ok()?;
 
-        Some(Recovered::new_unchecked(recovered_op_tx, recovered.signer().clone()))
+        Some(Recovered::new_unchecked(recovered_op_tx, recovered.signer()))
     }
 
     /// Returns an iterator over `Result<WithEncoded<OpTxEnvelope>>`
@@ -83,13 +84,20 @@ impl OpPayloadAttributes {
             Ok(WithEncoded::new(tx_bytes.clone(), op_tx))
         })
     }
-    /// Returns an iterator over `WithEncoded<Recovered<OpTxEnvelope>>`
+    /// Returns an iterator over successfully decoded `WithEncoded<Recovered<OpTxEnvelope>>` values.
+    ///
+    /// Transactions that fail to decode are silently filtered out.
     pub fn recovered_transactions_with_encoded(
         &self,
     ) -> impl Iterator<Item = WithEncoded<Recovered<OpTxEnvelope>>> + '_ {
         self.transactions.iter().flatten().filter_map(|tx_bytes| {
-            let recovered = self.try_into_recovered(tx_bytes)?;
-            Some(WithEncoded::new(tx_bytes.clone(), recovered))
+            match self.try_into_recovered(tx_bytes) {
+                Some(recovered) => Some(WithEncoded::new(tx_bytes.clone(), recovered)),
+                None => {
+                    println!("Failed to decode transaction bytes: {:?}", tx_bytes);
+                    None
+                }
+            }
         })
     }
 
