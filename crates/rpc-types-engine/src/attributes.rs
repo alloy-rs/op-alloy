@@ -74,7 +74,7 @@ impl OpPayloadAttributes {
     {
         self.transactions.iter().flatten().map(|tx_bytes| {
             let env = OpTxEnvelope::decode_2718(&mut tx_bytes.as_ref())
-                .map_err(|e| Box::<dyn std::error::Error>::from(format!("Decode error: {}", e)))?;
+                .map_err(|e| Box::<dyn std::error::Error>::from(format!("Decode error: {e}")))?;
 
             let op_tx = OpTxEnvelope::try_from(env).map_err(|e| {
                 Box::<dyn std::error::Error>::from(format!("Conversion error: {}", e))
