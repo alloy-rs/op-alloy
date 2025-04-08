@@ -77,7 +77,7 @@ impl OpPayloadAttributes {
                 .map_err(|e| Box::<dyn std::error::Error>::from(format!("Decode error: {e}")))?;
 
             let op_tx = OpTxEnvelope::try_from(env).map_err(|e| {
-                Box::<dyn std::error::Error>::from(format!("Conversion error: {}", e))
+                Box::<dyn std::error::Error>::from(format!("Conversion error: {e}"))
             })?;
 
             Ok(WithEncoded::new(tx_bytes.clone(), op_tx))
