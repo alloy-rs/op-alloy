@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.12.2](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.12.2) - 2025-04-09
+
+### Miscellaneous Tasks
+
+- Rm borrow attr ([#490](https://github.com/alloy-rs/op-alloy/issues/490))
+
 ## [0.12.1](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.12.1) - 2025-04-09
 
@@ -19,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.12.1
 - Clippy happy ([#487](https://github.com/alloy-rs/op-alloy/issues/487))
 - Implement serde_bincode_compat for envelope ([#486](https://github.com/alloy-rs/op-alloy/issues/486))
 - Remove op-alloy-flz crate and dep ([#484](https://github.com/alloy-rs/op-alloy/issues/484))
