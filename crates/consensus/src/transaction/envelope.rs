@@ -663,7 +663,7 @@ pub mod serde_bincode_compat {
         Sealed, Signed,
         transaction::serde_bincode_compat::{TxEip1559, TxEip2930, TxEip7702, TxLegacy},
     };
-    use alloy_primitives::{B256, PrimitiveSignature as Signature};
+    use alloy_primitives::{B256, Signature};
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use serde_with::{DeserializeAs, SerializeAs};
 
