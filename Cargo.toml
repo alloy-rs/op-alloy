@@ -60,8 +60,8 @@ alloy-network-primitives = { version = "0.13.0", default-features = false }
 alloy-rlp = { version = "0.3", default-features = false }
 
 # Alloy Core
-alloy-sol-types = { version = "0.8.23", default-features = false }
-alloy-primitives = { version = "0.8.23", default-features = false }
+alloy-sol-types = { version = "1.0.0", default-features = false }
+alloy-primitives = { version = "1.0.0", default-features = false }
 
 # Serde
 serde_repr = "0.1"
