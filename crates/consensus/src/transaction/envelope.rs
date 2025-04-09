@@ -818,7 +818,7 @@ mod tests {
     use super::*;
     use alloc::vec;
     use alloy_consensus::SignableTransaction;
-    use alloy_primitives::{Address, B256, Bytes, PrimitiveSignature, TxKind, U256, hex};
+    use alloy_primitives::{Address, B256, Bytes, Signature, TxKind, U256, hex};
 
     #[test]
     fn test_tx_gas_limit() {
@@ -834,7 +834,7 @@ mod tests {
         assert!(tx_envelope.is_deposit());
 
         let tx = TxEip1559::default();
-        let sig = PrimitiveSignature::test_signature();
+        let sig = Signature::test_signature();
         let tx_envelope = OpTxEnvelope::Eip1559(tx.into_signed(sig));
         assert!(!tx_envelope.is_system_transaction());
     }
@@ -915,7 +915,7 @@ mod tests {
             input: vec![8].into(),
             access_list: Default::default(),
         };
-        let sig = PrimitiveSignature::test_signature();
+        let sig = Signature::test_signature();
         let tx_signed = tx.into_signed(sig);
         let envelope: OpTxEnvelope = tx_signed.into();
         let encoded = envelope.encoded_2718();
