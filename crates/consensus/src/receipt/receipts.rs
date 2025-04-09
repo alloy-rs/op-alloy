@@ -215,7 +215,7 @@ where
 /// Bincode-compatible [`OpDepositReceipt`] serde implementation.
 #[cfg(all(feature = "serde", feature = "serde-bincode-compat"))]
 pub(crate) mod serde_bincode_compat {
-    use alloc::{borrow::Cow, vec::Vec};
+    use alloc::borrow::Cow;
     use alloy_consensus::Receipt;
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use serde_with::{DeserializeAs, SerializeAs};
@@ -237,7 +237,7 @@ pub(crate) mod serde_bincode_compat {
     /// ```
     #[derive(Debug, Serialize, Deserialize)]
     pub struct OpDepositReceipt<'a, T: Clone> {
-        logs: Cow<'a, Vec<T>>,
+        logs: Cow<'a, [T]>,
         status: bool,
         cumulative_gas_used: u64,
         deposit_nonce: Option<u64>,
@@ -321,8 +321,12 @@ pub(crate) mod serde_bincode_compat {
             // ensure we don't have an invalid poststate variant
             data.transaction.inner.status = data.transaction.inner.status.coerce_status().into();
 
-            let encoded = bincode::serialize(&data).unwrap();
-            let decoded: Data<Log> = bincode::deserialize(&encoded).unwrap();
+            let encoded = bincode::serde::encode_to_vec(&data, bincode::config::legacy()).unwrap();
+            let (decoded, _) = bincode::serde::decode_from_slice::<Data<Log>, _>(
+                &encoded,
+                bincode::config::legacy(),
+            )
+            .unwrap();
             assert_eq!(decoded, data);
         }
     }

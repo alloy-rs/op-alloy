@@ -1,7 +1,7 @@
-use crate::{OpTxType, OpTypedTransaction, TxDeposit};
+use crate::{OpPooledTransaction, OpTxType, OpTypedTransaction, TxDeposit};
 use alloy_consensus::{
     Sealable, Sealed, Signed, Transaction, TxEip1559, TxEip2930, TxEip7702, TxEnvelope, TxLegacy,
-    Typed2718, transaction::RlpEcdsaDecodableTx,
+    Typed2718, error::ValueError, transaction::RlpEcdsaDecodableTx,
 };
 use alloy_eips::{
     eip2718::{Decodable2718, Eip2718Error, Eip2718Result, Encodable2718},
@@ -347,6 +347,32 @@ impl OpTxEnvelope {
         }
     }
 
+    /// Attempts to convert the envelope into the pooled variant.
+    ///
+    /// Returns an error if the envelope's variant is incompatible with the pooled format:
+    /// [`TxDeposit`].
+    pub fn try_into_pooled(self) -> Result<OpPooledTransaction, ValueError<Self>> {
+        match self {
+            Self::Legacy(tx) => Ok(tx.into()),
+            Self::Eip2930(tx) => Ok(tx.into()),
+            Self::Eip1559(tx) => Ok(tx.into()),
+            Self::Eip7702(tx) => Ok(tx.into()),
+            Self::Deposit(tx) => {
+                Err(ValueError::new(tx.into(), "Deposit transactions cannot be pooled"))
+            }
+        }
+    }
+
+    /// Attempts to convert the envelope into the ethereum pooled variant.
+    ///
+    /// Returns an error if the envelope's variant is incompatible with the pooled format:
+    /// [`TxDeposit`].
+    pub fn try_into_eth_pooled(
+        self,
+    ) -> Result<alloy_consensus::transaction::PooledTransaction, ValueError<Self>> {
+        self.try_into_pooled().map(Into::into)
+    }
+
     /// Attempts to convert the optimism variant into an ethereum [`TxEnvelope`].
     ///
     /// Returns the envelope as error if it is a variant unsupported on ethereum: [`TxDeposit`]
@@ -463,14 +489,19 @@ impl OpTxEnvelope {
     }
 
     /// Returns the inner transaction hash.
-    pub fn tx_hash(&self) -> B256 {
+    pub fn hash(&self) -> &B256 {
         match self {
-            Self::Legacy(tx) => *tx.hash(),
-            Self::Eip1559(tx) => *tx.hash(),
-            Self::Eip2930(tx) => *tx.hash(),
-            Self::Eip7702(tx) => *tx.hash(),
-            Self::Deposit(tx) => tx.tx_hash(),
+            Self::Legacy(tx) => tx.hash(),
+            Self::Eip1559(tx) => tx.hash(),
+            Self::Eip2930(tx) => tx.hash(),
+            Self::Eip7702(tx) => tx.hash(),
+            Self::Deposit(tx) => tx.hash_ref(),
         }
+    }
+
+    /// Returns the inner transaction hash.
+    pub fn tx_hash(&self) -> B256 {
+        *self.hash()
     }
 
     /// Return the length of the inner txn, including type byte length
@@ -639,12 +670,170 @@ mod serde_from {
     }
 }
 
+/// Bincode-compatible serde implementation for OpTxEnvelope.
+#[cfg(all(feature = "serde", feature = "serde-bincode-compat"))]
+pub mod serde_bincode_compat {
+    use crate::serde_bincode_compat::TxDeposit;
+    use alloy_consensus::{
+        Sealed, Signed,
+        transaction::serde_bincode_compat::{TxEip1559, TxEip2930, TxEip7702, TxLegacy},
+    };
+    use alloy_primitives::{B256, Signature};
+    use serde::{Deserialize, Deserializer, Serialize, Serializer};
+    use serde_with::{DeserializeAs, SerializeAs};
+
+    /// Bincode-compatible representation of an OpTxEnvelope.
+    #[derive(Debug, Serialize, Deserialize)]
+    pub enum OpTxEnvelope<'a> {
+        /// Legacy variant.
+        Legacy {
+            /// Transaction signature.
+            signature: Signature,
+            /// Borrowed legacy transaction data.
+            transaction: TxLegacy<'a>,
+        },
+        /// EIP-2930 variant.
+        Eip2930 {
+            /// Transaction signature.
+            signature: Signature,
+            /// Borrowed EIP-2930 transaction data.
+            transaction: TxEip2930<'a>,
+        },
+        /// EIP-1559 variant.
+        Eip1559 {
+            /// Transaction signature.
+            signature: Signature,
+            /// Borrowed EIP-1559 transaction data.
+            transaction: TxEip1559<'a>,
+        },
+        /// EIP-7702 variant.
+        Eip7702 {
+            /// Transaction signature.
+            signature: Signature,
+            /// Borrowed EIP-7702 transaction data.
+            transaction: TxEip7702<'a>,
+        },
+        /// Deposit variant.
+        Deposit {
+            /// Precomputed hash.
+            hash: B256,
+            /// Borrowed deposit transaction data.
+            transaction: TxDeposit<'a>,
+        },
+    }
+
+    impl<'a> From<&'a super::OpTxEnvelope> for OpTxEnvelope<'a> {
+        fn from(value: &'a super::OpTxEnvelope) -> Self {
+            match value {
+                super::OpTxEnvelope::Legacy(signed_legacy) => Self::Legacy {
+                    signature: *signed_legacy.signature(),
+                    transaction: signed_legacy.tx().into(),
+                },
+                super::OpTxEnvelope::Eip2930(signed_2930) => Self::Eip2930 {
+                    signature: *signed_2930.signature(),
+                    transaction: signed_2930.tx().into(),
+                },
+                super::OpTxEnvelope::Eip1559(signed_1559) => Self::Eip1559 {
+                    signature: *signed_1559.signature(),
+                    transaction: signed_1559.tx().into(),
+                },
+                super::OpTxEnvelope::Eip7702(signed_7702) => Self::Eip7702 {
+                    signature: *signed_7702.signature(),
+                    transaction: signed_7702.tx().into(),
+                },
+                super::OpTxEnvelope::Deposit(sealed_deposit) => Self::Deposit {
+                    hash: sealed_deposit.seal(),
+                    transaction: sealed_deposit.inner().into(),
+                },
+            }
+        }
+    }
+
+    impl<'a> From<OpTxEnvelope<'a>> for super::OpTxEnvelope {
+        fn from(value: OpTxEnvelope<'a>) -> Self {
+            match value {
+                OpTxEnvelope::Legacy { signature, transaction } => {
+                    Self::Legacy(Signed::new_unhashed(transaction.into(), signature))
+                }
+                OpTxEnvelope::Eip2930 { signature, transaction } => {
+                    Self::Eip2930(Signed::new_unhashed(transaction.into(), signature))
+                }
+                OpTxEnvelope::Eip1559 { signature, transaction } => {
+                    Self::Eip1559(Signed::new_unhashed(transaction.into(), signature))
+                }
+                OpTxEnvelope::Eip7702 { signature, transaction } => {
+                    Self::Eip7702(Signed::new_unhashed(transaction.into(), signature))
+                }
+                OpTxEnvelope::Deposit { hash, transaction } => {
+                    Self::Deposit(Sealed::new_unchecked(transaction.into(), hash))
+                }
+            }
+        }
+    }
+
+    impl SerializeAs<super::OpTxEnvelope> for OpTxEnvelope<'_> {
+        fn serialize_as<S>(source: &super::OpTxEnvelope, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+        {
+            let borrowed = OpTxEnvelope::from(source);
+            borrowed.serialize(serializer)
+        }
+    }
+
+    impl<'de> DeserializeAs<'de, super::OpTxEnvelope> for OpTxEnvelope<'de> {
+        fn deserialize_as<D>(deserializer: D) -> Result<super::OpTxEnvelope, D::Error>
+        where
+            D: Deserializer<'de>,
+        {
+            let borrowed = OpTxEnvelope::deserialize(deserializer)?;
+            Ok(borrowed.into())
+        }
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+        use arbitrary::Arbitrary;
+        use rand::Rng;
+        use serde::{Deserialize, Serialize};
+        use serde_with::serde_as;
+
+        /// Tests a bincode round-trip for OpTxEnvelope using an arbitrary instance.
+        #[test]
+        fn test_op_tx_envelope_bincode_roundtrip_arbitrary() {
+            #[serde_as]
+            #[derive(Debug, PartialEq, Eq, Serialize, Deserialize)]
+            struct Data {
+                // Use the bincode-compatible representation defined in this module.
+                #[serde_as(as = "OpTxEnvelope<'_>")]
+                envelope: super::super::OpTxEnvelope,
+            }
+
+            let mut bytes = [0u8; 1024];
+            rand::rng().fill(bytes.as_mut_slice());
+            let data = Data {
+                envelope: super::super::OpTxEnvelope::arbitrary(&mut arbitrary::Unstructured::new(
+                    &bytes,
+                ))
+                .unwrap(),
+            };
+
+            let encoded = bincode::serde::encode_to_vec(&data, bincode::config::legacy()).unwrap();
+            let (decoded, _) =
+                bincode::serde::decode_from_slice::<Data, _>(&encoded, bincode::config::legacy())
+                    .unwrap();
+            assert_eq!(decoded, data);
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use alloc::vec;
     use alloy_consensus::SignableTransaction;
-    use alloy_primitives::{Address, B256, Bytes, PrimitiveSignature, TxKind, U256, hex};
+    use alloy_primitives::{Address, B256, Bytes, Signature, TxKind, U256, hex};
 
     #[test]
     fn test_tx_gas_limit() {
@@ -660,7 +849,7 @@ mod tests {
         assert!(tx_envelope.is_deposit());
 
         let tx = TxEip1559::default();
-        let sig = PrimitiveSignature::test_signature();
+        let sig = Signature::test_signature();
         let tx_envelope = OpTxEnvelope::Eip1559(tx.into_signed(sig));
         assert!(!tx_envelope.is_system_transaction());
     }
@@ -741,7 +930,7 @@ mod tests {
             input: vec![8].into(),
             access_list: Default::default(),
         };
-        let sig = PrimitiveSignature::test_signature();
+        let sig = Signature::test_signature();
         let tx_signed = tx.into_signed(sig);
         let envelope: OpTxEnvelope = tx_signed.into();
         let encoded = envelope.encoded_2718();
