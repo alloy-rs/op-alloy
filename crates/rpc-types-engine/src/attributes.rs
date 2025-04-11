@@ -1,10 +1,13 @@
 //! Optimism-specific payload attributes.
 
 use alloc::vec::Vec;
-use alloy_eips::eip1559::BaseFeeParams;
-use alloy_primitives::{B64, Bytes};
+use alloy_consensus::transaction::Recovered;
+use alloy_eips::{Decodable2718, eip1559::BaseFeeParams, eip2718::WithEncoded};
+use alloy_primitives::{B64, Bytes, SignatureError};
 use alloy_rpc_types_engine::PayloadAttributes;
-use op_alloy_consensus::{EIP1559ParamError, decode_eip_1559_params, encode_holocene_extra_data};
+use op_alloy_consensus::{
+    EIP1559ParamError, OpTxEnvelope, decode_eip_1559_params, encode_holocene_extra_data,
+};
 
 /// Optimism Payload Attributes
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
@@ -51,6 +54,81 @@ impl OpPayloadAttributes {
     /// Returns (`elasticity`, `denominator`)
     pub fn decode_eip_1559_params(&self) -> Option<(u32, u32)> {
         self.eip_1559_params.map(decode_eip_1559_params)
+    }
+    /// Decode each transaction and return an iterator of decoded `OpTxEnvelope`s.
+    /// Returns iterator over successfully decoded OpTxEnvelope.
+    pub fn try_to_decoded(
+        &self,
+    ) -> impl Iterator<Item = Result<OpTxEnvelope, SignatureError>> + '_ {
+        self.transactions.iter().flatten().map(|tx_bytes| {
+            OpTxEnvelope::decode_2718(&mut tx_bytes.as_ref())
+                .map_err(|_| SignatureError::FromBytes("Failed to decode OpTxEnvelope"))
+        })
+    }
+
+    /// Decode and recover signature from each transaction.
+    pub fn try_to_recovered(
+        &self,
+    ) -> impl Iterator<Item = Result<Recovered<OpTxEnvelope>, SignatureError>> + '_ {
+        self.transactions.iter().flatten().map(|tx_bytes| {
+            let env = OpTxEnvelope::decode_2718(&mut tx_bytes.as_ref())
+                .map_err(|_| SignatureError::FromBytes("Failed to decode OpTxEnvelope"))?;
+
+            let txenv = env
+                .try_into_eth_envelope()
+                .map_err(|_| SignatureError::FromBytes("Failed to convert to eth envelope"))?;
+
+            let recovered = txenv
+                .try_into_recovered()
+                .map_err(|_| SignatureError::FromBytes("Failed to recover signature"))?;
+
+            let recovered_op_tx = OpTxEnvelope::try_from_eth_envelope(recovered.inner().clone())
+                .map_err(|_| {
+                    SignatureError::FromBytes("Failed to convert back from eth envelope")
+                })?;
+
+            Ok(Recovered::new_unchecked(recovered_op_tx, recovered.signer()))
+        })
+    }
+
+    /// Helper: returns first successfully recovered transaction, if any.
+    pub fn try_into_recovered(&self) -> Option<Recovered<OpTxEnvelope>> {
+        self.try_to_recovered().find_map(Result::ok)
+    }
+
+    /// Returns iterator over decoded transactions with their original encoded bytes.
+    pub fn decoded_transactions_with_encoded(
+        &self,
+    ) -> impl Iterator<Item = Result<WithEncoded<OpTxEnvelope>, SignatureError>> + '_ {
+        self.transactions.iter().flatten().map(|tx_bytes| {
+            let env = OpTxEnvelope::decode_2718(&mut tx_bytes.as_ref())
+                .map_err(|_| SignatureError::FromBytes("Failed to decode OpTxEnvelope"))?;
+
+            let op_tx = OpTxEnvelope::try_from(env)
+                .map_err(|_| SignatureError::FromBytes("Failed to convert envelope"))?;
+
+            Ok(WithEncoded::new(tx_bytes.clone(), op_tx))
+        })
+    }
+
+    /// Returns iterator over successfully recovered transactions with encoded bytes.
+    pub fn recovered_transactions_with_encoded(
+        &self,
+    ) -> impl Iterator<Item = Result<WithEncoded<Recovered<OpTxEnvelope>>, SignatureError>> + '_
+    {
+        self.transactions.iter().flatten().map(|tx_bytes| {
+            self.try_to_recovered()
+                .find_map(Result::ok)
+                .map(|recovered| WithEncoded::new(tx_bytes.clone(), recovered))
+                .ok_or(SignatureError::FromBytes(
+                    "Recovery error: failed to decode transaction bytes",
+                ))
+        })
+    }
+
+    /// Filter only successfully recovered transactions
+    pub fn recovered_transactions(&self) -> impl Iterator<Item = Recovered<OpTxEnvelope>> + '_ {
+        self.try_to_recovered().filter_map(Result::ok)
     }
 }
 
