@@ -1,7 +1,7 @@
-use crate::{OpTxType, OpTypedTransaction, TxDeposit};
+use crate::{OpPooledTransaction, OpTxType, OpTypedTransaction, TxDeposit};
 use alloy_consensus::{
     Sealable, Sealed, Signed, Transaction, TxEip1559, TxEip2930, TxEip7702, TxEnvelope, TxLegacy,
-    Typed2718, transaction::RlpEcdsaDecodableTx,
+    Typed2718, error::ValueError, transaction::RlpEcdsaDecodableTx,
 };
 use alloy_eips::{
     eip2718::{Decodable2718, Eip2718Error, Eip2718Result, Encodable2718},
@@ -347,6 +347,32 @@ impl OpTxEnvelope {
         }
     }
 
+    /// Attempts to convert the envelope into the pooled variant.
+    ///
+    /// Returns an error if the envelope's variant is incompatible with the pooled format:
+    /// [`TxDeposit`].
+    pub fn try_into_pooled(self) -> Result<OpPooledTransaction, ValueError<Self>> {
+        match self {
+            Self::Legacy(tx) => Ok(tx.into()),
+            Self::Eip2930(tx) => Ok(tx.into()),
+            Self::Eip1559(tx) => Ok(tx.into()),
+            Self::Eip7702(tx) => Ok(tx.into()),
+            Self::Deposit(tx) => {
+                Err(ValueError::new(tx.into(), "Deposit transactions cannot be pooled"))
+            }
+        }
+    }
+
+    /// Attempts to convert the envelope into the ethereum pooled variant.
+    ///
+    /// Returns an error if the envelope's variant is incompatible with the pooled format:
+    /// [`TxDeposit`].
+    pub fn try_into_eth_pooled(
+        self,
+    ) -> Result<alloy_consensus::transaction::PooledTransaction, ValueError<Self>> {
+        self.try_into_pooled().map(Into::into)
+    }
+
     /// Attempts to convert the optimism variant into an ethereum [`TxEnvelope`].
     ///
     /// Returns the envelope as error if it is a variant unsupported on ethereum: [`TxDeposit`]
@@ -371,6 +397,20 @@ impl OpTxEnvelope {
             TxEnvelope::Eip1559(tx) => Ok(tx.into()),
             tx @ TxEnvelope::Eip4844(_) => Err(tx),
             TxEnvelope::Eip7702(tx) => Ok(tx.into()),
+        }
+    }
+
+    /// Returns mutable access to the input bytes.
+    ///
+    /// Caution: modifying this will cause side-effects on the hash.
+    #[doc(hidden)]
+    pub fn input_mut(&mut self) -> &mut Bytes {
+        match self {
+            Self::Eip1559(tx) => &mut tx.tx_mut().input,
+            Self::Eip2930(tx) => &mut tx.tx_mut().input,
+            Self::Legacy(tx) => &mut tx.tx_mut().input,
+            Self::Eip7702(tx) => &mut tx.tx_mut().input,
+            Self::Deposit(tx) => &mut tx.inner_mut().input,
         }
     }
 
@@ -637,7 +677,7 @@ pub mod serde_bincode_compat {
         Sealed, Signed,
         transaction::serde_bincode_compat::{TxEip1559, TxEip2930, TxEip7702, TxLegacy},
     };
-    use alloy_primitives::{B256, PrimitiveSignature as Signature};
+    use alloy_primitives::{B256, Signature};
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
     use serde_with::{DeserializeAs, SerializeAs};
 
@@ -649,7 +689,6 @@ pub mod serde_bincode_compat {
             /// Transaction signature.
             signature: Signature,
             /// Borrowed legacy transaction data.
-            #[serde(borrow)]
             transaction: TxLegacy<'a>,
         },
         /// EIP-2930 variant.
@@ -657,7 +696,6 @@ pub mod serde_bincode_compat {
             /// Transaction signature.
             signature: Signature,
             /// Borrowed EIP-2930 transaction data.
-            #[serde(borrow)]
             transaction: TxEip2930<'a>,
         },
         /// EIP-1559 variant.
@@ -665,7 +703,6 @@ pub mod serde_bincode_compat {
             /// Transaction signature.
             signature: Signature,
             /// Borrowed EIP-1559 transaction data.
-            #[serde(borrow)]
             transaction: TxEip1559<'a>,
         },
         /// EIP-7702 variant.
@@ -673,7 +710,6 @@ pub mod serde_bincode_compat {
             /// Transaction signature.
             signature: Signature,
             /// Borrowed EIP-7702 transaction data.
-            #[serde(borrow)]
             transaction: TxEip7702<'a>,
         },
         /// Deposit variant.
@@ -681,7 +717,6 @@ pub mod serde_bincode_compat {
             /// Precomputed hash.
             hash: B256,
             /// Borrowed deposit transaction data.
-            #[serde(borrow)]
             transaction: TxDeposit<'a>,
         },
     }
@@ -783,8 +818,10 @@ pub mod serde_bincode_compat {
                 .unwrap(),
             };
 
-            let encoded = bincode::serialize(&data).unwrap();
-            let decoded: Data = bincode::deserialize(&encoded).unwrap();
+            let encoded = bincode::serde::encode_to_vec(&data, bincode::config::legacy()).unwrap();
+            let (decoded, _) =
+                bincode::serde::decode_from_slice::<Data, _>(&encoded, bincode::config::legacy())
+                    .unwrap();
             assert_eq!(decoded, data);
         }
     }
@@ -795,7 +832,7 @@ mod tests {
     use super::*;
     use alloc::vec;
     use alloy_consensus::SignableTransaction;
-    use alloy_primitives::{Address, B256, Bytes, PrimitiveSignature, TxKind, U256, hex};
+    use alloy_primitives::{Address, B256, Bytes, Signature, TxKind, U256, hex};
 
     #[test]
     fn test_tx_gas_limit() {
@@ -811,7 +848,7 @@ mod tests {
         assert!(tx_envelope.is_deposit());
 
         let tx = TxEip1559::default();
-        let sig = PrimitiveSignature::test_signature();
+        let sig = Signature::test_signature();
         let tx_envelope = OpTxEnvelope::Eip1559(tx.into_signed(sig));
         assert!(!tx_envelope.is_system_transaction());
     }
@@ -892,7 +929,7 @@ mod tests {
             input: vec![8].into(),
             access_list: Default::default(),
         };
-        let sig = PrimitiveSignature::test_signature();
+        let sig = Signature::test_signature();
         let tx_signed = tx.into_signed(sig);
         let envelope: OpTxEnvelope = tx_signed.into();
         let encoded = envelope.encoded_2718();

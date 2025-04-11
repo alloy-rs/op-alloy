@@ -5,12 +5,56 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.13.0](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.13.0) - 2025-04-09
+
+### Dependencies
+
+- Alloy 1.0 ([#493](https://github.com/alloy-rs/op-alloy/issues/493))
+- [deps] Bincode 2.0 ([#491](https://github.com/alloy-rs/op-alloy/issues/491))
+
+### Features
+
+- Add input mut ([#478](https://github.com/alloy-rs/op-alloy/issues/478))
+- Add missing conversions ([#492](https://github.com/alloy-rs/op-alloy/issues/492))
+
+## [0.12.2](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.12.2) - 2025-04-09
+
+### Miscellaneous Tasks
+
+- Release 0.12.2
+- Rm borrow attr ([#490](https://github.com/alloy-rs/op-alloy/issues/490))
+
+## [0.12.1](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.12.1) - 2025-04-09
+
+### Bug Fixes
+
+- [rpc-types-engine] Fix `PayloadHash` for V3 + V4 topic ([#482](https://github.com/alloy-rs/op-alloy/issues/482))
+
+### Features
+
+- [rpc-types-engine] SSZ Payload Encoding ([#485](https://github.com/alloy-rs/op-alloy/issues/485))
+- Add hash ref function ([#483](https://github.com/alloy-rs/op-alloy/issues/483))
+
+### Miscellaneous Tasks
+
+- Release 0.12.1
+- Clippy happy ([#487](https://github.com/alloy-rs/op-alloy/issues/487))
+- Implement serde_bincode_compat for envelope ([#486](https://github.com/alloy-rs/op-alloy/issues/486))
+- Remove op-alloy-flz crate and dep ([#484](https://github.com/alloy-rs/op-alloy/issues/484))
+
 ## [0.12.0](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.12.0) - 2025-03-28
 
 ### Dependencies
 
 - Bump alloy 0.13 ([#481](https://github.com/alloy-rs/op-alloy/issues/481))
+
+### Miscellaneous Tasks
+
+- Release 0.12.0
 
 ## [0.11.3](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.11.3) - 2025-03-26
