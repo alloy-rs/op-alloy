@@ -4,6 +4,7 @@ use alloc::vec::Vec;
 use alloy_consensus::transaction::Recovered;
 use alloy_eips::{Decodable2718, eip1559::BaseFeeParams, eip2718::WithEncoded};
 use alloy_primitives::{B64, Bytes, SignatureError};
+use alloy_rlp::Result;
 use alloy_rpc_types_engine::PayloadAttributes;
 use op_alloy_consensus::{
     EIP1559ParamError, OpTxEnvelope, decode_eip_1559_params, encode_holocene_extra_data,
@@ -91,26 +92,20 @@ impl OpPayloadAttributes {
         })
     }
 
-    /// Helper: returns first successfully recovered transaction, if any.
-    pub fn try_into_recovered(&self) -> Option<Recovered<OpTxEnvelope>> {
-        self.try_to_recovered().find_map(Result::ok)
-    }
-
     /// Returns iterator over decoded transactions with their original encoded bytes.
     pub fn decoded_transactions_with_encoded(
         &self,
     ) -> impl Iterator<Item = Result<WithEncoded<OpTxEnvelope>, SignatureError>> + '_ {
-        self.transactions.iter().flatten().map(|tx_bytes| {
-            let env = OpTxEnvelope::decode_2718(&mut tx_bytes.as_ref())
-                .map_err(|_| SignatureError::FromBytes("Failed to decode OpTxEnvelope"))?;
+        let mut decoded_iter = self.try_to_decoded();
 
-            let op_tx = OpTxEnvelope::try_from(env)
-                .map_err(|_| SignatureError::FromBytes("Failed to convert envelope"))?;
+        self.transactions.iter().flatten().map(move |tx_bytes| {
+            let decoded = decoded_iter
+                .next()
+                .ok_or(SignatureError::FromBytes("Mismatched decoded transaction"))?;
 
-            Ok(WithEncoded::new(tx_bytes.clone(), op_tx))
+            decoded.map(|op_tx| WithEncoded::new(tx_bytes.clone(), op_tx))
         })
     }
-
     /// Returns iterator over successfully recovered transactions with encoded bytes.
     pub fn recovered_transactions_with_encoded(
         &self,
