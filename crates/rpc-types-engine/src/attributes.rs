@@ -85,21 +85,11 @@ impl OpPayloadAttributes {
     ) -> impl Iterator<Item = Result<Recovered<OpTxEnvelope>, SignatureError>> + '_ {
         self.decoded_transactions_with_encoded().map(|res| {
             res.and_then(|with| {
-                let eth_env = with
-                    .into_value()
-                    .try_into_eth_envelope()
-                    .map_err(|_| SignatureError::FromBytes("Failed to convert to eth envelope"))?;
+                let op_tx = with.into_value();
 
-                let recovered = eth_env
+                op_tx
                     .try_into_recovered()
-                    .map_err(|_| SignatureError::FromBytes("Failed to recover signature"))?;
-
-                let recovered_op_tx =
-                    OpTxEnvelope::try_from_eth_envelope(recovered.inner().clone()).map_err(
-                        |_| SignatureError::FromBytes("Failed to convert back from eth envelope"),
-                    )?;
-
-                Ok(Recovered::new_unchecked(recovered_op_tx, recovered.signer()))
+                    .map_err(|_| SignatureError::FromBytes("Failed to recover signature"))
             })
         })
     }
