@@ -56,6 +56,7 @@ impl OpPayloadAttributes {
     pub fn decode_eip_1559_params(&self) -> Option<(u32, u32)> {
         self.eip_1559_params.map(decode_eip_1559_params)
     }
+
     /// Decode each transaction and return an iterator of decoded `OpTxEnvelope`s.
     /// Returns iterator over successfully decoded OpTxEnvelope.
     pub fn try_to_decoded(
@@ -67,58 +68,56 @@ impl OpPayloadAttributes {
         })
     }
 
-    /// Decode and recover signature from each transaction.
-    pub fn try_to_recovered(
-        &self,
-    ) -> impl Iterator<Item = Result<Recovered<OpTxEnvelope>, SignatureError>> + '_ {
-        self.transactions.iter().flatten().map(|tx_bytes| {
-            let env = OpTxEnvelope::decode_2718(&mut tx_bytes.as_ref())
-                .map_err(|_| SignatureError::FromBytes("Failed to decode OpTxEnvelope"))?;
-
-            let txenv = env
-                .try_into_eth_envelope()
-                .map_err(|_| SignatureError::FromBytes("Failed to convert to eth envelope"))?;
-
-            let recovered = txenv
-                .try_into_recovered()
-                .map_err(|_| SignatureError::FromBytes("Failed to recover signature"))?;
-
-            let recovered_op_tx = OpTxEnvelope::try_from_eth_envelope(recovered.inner().clone())
-                .map_err(|_| {
-                    SignatureError::FromBytes("Failed to convert back from eth envelope")
-                })?;
-
-            Ok(Recovered::new_unchecked(recovered_op_tx, recovered.signer()))
-        })
-    }
-
     /// Returns iterator over decoded transactions with their original encoded bytes.
     pub fn decoded_transactions_with_encoded(
         &self,
     ) -> impl Iterator<Item = Result<WithEncoded<OpTxEnvelope>, SignatureError>> + '_ {
-        let mut decoded_iter = self.try_to_decoded();
+        self.transactions
+            .iter()
+            .flatten()
+            .zip(self.try_to_decoded())
+            .map(|(tx_bytes, result)| result.map(|op_tx| WithEncoded::new(tx_bytes.clone(), op_tx)))
+    }
 
-        self.transactions.iter().flatten().map(move |tx_bytes| {
-            let decoded = decoded_iter
-                .next()
-                .ok_or(SignatureError::FromBytes("Mismatched decoded transaction"))?;
+    /// Decode and recover signature from each transaction.
+    pub fn try_to_recovered(
+        &self,
+    ) -> impl Iterator<Item = Result<Recovered<OpTxEnvelope>, SignatureError>> + '_ {
+        self.decoded_transactions_with_encoded().map(|res| {
+            res.and_then(|with| {
+                let eth_env = with
+                    .into_value()
+                    .try_into_eth_envelope()
+                    .map_err(|_| SignatureError::FromBytes("Failed to convert to eth envelope"))?;
 
-            decoded.map(|op_tx| WithEncoded::new(tx_bytes.clone(), op_tx))
+                let recovered = eth_env
+                    .try_into_recovered()
+                    .map_err(|_| SignatureError::FromBytes("Failed to recover signature"))?;
+
+                let recovered_op_tx =
+                    OpTxEnvelope::try_from_eth_envelope(recovered.inner().clone()).map_err(
+                        |_| SignatureError::FromBytes("Failed to convert back from eth envelope"),
+                    )?;
+
+                Ok(Recovered::new_unchecked(recovered_op_tx, recovered.signer()))
+            })
         })
     }
+
     /// Returns iterator over successfully recovered transactions with encoded bytes.
     pub fn recovered_transactions_with_encoded(
         &self,
     ) -> impl Iterator<Item = Result<WithEncoded<Recovered<OpTxEnvelope>>, SignatureError>> + '_
     {
-        self.transactions.iter().flatten().map(|tx_bytes| {
-            self.try_to_recovered()
-                .find_map(Result::ok)
-                .map(|recovered| WithEncoded::new(tx_bytes.clone(), recovered))
-                .ok_or(SignatureError::FromBytes(
-                    "Recovery error: failed to decode transaction bytes",
-                ))
-        })
+        self.decoded_transactions_with_encoded().zip(self.try_to_recovered()).map(
+            |(decoded_result, recovered_result)| match (decoded_result, recovered_result) {
+                (Ok(decoded), Ok(recovered)) => {
+                    let encoded = decoded.encoded_bytes().clone();
+                    Ok(WithEncoded::new(encoded, recovered))
+                }
+                (Err(e), _) | (_, Err(e)) => Err(e),
+            },
+        )
     }
 
     /// Filter only successfully recovered transactions
