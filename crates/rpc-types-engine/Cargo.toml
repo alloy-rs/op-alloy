@@ -16,7 +16,7 @@ workspace = true
 
 [dependencies]
 # Workspace
-op-alloy-consensus = { workspace = true, features = ["k256","arbitrary"] }
+op-alloy-consensus.workspace = true
 
 # Alloy
 alloy-primitives.workspace = true
@@ -61,6 +61,7 @@ serde = [
 	"alloy-rpc-types-engine/serde",
 	"op-alloy-consensus/serde"
 ]
+k256 = ["op-alloy-consensus/k256"]
 arbitrary = [
   "std",
   "dep:arbitrary",
