@@ -105,7 +105,7 @@ impl From<Signed<OpTypedTransaction>> for OpTxEnvelope {
 
 impl From<(OpTypedTransaction, Signature)> for OpTxEnvelope {
     fn from(value: (OpTypedTransaction, Signature)) -> Self {
-        OpTxEnvelope::new_unhashed(value.0, value.1)
+        Self::new_unhashed(value.0, value.1)
     }
 }
 
