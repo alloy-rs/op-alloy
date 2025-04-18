@@ -45,7 +45,7 @@ impl OpTxType {
     pub const ALL: [Self; 5] =
         [Self::Legacy, Self::Eip2930, Self::Eip1559, Self::Eip7702, Self::Deposit];
 
-    /// Returns `true` if transaction is deposit type.
+    /// Returns `true` if the type is [`OpTxType::Deposit`].
     pub const fn is_deposit(&self) -> bool {
         matches!(self, Self::Deposit)
     }
