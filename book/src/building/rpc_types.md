@@ -14,7 +14,7 @@ Related to receipts, [`op-alloy-rpc-types`][rpc] contains the
 <!-- Links -->
 
 [rpc]: https://crates.io/crates/op-alloy-rpc-types
-[typed]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/enum.OpTypedTransaction.html
+[typed]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/transaction/enum.OpTypedTransaction.html
 [tx]: https://docs.rs/op-alloy-rpc-types/latest/op_alloy_rpc_types/transaction/struct.Transaction.html
 [req]: https://docs.rs/op-alloy-rpc-types/latest/op_alloy_rpc_types/receipt/struct.OpTransactionReceipt.html
 [receipt]: https://docs.rs/op-alloy-rpc-types/latest/op_alloy_rpc_types/receipt/struct.OpTransactionReceipt.html

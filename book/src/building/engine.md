@@ -22,9 +22,9 @@ from [`alloy-rpc-types-engine`][alloy-engine].
 <!-- Links -->
 
 [alloy-engine]: https://crates.io/crates/alloy-rpc-types-engine
-[v3]: https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/struct.OpExecutionPayloadEnvelopeV3.html
-[v4]: https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/struct.OpExecutionPayloadEnvelopeV4.html
-[parent]: https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/struct.OpAttributesWithParent.html
+[v3]: https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/payload/v3/struct.OpExecutionPayloadEnvelopeV3.html
+[v4]: https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/payload/v4/struct.OpExecutionPayloadEnvelopeV4.html
+[parent]: https://docs.rs/op-alloy-rpc-types-engine/0.9.5/op_alloy_rpc_types_engine/struct.OpAttributesWithParent.html
 [pa]: https://docs.rs/alloy-rpc-types-engine/latest/alloy_rpc_types_engine/payload/struct.PayloadAttributes.html
 [attributes]: https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/struct.OpPayloadAttributes.html
 [engine]: https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/struct.OpAttributesWithParent.html

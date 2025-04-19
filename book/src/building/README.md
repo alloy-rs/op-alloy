@@ -15,11 +15,11 @@ Some of the primary crates and their types are listed below.
 <!-- Links -->
 
 [op-block]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/type.OpBlock.html
-[op-tx-envelope]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/enum.OpTxEnvelope.html
+[op-tx-envelope]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/transaction/enum.OpTxEnvelope.html
 [op-rx-envelope]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/enum.OpReceiptEnvelope.html
 
 [op-payload-attributes]: https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/struct.OpPayloadAttributes.html
-[op-attributes-with-parent]: https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/struct.OpAttributesWithParent.html
+[op-attributes-with-parent]: https://docs.rs/op-alloy-rpc-types-engine/0.9.5/op_alloy_rpc_types_engine/struct.OpAttributesWithParent.html
 
 [op-alloy-consensus]: https://crates.io/crates/op-alloy-consensus
 [op-alloy-rpc-types-engine]: https://crates.io/crates/op-alloy-rpc-types-engine
