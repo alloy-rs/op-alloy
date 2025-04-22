@@ -508,11 +508,10 @@ Some of the primary crates and their types are listed below.</p>
 <p>[<code>RollupConfig</code>][rollup-config] and [<code>SystemConfig</code>][system-config] types.</p>
 <ul>
 <li><a href="https://crates.io/crates/op-alloy-consensus"><code>op-alloy-consensus</code></a> provides <a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/type.OpBlock.html"><code>OpBlock</code></a>,
-<a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/enum.OpTxEnvelope.html"><code>OpTxEnvelope</code></a>, <a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/enum.OpReceiptEnvelope.html"><code>OpReceiptEnvelope</code></a>,
+<a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/transaction/enum.OpTxEnvelope.html"><code>OpTxEnvelope</code></a>, <a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/enum.OpReceiptEnvelope.html"><code>OpReceiptEnvelope</code></a>,
 and more.</li>
 <li><a href="https://crates.io/crates/op-alloy-rpc-types-engine"><code>op-alloy-rpc-types-engine</code></a> provides the
-<a href="https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/struct.OpPayloadAttributes.html"><code>OpPayloadAttributes</code></a> and
-<a href="https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/struct.OpAttributesWithParent.html"><code>OpAttributesWithParent</code></a>.</li>
+<a href="https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/struct.OpPayloadAttributes.html"><code>OpPayloadAttributes</code></a>.</li>
 </ul>
 <!-- Links -->
 <div style="break-before: page; page-break-before: always;"></div><style>
@@ -713,12 +712,9 @@ with the Engine API in the OP Stack.</p>
 <p>Optimism defines a custom payload attributes type called <a href="https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/struct.OpPayloadAttributes.html"><code>OpPayloadAttributes</code></a>.
 <code>OpPayloadAttributes</code> extends alloy's <a href="https://docs.rs/alloy-rpc-types-engine/latest/alloy_rpc_types_engine/payload/struct.PayloadAttributes.html"><code>PayloadAttributes</code></a> with a few fields: transactions,
 a flag for enabling the tx pool, the gas limit, and EIP 1559 parameters.</p>
-<p>Wrapping <code>OpPayloadAttributes</code>, the <a href="https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/struct.OpAttributesWithParent.html"><code>OpAttributesWithParent</code></a> type extends payload
-attributes with the parent block (referenced as an [<code>L2BlockInfo</code>][lbi]) and a flag
-for whether the associated batch is the last batch in the span.</p>
 <p>Optimism also returns a custom type for the <code>engine_getPayload</code> request for both V3 and
-V4 payload envelopes. These are the <a href="https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/struct.OpExecutionPayloadEnvelopeV3.html"><code>OpExecutionPayloadEnvelopeV3</code></a> and
-<a href="https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/struct.OpExecutionPayloadEnvelopeV4.html"><code>OpExecutionPayloadEnvelopeV4</code></a> types, which both wrap payload envelope types
+V4 payload envelopes. These are the <a href="https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/payload/v3/struct.OpExecutionPayloadEnvelopeV3.html"><code>OpExecutionPayloadEnvelopeV3</code></a> and
+<a href="https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/payload/v4/struct.OpExecutionPayloadEnvelopeV4.html"><code>OpExecutionPayloadEnvelopeV4</code></a> types, which both wrap payload envelope types
 from <a href="https://crates.io/crates/alloy-rpc-types-engine"><code>alloy-rpc-types-engine</code></a>.</p>
 <!-- Links -->
 <div style="break-before: page; page-break-before: always;"></div><style>
