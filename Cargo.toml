@@ -64,7 +64,6 @@ alloy-sol-types = { version = "1.0.0", default-features = false }
 alloy-primitives = { version = "1.0.0", default-features = false }
 
 # Serde
-serde_repr = "0.1"
 serde = { version = "1.0", default-features = false, features = [
     "derive",
     "alloc",
@@ -88,11 +87,7 @@ jsonrpsee-core = "0.24"
 jsonrpsee-types = "0.24"
 
 # misc
-cfg-if = "1"
 async-trait = "0.1.87"
-unsigned-varint = "0.8.0"
-spin = { version = "0.9.8", features = ["mutex"] }
-lazy_static = { version = "1.5.0", default-features = false }
 derive_more = { version = "2.0", default-features = false }
 thiserror = { version = "2.0", default-features = false }
 similar-asserts = "1.7"
@@ -109,10 +104,6 @@ proptest = "1.6"
 proptest-derive = "0.5"
 tokio = "1"
 rstest = "0.24.0"
-
-## crypto
-c-kzg = { version = "1.0", default-features = false }
-k256 = { version = "0.13", default-features = false, features = ["ecdsa"] }
 
 # [patch.crates-io]
 # alloy-eips = { git = "https://github.com/alloy-rs/alloy", rev = "a4e7099" }
