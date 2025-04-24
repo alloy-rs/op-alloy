@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.15.1](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.15.1) - 2025-04-24
+
+### Dependencies
+
+- Rm unused deps ([#503](https://github.com/alloy-rs/op-alloy/issues/503))
+
+### Features
+
+- [consensus] Add interop block replacement deposit source ([#505](https://github.com/alloy-rs/op-alloy/issues/505))
+
+### Miscellaneous Tasks
+
+- Add new_unchecked ([#504](https://github.com/alloy-rs/op-alloy/issues/504))
+
 ## [0.15.0](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.15.0) - 2025-04-23
 
@@ -18,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.15.0
 - Add is_deposit to optxtype ([#500](https://github.com/alloy-rs/op-alloy/issues/500))
 
 ## [0.14.1](https://github.com/alloy-rs/op-alloy
