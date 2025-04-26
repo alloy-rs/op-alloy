@@ -25,10 +25,6 @@ To get started with op-alloy, add its crates as a dependency and take your first
 
 Walk through types and functionality available in different `op-alloy` crates.
 
-### [Examples](./examples/README.md)
-
-Get hands-on experience using `op-alloy` crates for critical OP Stack functionality.
-
 ### [Contributing](./CONTRIBUTING.md)
 
 Contributors are welcome! It is built and maintained by Alloy contributors,
