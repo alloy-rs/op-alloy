@@ -7,7 +7,8 @@ use alloy_rpc_types_engine::{
 };
 use alloy_transport::{Transport, TransportResult};
 use op_alloy_rpc_types_engine::{
-    OpExecutionPayloadEnvelopeV3, OpExecutionPayloadEnvelopeV4, OpPayloadAttributes, OpExecutionPayloadV4,
+    OpExecutionPayloadEnvelopeV3, OpExecutionPayloadEnvelopeV4, OpExecutionPayloadV4,
+    OpPayloadAttributes,
 };
 
 /// Extension trait that gives access to Optimism engine API RPC methods.
