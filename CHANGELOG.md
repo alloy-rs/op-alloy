@@ -5,8 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.15.1](https://github.com/alloy-rs/op-alloy
-/releases/tag/v0.15.1) - 2025-04-24
+## [0.15.2](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.15.2) - 2025-05-02
+
+### Bug Fixes
+
+- [engine] Use OpExecutionPayloadV4 ([#509](https://github.com/alloy-rs/op-alloy/issues/509))
+- Remove broken Examples links ([#507](https://github.com/alloy-rs/op-alloy/issues/507))
 
 ### Dependencies
 
@@ -18,7 +23,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.15.1 ([#506](https://github.com/alloy-rs/op-alloy/issues/506))
 - Add new_unchecked ([#504](https://github.com/alloy-rs/op-alloy/issues/504))
+
+### Other
+
+- Update OpTxEnvelope documentation link path ([#508](https://github.com/alloy-rs/op-alloy/issues/508))
 
 ## [0.15.0](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.15.0) - 2025-04-23
