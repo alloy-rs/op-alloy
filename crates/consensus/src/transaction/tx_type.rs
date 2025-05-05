@@ -142,7 +142,7 @@ impl Typed2718 for OpTxType {
 
 impl IsTyped2718 for OpTxType {
     fn is_type(type_id: u8) -> bool {
-        // legacy | eip2930 | eip1559 | eip7702 | deposit 
+        // legacy | eip2930 | eip1559 | eip7702 | deposit
         matches!(type_id, 0 | 1 | 2 | 4 | 126)
     }
 }

@@ -4,11 +4,10 @@ use alloy_consensus::{
     TxEnvelope, TxLegacy, Typed2718, error::ValueError, transaction::RlpEcdsaDecodableTx,
 };
 use alloy_eips::{
-    eip2718::{Decodable2718, Eip2718Error, Eip2718Result, Encodable2718},
+    eip2718::{Decodable2718, Eip2718Error, Eip2718Result, Encodable2718, IsTyped2718},
     eip2930::AccessList,
     eip7702::SignedAuthorization,
 };
-use alloy_eips::eip2718::IsTyped2718;
 use alloy_primitives::{Address, B256, Bytes, Signature, TxKind, U256};
 use alloy_rlp::{Decodable, Encodable};
 
