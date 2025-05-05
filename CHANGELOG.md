@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.15.2
 - Release 0.15.1 ([#506](https://github.com/alloy-rs/op-alloy/issues/506))
 - Add new_unchecked ([#504](https://github.com/alloy-rs/op-alloy/issues/504))
 
