@@ -2,7 +2,7 @@
 
 use super::OpTxType;
 use alloc::vec::Vec;
-use alloy_consensus::{Sealable, Transaction, TxType, Typed2718};
+use alloy_consensus::{Sealable, Transaction, Typed2718};
 use alloy_eips::{
     eip2718::{Decodable2718, Eip2718Error, Eip2718Result, Encodable2718, IsTyped2718},
     eip2930::AccessList,
