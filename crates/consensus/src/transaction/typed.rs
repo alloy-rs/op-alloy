@@ -4,6 +4,7 @@ use alloy_consensus::{
     transaction::RlpEcdsaEncodableTx,
 };
 use alloy_eips::{Encodable2718, eip2930::AccessList};
+use alloy_eips::eip2718::IsTyped2718;
 use alloy_primitives::{Address, B256, Bytes, ChainId, Signature, TxHash, TxKind, bytes::BufMut};
 
 /// The TypedTransaction enum represents all Ethereum transaction request types, modified for the OP
@@ -164,6 +165,12 @@ impl Typed2718 for OpTypedTransaction {
             Self::Eip7702(_) => OpTxType::Eip7702 as u8,
             Self::Deposit(_) => OpTxType::Deposit as u8,
         }
+    }
+}
+
+impl IsTyped2718 for OpTypedTransaction {
+    fn is_type(type_id: u8) -> bool {
+        <OpTxType as IsTyped2718>::is_type(type_id)
     }
 }
 

@@ -8,6 +8,7 @@ use alloy_eips::{
     eip2930::AccessList,
     eip7702::SignedAuthorization,
 };
+use alloy_eips::eip2718::IsTyped2718;
 use alloy_primitives::{Address, B256, Bytes, Signature, TxKind, U256};
 use alloy_rlp::{Decodable, Encodable};
 
@@ -140,6 +141,12 @@ impl Typed2718 for OpTxEnvelope {
             Self::Eip7702(tx) => tx.tx().ty(),
             Self::Deposit(tx) => tx.ty(),
         }
+    }
+}
+
+impl IsTyped2718 for OpTxEnvelope {
+    fn is_type(type_id: u8) -> bool {
+        <OpTxType as IsTyped2718>::is_type(type_id)
     }
 }
 

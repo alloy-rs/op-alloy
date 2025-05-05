@@ -15,6 +15,7 @@ use alloy_eips::{
 use alloy_primitives::{B256, Bytes, ChainId, Signature, TxHash, TxKind, U256, bytes};
 use alloy_rlp::{Decodable, Encodable, Header};
 use core::hash::{Hash, Hasher};
+use alloy_eips::eip2718::IsTyped2718;
 
 /// All possible transactions that can be included in a response to `GetPooledTransactions`.
 /// A response to `GetPooledTransactions`. This can include a typed signed transaction, but cannot
@@ -436,6 +437,13 @@ impl Typed2718 for OpPooledTransaction {
             Self::Eip1559(tx) => tx.tx().ty(),
             Self::Eip7702(tx) => tx.tx().ty(),
         }
+    }
+}
+
+impl IsTyped2718 for OpPooledTransaction {
+    fn is_type(type_id: u8) -> bool {
+        // legacy | eip2930 | eip1559 | eip7702  
+        matches!(type_id, 0 | 1 | 2 | 4 )
     }
 }
 
