@@ -440,7 +440,7 @@ mod tests {
         };
 
         assert_eq!(tx.source_hash(), Some(B256::default()));
-        assert_eq!(tx.mint(), None);
+        assert_eq!(tx.mint(), Some(0));
         assert!(!tx.is_system_transaction());
     }
 
