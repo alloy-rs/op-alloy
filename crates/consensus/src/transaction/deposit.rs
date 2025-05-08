@@ -8,9 +8,7 @@ use alloy_eips::{
     eip2930::AccessList,
 };
 use alloy_primitives::{Address, B256, Bytes, ChainId, Signature, TxHash, TxKind, U256, keccak256};
-use alloy_rlp::{
-    Buf, BufMut, Decodable, EMPTY_STRING_CODE, Encodable, Error as DecodeError, Header,
-};
+use alloy_rlp::{BufMut, Decodable, Encodable, Header};
 use core::mem;
 
 /// Deposit transactions, also known as deposits are initiated on L1, and executed on L2.
@@ -70,12 +68,7 @@ impl TxDeposit {
             source_hash: Decodable::decode(buf)?,
             from: Decodable::decode(buf)?,
             to: Decodable::decode(buf)?,
-            mint: if *buf.first().ok_or(DecodeError::InputTooShort)? == EMPTY_STRING_CODE {
-                buf.advance(1);
-                0
-            } else {
-                Decodable::decode(buf)?
-            },
+            mint: Decodable::decode(buf)?,
             value: Decodable::decode(buf)?,
             gas_limit: Decodable::decode(buf)?,
             is_system_transaction: Decodable::decode(buf)?,
@@ -123,11 +116,7 @@ impl TxDeposit {
         self.source_hash.encode(out);
         self.from.encode(out);
         self.to.encode(out);
-        if self.mint == 0 {
-            out.put_u8(EMPTY_STRING_CODE);
-        } else {
-            self.mint.encode(out);
-        }
+        self.mint.encode(out);
         self.value.encode(out);
         self.gas_limit.encode(out);
         self.is_system_transaction.encode(out);
@@ -352,8 +341,8 @@ pub trait DepositTransaction: Transaction {
     /// Returns the optional mint value of the deposit transaction.
     ///
     /// # Returns
-    /// An `Option<u128>` representing the ETH value to mint on L2, if any.
-    fn mint(&self) -> Option<u128>;
+    /// An `u128` representing the ETH value to mint on L2, if any.
+    fn mint(&self) -> u128;
 
     /// Indicates whether the transaction is exempt from the L2 gas limit.
     ///
@@ -369,8 +358,8 @@ impl DepositTransaction for TxDeposit {
     }
 
     #[inline]
-    fn mint(&self) -> Option<u128> {
-        Some(self.mint)
+    fn mint(&self) -> u128 {
+        self.mint
     }
 
     #[inline]
@@ -422,7 +411,7 @@ mod tests {
         };
 
         assert_eq!(tx.source_hash(), Some(B256::with_last_byte(42)));
-        assert_eq!(tx.mint(), Some(100));
+        assert_eq!(tx.mint(), 100);
         assert!(tx.is_system_transaction());
     }
 
@@ -440,7 +429,7 @@ mod tests {
         };
 
         assert_eq!(tx.source_hash(), Some(B256::default()));
-        assert_eq!(tx.mint(), Some(0));
+        assert_eq!(tx.mint(), 0);
         assert!(!tx.is_system_transaction());
     }
 
@@ -459,7 +448,7 @@ mod tests {
         };
 
         assert_eq!(tx.source_hash(), Some(B256::default()));
-        assert_eq!(tx.mint(), Some(200));
+        assert_eq!(tx.mint(), 200);
         assert!(!tx.is_system_transaction());
         assert_eq!(tx.kind(), TxKind::Call(contract_address));
     }
@@ -572,6 +561,30 @@ mod tests {
         let len_without_header = tx_deposit.eip2718_encoded_length();
 
         assert!(total_len > len_without_header);
+    }
+    #[test]
+    fn test_deposit_tx_roundtrip() {
+        let raw_txs = [
+            "7ef8f8a0871ec5fb6afe7e5ae950bbb4cfd7d7cb277b413e67da806d50834a814b14c9f494deaddeaddeaddeaddeaddeaddeaddeaddead00019442000000000000000000000000000000000000158080830f424080b8a4440a5e20000008dd00101c12000000000000000400000000681c941f0000000001566261000000000000000000000000000000000000000000000000000000005f629c020000000000000000000000000000000000000000000000000000000000000001937badfbcce566e0ba932a3f7659644aa0c6ef019541d3134a1d8cb9f84d45c70000000000000000000000005050f69a9786f081509234f1a7f4684b5e5b76c9",
+        ];
+
+        for raw_tx_hex in raw_txs {
+            let raw_tx = hex::decode(raw_tx_hex).unwrap();
+
+            let tx = TxDeposit::typed_decode(raw_tx[0], &mut &raw_tx[1..]).unwrap();
+            let mut encoded = BytesMut::new();
+            tx.encode_2718(&mut encoded);
+            assert_eq!(&encoded[..], &raw_tx[..], "Encoded bytes don't match original");
+
+            let tx_from_fields = TxDeposit::rlp_decode(&mut &raw_tx[1..]).unwrap();
+            let mut encoded_fields = BytesMut::new();
+            tx_from_fields.rlp_encode(&mut encoded_fields);
+            assert_eq!(
+                &encoded_fields[..],
+                &raw_tx[1..],
+                "RLP encoded fields don't match original"
+            );
+        }
     }
 }
 

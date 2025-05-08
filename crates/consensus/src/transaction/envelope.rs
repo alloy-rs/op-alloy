@@ -972,7 +972,7 @@ mod tests {
 
         let tx = OpTxEnvelope::decode_2718(&mut b[..].as_ref()).unwrap();
         let deposit = tx.as_deposit().unwrap();
-        assert!(deposit.mint == 0);
+        assert_eq!(deposit.mint, 0);
     }
 
     #[test]
