@@ -571,7 +571,7 @@ mod tests {
         for raw_tx_hex in raw_txs {
             let raw_tx = hex::decode(raw_tx_hex).unwrap();
 
-            let tx = TxDeposit::typed_decode(raw_tx[0], &mut &raw_tx[1..]).unwrap();
+            let tx = TxDeposit::decode_2718(&mut raw_tx.as_ref()).unwrap();
             let mut encoded = BytesMut::new();
             tx.encode_2718(&mut encoded);
             assert_eq!(&encoded[..], &raw_tx[..], "Encoded bytes don't match original");
