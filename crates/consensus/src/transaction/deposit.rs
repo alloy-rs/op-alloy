@@ -28,8 +28,8 @@ pub struct TxDeposit {
     #[cfg_attr(feature = "serde", serde(default, skip_serializing_if = "TxKind::is_create"))]
     pub to: TxKind,
     /// The ETH value to mint on L2.
-    #[cfg_attr(feature = "serde", serde(default, with = "alloy_serde::quantity::opt"))]
-    pub mint: Option<u128>,
+    #[cfg_attr(feature = "serde", serde(default, with = "alloy_serde::quantity"))]
+    pub mint: u128,
     ///  The ETH value to send to the recipient account.
     pub value: U256,
     /// The gas limit for the L2 transaction.
@@ -72,9 +72,9 @@ impl TxDeposit {
             to: Decodable::decode(buf)?,
             mint: if *buf.first().ok_or(DecodeError::InputTooShort)? == EMPTY_STRING_CODE {
                 buf.advance(1);
-                None
+                0
             } else {
-                Some(Decodable::decode(buf)?)
+                Decodable::decode(buf)?
             },
             value: Decodable::decode(buf)?,
             gas_limit: Decodable::decode(buf)?,
@@ -110,7 +110,7 @@ impl TxDeposit {
         self.source_hash.length()
             + self.from.length()
             + self.to.length()
-            + self.mint.map_or(1, |mint| mint.length())
+            + self.mint.length()
             + self.value.length()
             + self.gas_limit.length()
             + self.is_system_transaction.length()
@@ -123,10 +123,10 @@ impl TxDeposit {
         self.source_hash.encode(out);
         self.from.encode(out);
         self.to.encode(out);
-        if let Some(mint) = self.mint {
-            mint.encode(out);
-        } else {
+        if self.mint == 0 {
             out.put_u8(EMPTY_STRING_CODE);
+        } else {
+            self.mint.encode(out);
         }
         self.value.encode(out);
         self.gas_limit.encode(out);
@@ -140,7 +140,7 @@ impl TxDeposit {
         mem::size_of::<B256>() + // source_hash
         mem::size_of::<Address>() + // from
         self.to.size() + // to
-        mem::size_of::<Option<u128>>() + // mint
+        mem::size_of::<u128>() + // mint
         mem::size_of::<U256>() + // value
         mem::size_of::<u128>() + // gas_limit
         mem::size_of::<bool>() + // is_system_transaction
@@ -370,7 +370,7 @@ impl DepositTransaction for TxDeposit {
 
     #[inline]
     fn mint(&self) -> Option<u128> {
-        self.mint
+        Some(self.mint)
     }
 
     #[inline]
@@ -414,7 +414,7 @@ mod tests {
             source_hash: B256::with_last_byte(42),
             from: Address::default(),
             to: TxKind::default(),
-            mint: Some(100),
+            mint: 100,
             value: U256::from(1000),
             gas_limit: 50000,
             is_system_transaction: true,
@@ -432,7 +432,7 @@ mod tests {
             source_hash: B256::default(),
             from: Address::default(),
             to: TxKind::default(),
-            mint: None,
+            mint: 0,
             value: U256::default(),
             gas_limit: 50000,
             is_system_transaction: false,
@@ -451,7 +451,7 @@ mod tests {
             source_hash: B256::default(),
             from: Address::default(),
             to: TxKind::Call(contract_address),
-            mint: Some(200),
+            mint: 200,
             value: U256::from(500),
             gas_limit: 100000,
             is_system_transaction: false,
@@ -481,7 +481,7 @@ mod tests {
             source_hash: B256::default(),
             from: Address::default(),
             to: TxKind::default(),
-            mint: Some(100),
+            mint: 100,
             value: U256::default(),
             gas_limit: 50000,
             is_system_transaction: true,
@@ -501,7 +501,7 @@ mod tests {
             source_hash: B256::default(),
             from: Address::default(),
             to: TxKind::default(),
-            mint: Some(100),
+            mint: 100,
             value: U256::default(),
             gas_limit: 50000,
             is_system_transaction: true,
@@ -523,7 +523,7 @@ mod tests {
             source_hash: B256::default(),
             from: Address::default(),
             to: TxKind::default(),
-            mint: Some(100),
+            mint: 100,
             value: U256::default(),
             gas_limit: 50000,
             is_system_transaction: true,
@@ -539,7 +539,7 @@ mod tests {
             source_hash: B256::default(),
             from: Address::default(),
             to: TxKind::default(),
-            mint: Some(100),
+            mint: 100,
             value: U256::default(),
             gas_limit: 50000,
             is_system_transaction: true,
@@ -561,7 +561,7 @@ mod tests {
             source_hash: B256::default(),
             from: Address::default(),
             to: TxKind::default(),
-            mint: Some(100),
+            mint: 100,
             value: U256::default(),
             gas_limit: 50000,
             is_system_transaction: true,
