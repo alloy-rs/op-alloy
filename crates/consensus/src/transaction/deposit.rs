@@ -605,7 +605,7 @@ pub(super) mod serde_bincode_compat {
         #[serde(default)]
         to: TxKind,
         #[serde(default)]
-        mint: Option<u128>,
+        mint: u128,
         value: U256,
         gas_limit: u64,
         is_system_transaction: bool,
