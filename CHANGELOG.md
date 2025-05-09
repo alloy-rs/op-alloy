@@ -5,11 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.15.5](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.15.5) - 2025-05-09
+
+### Bug Fixes
+
+- Ensure all bytes consumed ([#515](https://github.com/alloy-rs/op-alloy/issues/515))
+
+### Documentation
+
+- Fix dead link to starting.md `starting.md` ([#511](https://github.com/alloy-rs/op-alloy/issues/511))
+
+### Features
+
+- [engine] Superchain Signal ([#512](https://github.com/alloy-rs/op-alloy/issues/512))
+
 ## [0.15.4](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.15.4) - 2025-05-05
 
 ### Miscellaneous Tasks
 
+- Release 0.15.4
 - Add istyped support ([#510](https://github.com/alloy-rs/op-alloy/issues/510))
 
 ## [0.15.3](https://github.com/alloy-rs/op-alloy
