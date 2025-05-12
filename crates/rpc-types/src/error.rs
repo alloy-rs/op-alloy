@@ -1,5 +1,6 @@
 //! Superchain consensus errors
 
+use alloc::boxed::Box;
 use alloy_json_rpc::RpcError;
 use core::error;
 use derive_more;
