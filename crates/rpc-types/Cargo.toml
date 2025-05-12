@@ -25,6 +25,7 @@ alloy-network-primitives.workspace = true
 alloy-eips = { workspace = true, features = ["serde"] }
 alloy-rpc-types-eth = { workspace = true, features = ["serde"] }
 alloy-primitives = { workspace = true, features = ["map", "rlp", "serde"] }
+alloy-json-rpc.workspace = true
 
 # Serde
 serde_json.workspace = true
@@ -33,7 +34,9 @@ serde = { workspace = true, features = ["derive"] }
 # arbitrary
 arbitrary = { workspace = true, features = ["derive"], optional = true }
 
-derive_more = { workspace = true, features = ["as_ref", "deref_mut"] }
+# misc
+derive_more = { workspace = true, features = ["as_ref", "deref_mut", "try_from"] }
+thiserror.workspace = true
 
 [dev-dependencies]
 rand.workspace = true
