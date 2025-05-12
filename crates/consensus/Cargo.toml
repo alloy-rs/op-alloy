@@ -20,6 +20,7 @@ alloy-rlp.workspace = true
 alloy-eips.workspace = true
 alloy-consensus.workspace = true
 alloy-primitives = { workspace = true, features = ["rlp"] }
+alloy-json-rpc.workspace = true
 
 # compat
 alloy-network = { workspace = true, optional = true }
@@ -27,7 +28,7 @@ alloy-rpc-types-eth = { workspace = true, optional = true }
 
 # misc
 thiserror.workspace = true
-derive_more = { workspace = true, features = ["display"] }
+derive_more = { workspace = true, features = ["display", "try_from"] }
 
 # arbitrary
 arbitrary = { workspace = true, features = ["derive"], optional = true }

@@ -34,6 +34,7 @@ mod block;
 pub use block::OpBlock;
 
 pub mod interop;
+pub use interop::{InvalidInboxEntry, SafetyLevel};
 
 #[cfg(feature = "serde")]
 pub use transaction::serde_deposit_tx_rpc;
