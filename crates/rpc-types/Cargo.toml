@@ -25,7 +25,6 @@ alloy-network-primitives.workspace = true
 alloy-eips = { workspace = true, features = ["serde"] }
 alloy-rpc-types-eth = { workspace = true, features = ["serde"] }
 alloy-primitives = { workspace = true, features = ["map", "rlp", "serde"] }
-alloy-json-rpc.workspace = true
 
 # Serde
 serde_json.workspace = true
