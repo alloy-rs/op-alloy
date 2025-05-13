@@ -58,7 +58,7 @@ impl core::fmt::Display for ProtocolVersion {
 }
 
 /// An error that can occur when encoding or decoding a ProtocolVersion.
-#[derive(Copy, Clone, Debug, Display, From)]
+#[derive(Copy, Clone, thiserror::Error, Debug, Display, From)]
 pub enum ProtocolVersionError {
     /// An unsupported version was encountered.
     #[display("Unsupported version: {_0}")]
