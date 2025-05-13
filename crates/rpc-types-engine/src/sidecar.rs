@@ -60,7 +60,7 @@ impl OpExecutionPayloadSidecar {
     }
 
     /// See [`ecotone`](Self::ecotone).
-    #[deprecated(note = "use logically equivalent ecotone instead")]
+    #[deprecated(note = "use `ecotone` instead")]
     pub const fn canyon(&self) -> Option<&CancunPayloadFields> {
         self.ecotone()
     }
@@ -68,6 +68,12 @@ impl OpExecutionPayloadSidecar {
     /// Returns a reference to the [`CancunPayloadFields`].
     pub const fn ecotone(&self) -> Option<&CancunPayloadFields> {
         self.ecotone.as_ref()
+    }
+
+    /// See [`into_ecotone`](Self::into_ecotone).
+    #[deprecated(note = "use `into_ecotone` instead")]
+    pub fn into_canyon(self) -> Option<CancunPayloadFields> {
+        self.into_ecotone()
     }
 
     /// Consumes the type and returns the [`CancunPayloadFields`]
