@@ -5,12 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.15.7](https://github.com/alloy-rs/op-alloy
-/releases/tag/v0.15.7) - 2025-05-13
+## [0.16.0](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.16.0) - 2025-05-13
 
 ### Bug Fixes
 
 - [rpc-types-engine] Error Implementation ([#519](https://github.com/alloy-rs/op-alloy/issues/519))
+
+### Dependencies
+
+- Bump alloy 1.0.0 ([#521](https://github.com/alloy-rs/op-alloy/issues/521))
+
+### Miscellaneous Tasks
+
+- Rm native recover fn ([#522](https://github.com/alloy-rs/op-alloy/issues/522))
+- [super-consensus] Migrate `InvalidInboxEntry` from reth ([#518](https://github.com/alloy-rs/op-alloy/issues/518))
+
+### Other
+
+- 0.15.7 ([#520](https://github.com/alloy-rs/op-alloy/issues/520))
 
 ## [0.15.6](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.15.6) - 2025-05-12
