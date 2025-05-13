@@ -1,7 +1,7 @@
 //! Contains the transaction type identifier for Optimism.
 
 use alloy_consensus::Typed2718;
-use alloy_eips::eip2718::Eip2718Error;
+use alloy_eips::eip2718::{Eip2718Error, IsTyped2718};
 use alloy_primitives::{U8, U64};
 use alloy_rlp::{BufMut, Decodable, Encodable};
 use derive_more::Display;
@@ -44,6 +44,11 @@ impl OpTxType {
     /// List of all variants.
     pub const ALL: [Self; 5] =
         [Self::Legacy, Self::Eip2930, Self::Eip1559, Self::Eip7702, Self::Deposit];
+
+    /// Returns `true` if the type is [`OpTxType::Deposit`].
+    pub const fn is_deposit(&self) -> bool {
+        matches!(self, Self::Deposit)
+    }
 }
 
 #[cfg(feature = "arbitrary")]
@@ -132,6 +137,13 @@ impl Decodable for OpTxType {
 impl Typed2718 for OpTxType {
     fn ty(&self) -> u8 {
         (*self).into()
+    }
+}
+
+impl IsTyped2718 for OpTxType {
+    fn is_type(type_id: u8) -> bool {
+        // legacy | eip2930 | eip1559 | eip7702 | deposit
+        matches!(type_id, 0 | 1 | 2 | 4 | 126)
     }
 }
 

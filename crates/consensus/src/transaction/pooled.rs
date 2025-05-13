@@ -8,7 +8,7 @@ use alloy_consensus::{
     transaction::{RlpEcdsaDecodableTx, TxEip1559, TxEip2930, TxLegacy},
 };
 use alloy_eips::{
-    eip2718::{Decodable2718, Eip2718Error, Eip2718Result, Encodable2718},
+    eip2718::{Decodable2718, Eip2718Error, Eip2718Result, Encodable2718, IsTyped2718},
     eip2930::AccessList,
     eip7702::SignedAuthorization,
 };
@@ -194,6 +194,26 @@ impl From<OpPooledTransaction> for alloy_consensus::transaction::PooledTransacti
 impl Hash for OpPooledTransaction {
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.trie_hash().hash(state);
+    }
+}
+
+#[cfg(feature = "k256")]
+impl alloy_consensus::transaction::SignerRecoverable for OpPooledTransaction {
+    fn recover_signer(
+        &self,
+    ) -> Result<alloy_primitives::Address, alloy_consensus::crypto::RecoveryError> {
+        let signature_hash = self.signature_hash();
+        alloy_consensus::crypto::secp256k1::recover_signer(self.signature(), signature_hash)
+    }
+
+    fn recover_signer_unchecked(
+        &self,
+    ) -> Result<alloy_primitives::Address, alloy_consensus::crypto::RecoveryError> {
+        let signature_hash = self.signature_hash();
+        alloy_consensus::crypto::secp256k1::recover_signer_unchecked(
+            self.signature(),
+            signature_hash,
+        )
     }
 }
 
@@ -436,6 +456,13 @@ impl Typed2718 for OpPooledTransaction {
             Self::Eip1559(tx) => tx.tx().ty(),
             Self::Eip7702(tx) => tx.tx().ty(),
         }
+    }
+}
+
+impl IsTyped2718 for OpPooledTransaction {
+    fn is_type(type_id: u8) -> bool {
+        // legacy | eip2930 | eip1559 | eip7702
+        matches!(type_id, 0 | 1 | 2 | 4)
     }
 }
 

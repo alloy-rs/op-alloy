@@ -3,7 +3,7 @@ members = ["crates/*"]
 resolver = "2"
 
 [workspace.package]
-version = "0.13.0"
+version = "0.15.7"
 edition = "2024"
 rust-version = "1.85"
 authors = ["Alloy Contributors"]
@@ -37,24 +37,25 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [workspace.dependencies]
 # Workspace
-op-alloy-consensus = { version = "0.13.0", path = "crates/consensus", default-features = false }
-op-alloy-network = { version = "0.13.0", path = "crates/network", default-features = false }
-op-alloy-provider = { version = "0.13.0", path = "crates/provider", default-features = false }
-op-alloy-rpc-types = { version = "0.13.0", path = "crates/rpc-types", default-features = false }
-op-alloy-rpc-types-engine = { version = "0.13.0", path = "crates/rpc-types-engine", default-features = false }
-op-alloy-rpc-jsonrpsee = { version = "0.13.0", path = "crates/rpc-jsonrpsee", default-features = false }
+op-alloy-consensus = { version = "0.15.7", path = "crates/consensus", default-features = false }
+op-alloy-network = { version = "0.15.7", path = "crates/network", default-features = false }
+op-alloy-provider = { version = "0.15.7", path = "crates/provider", default-features = false }
+op-alloy-rpc-types = { version = "0.15.7", path = "crates/rpc-types", default-features = false }
+op-alloy-rpc-types-engine = { version = "0.15.7", path = "crates/rpc-types-engine", default-features = false }
+op-alloy-rpc-jsonrpsee = { version = "0.15.7", path = "crates/rpc-jsonrpsee", default-features = false }
 
 # Alloy
-alloy-eips = { version = "0.14.0", default-features = false }
-alloy-serde = { version = "0.14.0", default-features = false }
-alloy-signer = { version = "0.14.0", default-features = false }
-alloy-network = { version = "0.14.0", default-features = false }
-alloy-provider = { version = "0.14.0", default-features = false }
-alloy-transport = { version = "0.14.0", default-features = false }
-alloy-consensus = { version = "0.14.0", default-features = false }
-alloy-rpc-types-eth = { version = "0.14.0", default-features = false }
-alloy-rpc-types-engine = { version = "0.14.0", default-features = false }
-alloy-network-primitives = { version = "0.14.0", default-features = false }
+alloy-eips = { version = "0.15.11", default-features = false }
+alloy-serde = { version = "0.15.11", default-features = false }
+alloy-signer = { version = "0.15.11", default-features = false }
+alloy-network = { version = "0.15.11", default-features = false }
+alloy-provider = { version = "0.15.11", default-features = false }
+alloy-transport = { version = "0.15.11", default-features = false }
+alloy-consensus = { version = "0.15.11", default-features = false }
+alloy-rpc-types-eth = { version = "0.15.11", default-features = false }
+alloy-rpc-types-engine = { version = "0.15.11", default-features = false }
+alloy-network-primitives = { version = "0.15.11", default-features = false }
+alloy-json-rpc = { version = "0.15.11", default-features = false }
 
 # Alloy RLP
 alloy-rlp = { version = "0.3", default-features = false }
@@ -64,7 +65,6 @@ alloy-sol-types = { version = "1.0.0", default-features = false }
 alloy-primitives = { version = "1.0.0", default-features = false }
 
 # Serde
-serde_repr = "0.1"
 serde = { version = "1.0", default-features = false, features = [
     "derive",
     "alloc",
@@ -88,11 +88,7 @@ jsonrpsee-core = "0.24"
 jsonrpsee-types = "0.24"
 
 # misc
-cfg-if = "1"
 async-trait = "0.1.87"
-unsigned-varint = "0.8.0"
-spin = { version = "0.9.8", features = ["mutex"] }
-lazy_static = { version = "1.5.0", default-features = false }
 derive_more = { version = "2.0", default-features = false }
 thiserror = { version = "2.0", default-features = false }
 similar-asserts = "1.7"
@@ -109,10 +105,6 @@ proptest = "1.6"
 proptest-derive = "0.5"
 tokio = "1"
 rstest = "0.24.0"
-
-## crypto
-c-kzg = { version = "1.0", default-features = false }
-k256 = { version = "0.13", default-features = false, features = ["ecdsa"] }
 
 # [patch.crates-io]
 # alloy-eips = { git = "https://github.com/alloy-rs/alloy", rev = "a4e7099" }

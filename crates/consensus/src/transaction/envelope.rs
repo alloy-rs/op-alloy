@@ -1,14 +1,14 @@
 use crate::{OpPooledTransaction, OpTxType, OpTypedTransaction, TxDeposit};
 use alloy_consensus::{
-    Sealable, Sealed, Signed, Transaction, TxEip1559, TxEip2930, TxEip7702, TxEnvelope, TxLegacy,
-    Typed2718, error::ValueError, transaction::RlpEcdsaDecodableTx,
+    Sealable, Sealed, SignableTransaction, Signed, Transaction, TxEip1559, TxEip2930, TxEip7702,
+    TxEnvelope, TxLegacy, Typed2718, error::ValueError, transaction::RlpEcdsaDecodableTx,
 };
 use alloy_eips::{
-    eip2718::{Decodable2718, Eip2718Error, Eip2718Result, Encodable2718},
+    eip2718::{Decodable2718, Eip2718Error, Eip2718Result, Encodable2718, IsTyped2718},
     eip2930::AccessList,
     eip7702::SignedAuthorization,
 };
-use alloy_primitives::{Address, B256, Bytes, TxKind, U256};
+use alloy_primitives::{Address, B256, Bytes, Signature, TxKind, U256};
 use alloy_rlp::{Decodable, Encodable};
 
 /// The Ethereum [EIP-2718] Transaction Envelope, modified for OP Stack chains.
@@ -103,6 +103,12 @@ impl From<Signed<OpTypedTransaction>> for OpTxEnvelope {
     }
 }
 
+impl From<(OpTypedTransaction, Signature)> for OpTxEnvelope {
+    fn from(value: (OpTypedTransaction, Signature)) -> Self {
+        Self::new_unhashed(value.0, value.1)
+    }
+}
+
 impl From<Sealed<TxDeposit>> for OpTxEnvelope {
     fn from(v: Sealed<TxDeposit>) -> Self {
         Self::Deposit(v)
@@ -134,6 +140,12 @@ impl Typed2718 for OpTxEnvelope {
             Self::Eip7702(tx) => tx.tx().ty(),
             Self::Deposit(tx) => tx.ty(),
         }
+    }
+}
+
+impl IsTyped2718 for OpTxEnvelope {
+    fn is_type(type_id: u8) -> bool {
+        <OpTxType as IsTyped2718>::is_type(type_id)
     }
 }
 
@@ -320,6 +332,25 @@ impl Transaction for OpTxEnvelope {
 }
 
 impl OpTxEnvelope {
+    /// Creates a new enveloped transaction from the given transaction, signature and hash.
+    ///
+    /// Caution: This assumes the given hash is the correct transaction hash.
+    pub fn new_unchecked(
+        transaction: OpTypedTransaction,
+        signature: Signature,
+        hash: B256,
+    ) -> Self {
+        Signed::new_unchecked(transaction, signature, hash).into()
+    }
+
+    /// Creates a new signed transaction from the given typed transaction and signature without the
+    /// hash.
+    ///
+    /// Note: this only calculates the hash on the first [`OpTxEnvelope::hash`] call.
+    pub fn new_unhashed(transaction: OpTypedTransaction, signature: Signature) -> Self {
+        transaction.into_signed(signature).into()
+    }
+
     /// Returns true if the transaction is a legacy transaction.
     #[inline]
     pub const fn is_legacy(&self) -> bool {
@@ -540,6 +571,49 @@ impl OpTxEnvelope {
             Self::Eip7702(t) => t.eip2718_encoded_length(),
             Self::Deposit(t) => t.eip2718_encoded_length(),
         }
+    }
+}
+
+#[cfg(feature = "k256")]
+impl alloy_consensus::transaction::SignerRecoverable for OpTxEnvelope {
+    fn recover_signer(&self) -> Result<Address, alloy_consensus::crypto::RecoveryError> {
+        let signature_hash = match self {
+            Self::Legacy(tx) => tx.signature_hash(),
+            Self::Eip2930(tx) => tx.signature_hash(),
+            Self::Eip1559(tx) => tx.signature_hash(),
+            Self::Eip7702(tx) => tx.signature_hash(),
+            // Optimism's Deposit transaction does not have a signature. Directly return the
+            // `from` address.
+            Self::Deposit(tx) => return Ok(tx.from),
+        };
+        let signature = match self {
+            Self::Legacy(tx) => tx.signature(),
+            Self::Eip2930(tx) => tx.signature(),
+            Self::Eip1559(tx) => tx.signature(),
+            Self::Eip7702(tx) => tx.signature(),
+            Self::Deposit(_) => unreachable!("Deposit transactions should not be handled here"),
+        };
+        alloy_consensus::crypto::secp256k1::recover_signer(signature, signature_hash)
+    }
+
+    fn recover_signer_unchecked(&self) -> Result<Address, alloy_consensus::crypto::RecoveryError> {
+        let signature_hash = match self {
+            Self::Legacy(tx) => tx.signature_hash(),
+            Self::Eip2930(tx) => tx.signature_hash(),
+            Self::Eip1559(tx) => tx.signature_hash(),
+            Self::Eip7702(tx) => tx.signature_hash(),
+            // Optimism's Deposit transaction does not have a signature. Directly return the
+            // `from` address.
+            Self::Deposit(tx) => return Ok(tx.from),
+        };
+        let signature = match self {
+            Self::Legacy(tx) => tx.signature(),
+            Self::Eip2930(tx) => tx.signature(),
+            Self::Eip1559(tx) => tx.signature(),
+            Self::Eip7702(tx) => tx.signature(),
+            Self::Deposit(_) => unreachable!("Deposit transactions should not be handled here"),
+        };
+        alloy_consensus::crypto::secp256k1::recover_signer_unchecked(signature, signature_hash)
     }
 }
 

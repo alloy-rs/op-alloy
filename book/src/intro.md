@@ -17,17 +17,13 @@ performance types, traits, and middleware from [Alloy][alloy].
 
 ## Sections
 
-### [Getting Started](./starting/installation.md)
+### [Getting Started](./starting/starting.md)
 
 To get started with op-alloy, add its crates as a dependency and take your first steps.
 
 ### [Building with op-alloy](./building/README.md)
 
 Walk through types and functionality available in different `op-alloy` crates.
-
-### [Examples](./examples/README.md)
-
-Get hands-on experience using `op-alloy` crates for critical OP Stack functionality.
 
 ### [Contributing](./CONTRIBUTING.md)
 

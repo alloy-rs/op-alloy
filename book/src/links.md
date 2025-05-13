@@ -19,7 +19,7 @@
 [ore]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/enum.OpReceiptEnvelope.html
 [op-block]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/type.OpBlock.html
 [ty]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/enum.OpTxType.html
-[envelope]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/enum.OpTxEnvelope.html
+[envelope]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/transaction/enum.OpTxEnvelope.html
 
 <!-- OP Stack Specs -->
 
