@@ -45,17 +45,17 @@ op-alloy-rpc-types-engine = { version = "0.15.7", path = "crates/rpc-types-engin
 op-alloy-rpc-jsonrpsee = { version = "0.15.7", path = "crates/rpc-jsonrpsee", default-features = false }
 
 # Alloy
-alloy-eips = { version = "0.15.11", default-features = false }
-alloy-serde = { version = "0.15.11", default-features = false }
-alloy-signer = { version = "0.15.11", default-features = false }
-alloy-network = { version = "0.15.11", default-features = false }
-alloy-provider = { version = "0.15.11", default-features = false }
-alloy-transport = { version = "0.15.11", default-features = false }
-alloy-consensus = { version = "0.15.11", default-features = false }
-alloy-rpc-types-eth = { version = "0.15.11", default-features = false }
-alloy-rpc-types-engine = { version = "0.15.11", default-features = false }
-alloy-network-primitives = { version = "0.15.11", default-features = false }
-alloy-json-rpc = { version = "0.15.11", default-features = false }
+alloy-eips = { version = "1.0.0", default-features = false }
+alloy-serde = { version = "1.0.0", default-features = false }
+alloy-signer = { version = "1.0.0", default-features = false }
+alloy-network = { version = "1.0.0", default-features = false }
+alloy-provider = { version = "1.0.0", default-features = false }
+alloy-transport = { version = "1.0.0", default-features = false }
+alloy-consensus = { version = "1.0.0", default-features = false }
+alloy-rpc-types-eth = { version = "1.0.0", default-features = false }
+alloy-rpc-types-engine = { version = "1.0.0", default-features = false }
+alloy-network-primitives = { version = "1.0.0", default-features = false }
+alloy-json-rpc = { version = "1.0.0", default-features = false }
 
 # Alloy RLP
 alloy-rlp = { version = "0.3", default-features = false }
@@ -78,14 +78,14 @@ bincode = "2.0.1"
 ethereum_ssz = "0.9"
 
 # rpc
-jsonrpsee = { version = "0.24", features = [
+jsonrpsee = { version = "0.25", features = [
     "jsonrpsee-core",
     "client-core",
     "server-core",
     "macros",
 ] }
-jsonrpsee-core = "0.24"
-jsonrpsee-types = "0.24"
+jsonrpsee-core = "0.25"
+jsonrpsee-types = "0.25"
 
 # misc
 async-trait = "0.1.87"
