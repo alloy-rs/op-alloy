@@ -59,6 +59,12 @@ impl OpExecutionPayloadSidecar {
         Self { ecotone: ecotone.into(), isthmus: isthmus.into() }
     }
 
+    /// See [`ecotone`](Self::ecotone).
+    #[deprecated(note = "use logically equivalent ecotone instead")]
+    pub const fn canyon(&self) -> Option<&CancunPayloadFields> {
+        self.ecotone()
+    }
+
     /// Returns a reference to the [`CancunPayloadFields`].
     pub const fn ecotone(&self) -> Option<&CancunPayloadFields> {
         self.ecotone.as_ref()
