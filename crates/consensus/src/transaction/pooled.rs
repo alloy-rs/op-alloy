@@ -79,19 +79,6 @@ impl OpPooledTransaction {
         payload_length
     }
 
-    /// Recover the signer of the transaction.
-    #[cfg(feature = "k256")]
-    pub fn recover_signer(
-        &self,
-    ) -> Result<alloy_primitives::Address, alloy_primitives::SignatureError> {
-        match self {
-            Self::Legacy(tx) => tx.recover_signer(),
-            Self::Eip2930(tx) => tx.recover_signer(),
-            Self::Eip1559(tx) => tx.recover_signer(),
-            Self::Eip7702(tx) => tx.recover_signer(),
-        }
-    }
-
     /// This encodes the transaction _without_ the signature, and is only suitable for creating a
     /// hash intended for signing.
     pub fn encode_for_signing(&self, out: &mut dyn bytes::BufMut) {
@@ -194,6 +181,26 @@ impl From<OpPooledTransaction> for alloy_consensus::transaction::PooledTransacti
 impl Hash for OpPooledTransaction {
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.trie_hash().hash(state);
+    }
+}
+
+#[cfg(feature = "k256")]
+impl alloy_consensus::transaction::SignerRecoverable for OpPooledTransaction {
+    fn recover_signer(
+        &self,
+    ) -> Result<alloy_primitives::Address, alloy_consensus::crypto::RecoveryError> {
+        let signature_hash = self.signature_hash();
+        alloy_consensus::crypto::secp256k1::recover_signer(self.signature(), signature_hash)
+    }
+
+    fn recover_signer_unchecked(
+        &self,
+    ) -> Result<alloy_primitives::Address, alloy_consensus::crypto::RecoveryError> {
+        let signature_hash = self.signature_hash();
+        alloy_consensus::crypto::secp256k1::recover_signer_unchecked(
+            self.signature(),
+            signature_hash,
+        )
     }
 }
 

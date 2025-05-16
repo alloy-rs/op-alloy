@@ -431,34 +431,6 @@ impl OpTxEnvelope {
         }
     }
 
-    /// Recover the signer of the transaction.
-    ///
-    /// If this transaction is a [`TxDeposit`] transaction this returns the deposit transaction's
-    /// `from` address.
-    #[cfg(feature = "k256")]
-    pub fn recover_signer(&self) -> Result<Address, alloy_primitives::SignatureError> {
-        match self {
-            Self::Legacy(tx) => tx.recover_signer(),
-            Self::Eip2930(tx) => tx.recover_signer(),
-            Self::Eip1559(tx) => tx.recover_signer(),
-            Self::Eip7702(tx) => tx.recover_signer(),
-            Self::Deposit(tx) => Ok(tx.inner().from),
-        }
-    }
-    /// Recover the signer and return a new [`alloy_consensus::transaction::Recovered`] instance
-    /// containing both the transaction and the recovered signer address.
-    ///
-    /// If this transaction is a [`TxDeposit`] transaction this returns the deposit transaction's
-    /// `from` address.
-    #[cfg(feature = "k256")]
-    pub fn try_into_recovered(
-        self,
-    ) -> Result<alloy_consensus::transaction::Recovered<Self>, alloy_primitives::SignatureError>
-    {
-        let signer = self.recover_signer()?;
-        Ok(alloy_consensus::transaction::Recovered::new_unchecked(self, signer))
-    }
-
     /// Returns mutable access to the input bytes.
     ///
     /// Caution: modifying this will cause side-effects on the hash.
@@ -571,6 +543,49 @@ impl OpTxEnvelope {
             Self::Eip7702(t) => t.eip2718_encoded_length(),
             Self::Deposit(t) => t.eip2718_encoded_length(),
         }
+    }
+}
+
+#[cfg(feature = "k256")]
+impl alloy_consensus::transaction::SignerRecoverable for OpTxEnvelope {
+    fn recover_signer(&self) -> Result<Address, alloy_consensus::crypto::RecoveryError> {
+        let signature_hash = match self {
+            Self::Legacy(tx) => tx.signature_hash(),
+            Self::Eip2930(tx) => tx.signature_hash(),
+            Self::Eip1559(tx) => tx.signature_hash(),
+            Self::Eip7702(tx) => tx.signature_hash(),
+            // Optimism's Deposit transaction does not have a signature. Directly return the
+            // `from` address.
+            Self::Deposit(tx) => return Ok(tx.from),
+        };
+        let signature = match self {
+            Self::Legacy(tx) => tx.signature(),
+            Self::Eip2930(tx) => tx.signature(),
+            Self::Eip1559(tx) => tx.signature(),
+            Self::Eip7702(tx) => tx.signature(),
+            Self::Deposit(_) => unreachable!("Deposit transactions should not be handled here"),
+        };
+        alloy_consensus::crypto::secp256k1::recover_signer(signature, signature_hash)
+    }
+
+    fn recover_signer_unchecked(&self) -> Result<Address, alloy_consensus::crypto::RecoveryError> {
+        let signature_hash = match self {
+            Self::Legacy(tx) => tx.signature_hash(),
+            Self::Eip2930(tx) => tx.signature_hash(),
+            Self::Eip1559(tx) => tx.signature_hash(),
+            Self::Eip7702(tx) => tx.signature_hash(),
+            // Optimism's Deposit transaction does not have a signature. Directly return the
+            // `from` address.
+            Self::Deposit(tx) => return Ok(tx.from),
+        };
+        let signature = match self {
+            Self::Legacy(tx) => tx.signature(),
+            Self::Eip2930(tx) => tx.signature(),
+            Self::Eip1559(tx) => tx.signature(),
+            Self::Eip7702(tx) => tx.signature(),
+            Self::Deposit(_) => unreachable!("Deposit transactions should not be handled here"),
+        };
+        alloy_consensus::crypto::secp256k1::recover_signer_unchecked(signature, signature_hash)
     }
 }
 
