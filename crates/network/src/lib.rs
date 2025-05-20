@@ -8,10 +8,14 @@
 
 pub use alloy_network::*;
 
-use alloy_consensus::{TxEnvelope, TxType, TypedTransaction};
+use alloy_consensus::{
+    EthereumTypedTransaction, TxEip1559, TxEip4844, TxEnvelope, TxType, TypedTransaction,
+};
 use alloy_primitives::{Address, Bytes, ChainId, TxKind, U256};
 use alloy_rpc_types_eth::{AccessList, TransactionInput, TransactionRequest};
-use op_alloy_consensus::{OpTxEnvelope, OpTxType, OpTypedTransaction};
+use op_alloy_consensus::{
+    DEPOSIT_TX_TYPE_ID, OpTxEnvelope, OpTxType, OpTypedTransaction, TxDeposit,
+};
 
 /// Types for an Op-stack network.
 #[derive(Clone, Copy, Debug)]
@@ -216,7 +220,42 @@ impl TransactionBuilder<Optimism> for TransactionRequest {
             return Err(TransactionBuilderError::InvalidTransactionRequest(tx_type, missing)
                 .into_unbuilt(self));
         }
-        todo!()
+
+        let eth_typed = self.build_typed_tx().expect("checked by missing_keys");
+
+        match eth_typed {
+            EthereumTypedTransaction::Legacy(tx) => {
+                let tx = OpTypedTransaction::Legacy(tx);
+                Ok(tx)
+            }
+            EthereumTypedTransaction::Eip2930(tx) => {
+                let tx = OpTypedTransaction::Eip2930(tx);
+                Ok(tx)
+            }
+            EthereumTypedTransaction::Eip1559(tx) => {
+                let tx = OpTypedTransaction::Eip1559(tx);
+                Ok(tx)
+            }
+            EthereumTypedTransaction::Eip4844(tx) => {
+                // Converted to EIP-1559
+                let tx: TxEip4844 = tx.into();
+                Ok(OpTypedTransaction::Eip1559(TxEip1559 {
+                    chain_id: tx.chain_id,
+                    nonce: tx.nonce,
+                    gas_limit: tx.gas_limit,
+                    max_priority_fee_per_gas: tx.max_priority_fee_per_gas,
+                    max_fee_per_gas: tx.max_fee_per_gas,
+                    to: TxKind::Call(tx.to),
+                    value: tx.value,
+                    access_list: tx.access_list,
+                    input: tx.input,
+                }))
+            }
+            EthereumTypedTransaction::Eip7702(tx) => {
+                let tx = OpTypedTransaction::Eip7702(tx);
+                Ok(tx)
+            }
+        }
     }
 
     async fn build<W: NetworkWallet<Optimism>>(
