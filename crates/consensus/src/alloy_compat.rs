@@ -1,11 +1,13 @@
 //! Additional compatibility implementations.
 
-use crate::{DEPOSIT_TX_TYPE_ID, OpTxEnvelope, TxDeposit};
+use crate::{DEPOSIT_TX_TYPE_ID, OpTxEnvelope, OpTypedTransaction, TxDeposit};
 use alloc::string::ToString;
 use alloy_consensus::Sealed;
 use alloy_eips::Typed2718;
 use alloy_network::{AnyRpcTransaction, AnyTxEnvelope, UnknownTxEnvelope, UnknownTypedTransaction};
-use alloy_rpc_types_eth::{ConversionError, Transaction as AlloyRpcTransaction};
+use alloy_rpc_types_eth::{
+    ConversionError, Transaction as AlloyRpcTransaction, TransactionRequest,
+};
 use alloy_serde::WithOtherFields;
 
 impl TryFrom<UnknownTxEnvelope> for TxDeposit {
@@ -58,6 +60,54 @@ impl TryFrom<AnyRpcTransaction> for OpTxEnvelope {
                     .map_err(|err| ConversionError::Custom(err.to_string()))?;
                 Ok(Self::Deposit(Sealed::new(tx.try_into()?)))
             }
+        }
+    }
+}
+
+impl From<TxDeposit> for TransactionRequest {
+    fn from(tx: TxDeposit) -> Self {
+        let TxDeposit {
+            source_hash: _,
+            from,
+            to,
+            mint: _,
+            value,
+            gas_limit,
+            is_system_transaction: _,
+            input,
+        } = tx;
+
+        TransactionRequest {
+            from: Some(from),
+            to: Some(to),
+            value: Some(value),
+            gas: Some(gas_limit),
+            input: input.into(),
+            ..Default::default()
+        }
+    }
+}
+
+impl From<OpTypedTransaction> for TransactionRequest {
+    fn from(tx: OpTypedTransaction) -> Self {
+        match tx {
+            OpTypedTransaction::Legacy(tx) => tx.into(),
+            OpTypedTransaction::Eip2930(tx) => tx.into(),
+            OpTypedTransaction::Eip1559(tx) => tx.into(),
+            OpTypedTransaction::Eip7702(tx) => tx.into(),
+            OpTypedTransaction::Deposit(tx) => tx.into(),
+        }
+    }
+}
+
+impl From<OpTxEnvelope> for TransactionRequest {
+    fn from(value: OpTxEnvelope) -> Self {
+        match value {
+            OpTxEnvelope::Eip2930(tx) => tx.into_parts().0.into(),
+            OpTxEnvelope::Eip1559(tx) => tx.into_parts().0.into(),
+            OpTxEnvelope::Eip7702(tx) => tx.into_parts().0.into(),
+            OpTxEnvelope::Deposit(tx) => tx.into_inner().into(),
+            _ => Default::default(),
         }
     }
 }
