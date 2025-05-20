@@ -13,9 +13,7 @@ use alloy_consensus::{
 };
 use alloy_primitives::{Address, Bytes, ChainId, TxKind, U256};
 use alloy_rpc_types_eth::{AccessList, TransactionInput, TransactionRequest};
-use op_alloy_consensus::{
-    DEPOSIT_TX_TYPE_ID, OpTxEnvelope, OpTxType, OpTypedTransaction, TxDeposit,
-};
+use op_alloy_consensus::{DEPOSIT_TX_TYPE_ID, OpTxEnvelope, OpTxType, OpTypedTransaction};
 
 /// Types for an Op-stack network.
 #[derive(Clone, Copy, Debug)]
