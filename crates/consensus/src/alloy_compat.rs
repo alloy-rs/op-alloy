@@ -77,7 +77,7 @@ impl From<TxDeposit> for TransactionRequest {
             input,
         } = tx;
 
-        TransactionRequest {
+        Self {
             from: Some(from),
             to: Some(to),
             value: Some(value),
