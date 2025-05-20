@@ -159,7 +159,28 @@ impl TransactionBuilder<Optimism> for TransactionRequest {
     }
 
     fn can_build(&self) -> bool {
-        todo!()
+        // value and data may be none. If they are, they will be set to default
+        // values.
+
+        // chain_id and from may be none.
+        let common = self.gas.is_some() && self.nonce.is_some();
+
+        let legacy = self.gas_price.is_some();
+        let eip2930 = legacy && self.access_list.is_some();
+
+        let eip1559 = self.max_fee_per_gas.is_some() && self.max_priority_fee_per_gas.is_some();
+
+        let eip4844 = eip1559 && self.sidecar.is_some() && self.to.is_some();
+
+        let eip7702 = eip1559 && self.authorization_list().is_some();
+
+        // required deposit fields
+        let deposit = self.value.is_some()
+            && self.from.is_some()
+            && self.to.is_some()
+            && (self.input.data.is_some() || self.input.input.is_some());
+        // cannot build is eip4844 fields are set.
+        common && (legacy || eip2930 || eip1559 || eip7702 || deposit) && !eip4844
     }
 
     #[doc(alias = "output_transaction_type")]
