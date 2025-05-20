@@ -142,7 +142,8 @@ mod tests {
         let unknown_tx_envelope: UnknownTxEnvelope = serde_json::from_str(deposit).unwrap();
 
         let _deposit: TxDeposit = unknown_tx_envelope.try_into().unwrap();
-        dbg!(&_deposit);
+        #[cfg(feature = "std")]
+        dbg!(_deposit);
 
         let any: AnyTxEnvelope = serde_json::from_str(deposit).unwrap();
 
