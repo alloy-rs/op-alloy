@@ -182,30 +182,43 @@ impl TransactionBuilder<Optimism> for TransactionRequest {
         let deposit = self.value.is_some()
             && self.from.is_some()
             && self.to.is_some()
-            && (self.input.data.is_some() || self.input.input.is_some());
+            && self.input.input().is_some();
         // cannot build is eip4844 fields are set.
         common && (legacy || eip2930 || eip1559 || eip7702 || deposit) && !eip4844
     }
 
     #[doc(alias = "output_transaction_type")]
     fn output_tx_type(&self) -> OpTxType {
+        if self.transaction_type.is_some_and(|ty| ty == DEPOSIT_TX_TYPE_ID) {
+            return OpTxType::Deposit;
+        }
         match self.preferred_type() {
             TxType::Eip1559 | TxType::Eip4844 => OpTxType::Eip1559,
             TxType::Eip2930 => OpTxType::Eip2930,
             TxType::Eip7702 => OpTxType::Eip7702,
             TxType::Legacy => OpTxType::Legacy,
-            // TODO: handle deposit tx
         }
     }
 
     #[doc(alias = "output_transaction_type_checked")]
     fn output_tx_type_checked(&self) -> Option<OpTxType> {
+        if self.transaction_type.is_some_and(|ty| ty == DEPOSIT_TX_TYPE_ID) {
+            // Check deposit fields
+            if self.value.is_some()
+                && self.from.is_some()
+                && self.to.is_some()
+                && self.input.input().is_some()
+                && (self.complete_legacy().is_ok() || self.complete_1559().is_ok())
+            {
+                return Some(OpTxType::Deposit);
+            }
+            return None;
+        }
         self.buildable_type().map(|tx_ty| match tx_ty {
             TxType::Eip1559 | TxType::Eip4844 => OpTxType::Eip1559,
             TxType::Eip2930 => OpTxType::Eip2930,
             TxType::Eip7702 => OpTxType::Eip7702,
             TxType::Legacy => OpTxType::Legacy,
-            // TODO: handle deposit tx
         })
     }
 
