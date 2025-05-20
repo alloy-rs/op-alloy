@@ -10,9 +10,8 @@ pub use alloy_network::*;
 
 use alloy_consensus::{TxEnvelope, TxType, TypedTransaction};
 use alloy_primitives::{Address, Bytes, ChainId, TxKind, U256};
-use alloy_rpc_types_eth::AccessList;
+use alloy_rpc_types_eth::{AccessList, TransactionInput, TransactionRequest};
 use op_alloy_consensus::{OpTxEnvelope, OpTxType, OpTypedTransaction};
-use op_alloy_rpc_types::OpTransactionRequest;
 
 /// Types for an Op-stack network.
 #[derive(Clone, Copy, Debug)]
@@ -31,7 +30,7 @@ impl Network for Optimism {
 
     type Header = alloy_consensus::Header;
 
-    type TransactionRequest = op_alloy_rpc_types::OpTransactionRequest;
+    type TransactionRequest = alloy_rpc_types_eth::TransactionRequest;
 
     type TransactionResponse = op_alloy_rpc_types::Transaction;
 
@@ -43,97 +42,97 @@ impl Network for Optimism {
         alloy_rpc_types_eth::Block<Self::TransactionResponse, Self::HeaderResponse>;
 }
 
-impl TransactionBuilder<Optimism> for OpTransactionRequest {
+impl TransactionBuilder<Optimism> for TransactionRequest {
     fn chain_id(&self) -> Option<ChainId> {
-        self.as_ref().chain_id()
+        self.chain_id
     }
 
     fn set_chain_id(&mut self, chain_id: ChainId) {
-        self.as_mut().set_chain_id(chain_id);
+        self.chain_id = Some(chain_id);
     }
 
     fn nonce(&self) -> Option<u64> {
-        self.as_ref().nonce()
+        self.nonce
     }
 
     fn set_nonce(&mut self, nonce: u64) {
-        self.as_mut().set_nonce(nonce);
+        self.nonce = Some(nonce);
     }
 
     fn input(&self) -> Option<&Bytes> {
-        self.as_ref().input()
+        self.input.input()
     }
 
     fn set_input<T: Into<Bytes>>(&mut self, input: T) {
-        self.as_mut().set_input(input);
+        self.input = TransactionInput::both(input.into())
     }
 
     fn from(&self) -> Option<Address> {
-        self.as_ref().from()
+        self.from
     }
 
     fn set_from(&mut self, from: Address) {
-        self.as_mut().set_from(from);
+        self.from = Some(from);
     }
 
     fn kind(&self) -> Option<TxKind> {
-        self.as_ref().kind()
+        self.to
     }
 
     fn clear_kind(&mut self) {
-        self.as_mut().clear_kind();
+        self.to = None;
     }
 
     fn set_kind(&mut self, kind: TxKind) {
-        self.as_mut().set_kind(kind);
+        self.to = Some(kind);
     }
 
     fn value(&self) -> Option<U256> {
-        self.as_ref().value()
+        self.value
     }
 
     fn set_value(&mut self, value: U256) {
-        self.as_mut().set_value(value);
+        self.value = Some(value);
     }
 
     fn gas_price(&self) -> Option<u128> {
-        self.as_ref().gas_price()
+        self.gas_price
     }
 
     fn set_gas_price(&mut self, gas_price: u128) {
-        self.as_mut().set_gas_price(gas_price);
+        self.gas_price = Some(gas_price);
     }
 
     fn max_fee_per_gas(&self) -> Option<u128> {
-        self.as_ref().max_fee_per_gas()
+        self.max_fee_per_gas
     }
 
     fn set_max_fee_per_gas(&mut self, max_fee_per_gas: u128) {
-        self.as_mut().set_max_fee_per_gas(max_fee_per_gas);
+        self.max_fee_per_gas = Some(max_fee_per_gas);
     }
 
     fn max_priority_fee_per_gas(&self) -> Option<u128> {
-        self.as_ref().max_priority_fee_per_gas()
+        self.max_priority_fee_per_gas
     }
 
     fn set_max_priority_fee_per_gas(&mut self, max_priority_fee_per_gas: u128) {
-        self.as_mut().set_max_priority_fee_per_gas(max_priority_fee_per_gas);
+        self.max_priority_fee_per_gas = Some(max_priority_fee_per_gas);
     }
 
     fn gas_limit(&self) -> Option<u64> {
-        self.as_ref().gas_limit()
+        self.gas
     }
 
     fn set_gas_limit(&mut self, gas_limit: u64) {
-        self.as_mut().set_gas_limit(gas_limit);
+        self.gas = Some(gas_limit);
     }
 
     fn access_list(&self) -> Option<&AccessList> {
-        self.as_ref().access_list()
+        self.access_list.as_ref()
     }
 
     fn set_access_list(&mut self, access_list: AccessList) {
-        self.as_mut().set_access_list(access_list);
+        self.access_list = Some(access_list);
     }
 
     fn complete_type(&self, ty: OpTxType) -> Result<(), Vec<&'static str>> {
@@ -141,22 +140,31 @@ impl TransactionBuilder<Optimism> for OpTransactionRequest {
             OpTxType::Deposit => Err(vec!["not implemented for deposit tx"]),
             _ => {
                 let ty = TxType::try_from(ty as u8).unwrap();
-                self.as_ref().complete_type(ty)
+                match ty {
+                    TxType::Legacy => self.complete_legacy(),
+                    TxType::Eip2930 => self.complete_2930(),
+                    TxType::Eip1559 => self.complete_1559(),
+                    TxType::Eip4844 => Err(vec!["cannot build eip4844 tx"]),
+                    TxType::Eip7702 => self.complete_7702(),
+                }
             }
         }
     }
 
     fn can_submit(&self) -> bool {
-        self.as_ref().can_submit()
+        // value and data may be None. If they are, they will be set to default.
+        // gas fields and nonce may be None, if they are, they will be populated
+        // with default values by the RPC server
+        self.from.is_some()
     }
 
     fn can_build(&self) -> bool {
-        self.as_ref().can_build()
+        todo!()
     }
 
     #[doc(alias = "output_transaction_type")]
     fn output_tx_type(&self) -> OpTxType {
-        match self.as_ref().preferred_type() {
+        match self.preferred_type() {
             TxType::Eip1559 | TxType::Eip4844 => OpTxType::Eip1559,
             TxType::Eip2930 => OpTxType::Eip2930,
             TxType::Eip7702 => OpTxType::Eip7702,
@@ -166,7 +174,7 @@ impl TransactionBuilder<Optimism> for OpTransactionRequest {
 
     #[doc(alias = "output_transaction_type_checked")]
     fn output_tx_type_checked(&self) -> Option<OpTxType> {
-        self.as_ref().buildable_type().map(|tx_ty| match tx_ty {
+        self.buildable_type().map(|tx_ty| match tx_ty {
             TxType::Eip1559 | TxType::Eip4844 => OpTxType::Eip1559,
             TxType::Eip2930 => OpTxType::Eip2930,
             TxType::Eip7702 => OpTxType::Eip7702,
@@ -175,16 +183,17 @@ impl TransactionBuilder<Optimism> for OpTransactionRequest {
     }
 
     fn prep_for_submission(&mut self) {
-        self.as_mut().prep_for_submission();
+        self.transaction_type = Some(self.preferred_type() as u8);
+        self.trim_conflicting_keys();
     }
 
     fn build_unsigned(self) -> BuildResult<OpTypedTransaction, Optimism> {
-        if let Err((tx_type, missing)) = self.as_ref().missing_keys() {
+        if let Err((tx_type, missing)) = self.missing_keys() {
             let tx_type = OpTxType::try_from(tx_type as u8).unwrap();
             return Err(TransactionBuilderError::InvalidTransactionRequest(tx_type, missing)
                 .into_unbuilt(self));
         }
-        Ok(self.build_typed_tx().expect("checked by missing_keys"))
+        todo!()
     }
 
     async fn build<W: NetworkWallet<Optimism>>(
