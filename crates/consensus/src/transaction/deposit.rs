@@ -11,6 +11,7 @@ use alloy_primitives::{Address, B256, Bytes, ChainId, Signature, TxHash, TxKind,
 use alloy_rlp::{
     Buf, BufMut, Decodable, EMPTY_STRING_CODE, Encodable, Error as DecodeError, Header,
 };
+use alloy_rpc_types_eth::TransactionRequest;
 use core::mem;
 
 /// Deposit transactions, also known as deposits are initiated on L1, and executed on L2.
@@ -338,6 +339,30 @@ impl Decodable for TxDeposit {
 impl Sealable for TxDeposit {
     fn hash_slow(&self) -> B256 {
         self.tx_hash()
+    }
+}
+
+impl From<TxDeposit> for TransactionRequest {
+    fn from(tx: TxDeposit) -> Self {
+        let TxDeposit {
+            source_hash: _,
+            from,
+            to,
+            mint: _,
+            value,
+            gas_limit,
+            is_system_transaction: _,
+            input,
+        } = tx;
+
+        Self {
+            from: Some(from),
+            to: Some(to),
+            value: Some(value),
+            gas: Some(gas_limit),
+            input: input.into(),
+            ..Default::default()
+        }
     }
 }
 

@@ -11,6 +11,7 @@ use alloy_eips::{
 };
 use alloy_primitives::{Address, B256, Bytes, Signature, TxKind, U256};
 use alloy_rlp::{Decodable, Encodable};
+use alloy_rpc_types_eth::TransactionRequest;
 
 /// The Ethereum [EIP-2718] Transaction Envelope, modified for OP Stack chains.
 ///
@@ -129,6 +130,18 @@ impl TryFrom<OpTxEnvelope> for TxEnvelope {
 
     fn try_from(value: OpTxEnvelope) -> Result<Self, Self::Error> {
         value.try_into_eth_envelope()
+    }
+}
+
+impl From<OpTxEnvelope> for TransactionRequest {
+    fn from(value: OpTxEnvelope) -> Self {
+        match value {
+            OpTxEnvelope::Eip2930(tx) => tx.into_parts().0.into(),
+            OpTxEnvelope::Eip1559(tx) => tx.into_parts().0.into(),
+            OpTxEnvelope::Eip7702(tx) => tx.into_parts().0.into(),
+            OpTxEnvelope::Deposit(tx) => tx.into_inner().into(),
+            _ => Default::default(),
+        }
     }
 }
 

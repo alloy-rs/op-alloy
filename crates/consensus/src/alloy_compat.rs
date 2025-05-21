@@ -1,13 +1,11 @@
 //! Additional compatibility implementations.
 
-use crate::{DEPOSIT_TX_TYPE_ID, OpTxEnvelope, OpTypedTransaction, TxDeposit};
+use crate::{DEPOSIT_TX_TYPE_ID, OpTxEnvelope, TxDeposit};
 use alloc::string::ToString;
 use alloy_consensus::Sealed;
 use alloy_eips::Typed2718;
 use alloy_network::{AnyRpcTransaction, AnyTxEnvelope, UnknownTxEnvelope, UnknownTypedTransaction};
-use alloy_rpc_types_eth::{
-    ConversionError, Transaction as AlloyRpcTransaction, TransactionRequest,
-};
+use alloy_rpc_types_eth::{ConversionError, Transaction as AlloyRpcTransaction};
 use alloy_serde::WithOtherFields;
 
 impl TryFrom<UnknownTxEnvelope> for TxDeposit {
@@ -64,54 +62,6 @@ impl TryFrom<AnyRpcTransaction> for OpTxEnvelope {
     }
 }
 
-impl From<TxDeposit> for TransactionRequest {
-    fn from(tx: TxDeposit) -> Self {
-        let TxDeposit {
-            source_hash: _,
-            from,
-            to,
-            mint: _,
-            value,
-            gas_limit,
-            is_system_transaction: _,
-            input,
-        } = tx;
-
-        Self {
-            from: Some(from),
-            to: Some(to),
-            value: Some(value),
-            gas: Some(gas_limit),
-            input: input.into(),
-            ..Default::default()
-        }
-    }
-}
-
-impl From<OpTypedTransaction> for TransactionRequest {
-    fn from(tx: OpTypedTransaction) -> Self {
-        match tx {
-            OpTypedTransaction::Legacy(tx) => tx.into(),
-            OpTypedTransaction::Eip2930(tx) => tx.into(),
-            OpTypedTransaction::Eip1559(tx) => tx.into(),
-            OpTypedTransaction::Eip7702(tx) => tx.into(),
-            OpTypedTransaction::Deposit(tx) => tx.into(),
-        }
-    }
-}
-
-impl From<OpTxEnvelope> for TransactionRequest {
-    fn from(value: OpTxEnvelope) -> Self {
-        match value {
-            OpTxEnvelope::Eip2930(tx) => tx.into_parts().0.into(),
-            OpTxEnvelope::Eip1559(tx) => tx.into_parts().0.into(),
-            OpTxEnvelope::Eip7702(tx) => tx.into_parts().0.into(),
-            OpTxEnvelope::Deposit(tx) => tx.into_inner().into(),
-            _ => Default::default(),
-        }
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -142,8 +92,6 @@ mod tests {
         let unknown_tx_envelope: UnknownTxEnvelope = serde_json::from_str(deposit).unwrap();
 
         let _deposit: TxDeposit = unknown_tx_envelope.try_into().unwrap();
-        #[cfg(feature = "std")]
-        dbg!(_deposit);
 
         let any: AnyTxEnvelope = serde_json::from_str(deposit).unwrap();
 
