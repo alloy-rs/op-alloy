@@ -154,13 +154,15 @@ impl TransactionBuilder<Optimism> for TransactionRequest {
     }
 
     fn can_submit(&self) -> bool {
-        // value and data may be None. If they are, they will be set to default.
-        // gas fields and nonce may be None, if they are, they will be populated
-        // with default values by the RPC server
         self.from.is_some()
     }
 
     fn can_build(&self) -> bool {
+        // cannot build 4844 txs
+        if self.sidecar.is_some() {
+            return false;
+        }
+
         // value and data may be none. If they are, they will be set to default
         // values.
 
@@ -172,8 +174,6 @@ impl TransactionBuilder<Optimism> for TransactionRequest {
 
         let eip1559 = self.max_fee_per_gas.is_some() && self.max_priority_fee_per_gas.is_some();
 
-        let eip4844 = eip1559 && self.sidecar.is_some() && self.to.is_some();
-
         let eip7702 = eip1559 && self.authorization_list().is_some();
 
         // required deposit fields
@@ -181,8 +181,7 @@ impl TransactionBuilder<Optimism> for TransactionRequest {
             && self.from.is_some()
             && self.to.is_some()
             && self.input.input().is_some();
-        // cannot build is eip4844 fields are set.
-        common && (legacy || eip2930 || eip1559 || eip7702 || deposit) && !eip4844
+        common && (legacy || eip2930 || eip1559 || eip7702 || deposit)
     }
 
     #[doc(alias = "output_transaction_type")]
