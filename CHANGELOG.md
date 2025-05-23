@@ -5,8 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.17.0](https://github.com/alloy-rs/op-alloy
-/releases/tag/v0.17.0) - 2025-05-23
+## [0.17.1](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.17.1) - 2025-05-23
 
 ### Bug Fixes
 
@@ -18,10 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Features
 
+- Made TxDeposit's mint field non-optional ([#514](https://github.com/alloy-rs/op-alloy/issues/514))
 - [`network`] Impl RecommendedFillers for Optimism ([#524](https://github.com/alloy-rs/op-alloy/issues/524))
 
 ### Miscellaneous Tasks
 
+- Release 0.17.0
 - Relax conversion ([#523](https://github.com/alloy-rs/op-alloy/issues/523))
 
 ## [0.16.0](https://github.com/alloy-rs/op-alloy
