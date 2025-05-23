@@ -8,9 +8,7 @@ use alloy_eips::{
     eip2930::AccessList,
 };
 use alloy_primitives::{Address, B256, Bytes, ChainId, Signature, TxHash, TxKind, U256, keccak256};
-use alloy_rlp::{
-    Buf, BufMut, Decodable, EMPTY_STRING_CODE, Encodable, Error as DecodeError, Header,
-};
+use alloy_rlp::{BufMut, Decodable, Encodable, Header};
 use alloy_rpc_types_eth::TransactionRequest;
 use core::mem;
 
