@@ -140,7 +140,7 @@ impl From<OpTxEnvelope> for TransactionRequest {
             OpTxEnvelope::Eip1559(tx) => tx.into_parts().0.into(),
             OpTxEnvelope::Eip7702(tx) => tx.into_parts().0.into(),
             OpTxEnvelope::Deposit(tx) => tx.into_inner().into(),
-            _ => Default::default(),
+            OpTxEnvelope::Legacy(tx) => tx.into_parts().0.into(),
         }
     }
 }
