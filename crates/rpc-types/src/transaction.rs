@@ -50,7 +50,7 @@ impl Transaction {
                 .unwrap_or_else(|| tx.max_fee_per_gas())
         };
 
-        Transaction {
+        Self {
             inner: alloy_rpc_types_eth::Transaction {
                 inner: tx,
                 block_hash: tx_info.inner.block_hash,
