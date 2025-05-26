@@ -480,19 +480,12 @@ impl<Tx> From<OpPooledTransaction> for Extended<OpTxEnvelope, Tx> {
 }
 
 impl<Tx> TryFrom<Extended<OpTxEnvelope, Tx>> for OpPooledTransaction {
-    type Error = ValueError<OpTxEnvelope>;
+    type Error = ();
 
     fn try_from(_tx: Extended<OpTxEnvelope, Tx>) -> Result<Self, Self::Error> {
         match _tx {
-            Extended::BuiltIn(inner) => inner.try_into(),
-            Extended::Other(_tx) => Err(ValueError::new(
-                OpTxEnvelope::Legacy(alloy_consensus::Signed::new_unchecked(
-                    alloy_consensus::TxLegacy::default(),
-                    Signature::decode_rlp_vrs(&mut &[0u8; 65][..], |_| Ok(false)).unwrap(),
-                    B256::default(),
-                )),
-                "Cannot convert custom transaction to OpPooledTransaction",
-            )),
+            Extended::BuiltIn(inner) => inner.try_into().map_err(|_| ()),
+            Extended::Other(_tx) => Err(()),
         }
     }
 }
