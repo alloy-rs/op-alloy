@@ -32,9 +32,9 @@ pub struct Transaction {
 impl Transaction {
     /// Returns a rpc `Transaction` with a `OpTransactionInfo`` and
     /// `Recovered<OpTxEnvelope>` as input
-    pub fn with_tx_info(
-        tx_info: OpTransactionInfo,
+    pub fn from_transaction(
         tx: alloy_consensus::transaction::Recovered<OpTxEnvelope>,
+        tx_info: OpTransactionInfo,
     ) -> Self {
         let base_fee = tx_info.inner.base_fee;
         let effective_gas_price = if tx.is_deposit() {
