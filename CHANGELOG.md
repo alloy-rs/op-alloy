@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.17.2](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.17.2) - 2025-05-26
+
+### Features
+
+- Add Extended conversions for OpPooledTransaction, OpTxEnvelope ([#530](https://github.com/alloy-rs/op-alloy/issues/530))
+- Added Transaction conversion from consensus for rpc  ([#529](https://github.com/alloy-rs/op-alloy/issues/529))
+- Add meta helpers ([#527](https://github.com/alloy-rs/op-alloy/issues/527))
+
 ## [0.17.1](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.17.1) - 2025-05-23
 
@@ -23,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.17.1
 - Release 0.17.0
 - Relax conversion ([#523](https://github.com/alloy-rs/op-alloy/issues/523))
 
