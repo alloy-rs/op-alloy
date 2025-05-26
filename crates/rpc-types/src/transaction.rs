@@ -1,6 +1,6 @@
 //! Optimism specific types related to transactions.
 
-use alloy_consensus::{Transaction as _, Typed2718};
+use alloy_consensus::{Transaction as _, Typed2718, transaction::Recovered};
 use alloy_eips::{eip2930::AccessList, eip7702::SignedAuthorization};
 use alloy_primitives::{Address, B256, BlockHash, Bytes, ChainId, TxKind, U256};
 use alloy_serde::OtherFields;
@@ -30,12 +30,9 @@ pub struct Transaction {
 }
 
 impl Transaction {
-    /// Returns a rpc `Transaction` with a `OpTransactionInfo`` and
-    /// `Recovered<OpTxEnvelope>` as input
-    pub fn from_transaction(
-        tx: alloy_consensus::transaction::Recovered<OpTxEnvelope>,
-        tx_info: OpTransactionInfo,
-    ) -> Self {
+    /// Returns a rpc [`Transaction`] with a [`OpTransactionInfo`] and
+    /// [`Recovered<OpTxEnvelope>`] as input.
+    pub fn from_transaction(tx: Recovered<OpTxEnvelope>, tx_info: OpTransactionInfo) -> Self {
         let base_fee = tx_info.inner.base_fee;
         let effective_gas_price = if tx.is_deposit() {
             // For deposits, we must always set the `gasPrice` field to 0 in rpc
