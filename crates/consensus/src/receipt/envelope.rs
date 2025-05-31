@@ -319,6 +319,12 @@ impl Decodable2718 for OpReceiptEnvelope {
     }
 }
 
+impl<T> From<OpReceiptEnvelope<T>> for Receipt<T> {
+    fn from(receipt: OpReceiptEnvelope<T>) -> Self {
+        receipt.into_receipt()
+    }
+}
+
 #[cfg(all(test, feature = "arbitrary"))]
 impl<'a, T> arbitrary::Arbitrary<'a> for OpReceiptEnvelope<T>
 where
