@@ -12,13 +12,16 @@ to the subset of L1 types used by Optimistic rollups.
 
 ## Usage
 
-The following crates are provided by `op-alloy`.
+The following crates are provided by `op-alloy`:
 
-- [`op-alloy-consensus`][op-alloy-consensus]
-- [`op-alloy-network`][op-alloy-network]
-- [`op-alloy-rpc-jsonrpsee`][op-alloy-rpc-jsonrpsee]
-- [`op-alloy-rpc-types-engine`][op-alloy-rpc-types-engine]
-- [`op-alloy-rpc-types`][op-alloy-rpc-types]
+| Crate Name  | Description / Purpose                   | Version |
+|-------------|-----------------------------------------|---------|
+| [op-alloy-consensus](https://crates.io/crates/op-alloy-consensus) | Handles consensus-related logic         | [![version](https://img.shields.io/crates/v/op-alloy-consensus)](https://crates.io/crates/op-alloy-consensus) |
+| [op-alloy-network](https://crates.io/crates/op-alloy-network) | Manages networking functionality        | [![version](https://img.shields.io/crates/v/op-alloy-network)](https://crates.io/crates/op-alloy-network) |
+| [op-alloy-rpc-jsonrpsee](https://crates.io/crates/op-alloy-rpc-jsonrpsee) | RPC implementation using `jsonrpsee`    | [![version](https://img.shields.io/crates/v/op-alloy-rpc-jsonrpsee)](https://crates.io/crates/op-alloy-rpc-jsonrpsee) |
+| [op-alloy-rpc-types-engine](https://crates.io/crates/op-alloy-rpc-types-engine) | Type definitions specific to RPC engine | [![version](https://img.shields.io/crates/v/op-alloy-rpc-types-engine)](https://crates.io/crates/op-alloy-rpc-types-engine) |
+| [op-alloy-rpc-types](https://crates.io/crates/op-alloy-rpc-types) | Shared types used across RPC components | [![version](https://img.shields.io/crates/v/op-alloy-rpc-types)](https://crates.io/crates/op-alloy-rpc-types) |
+
 
 
 ## Development Status
@@ -54,9 +57,13 @@ op-alloy is intended to be `no_std` compatible, initially for use in [kona][kona
 The following crates support `no_std`.
 Notice, provider crates do not support `no_std` compatibility.
 
-- [`op-alloy-consensus`][op-alloy-consensus]
-- [`op-alloy-rpc-types`][op-alloy-rpc-types]
-- [`op-alloy-rpc-types-engine`][op-alloy-rpc-types-engine]
+
+| Crate Name                                               | Description / Purpose                   | Version |
+|----------------------------------------------------------|-----------------------------------------|---------|
+| [`op-alloy-consensus`]                 | Handles consensus-related logic         | [![version](https://img.shields.io/crates/v/op-alloy-consensus)](https://crates.io/crates/op-alloy-consensus) |
+| [`op-alloy-rpc-types`]                 | Shared types used across RPC components | [![version](https://img.shields.io/crates/v/op-alloy-rpc-types)](https://crates.io/crates/op-alloy-rpc-types) |
+| [`op-alloy-rpc-types-engine`]   | RPC types specific to the engine API    | [![version](https://img.shields.io/crates/v/op-alloy-rpc-types-engine)](https://crates.io/crates/op-alloy-rpc-types-engine) |
+
 
 If you would like to add no_std support to a crate,
 please make sure to update [scripts/check_no_std.sh][check-no-std].
@@ -88,8 +95,9 @@ shall be dual licensed as above, without any additional terms or conditions.
 [alloy]: https://github.com/alloy-rs/alloy
 [contributing]: https://alloy-rs.github.io/op-alloy
 
-[op-alloy-consensus]: https://crates.io/crates/op-alloy-consensus
-[op-alloy-network]: https://crates.io/crates/op-alloy-network
-[op-alloy-rpc-jsonrpsee]: https://crates.io/crates/op-alloy-rpc-jsonrpsee
-[op-alloy-rpc-types-engine]: https://crates.io/crates/op-alloy-rpc-types-engine
-[op-alloy-rpc-types]: https://crates.io/crates/op-alloy-rpc-types
+[`op-alloy-consensus`]: https://crates.io/crates/op-alloy-consensus  
+[`op-alloy-network`]: https://crates.io/crates/op-alloy-network  
+[`op-alloy-rpc-jsonrpsee`]: https://crates.io/crates/op-alloy-rpc-jsonrpsee  
+[`op-alloy-rpc-types-engine`]: https://crates.io/crates/op-alloy-rpc-types-engine  
+[`op-alloy-rpc-types`]: https://crates.io/crates/op-alloy-rpc-types
+
