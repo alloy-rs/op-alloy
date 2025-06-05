@@ -105,6 +105,8 @@ pub enum SuperchainDAError {
 #[cfg(feature = "jsonrpsee")]
 impl From<SuperchainDAError> for jsonrpsee::types::ErrorObjectOwned {
     fn from(err: SuperchainDAError) -> Self {
+        use crate::alloc::string::ToString;
+        
         jsonrpsee::types::ErrorObjectOwned::owned(err as i32, err.to_string(), None::<()>)
     }
 }
