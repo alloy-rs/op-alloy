@@ -108,12 +108,3 @@ impl From<SuperchainDAError> for jsonrpsee::types::ErrorObjectOwned {
         jsonrpsee::types::ErrorObjectOwned::owned(err as i32, err.to_string(), None::<()>)
     }
 }
-
-#[cfg(feature = "jsonrpsee")]
-impl TryFrom<jsonrpsee::types::ErrorObjectOwned> for SuperchainDAError {
-    type Error = derive_more::TryFromReprError<i32>;
-
-    fn try_from(err: jsonrpsee::types::ErrorObjectOwned) -> Result<Self, Self::Error> {
-        err.code().try_into()
-    }
-}
