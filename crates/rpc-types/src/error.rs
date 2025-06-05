@@ -101,3 +101,19 @@ pub enum SupervisorDAError {
     #[error("underlying database has I/O issues or is corrupted")]
     DataCorruption = -321501,
 }
+
+#[cfg(feature = "jsonrpsee")]
+impl From<SupervisorDAError> for jsonrpsee::ErrorObjectOwned {
+    fn from(err: SupervisorDAError) -> Self {
+        jsonrpsee::ErrorObjectOwned::owned(err as i32, err.to_string(), None::<()>)
+    }
+}
+
+#[cfg(feature = "jsonrpsee")]
+impl TryFrom<jsonrpsee::ErrorObjectOwned> for SupervisorDAError {
+    type Error = &'static str;
+
+    fn from(err: jsonrpsee::ErrorObjectOwned) -> Self {
+        err.code.try_into()
+    }
+}
