@@ -5,6 +5,7 @@ use alloy_consensus::{
 };
 use alloy_eips::{Encodable2718, eip2718::IsTyped2718, eip2930::AccessList};
 use alloy_primitives::{Address, B256, Bytes, ChainId, Signature, TxHash, TxKind, bytes::BufMut};
+use alloy_rpc_types_eth::TransactionRequest;
 
 /// The TypedTransaction enum represents all Ethereum transaction request types, modified for the OP
 /// Stack.
@@ -75,6 +76,18 @@ impl From<OpTxEnvelope> for OpTypedTransaction {
             OpTxEnvelope::Eip1559(tx) => Self::Eip1559(tx.strip_signature()),
             OpTxEnvelope::Eip7702(tx) => Self::Eip7702(tx.strip_signature()),
             OpTxEnvelope::Deposit(tx) => Self::Deposit(tx.into_inner()),
+        }
+    }
+}
+
+impl From<OpTypedTransaction> for TransactionRequest {
+    fn from(tx: OpTypedTransaction) -> Self {
+        match tx {
+            OpTypedTransaction::Legacy(tx) => tx.into(),
+            OpTypedTransaction::Eip2930(tx) => tx.into(),
+            OpTypedTransaction::Eip1559(tx) => tx.into(),
+            OpTypedTransaction::Eip7702(tx) => tx.into(),
+            OpTypedTransaction::Deposit(tx) => tx.into(),
         }
     }
 }
