@@ -111,9 +111,9 @@ impl From<SuperchainDAError> for jsonrpsee::types::ErrorObjectOwned {
 
 #[cfg(feature = "jsonrpsee")]
 impl TryFrom<jsonrpsee::types::ErrorObjectOwned> for SuperchainDAError {
-    type Error = &'static str;
+    type Error = derive_more::TryFromReprError<i32>;
 
-    fn from(err: jsonrpsee::types::ErrorObjectOwned) -> Self {
-        err.code.try_into()
+    fn try_from(err: jsonrpsee::types::ErrorObjectOwned) -> Result<Self, Self::Error> {
+        err.code().try_into()
     }
 }
