@@ -103,17 +103,17 @@ pub enum SuperchainDAError {
 }
 
 #[cfg(feature = "jsonrpsee")]
-impl From<SuperchainDAError> for jsonrpsee::ErrorObjectOwned {
+impl From<SuperchainDAError> for jsonrpsee::types::ErrorObjectOwned {
     fn from(err: SuperchainDAError) -> Self {
-        jsonrpsee::ErrorObjectOwned::owned(err as i32, err.to_string(), None::<()>)
+        jsonrpsee::types::ErrorObjectOwned::owned(err as i32, err.to_string(), None::<()>)
     }
 }
 
 #[cfg(feature = "jsonrpsee")]
-impl TryFrom<jsonrpsee::ErrorObjectOwned> for SuperchainDAError {
+impl TryFrom<jsonrpsee::types::ErrorObjectOwned> for SuperchainDAError {
     type Error = &'static str;
 
-    fn from(err: jsonrpsee::ErrorObjectOwned) -> Self {
+    fn from(err: jsonrpsee::types::ErrorObjectOwned) -> Self {
         err.code.try_into()
     }
 }
