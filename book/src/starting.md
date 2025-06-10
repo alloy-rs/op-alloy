@@ -62,7 +62,7 @@ so `op-alloy-consensus` types can be used from `op-alloy` through `op_alloy::con
 ## Crates
 
 - [`op-alloy-network`][op-alloy-network]
-- [`op-alloy-provider`][op-alloy-protocol]
+- [`op-alloy-provider`][op-alloy-provider]
 - [`op-alloy-consensus`][op-alloy-consensus] (supports `no_std`)
 - [`op-alloy-rpc-jsonrpsee`][op-alloy-rpc-jsonrpsee]
 - [`op-alloy-rpc-types`][op-alloy-rpc-types] (supports `no_std`)
