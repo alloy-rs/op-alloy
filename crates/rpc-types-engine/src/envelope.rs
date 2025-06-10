@@ -12,6 +12,25 @@ use alloy_rpc_types_engine::{
     CancunPayloadFields, ExecutionPayloadInputV2, ExecutionPayloadV3, PraguePayloadFields,
 };
 
+/// A thin wrapper around [`OpExecutionPayload`] that includes the parent beacon block root.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct OpExecutionPayloadEnvelope {
+    /// The execution payload.
+    pub payload: OpExecutionPayload,
+    /// The parent beacon block root, if any.
+    pub parent_beacon_block_root: Option<B256>,
+}
+
+impl From<OpNetworkPayloadEnvelope> for OpExecutionPayloadEnvelope {
+    fn from(envelope: OpNetworkPayloadEnvelope) -> Self {
+        Self {
+            payload: envelope.payload,
+            parent_beacon_block_root: envelope.parent_beacon_block_root,
+        }
+    }
+}
+
 /// Struct aggregating [`OpExecutionPayload`] and [`OpExecutionPayloadSidecar`] and encapsulating
 /// complete payload supplied for execution.
 #[derive(Debug, Clone)]
