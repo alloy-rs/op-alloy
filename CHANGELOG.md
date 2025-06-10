@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.18.0](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.18.0) - 2025-06-10
+
+### Bug Fixes
+
+- Redirect to op-alloy-provider crate ([#540](https://github.com/alloy-rs/op-alloy/issues/540))
+- Fix link to starting.md ([#533](https://github.com/alloy-rs/op-alloy/issues/533))
+
+### Documentation
+
+- Grammar fixes and a cleanup of a broken documentation link ([#537](https://github.com/alloy-rs/op-alloy/issues/537))
+- Docs (README.md): create tables for crateses ([#534](https://github.com/alloy-rs/op-alloy/issues/534))
+
+### Features
+
+- [rpc-types-engine] OpExecutionPayload Wrapper ([#539](https://github.com/alloy-rs/op-alloy/issues/539))
+- [interop] Rename `InvalidInboxEntry`->`SuperchainDAError` ([#535](https://github.com/alloy-rs/op-alloy/issues/535))
+
+### Miscellaneous Tasks
+
+- Add smol conversion helper ([#536](https://github.com/alloy-rs/op-alloy/issues/536))
+- Add receipt helpers ([#531](https://github.com/alloy-rs/op-alloy/issues/531))
+
+### Other
+
+- Fix link to Enum OpTxType ([#538](https://github.com/alloy-rs/op-alloy/issues/538))
+- Change `InvalidInboxEntry` repr `i64`->`i32` for `jsonrpsee` error compat ([#532](https://github.com/alloy-rs/op-alloy/issues/532))
+
 ## [0.17.2](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.17.2) - 2025-05-26
 
@@ -13,6 +41,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add Extended conversions for OpPooledTransaction, OpTxEnvelope ([#530](https://github.com/alloy-rs/op-alloy/issues/530))
 - Added Transaction conversion from consensus for rpc  ([#529](https://github.com/alloy-rs/op-alloy/issues/529))
 - Add meta helpers ([#527](https://github.com/alloy-rs/op-alloy/issues/527))
+
+### Miscellaneous Tasks
+
+- Release 0.17.2
 
 ## [0.17.1](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.17.1) - 2025-05-23
