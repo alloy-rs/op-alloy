@@ -15,12 +15,13 @@ use alloy_rpc_types_engine::{
 /// A thin wrapper around [`OpExecutionPayload`] that includes the parent beacon block root.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "std", derive(ssz_derive::Encode, ssz_derive::Decode))]
 #[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct OpExecutionPayloadEnvelope {
-    /// The execution payload.
-    pub payload: OpExecutionPayload,
     /// The parent beacon block root, if any.
     pub parent_beacon_block_root: Option<B256>,
+    /// The execution payload.
+    pub payload: OpExecutionPayload,
 }
 
 impl From<OpNetworkPayloadEnvelope> for OpExecutionPayloadEnvelope {
