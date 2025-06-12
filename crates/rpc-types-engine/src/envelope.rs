@@ -24,6 +24,16 @@ pub struct OpExecutionPayloadEnvelope {
     pub payload: OpExecutionPayload,
 }
 
+impl OpExecutionPayloadEnvelope {
+    /// Returns the payload hash over the ssz encoded payload envelope data.
+    #[cfg(feature = "std")]
+    pub fn payload_hash(&self) -> crate::PayloadHash {
+        use ssz::Encode;
+        let ssz_bytes = self.as_ssz_bytes();
+        crate::PayloadHash::from(&ssz_bytes.as_slice()[65..])
+    }
+}
+
 impl From<OpNetworkPayloadEnvelope> for OpExecutionPayloadEnvelope {
     fn from(envelope: OpNetworkPayloadEnvelope) -> Self {
         Self {
