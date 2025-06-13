@@ -5,8 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.18.0](https://github.com/alloy-rs/op-alloy
-/releases/tag/v0.18.0) - 2025-06-10
+## [0.18.1](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.18.1) - 2025-06-13
 
 ### Bug Fixes
 
@@ -20,16 +20,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Features
 
+- [rpc-types-engine] SSZ Encoding ([#544](https://github.com/alloy-rs/op-alloy/issues/544))
 - [rpc-types-engine] OpExecutionPayload Wrapper ([#539](https://github.com/alloy-rs/op-alloy/issues/539))
 - [interop] Rename `InvalidInboxEntry`->`SuperchainDAError` ([#535](https://github.com/alloy-rs/op-alloy/issues/535))
 
 ### Miscellaneous Tasks
 
+- [consensus] Rename `SafetyLevel` variants `Unsafe`->`LocalUnsafe` and `Safe`->`CrossSafe` ([#545](https://github.com/alloy-rs/op-alloy/issues/545))
 - Add smol conversion helper ([#536](https://github.com/alloy-rs/op-alloy/issues/536))
 - Add receipt helpers ([#531](https://github.com/alloy-rs/op-alloy/issues/531))
 
 ### Other
 
+- 0.18.0 ([#541](https://github.com/alloy-rs/op-alloy/issues/541))
 - Fix link to Enum OpTxType ([#538](https://github.com/alloy-rs/op-alloy/issues/538))
 - Change `InvalidInboxEntry` repr `i64`->`i32` for `jsonrpsee` error compat ([#532](https://github.com/alloy-rs/op-alloy/issues/532))
 
