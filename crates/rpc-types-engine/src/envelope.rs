@@ -40,21 +40,21 @@ impl ssz::Encode for OpExecutionPayloadEnvelope {
     }
 
     fn ssz_append(&self, buf: &mut Vec<u8>) {
-        let offset = <B256 as ssz::Encode>::ssz_fixed_len() * 6
-            + <OpExecutionPayload as ssz::Encode>::ssz_fixed_len()
-            + ssz::BYTES_PER_LENGTH_OFFSET * 3;
+        // Write parent beacon block root
+        match &self.parent_beacon_block_root {
+            Some(root) => buf.extend_from_slice(root.as_slice()),
+            None => buf.extend_from_slice(&[0u8; 32]),
+        }
 
-        let mut encoder = ssz::SszEncoder::container(buf, offset);
-
-        encoder.append(&self.parent_beacon_block_root);
-        encoder.append(&self.payload);
-
-        encoder.finalize();
+        // Write payload
+        self.payload.ssz_append(buf);
     }
 
     fn ssz_bytes_len(&self) -> usize {
-        <OpExecutionPayload as ssz::Encode>::ssz_bytes_len(&self.payload)
-            + <B256 as ssz::Encode>::ssz_fixed_len()
+        let mut len = 0;
+        len += B256::ssz_fixed_len(); // parent_beacon_block_root is always 32 bytes
+        len += self.payload.ssz_bytes_len();
+        len
     }
 }
 
@@ -65,17 +65,27 @@ impl ssz::Decode for OpExecutionPayloadEnvelope {
     }
 
     fn from_ssz_bytes(bytes: &[u8]) -> Result<Self, ssz::DecodeError> {
-        let mut builder = ssz::SszDecoderBuilder::new(bytes);
+        if bytes.len() < B256::ssz_fixed_len() {
+            return Err(ssz::DecodeError::InvalidByteLength {
+                len: bytes.len(),
+                expected: B256::ssz_fixed_len(),
+            });
+        }
 
-        builder.register_type::<B256>()?;
-        builder.register_type::<OpExecutionPayload>()?;
+        // Decode parent_beacon_block_root
+        let parent_beacon_block_root = {
+            let root_bytes = &bytes[..B256::ssz_fixed_len()];
+            if root_bytes.iter().all(|&b| b == 0) {
+                None
+            } else {
+                Some(B256::from_slice(root_bytes))
+            }
+        };
 
-        let mut decoder = builder.build()?;
+        // Decode payload
+        let payload = OpExecutionPayload::from_ssz_bytes(&bytes[B256::ssz_fixed_len()..])?;
 
-        Ok(Self {
-            parent_beacon_block_root: decoder.decode_next()?,
-            payload: decoder.decode_next()?,
-        })
+        Ok(Self { parent_beacon_block_root, payload })
     }
 }
 
