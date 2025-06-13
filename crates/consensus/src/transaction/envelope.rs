@@ -21,7 +21,7 @@ use alloy_primitives::{B256, Bytes, Signature, TxHash};
 /// flag.
 ///
 /// [EIP-2718]: https://eips.ethereum.org/EIPS/eip-2718
-#[derive(Debug, Clone, PartialEq, Eq, TransactionEnvelope)]
+#[derive(Debug, Clone, TransactionEnvelope)]
 #[envelope(tx_type_name = OpTxType)]
 pub enum OpTxEnvelope {
     /// An untagged [`TxLegacy`].
@@ -619,7 +619,7 @@ pub mod serde_bincode_compat {
 mod tests {
     use super::*;
     use alloc::vec;
-    use alloy_consensus::SignableTransaction;
+    use alloy_consensus::{SignableTransaction, Transaction};
     use alloy_primitives::{Address, B256, Bytes, Signature, TxKind, U256, hex};
 
     #[test]

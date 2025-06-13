@@ -1,9 +1,7 @@
 //! Contains the transaction type identifier for Optimism.
 
 use core::fmt::Display;
-
 use crate::transaction::envelope::OpTxType;
-use alloy_rlp::{BufMut, Decodable, Encodable};
 
 /// Identifier for an Optimism deposit transaction
 pub const DEPOSIT_TX_TYPE_ID: u8 = 126; // 0x7E
@@ -31,48 +29,11 @@ impl OpTxType {
     }
 }
 
-#[cfg(feature = "arbitrary")]
-impl arbitrary::Arbitrary<'_> for OpTxType {
-    fn arbitrary(u: &mut arbitrary::Unstructured<'_>) -> arbitrary::Result<Self> {
-        let i = u.choose_index(Self::ALL.len())?;
-        Ok(Self::ALL[i])
-    }
-}
-
-impl PartialEq<u8> for OpTxType {
-    fn eq(&self, other: &u8) -> bool {
-        (*self as u8) == *other
-    }
-}
-
-impl PartialEq<OpTxType> for u8 {
-    fn eq(&self, other: &OpTxType) -> bool {
-        *self == *other as Self
-    }
-}
-
-impl Encodable for OpTxType {
-    fn encode(&self, out: &mut dyn BufMut) {
-        (*self as u8).encode(out);
-    }
-
-    fn length(&self) -> usize {
-        1
-    }
-}
-
-impl Decodable for OpTxType {
-    fn decode(buf: &mut &[u8]) -> alloy_rlp::Result<Self> {
-        let ty = u8::decode(buf)?;
-
-        Self::try_from(ty).map_err(|_| alloy_rlp::Error::Custom("invalid transaction type"))
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
     use alloc::{vec, vec::Vec};
+    use alloy_rlp::{Decodable, Encodable};
 
     #[test]
     fn test_all_tx_types() {
