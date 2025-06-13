@@ -1,5 +1,5 @@
 use crate::{
-    OpPooledTransaction, OpTxType, OpTypedTransaction, TxDeposit,
+    OpPooledTransaction, OpTypedTransaction, TxDeposit,
     transaction::{OpDepositInfo, OpTransactionInfo},
 };
 use alloy_consensus::{
@@ -22,7 +22,7 @@ use alloy_primitives::{B256, Bytes, Signature, TxHash};
 ///
 /// [EIP-2718]: https://eips.ethereum.org/EIPS/eip-2718
 #[derive(Debug, Clone, PartialEq, Eq, TransactionEnvelope)]
-#[envelope(tx_type_enum = OpTxType)]
+#[envelope(tx_type_name = OpTxType)]
 pub enum OpTxEnvelope {
     /// An untagged [`TxLegacy`].
     #[envelope(ty = 0)]

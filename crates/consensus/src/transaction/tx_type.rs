@@ -1,43 +1,23 @@
 //! Contains the transaction type identifier for Optimism.
 
-use alloy_consensus::Typed2718;
-use alloy_eips::eip2718::{Eip2718Error, IsTyped2718};
-use alloy_primitives::{U8, U64};
+use core::fmt::Display;
+
+use crate::transaction::envelope::OpTxType;
 use alloy_rlp::{BufMut, Decodable, Encodable};
-use derive_more::Display;
 
 /// Identifier for an Optimism deposit transaction
 pub const DEPOSIT_TX_TYPE_ID: u8 = 126; // 0x7E
 
-/// Optimism `TransactionType` flags as specified in EIPs [2718], [1559], and
-/// [2930], as well as the [deposit transaction spec][deposit-spec]
-///
-/// [2718]: https://eips.ethereum.org/EIPS/eip-2718
-/// [1559]: https://eips.ethereum.org/EIPS/eip-1559
-/// [2930]: https://eips.ethereum.org/EIPS/eip-2930
-/// [4844]: https://eips.ethereum.org/EIPS/eip-4844
-/// [deposit-spec]: https://specs.optimism.io/protocol/deposits.html
-#[repr(u8)]
-#[derive(Debug, Copy, Clone, Eq, Default, PartialEq, PartialOrd, Ord, Hash, Display)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "serde", serde(into = "U8", try_from = "U64"))]
-pub enum OpTxType {
-    /// Legacy transaction type.
-    #[default]
-    #[display("legacy")]
-    Legacy = 0,
-    /// EIP-2930 transaction type.
-    #[display("eip2930")]
-    Eip2930 = 1,
-    /// EIP-1559 transaction type.
-    #[display("eip1559")]
-    Eip1559 = 2,
-    /// EIP-7702 transaction type.
-    #[display("eip7702")]
-    Eip7702 = 4,
-    /// Optimism Deposit transaction type.
-    #[display("deposit")]
-    Deposit = 126,
+impl Display for OpTxType {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        match self {
+            Self::Legacy => write!(f, "legacy"),
+            Self::Eip2930 => write!(f, "eip2930"),
+            Self::Eip1559 => write!(f, "eip1559"),
+            Self::Eip7702 => write!(f, "eip7702"),
+            Self::Deposit => write!(f, "deposit"),
+        }
+    }
 }
 
 impl OpTxType {
@@ -56,51 +36,6 @@ impl arbitrary::Arbitrary<'_> for OpTxType {
     fn arbitrary(u: &mut arbitrary::Unstructured<'_>) -> arbitrary::Result<Self> {
         let i = u.choose_index(Self::ALL.len())?;
         Ok(Self::ALL[i])
-    }
-}
-
-impl From<OpTxType> for U8 {
-    fn from(tx_type: OpTxType) -> Self {
-        Self::from(u8::from(tx_type))
-    }
-}
-
-impl From<OpTxType> for u8 {
-    fn from(v: OpTxType) -> Self {
-        v as Self
-    }
-}
-
-impl TryFrom<u8> for OpTxType {
-    type Error = Eip2718Error;
-
-    fn try_from(value: u8) -> Result<Self, Self::Error> {
-        Ok(match value {
-            0 => Self::Legacy,
-            1 => Self::Eip2930,
-            2 => Self::Eip1559,
-            4 => Self::Eip7702,
-            126 => Self::Deposit,
-            _ => return Err(Eip2718Error::UnexpectedType(value)),
-        })
-    }
-}
-
-impl TryFrom<u64> for OpTxType {
-    type Error = &'static str;
-
-    fn try_from(value: u64) -> Result<Self, Self::Error> {
-        let err = || "invalid tx type";
-        let value: u8 = value.try_into().map_err(|_| err())?;
-        Self::try_from(value).map_err(|_| err())
-    }
-}
-
-impl TryFrom<U64> for OpTxType {
-    type Error = &'static str;
-
-    fn try_from(value: U64) -> Result<Self, Self::Error> {
-        value.to::<u64>().try_into()
     }
 }
 
@@ -131,19 +66,6 @@ impl Decodable for OpTxType {
         let ty = u8::decode(buf)?;
 
         Self::try_from(ty).map_err(|_| alloy_rlp::Error::Custom("invalid transaction type"))
-    }
-}
-
-impl Typed2718 for OpTxType {
-    fn ty(&self) -> u8 {
-        (*self).into()
-    }
-}
-
-impl IsTyped2718 for OpTxType {
-    fn is_type(type_id: u8) -> bool {
-        // legacy | eip2930 | eip1559 | eip7702 | deposit
-        matches!(type_id, 0 | 1 | 2 | 4 | 126)
     }
 }
 
