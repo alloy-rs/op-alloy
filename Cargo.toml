@@ -76,6 +76,7 @@ serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
 snap = "1.1.1"
 bincode = "2.0.1"
 ethereum_ssz = "0.9"
+ethereum_ssz_derive = "0.9"
 
 # rpc
 jsonrpsee = { version = "0.25", features = [
