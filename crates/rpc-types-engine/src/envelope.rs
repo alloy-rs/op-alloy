@@ -15,13 +15,48 @@ use alloy_rpc_types_engine::{
 /// A thin wrapper around [`OpExecutionPayload`] that includes the parent beacon block root.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "std", derive(ssz_derive::Encode, ssz_derive::Decode))]
 #[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct OpExecutionPayloadEnvelope {
     /// The parent beacon block root, if any.
     pub parent_beacon_block_root: Option<B256>,
     /// The execution payload.
     pub payload: OpExecutionPayload,
+}
+
+impl ssz::Encode for OpExecutionPayloadEnvelope {
+    fn is_ssz_fixed_len() -> bool {
+        false
+    }
+
+    fn ssz_append(&self, buf: &mut Vec<u8>) {
+        if let Some(parent_beacon_block_root) = self.parent_beacon_block_root {
+            buf.extend_from_slice(parent_beacon_block_root.as_slice());
+        }
+        buf.extend(self.payload.as_ssz_bytes());
+    }
+
+    fn ssz_bytes_len(&self) -> usize {
+        B256::len_bytes() + self.payload.ssz_bytes_len()
+    }
+}
+
+impl ssz::Decode for OpExecutionPayloadEnvelope {
+    fn is_ssz_fixed_len() -> bool {
+        false
+    }
+
+    fn from_ssz_bytes(bytes: &[u8]) -> Result<Self, ssz::DecodeError> {
+        // Attempt to decode the payload, assuming the first 32 bytes are the parent beacon block
+        // root. If that fails, fall back to decoding the payload directly, assuming no
+        // parent beacon block root is present.
+        let (parent_beacon_block_root, payload) =
+            match OpExecutionPayload::from_ssz_bytes(&bytes[32..]) {
+                Ok(payload) => (Some(B256::from_slice(&bytes[..32])), payload),
+                Err(_) => (None, OpExecutionPayload::from_ssz_bytes(bytes)?),
+            };
+
+        Ok(Self { parent_beacon_block_root, payload })
+    }
 }
 
 impl OpExecutionPayloadEnvelope {
@@ -467,6 +502,21 @@ mod tests {
         let expected = b256!("9999999999999999999999999999999999999999999999999999999999999999");
         assert_eq!(envelope.parent_beacon_block_root.unwrap(), expected);
         let _ = serde_json::to_string(&envelope).unwrap();
+    }
+
+    #[test]
+    #[cfg(feature = "std")]
+    fn test_roundtrip_ssz_op_execution_payload_envelope() {
+        use alloy_primitives::hex;
+        use ssz::{Decode, Encode};
+        let data = hex::decode(
+            "0x00000000000000000000000000000000000000000000000000000000000001230000000000000000000000000000000000000000000000000000000000000123000000000000000000000000000000000000045600000000000000000000000000000000000000000000000000000000000007890000000000000000000000000000000000000000000000000000000000000abc0d0e0f000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000111de000000000000004d01000000000000bc010000000000002b02000000000000300200000903000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000088832020000380200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001236666040000009999"
+        ).unwrap();
+
+        let payload = OpExecutionPayloadEnvelope::from_ssz_bytes(&data).unwrap();
+        let payload_ssz = payload.as_ssz_bytes();
+
+        assert_eq!(data, payload_ssz.as_slice());
     }
 
     #[test]
