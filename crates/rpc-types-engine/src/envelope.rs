@@ -15,7 +15,6 @@ use alloy_rpc_types_engine::{
 /// A thin wrapper around [`OpExecutionPayload`] that includes the parent beacon block root.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "std", derive(ssz_derive::Encode, ssz_derive::Decode))]
 #[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct OpExecutionPayloadEnvelope {
     /// The parent beacon block root, if any.
@@ -31,6 +30,52 @@ impl OpExecutionPayloadEnvelope {
         use ssz::Encode;
         let ssz_bytes = self.as_ssz_bytes();
         crate::PayloadHash::from(&ssz_bytes.as_slice()[65..])
+    }
+}
+
+#[cfg(feature = "std")]
+impl ssz::Encode for OpExecutionPayloadEnvelope {
+    fn is_ssz_fixed_len() -> bool {
+        false
+    }
+
+    fn ssz_append(&self, buf: &mut Vec<u8>) {
+        let offset = <B256 as ssz::Encode>::ssz_fixed_len() * 6
+            + <OpExecutionPayload as ssz::Encode>::ssz_fixed_len()
+            + ssz::BYTES_PER_LENGTH_OFFSET * 3;
+
+        let mut encoder = ssz::SszEncoder::container(buf, offset);
+
+        encoder.append(&self.parent_beacon_block_root);
+        encoder.append(&self.payload);
+
+        encoder.finalize();
+    }
+
+    fn ssz_bytes_len(&self) -> usize {
+        <OpExecutionPayload as ssz::Encode>::ssz_bytes_len(&self.payload)
+            + <B256 as ssz::Encode>::ssz_fixed_len()
+    }
+}
+
+#[cfg(feature = "std")]
+impl ssz::Decode for OpExecutionPayloadEnvelope {
+    fn is_ssz_fixed_len() -> bool {
+        false
+    }
+
+    fn from_ssz_bytes(bytes: &[u8]) -> Result<Self, ssz::DecodeError> {
+        let mut builder = ssz::SszDecoderBuilder::new(bytes);
+
+        builder.register_type::<B256>()?;
+        builder.register_type::<OpExecutionPayload>()?;
+
+        let mut decoder = builder.build()?;
+
+        Ok(Self {
+            parent_beacon_block_root: decoder.decode_next()?,
+            payload: decoder.decode_next()?,
+        })
     }
 }
 
@@ -454,6 +499,18 @@ impl PayloadHash {
 mod tests {
     use super::*;
     use alloy_primitives::b256;
+
+    #[test]
+    #[cfg(feature = "std")]
+    fn test_roundtrip_encode_rpc_execution_payload_envelope() {
+        use alloy_primitives::hex;
+        use ssz::Decode;
+        let data = hex!(
+            "00000000000000000000000000000000000000000000000000000000000001230000000000000000000000000000000000000000000000000000000000000123000000000000000000000000000000000000045600000000000000000000000000000000000000000000000000000000000007890000000000000000000000000000000000000000000000000000000000000abc0d0e0f000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000111de000000000000004d01000000000000bc010000000000002b02000000000000300200000903000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000088832020000380200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001236666040000009999"
+        );
+
+        OpExecutionPayloadEnvelope::from_ssz_bytes(&data).unwrap();
+    }
 
     #[test]
     #[cfg(feature = "serde")]
