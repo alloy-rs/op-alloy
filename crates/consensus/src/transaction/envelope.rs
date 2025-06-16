@@ -22,7 +22,7 @@ use alloy_primitives::{B256, Bytes, Signature, TxHash};
 ///
 /// [EIP-2718]: https://eips.ethereum.org/EIPS/eip-2718
 #[derive(Debug, Clone, TransactionEnvelope)]
-#[envelope(tx_type_name = OpTxType)]
+#[envelope(tx_type_name = OpTxType, serde_cfg(feature = "serde"))]
 pub enum OpTxEnvelope {
     /// An untagged [`TxLegacy`].
     #[envelope(ty = 0)]
