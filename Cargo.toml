@@ -108,13 +108,13 @@ tokio = "1"
 rstest = "0.24.0"
 
 [patch.crates-io]
-alloy-eips = { git = "https://github.com/alloy-rs/alloy", rev = "7f8c746d3" }
-alloy-serde = { git = "https://github.com/alloy-rs/alloy", rev = "7f8c746d3" }
-alloy-signer = { git = "https://github.com/alloy-rs/alloy", rev = "7f8c746d3" }
-alloy-network = { git = "https://github.com/alloy-rs/alloy", rev = "7f8c746d3" }
-alloy-provider = { git = "https://github.com/alloy-rs/alloy", rev = "7f8c746d3" }
-alloy-transport = { git = "https://github.com/alloy-rs/alloy", rev = "7f8c746d3" }
-alloy-consensus = { git = "https://github.com/alloy-rs/alloy", rev = "7f8c746d3" }
-alloy-rpc-types-eth = { git = "https://github.com/alloy-rs/alloy", rev = "7f8c746d3" }
-alloy-rpc-types-engine = { git = "https://github.com/alloy-rs/alloy", rev = "7f8c746d3" }
-alloy-network-primitives = { git = "https://github.com/alloy-rs/alloy", rev = "7f8c746d3" }
+alloy-eips = { git = "https://github.com/alloy-rs/alloy", rev = "242dd84f7" }
+alloy-serde = { git = "https://github.com/alloy-rs/alloy", rev = "242dd84f7" }
+alloy-signer = { git = "https://github.com/alloy-rs/alloy", rev = "242dd84f7" }
+alloy-network = { git = "https://github.com/alloy-rs/alloy", rev = "242dd84f7" }
+alloy-provider = { git = "https://github.com/alloy-rs/alloy", rev = "242dd84f7" }
+alloy-transport = { git = "https://github.com/alloy-rs/alloy", rev = "242dd84f7" }
+alloy-consensus = { git = "https://github.com/alloy-rs/alloy", rev = "242dd84f7" }
+alloy-rpc-types-eth = { git = "https://github.com/alloy-rs/alloy", rev = "242dd84f7" }
+alloy-rpc-types-engine = { git = "https://github.com/alloy-rs/alloy", rev = "242dd84f7" }
+alloy-network-primitives = { git = "https://github.com/alloy-rs/alloy", rev = "242dd84f7" }
