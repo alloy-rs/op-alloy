@@ -206,7 +206,7 @@ mod tx_serde {
     //! [`alloy_consensus::transaction::Recovered::signer`] which resides in
     //! [`alloy_rpc_types_eth::Transaction::inner`] and [`op_alloy_consensus::TxDeposit::from`].
     //!
-    //! Additionaly, we need similar logic for the `gasPrice` field
+    //! Additionally, we need similar logic for the `gasPrice` field
     use super::*;
     use alloy_consensus::transaction::Recovered;
     use op_alloy_consensus::OpTransaction;
