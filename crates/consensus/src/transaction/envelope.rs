@@ -7,7 +7,7 @@ use alloy_consensus::{
     TransactionEnvelope, TxEip1559, TxEip2930, TxEip7702, TxEnvelope, TxLegacy, error::ValueError,
     transaction::TransactionInfo,
 };
-use alloy_eips::eip2718::{Encodable2718};
+use alloy_eips::eip2718::Encodable2718;
 use alloy_primitives::{B256, Bytes, Signature, TxHash};
 
 /// The Ethereum [EIP-2718] Transaction Envelope, modified for OP Stack chains.
