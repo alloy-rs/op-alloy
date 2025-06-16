@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.18.3](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.18.3) - 2025-06-16
+
+### Features
+
+- [rpc] Convert into RPC transaction from generic `OpTransaction` ([#550](https://github.com/alloy-rs/op-alloy/issues/550))
+
 ## [0.18.2](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.18.2) - 2025-06-16
 
@@ -29,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.18.2
 - [consensus] Rename `SafetyLevel` variants `Unsafe`->`LocalUnsafe` and `Safe`->`CrossSafe` ([#545](https://github.com/alloy-rs/op-alloy/issues/545))
 - Add smol conversion helper ([#536](https://github.com/alloy-rs/op-alloy/issues/536))
 - Add receipt helpers ([#531](https://github.com/alloy-rs/op-alloy/issues/531))
