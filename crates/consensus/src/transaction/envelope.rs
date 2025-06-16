@@ -659,27 +659,6 @@ impl alloy_consensus::transaction::SignerRecoverable for OpTxEnvelope {
     }
 }
 
-#[cfg(not(feature = "k256"))]
-impl alloy_consensus::transaction::SignerRecoverable for OpTxEnvelope {
-    fn recover_signer(&self) -> Result<Address, alloy_consensus::crypto::RecoveryError> {
-        match self {
-            // Optimism's Deposit transaction does not have a signature. Directly return the
-            // `from` address.
-            Self::Deposit(tx) => Ok(tx.from),
-            _ => Err(alloy_consensus::crypto::RecoveryError::new()),
-        }
-    }
-
-    fn recover_signer_unchecked(&self) -> Result<Address, alloy_consensus::crypto::RecoveryError> {
-        match self {
-            // Optimism's Deposit transaction does not have a signature. Directly return the
-            // `from` address.
-            Self::Deposit(tx) => Ok(tx.from),
-            _ => Err(alloy_consensus::crypto::RecoveryError::new()),
-        }
-    }
-}
-
 impl Encodable for OpTxEnvelope {
     fn encode(&self, out: &mut dyn alloy_rlp::BufMut) {
         self.network_encode(out)
