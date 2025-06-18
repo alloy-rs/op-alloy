@@ -38,6 +38,7 @@ pub enum OpTxEnvelope {
     Eip7702(Signed<TxEip7702>),
     /// A [`TxDeposit`] tagged with type 0x7E.
     #[envelope(ty = 126)]
+    #[serde(serialize_with = "crate::serde_deposit_tx_rpc")]
     Deposit(Sealed<TxDeposit>),
 }
 
