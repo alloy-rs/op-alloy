@@ -45,17 +45,17 @@ op-alloy-rpc-types-engine = { version = "0.18.4", path = "crates/rpc-types-engin
 op-alloy-rpc-jsonrpsee = { version = "0.18.4", path = "crates/rpc-jsonrpsee", default-features = false }
 
 # Alloy
-alloy-eips = { version = "1.0.0", default-features = false }
-alloy-serde = { version = "1.0.0", default-features = false }
-alloy-signer = { version = "1.0.0", default-features = false }
-alloy-network = { version = "1.0.0", default-features = false }
-alloy-provider = { version = "1.0.0", default-features = false }
-alloy-transport = { version = "1.0.0", default-features = false }
-alloy-consensus = { version = "1.0.0", default-features = false }
-alloy-rpc-types-eth = { version = "1.0.0", default-features = false }
-alloy-rpc-types-engine = { version = "1.0.0", default-features = false }
-alloy-network-primitives = { version = "1.0.0", default-features = false }
-alloy-json-rpc = { version = "1.0.0", default-features = false }
+alloy-eips = { rev = "0054dafa2a2294e709b8a66e22579d347d8f7390", git = "https://github.com/alloy-rs/alloy", default-features = false }
+alloy-serde = { rev = "0054dafa2a2294e709b8a66e22579d347d8f7390", git = "https://github.com/alloy-rs/alloy", default-features = false }
+alloy-signer = { rev = "0054dafa2a2294e709b8a66e22579d347d8f7390", git = "https://github.com/alloy-rs/alloy", default-features = false }
+alloy-network = { rev = "0054dafa2a2294e709b8a66e22579d347d8f7390", git = "https://github.com/alloy-rs/alloy", default-features = false }
+alloy-provider = { rev = "0054dafa2a2294e709b8a66e22579d347d8f7390", git = "https://github.com/alloy-rs/alloy", default-features = false }
+alloy-transport = { rev = "0054dafa2a2294e709b8a66e22579d347d8f7390", git = "https://github.com/alloy-rs/alloy", default-features = false }
+alloy-consensus = { rev = "0054dafa2a2294e709b8a66e22579d347d8f7390", git = "https://github.com/alloy-rs/alloy", default-features = false }
+alloy-rpc-types-eth = { rev = "0054dafa2a2294e709b8a66e22579d347d8f7390", git = "https://github.com/alloy-rs/alloy", default-features = false }
+alloy-rpc-types-engine = { rev = "0054dafa2a2294e709b8a66e22579d347d8f7390", git = "https://github.com/alloy-rs/alloy", default-features = false }
+alloy-network-primitives = { rev = "0054dafa2a2294e709b8a66e22579d347d8f7390", git = "https://github.com/alloy-rs/alloy", default-features = false }
+alloy-json-rpc = { rev = "0054dafa2a2294e709b8a66e22579d347d8f7390", git = "https://github.com/alloy-rs/alloy", default-features = false }
 
 # Alloy RLP
 alloy-rlp = { version = "0.3", default-features = false }
