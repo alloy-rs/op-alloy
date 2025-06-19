@@ -35,7 +35,11 @@ pub struct Transaction<T = OpTxEnvelope> {
 
 impl<T: OpTransaction + TransactionTrait> Transaction<T> {
     /// Converts a consensus `tx` with an additional context `tx_info` into an RPC [`Transaction`].
-    pub fn from_transaction(tx: Recovered<T>, tx_info: OpTransactionInfo) -> Self {
+    pub fn from_transaction<TxIn>(tx: Recovered<TxIn>, tx_info: OpTransactionInfo) -> Self
+    where
+        TxIn: OpTransaction + TransactionTrait,
+        T: From<TxIn>,
+    {
         let base_fee = tx_info.inner.base_fee;
         let effective_gas_price = if tx.is_deposit() {
             // For deposits, we must always set the `gasPrice` field to 0 in rpc
@@ -52,7 +56,7 @@ impl<T: OpTransaction + TransactionTrait> Transaction<T> {
 
         Self {
             inner: alloy_rpc_types_eth::Transaction {
-                inner: tx,
+                inner: tx.convert(),
                 block_hash: tx_info.inner.block_hash,
                 block_number: tx_info.inner.block_number,
                 transaction_index: tx_info.inner.index,
