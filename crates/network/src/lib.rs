@@ -10,7 +10,7 @@ pub use alloy_network::*;
 
 use alloy_consensus::{EthereumTypedTransaction, TxEnvelope, TxType, TypedTransaction};
 use alloy_primitives::{Address, Bytes, ChainId, TxKind, U256};
-use alloy_rpc_types_eth::{AccessList, TransactionRequest};
+use alloy_rpc_types_eth::{AccessList, TransactionInputKind, TransactionRequest};
 use op_alloy_consensus::{DEPOSIT_TX_TYPE_ID, OpTxEnvelope, OpTxType, OpTypedTransaction};
 
 /// Types for an Op-stack network.
@@ -65,6 +65,18 @@ impl TransactionBuilder<Optimism> for TransactionRequest {
 
     fn set_input<T: Into<Bytes>>(&mut self, input: T) {
         self.input.input = Some(input.into());
+    }
+
+    fn set_input_kind<T: Into<Bytes>>(&mut self, input: T, kind: TransactionInputKind) {
+        match kind {
+            TransactionInputKind::Input => self.input.input = Some(input.into()),
+            TransactionInputKind::Data => self.input.data = Some(input.into()),
+            TransactionInputKind::Both => {
+                let bytes = input.into();
+                self.input.input = Some(bytes.clone());
+                self.input.data = Some(bytes);
+            }
+        }
     }
 
     fn from(&self) -> Option<Address> {
