@@ -146,6 +146,9 @@ impl TransactionBuilder<Optimism> for TransactionRequest {
     }
 
     fn can_submit(&self) -> bool {
+        // value and data may be None. If they are, they will be set to default.
+        // gas fields and nonce may be None, if they are, they will be populated
+        // with default values by the RPC server
         self.from.is_some()
     }
 

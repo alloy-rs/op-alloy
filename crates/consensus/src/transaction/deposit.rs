@@ -9,7 +9,6 @@ use alloy_eips::{
 };
 use alloy_primitives::{Address, B256, Bytes, ChainId, Signature, TxHash, TxKind, U256, keccak256};
 use alloy_rlp::{BufMut, Decodable, Encodable, Header};
-use alloy_rpc_types_eth::TransactionRequest;
 use core::mem;
 
 /// Deposit transactions, also known as deposits are initiated on L1, and executed on L2.
@@ -331,7 +330,8 @@ impl Sealable for TxDeposit {
     }
 }
 
-impl From<TxDeposit> for TransactionRequest {
+#[cfg(feature = "alloy-compat")]
+impl From<TxDeposit> for alloy_rpc_types_eth::TransactionRequest {
     fn from(tx: TxDeposit) -> Self {
         let TxDeposit {
             source_hash: _,

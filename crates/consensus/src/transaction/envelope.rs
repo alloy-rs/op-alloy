@@ -9,7 +9,6 @@ use alloy_consensus::{
 };
 use alloy_eips::eip2718::Encodable2718;
 use alloy_primitives::{B256, Bytes, Signature, TxHash};
-use alloy_rpc_types_eth::TransactionRequest;
 
 /// The Ethereum [EIP-2718] Transaction Envelope, modified for OP Stack chains.
 ///
@@ -179,7 +178,8 @@ impl TryFrom<OpTxEnvelope> for TxEnvelope {
     }
 }
 
-impl From<OpTxEnvelope> for TransactionRequest {
+#[cfg(feature = "alloy-compat")]
+impl From<OpTxEnvelope> for alloy_rpc_types_eth::TransactionRequest {
     fn from(value: OpTxEnvelope) -> Self {
         match value {
             OpTxEnvelope::Eip2930(tx) => tx.into_parts().0.into(),
