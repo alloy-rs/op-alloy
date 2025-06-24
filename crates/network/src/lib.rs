@@ -8,9 +8,7 @@
 
 pub use alloy_network::*;
 
-use alloy_consensus::{
-    EthereumTypedTransaction, TxEip1559, TxEip4844, TxEnvelope, TxType, TypedTransaction,
-};
+use alloy_consensus::{EthereumTypedTransaction, TxEnvelope, TxType, TypedTransaction};
 use alloy_primitives::{Address, Bytes, ChainId, TxKind, U256};
 use alloy_rpc_types_eth::{AccessList, TransactionInput, TransactionRequest};
 use op_alloy_consensus::{DEPOSIT_TX_TYPE_ID, OpTxEnvelope, OpTxType, OpTypedTransaction};
@@ -221,14 +219,15 @@ impl TransactionBuilder<Optimism> for TransactionRequest {
     fn build_unsigned(self) -> BuildResult<OpTypedTransaction, Optimism> {
         if self.preferred_type() == TxType::Eip4844 {
             return Err(TransactionBuilderError::Custom(
-                "EIP-4844 transactions are not supported".to_string(),
+                "EIP-4844 transactions are not supported".to_string().into(),
             )
             .into_unbuilt(self));
         }
 
         if let Err((tx_type, missing)) = self.missing_keys() {
-            let tx_type = OpTxType::try_from(tx_type as u8)
-                .map_err(TransactionBuilderError::Custom("invalid transaction type".to_string()))?;
+            let tx_type = OpTxType::try_from(tx_type as u8).map_err(|e| {
+                TransactionBuilderError::Custom(e.into()).into_unbuilt(self.clone())
+            })?;
 
             return Err(TransactionBuilderError::InvalidTransactionRequest(tx_type, missing)
                 .into_unbuilt(self));
