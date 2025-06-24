@@ -154,7 +154,7 @@ impl TransactionBuilder<Optimism> for TransactionRequest {
 
     fn can_build(&self) -> bool {
         // cannot build 4844 txs
-        if self.sidecar.is_some() {
+        if self.sidecar.is_some() || self.blob_versioned_hashes.is_some() {
             return false;
         }
 
