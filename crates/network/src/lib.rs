@@ -140,16 +140,10 @@ impl TransactionBuilder<Optimism> for TransactionRequest {
     fn complete_type(&self, ty: OpTxType) -> Result<(), Vec<&'static str>> {
         match ty {
             OpTxType::Deposit => Err(vec!["not implemented for deposit tx"]),
-            _ => {
-                let ty = TxType::try_from(ty as u8).unwrap();
-                match ty {
-                    TxType::Legacy => self.complete_legacy(),
-                    TxType::Eip2930 => self.complete_2930(),
-                    TxType::Eip1559 => self.complete_1559(),
-                    TxType::Eip4844 => Err(vec!["cannot build eip4844 tx"]),
-                    TxType::Eip7702 => self.complete_7702(),
-                }
-            }
+            OpTxType::Legacy => self.complete_legacy(),
+            OpTxType::Eip2930 => self.complete_2930(),
+            OpTxType::Eip1559 => self.complete_1559(),
+            OpTxType::Eip7702 => self.complete_7702(),
         }
     }
 
