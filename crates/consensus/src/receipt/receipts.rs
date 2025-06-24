@@ -1,11 +1,20 @@
 //! Transaction receipt types for Optimism.
 
 use super::OpTxReceipt;
+use crate::transaction::OpDepositInfo;
 use alloy_consensus::{
     Eip658Value, Receipt, ReceiptWithBloom, RlpDecodableReceipt, RlpEncodableReceipt, TxReceipt,
 };
 use alloy_primitives::{Bloom, Log};
 use alloy_rlp::{Buf, BufMut, Decodable, Encodable, Header};
+
+/// [`OpDepositReceipt`] with calculated bloom filter, modified for the OP Stack.
+///
+/// This convenience type allows us to lazily calculate the bloom filter for a
+/// receipt, similar to [`Sealed`].
+///
+/// [`Sealed`]: alloy_consensus::Sealed
+pub type OpDepositReceiptWithBloom<T = Log> = ReceiptWithBloom<OpDepositReceipt<T>>;
 
 /// Receipt containing result of transaction execution.
 #[derive(Clone, Debug, PartialEq, Eq, Default)]
@@ -52,6 +61,21 @@ impl OpDepositReceipt {
     /// container type.
     pub fn with_bloom(self) -> OpDepositReceiptWithBloom {
         self.into()
+    }
+}
+
+impl<T> OpDepositReceipt<T> {
+    /// Consumes the type and returns the inner [`Receipt`].
+    pub fn into_inner(self) -> Receipt<T> {
+        self.inner
+    }
+
+    /// Returns the deposit info for this receipt.
+    pub const fn deposit_info(&self) -> OpDepositInfo {
+        OpDepositInfo {
+            deposit_nonce: self.deposit_nonce,
+            deposit_receipt_version: self.deposit_receipt_version,
+        }
     }
 }
 
@@ -105,6 +129,12 @@ impl<T: Decodable> OpDepositReceipt<T> {
 impl<T> AsRef<Receipt<T>> for OpDepositReceipt<T> {
     fn as_ref(&self) -> &Receipt<T> {
         &self.inner
+    }
+}
+
+impl<T> From<OpDepositReceipt<T>> for Receipt<T> {
+    fn from(value: OpDepositReceipt<T>) -> Self {
+        value.into_inner()
     }
 }
 
@@ -181,14 +211,6 @@ impl OpTxReceipt for OpDepositReceipt {
         self.deposit_receipt_version
     }
 }
-
-/// [`OpDepositReceipt`] with calculated bloom filter, modified for the OP Stack.
-///
-/// This convenience type allows us to lazily calculate the bloom filter for a
-/// receipt, similar to [`Sealed`].
-///
-/// [`Sealed`]: alloy_consensus::Sealed
-pub type OpDepositReceiptWithBloom<T = Log> = ReceiptWithBloom<OpDepositReceipt<T>>;
 
 #[cfg(feature = "arbitrary")]
 impl<'a, T> arbitrary::Arbitrary<'a> for OpDepositReceipt<T>

@@ -52,7 +52,7 @@
 [alloy]: https://github.com/alloy-rs/alloy
 [op-alloy]: https://github.com/alloy-rs/op-alloy
 [b64]: https://docs.rs/alloy-primitives/latest/alloy_primitives/aliases/type.B64.html
-[tx-envelope]: https://docs.rs/alloy-consensus/latest/alloy_consensus/transaction/enum.TxEnvelope.html
+[tx-envelope]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/transaction/enum.OpTxType.html
 
 <!-- Kona links -->
 

@@ -5,6 +5,88 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.18.6](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.18.6) - 2025-06-18
+
+### Dependencies
+
+- Bump alloy ([#551](https://github.com/alloy-rs/op-alloy/issues/551))
+
+### Miscellaneous Tasks
+
+- Release 0.18.5
+
+## [0.18.4](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.18.4) - 2025-06-17
+
+### Bug Fixes
+
+- Move `Transaction::from_transaction` ([#552](https://github.com/alloy-rs/op-alloy/issues/552))
+
+### Miscellaneous Tasks
+
+- Release 0.18.4
+
+## [0.18.3](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.18.3) - 2025-06-16
+
+### Features
+
+- [rpc] Convert into RPC transaction from generic `OpTransaction` ([#550](https://github.com/alloy-rs/op-alloy/issues/550))
+
+### Miscellaneous Tasks
+
+- Release 0.18.3
+
+## [0.18.2](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.18.2) - 2025-06-16
+
+### Bug Fixes
+
+- Redirect to op-alloy-provider crate ([#540](https://github.com/alloy-rs/op-alloy/issues/540))
+- Fix link to starting.md ([#533](https://github.com/alloy-rs/op-alloy/issues/533))
+
+### Documentation
+
+- Grammar fixes and a cleanup of a broken documentation link ([#537](https://github.com/alloy-rs/op-alloy/issues/537))
+- Docs (README.md): create tables for crateses ([#534](https://github.com/alloy-rs/op-alloy/issues/534))
+
+### Features
+
+- [rpc] Replace wrapped `OpTxEnvelope` with a generic in the `Transaction` RPC response ([#542](https://github.com/alloy-rs/op-alloy/issues/542))
+- [consensus] Add `as_deposit` into `OpTransaction` trait ([#549](https://github.com/alloy-rs/op-alloy/issues/549))
+- [consensus] Add `OpTransaction` trait ([#548](https://github.com/alloy-rs/op-alloy/issues/548))
+- [rpc-types-engine] SSZ Encoding ([#544](https://github.com/alloy-rs/op-alloy/issues/544))
+- [rpc-types-engine] OpExecutionPayload Wrapper ([#539](https://github.com/alloy-rs/op-alloy/issues/539))
+- [interop] Rename `InvalidInboxEntry`->`SuperchainDAError` ([#535](https://github.com/alloy-rs/op-alloy/issues/535))
+
+### Miscellaneous Tasks
+
+- Release 0.18.2
+- [consensus] Rename `SafetyLevel` variants `Unsafe`->`LocalUnsafe` and `Safe`->`CrossSafe` ([#545](https://github.com/alloy-rs/op-alloy/issues/545))
+- Add smol conversion helper ([#536](https://github.com/alloy-rs/op-alloy/issues/536))
+- Add receipt helpers ([#531](https://github.com/alloy-rs/op-alloy/issues/531))
+
+### Other
+
+- 0.18.1 ([#547](https://github.com/alloy-rs/op-alloy/issues/547))
+- 0.18.0 ([#541](https://github.com/alloy-rs/op-alloy/issues/541))
+- Fix link to Enum OpTxType ([#538](https://github.com/alloy-rs/op-alloy/issues/538))
+- Change `InvalidInboxEntry` repr `i64`->`i32` for `jsonrpsee` error compat ([#532](https://github.com/alloy-rs/op-alloy/issues/532))
+
+## [0.17.2](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.17.2) - 2025-05-26
+
+### Features
+
+- Add Extended conversions for OpPooledTransaction, OpTxEnvelope ([#530](https://github.com/alloy-rs/op-alloy/issues/530))
+- Added Transaction conversion from consensus for rpc  ([#529](https://github.com/alloy-rs/op-alloy/issues/529))
+- Add meta helpers ([#527](https://github.com/alloy-rs/op-alloy/issues/527))
+
+### Miscellaneous Tasks
+
+- Release 0.17.2
+
 ## [0.17.1](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.17.1) - 2025-05-23
 
@@ -23,6 +105,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.17.1
 - Release 0.17.0
 - Relax conversion ([#523](https://github.com/alloy-rs/op-alloy/issues/523))
 

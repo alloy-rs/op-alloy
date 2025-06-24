@@ -52,7 +52,7 @@ pub enum ProtocolVersion {
 impl core::fmt::Display for ProtocolVersion {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         match self {
-            Self::V0(value) => write!(f, "{}", value),
+            Self::V0(value) => write!(f, "{value}"),
         }
     }
 }
@@ -90,7 +90,7 @@ impl ProtocolVersion {
 
         match self {
             Self::V0(value) => {
-                bytes[0] = 0x00; // this is not necessary, but addded for clarity
+                bytes[0] = 0x00; // this is not necessary, but added for clarity
                 bytes[1..].copy_from_slice(&value.encode());
                 B256::from_slice(&bytes)
             }
@@ -166,7 +166,7 @@ impl ProtocolVersion {
     /// Returns a human-readable string representation of the ProtocolVersion
     pub fn display(&self) -> String {
         match self {
-            Self::V0(value) => format!("{}", value),
+            Self::V0(value) => format!("{value}"),
         }
     }
 }

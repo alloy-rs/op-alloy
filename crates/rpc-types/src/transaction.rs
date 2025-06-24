@@ -1,29 +1,64 @@
 //! Optimism specific types related to transactions.
 
-use alloy_consensus::{Transaction as _, Typed2718};
+use alloy_consensus::{Transaction as TransactionTrait, Typed2718, transaction::Recovered};
 use alloy_eips::{eip2930::AccessList, eip7702::SignedAuthorization};
 use alloy_primitives::{Address, B256, BlockHash, Bytes, ChainId, TxKind, U256};
 use alloy_serde::OtherFields;
-use op_alloy_consensus::OpTxEnvelope;
+use op_alloy_consensus::{OpTransaction, OpTxEnvelope, transaction::OpTransactionInfo};
 use serde::{Deserialize, Serialize};
 
 /// OP Transaction type
 #[derive(
     Clone, Debug, PartialEq, Eq, Serialize, Deserialize, derive_more::Deref, derive_more::DerefMut,
 )]
-#[serde(try_from = "tx_serde::TransactionSerdeHelper", into = "tx_serde::TransactionSerdeHelper")]
 #[cfg_attr(all(any(test, feature = "arbitrary"), feature = "k256"), derive(arbitrary::Arbitrary))]
-pub struct Transaction {
+#[serde(
+    try_from = "tx_serde::TransactionSerdeHelper<T>",
+    into = "tx_serde::TransactionSerdeHelper<T>",
+    bound = "T: TransactionTrait + OpTransaction + Clone + serde::Serialize + serde::de::DeserializeOwned"
+)]
+pub struct Transaction<T = OpTxEnvelope> {
     /// Ethereum Transaction Types
     #[deref]
     #[deref_mut]
-    pub inner: alloy_rpc_types_eth::Transaction<OpTxEnvelope>,
+    pub inner: alloy_rpc_types_eth::Transaction<T>,
 
     /// Nonce for deposit transactions. Only present in RPC responses.
     pub deposit_nonce: Option<u64>,
 
     /// Deposit receipt version for deposit transactions post-canyon
     pub deposit_receipt_version: Option<u64>,
+}
+
+impl<T: OpTransaction + TransactionTrait> Transaction<T> {
+    /// Converts a consensus `tx` with an additional context `tx_info` into an RPC [`Transaction`].
+    pub fn from_transaction(tx: Recovered<T>, tx_info: OpTransactionInfo) -> Self {
+        let base_fee = tx_info.inner.base_fee;
+        let effective_gas_price = if tx.is_deposit() {
+            // For deposits, we must always set the `gasPrice` field to 0 in rpc
+            // deposit tx don't have a gas price field, but serde of `Transaction` will take care of
+            // it
+            0
+        } else {
+            base_fee
+                .map(|base_fee| {
+                    tx.effective_tip_per_gas(base_fee).unwrap_or_default() + base_fee as u128
+                })
+                .unwrap_or_else(|| tx.max_fee_per_gas())
+        };
+
+        Self {
+            inner: alloy_rpc_types_eth::Transaction {
+                inner: tx,
+                block_hash: tx_info.inner.block_hash,
+                block_number: tx_info.inner.block_number,
+                transaction_index: tx_info.inner.index,
+                effective_gas_price: Some(effective_gas_price),
+            },
+            deposit_nonce: tx_info.deposit_meta.deposit_nonce,
+            deposit_receipt_version: tx_info.deposit_meta.deposit_receipt_version,
+        }
+    }
 }
 
 impl Typed2718 for Transaction {
@@ -167,9 +202,10 @@ mod tx_serde {
     //! [`alloy_consensus::transaction::Recovered::signer`] which resides in
     //! [`alloy_rpc_types_eth::Transaction::inner`] and [`op_alloy_consensus::TxDeposit::from`].
     //!
-    //! Additionaly, we need similar logic for the `gasPrice` field
+    //! Additionally, we need similar logic for the `gasPrice` field
     use super::*;
     use alloy_consensus::transaction::Recovered;
+    use op_alloy_consensus::OpTransaction;
     use serde::de::Error;
 
     /// Helper struct which will be flattened into the transaction and will only contain `from`
@@ -196,9 +232,9 @@ mod tx_serde {
 
     #[derive(Serialize, Deserialize)]
     #[serde(rename_all = "camelCase")]
-    pub(crate) struct TransactionSerdeHelper {
+    pub(crate) struct TransactionSerdeHelper<T> {
         #[serde(flatten)]
-        inner: OpTxEnvelope,
+        inner: T,
         #[serde(default)]
         block_hash: Option<BlockHash>,
         #[serde(default, with = "alloy_serde::quantity::opt")]
@@ -216,8 +252,8 @@ mod tx_serde {
         other: OptionalFields,
     }
 
-    impl From<Transaction> for TransactionSerdeHelper {
-        fn from(value: Transaction) -> Self {
+    impl<T: TransactionTrait + OpTransaction> From<Transaction<T>> for TransactionSerdeHelper<T> {
+        fn from(value: Transaction<T>) -> Self {
             let Transaction {
                 inner:
                     alloy_rpc_types_eth::Transaction {
@@ -232,11 +268,7 @@ mod tx_serde {
             } = value;
 
             // if inner transaction is a deposit, then don't serialize `from` directly
-            let from = if matches!(inner.inner(), OpTxEnvelope::Deposit(_)) {
-                None
-            } else {
-                Some(inner.signer())
-            };
+            let from = if inner.as_deposit().is_some() { None } else { Some(inner.signer()) };
 
             // if inner transaction has its own `gasPrice` don't serialize it in this struct.
             let effective_gas_price = effective_gas_price.filter(|_| inner.gas_price().is_none());
@@ -252,10 +284,10 @@ mod tx_serde {
         }
     }
 
-    impl TryFrom<TransactionSerdeHelper> for Transaction {
+    impl<T: TransactionTrait + OpTransaction> TryFrom<TransactionSerdeHelper<T>> for Transaction<T> {
         type Error = serde_json::Error;
 
-        fn try_from(value: TransactionSerdeHelper) -> Result<Self, Self::Error> {
+        fn try_from(value: TransactionSerdeHelper<T>) -> Result<Self, Self::Error> {
             let TransactionSerdeHelper {
                 inner,
                 block_hash,
@@ -270,12 +302,10 @@ mod tx_serde {
             let from = if let Some(from) = other.from {
                 from
             } else {
-                match &inner {
-                    OpTxEnvelope::Deposit(tx) => tx.from,
-                    _ => {
-                        return Err(serde_json::Error::custom("missing `from` field"));
-                    }
-                }
+                inner
+                    .as_deposit()
+                    .map(|v| v.from)
+                    .ok_or_else(|| serde_json::Error::custom("missing `from` field"))?
             };
 
             // Only serialize deposit_nonce if inner transaction is deposit to avoid duplicated keys

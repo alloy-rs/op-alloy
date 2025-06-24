@@ -12,6 +12,92 @@ use alloy_rpc_types_engine::{
     CancunPayloadFields, ExecutionPayloadInputV2, ExecutionPayloadV3, PraguePayloadFields,
 };
 
+/// A thin wrapper around [`OpExecutionPayload`] that includes the parent beacon block root.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct OpExecutionPayloadEnvelope {
+    /// The parent beacon block root, if any.
+    pub parent_beacon_block_root: Option<B256>,
+    /// The execution payload.
+    pub payload: OpExecutionPayload,
+}
+
+impl OpExecutionPayloadEnvelope {
+    /// Returns the payload hash over the ssz encoded payload envelope data.
+    #[cfg(feature = "std")]
+    pub fn payload_hash(&self) -> crate::PayloadHash {
+        use ssz::Encode;
+        let ssz_bytes = self.as_ssz_bytes();
+        crate::PayloadHash::from(&ssz_bytes.as_slice()[65..])
+    }
+}
+
+#[cfg(feature = "std")]
+impl ssz::Encode for OpExecutionPayloadEnvelope {
+    fn is_ssz_fixed_len() -> bool {
+        false
+    }
+
+    fn ssz_append(&self, buf: &mut Vec<u8>) {
+        // Write parent beacon block root
+        match &self.parent_beacon_block_root {
+            Some(root) => buf.extend_from_slice(root.as_slice()),
+            None => buf.extend_from_slice(&[0u8; 32]),
+        }
+
+        // Write payload
+        self.payload.ssz_append(buf);
+    }
+
+    fn ssz_bytes_len(&self) -> usize {
+        let mut len = 0;
+        len += B256::ssz_fixed_len(); // parent_beacon_block_root is always 32 bytes
+        len += self.payload.ssz_bytes_len();
+        len
+    }
+}
+
+#[cfg(feature = "std")]
+impl ssz::Decode for OpExecutionPayloadEnvelope {
+    fn is_ssz_fixed_len() -> bool {
+        false
+    }
+
+    fn from_ssz_bytes(bytes: &[u8]) -> Result<Self, ssz::DecodeError> {
+        if bytes.len() < B256::ssz_fixed_len() {
+            return Err(ssz::DecodeError::InvalidByteLength {
+                len: bytes.len(),
+                expected: B256::ssz_fixed_len(),
+            });
+        }
+
+        // Decode parent_beacon_block_root
+        let parent_beacon_block_root = {
+            let root_bytes = &bytes[..B256::ssz_fixed_len()];
+            if root_bytes.iter().all(|&b| b == 0) {
+                None
+            } else {
+                Some(B256::from_slice(root_bytes))
+            }
+        };
+
+        // Decode payload
+        let payload = OpExecutionPayload::from_ssz_bytes(&bytes[B256::ssz_fixed_len()..])?;
+
+        Ok(Self { parent_beacon_block_root, payload })
+    }
+}
+
+impl From<OpNetworkPayloadEnvelope> for OpExecutionPayloadEnvelope {
+    fn from(envelope: OpNetworkPayloadEnvelope) -> Self {
+        Self {
+            payload: envelope.payload,
+            parent_beacon_block_root: envelope.parent_beacon_block_root,
+        }
+    }
+}
+
 /// Struct aggregating [`OpExecutionPayload`] and [`OpExecutionPayloadSidecar`] and encapsulating
 /// complete payload supplied for execution.
 #[derive(Debug, Clone)]
@@ -354,7 +440,7 @@ pub enum PayloadEnvelopeEncodeError {
     /// Wrong versions of the payload.
     #[error("Wrong version of the payload")]
     WrongVersion,
-    /// An error occured during snap encoding.
+    /// An error occurred during snap encoding.
     #[error(transparent)]
     #[cfg(feature = "std")]
     SnapEncoding(#[from] snap::Error),
@@ -423,6 +509,34 @@ impl PayloadHash {
 mod tests {
     use super::*;
     use alloy_primitives::b256;
+
+    #[test]
+    #[cfg(feature = "std")]
+    fn test_roundtrip_encode_rpc_execution_payload_envelope() {
+        use alloy_primitives::hex;
+        use ssz::{Decode, Encode};
+        let data = hex!(
+            "00000000000000000000000000000000000000000000000000000000000001230000000000000000000000000000000000000000000000000000000000000123000000000000000000000000000000000000045600000000000000000000000000000000000000000000000000000000000007890000000000000000000000000000000000000000000000000000000000000abc0d0e0f000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000111de000000000000004d01000000000000bc010000000000002b02000000000000300200000903000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000088832020000380200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001236666040000009999"
+        );
+
+        let payload = OpExecutionPayloadEnvelope::from_ssz_bytes(&data).unwrap();
+        let serialized = payload.as_ssz_bytes();
+        assert_eq!(data, &serialized[..]);
+    }
+
+    #[test]
+    #[cfg(feature = "serde")]
+    fn test_serde_rountrip_op_execution_payload_envelope() {
+        let envelope_str = r#"{
+            "payload": {"parentHash":"0xe927a1448525fb5d32cb50ee1408461a945ba6c39bd5cf5621407d500ecc8de9","feeRecipient":"0x0000000000000000000000000000000000000000","stateRoot":"0x10f8a0830000e8edef6d00cc727ff833f064b1950afd591ae41357f97e543119","receiptsRoot":"0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421","logsBloom":"0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000","prevRandao":"0xe0d8b4521a7da1582a713244ffb6a86aa1726932087386e2dc7973f43fc6cb24","blockNumber":"0x1","gasLimit":"0x2ffbd2","gasUsed":"0x0","timestamp":"0x1235","extraData":"0xd883010d00846765746888676f312e32312e30856c696e7578","baseFeePerGas":"0x342770c0","blockHash":"0x44d0fa5f2f73a938ebb96a2a21679eb8dea3e7b7dd8fd9f35aa756dda8bf0a8a","transactions":[],"withdrawals":[],"blobGasUsed":"0x0","excessBlobGas":"0x0","withdrawalsRoot":"0x10f8a0830000e8edef6d00cc727ff833f064b1950afd591ae41357f97e543119"},
+            "parentBeaconBlockRoot": "0x9999999999999999999999999999999999999999999999999999999999999999"
+        }"#;
+
+        let envelope: OpExecutionPayloadEnvelope = serde_json::from_str(envelope_str).unwrap();
+        let expected = b256!("9999999999999999999999999999999999999999999999999999999999999999");
+        assert_eq!(envelope.parent_beacon_block_root.unwrap(), expected);
+        let _ = serde_json::to_string(&envelope).unwrap();
+    }
 
     #[test]
     fn test_signature_message() {

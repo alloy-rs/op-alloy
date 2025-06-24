@@ -18,6 +18,8 @@ use error::OpPayloadError;
 /// [`OpExecutionPayloadV4`].
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize))]
+#[cfg_attr(feature = "std", derive(ssz_derive::Encode, ssz_derive::Decode))]
+#[cfg_attr(feature = "std", ssz(enum_behaviour = "transparent"))]
 #[cfg_attr(feature = "serde", serde(untagged))]
 pub enum OpExecutionPayload {
     /// V1 payload
@@ -498,7 +500,7 @@ impl OpExecutionPayload {
 
     /// Tries to create a new unsealed block from the given payload and payload sidecar.
     ///
-    /// Additional to checks preformed in [`OpExecutionPayload::try_into_block`], which is called
+    /// Additional to checks performed in [`OpExecutionPayload::try_into_block`], which is called
     /// under the hood, also checks that sidecar doesn't contain:
     /// - blob versioned hashes
     /// - execution layer requests
