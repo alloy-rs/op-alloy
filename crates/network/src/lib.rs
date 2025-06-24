@@ -219,8 +219,17 @@ impl TransactionBuilder<Optimism> for TransactionRequest {
     }
 
     fn build_unsigned(self) -> BuildResult<OpTypedTransaction, Optimism> {
+        if self.preferred_type() == TxType::Eip4844 {
+            return Err(TransactionBuilderError::Custom(
+                "EIP-4844 transactions are not supported".to_string(),
+            )
+            .into_unbuilt(self));
+        }
+
         if let Err((tx_type, missing)) = self.missing_keys() {
-            let tx_type = OpTxType::try_from(tx_type as u8).unwrap();
+            let tx_type = OpTxType::try_from(tx_type as u8)
+                .map_err(TransactionBuilderError::Custom("invalid transaction type".to_string()))?;
+
             return Err(TransactionBuilderError::InvalidTransactionRequest(tx_type, missing)
                 .into_unbuilt(self));
         }
@@ -240,24 +249,13 @@ impl TransactionBuilder<Optimism> for TransactionRequest {
                 let tx = OpTypedTransaction::Eip1559(tx);
                 Ok(tx)
             }
-            EthereumTypedTransaction::Eip4844(tx) => {
-                // Converted to EIP-1559
-                let tx: TxEip4844 = tx.into();
-                Ok(OpTypedTransaction::Eip1559(TxEip1559 {
-                    chain_id: tx.chain_id,
-                    nonce: tx.nonce,
-                    gas_limit: tx.gas_limit,
-                    max_priority_fee_per_gas: tx.max_priority_fee_per_gas,
-                    max_fee_per_gas: tx.max_fee_per_gas,
-                    to: TxKind::Call(tx.to),
-                    value: tx.value,
-                    access_list: tx.access_list,
-                    input: tx.input,
-                }))
-            }
+
             EthereumTypedTransaction::Eip7702(tx) => {
                 let tx = OpTypedTransaction::Eip7702(tx);
                 Ok(tx)
+            }
+            EthereumTypedTransaction::Eip4844(_) => {
+                unreachable!("EIP-4844 transactions are not supported")
             }
         }
     }
