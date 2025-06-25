@@ -49,7 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Documentation
 
 - Grammar fixes and a cleanup of a broken documentation link ([#537](https://github.com/alloy-rs/op-alloy/issues/537))
-- Docs (README.md): create tables for crateses ([#534](https://github.com/alloy-rs/op-alloy/issues/534))
+- Docs (README.md): create tables for crates ([#534](https://github.com/alloy-rs/op-alloy/issues/534))
 
 ### Features
 
