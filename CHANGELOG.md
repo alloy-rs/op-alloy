@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.18.7](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.18.7) - 2025-06-25
+
+### Bug Fixes
+
+- Use `TransactionRequest` in `Network` impl ([#525](https://github.com/alloy-rs/op-alloy/issues/525))
+- Correct typos in comments ([#554](https://github.com/alloy-rs/op-alloy/issues/554))
+
+### Documentation
+
+- Fix typo in payload comment ([#555](https://github.com/alloy-rs/op-alloy/issues/555))
+
+### Features
+
+- [rpc] Add `OpTransactionRequest` and associate it with `TransactionRequest` of `Optimism` ([#557](https://github.com/alloy-rs/op-alloy/issues/557))
+- Derive `TransactionEnvelope` for `OpPooledTransaction` ([#556](https://github.com/alloy-rs/op-alloy/issues/556))
+
+### Miscellaneous Tasks
+
+- Add funding.json
+
 ## [0.18.6](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.18.6) - 2025-06-18
 
@@ -14,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.18.6
 - Release 0.18.5
 
 ## [0.18.4](https://github.com/alloy-rs/op-alloy
