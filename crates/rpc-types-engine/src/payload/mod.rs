@@ -546,8 +546,8 @@ impl OpExecutionPayload {
     /// Tries to create a new unsealed block from the given payload and payload sidecar with a
     /// custom transaction mapper.
     ///
-    /// Additional to checks performed in [`OpExecutionPayload::try_into_block_with`], which is called
-    /// under the hood, also checks that sidecar doesn't contain:
+    /// Additional to checks performed in [`OpExecutionPayload::try_into_block_with`], which is
+    /// called under the hood, also checks that sidecar doesn't contain:
     /// - blob versioned hashes
     /// - execution layer requests
     ///
