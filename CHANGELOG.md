@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.18.9](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.18.9) - 2025-06-27
+
+### Dependencies
+
+- Bump alloy ([#562](https://github.com/alloy-rs/op-alloy/issues/562))
+
 ## [0.18.8](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.18.8) - 2025-06-27
 
@@ -19,6 +26,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Features
 
 - Override recover_signer_unchecked_with_buf ([#561](https://github.com/alloy-rs/op-alloy/issues/561))
+
+### Miscellaneous Tasks
+
+- Release 0.18.8
 
 ## [0.18.7](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.18.7) - 2025-06-25
