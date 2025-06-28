@@ -49,6 +49,20 @@ impl OpExecutionPayloadV4 {
 
         Ok(base_block)
     }
+
+    /// Converts [`OpExecutionPayloadV4`] to [`Block`] with the given closure.
+    pub fn try_into_block_with<T, F, E>(self, f: F) -> Result<Block<T>, PayloadError>
+    where
+        F: FnMut(Bytes) -> Result<T, E>,
+        E: Into<PayloadError>,
+    {
+        let mut base_block = self.payload_inner.try_into_block_with(f)?;
+
+        // overwrite l1 withdrawals root with l2 withdrawals root
+        base_block.header.withdrawals_root = Some(self.withdrawals_root);
+
+        Ok(base_block)
+    }
 }
 
 #[cfg(feature = "std")]
