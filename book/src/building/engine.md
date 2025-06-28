@@ -22,4 +22,4 @@ from [`alloy-rpc-types-engine`][alloy-engine].
 [v4]: https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/payload/v4/struct.OpExecutionPayloadEnvelopeV4.html
 [pa]: https://docs.rs/alloy-rpc-types-engine/latest/alloy_rpc_types_engine/payload/struct.PayloadAttributes.html
 [attributes]: https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/struct.OpPayloadAttributes.html
-[engine]: https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/struct.OpAttributesWithParent.html
+[engine]: https://docs.rs/op-alloy-rpc-types-engine/latest/op_alloy_rpc_types_engine/
