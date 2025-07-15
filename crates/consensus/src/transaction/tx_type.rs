@@ -31,7 +31,7 @@ impl OpTxType {
 
     /// Returns `true` if the type is [`OpTxType::Deposit`].
     pub const fn is_deposit(&self) -> bool {
-        matches!(self, Self::Deposit)
+        *self == Self::Deposit
     }
 }
 
