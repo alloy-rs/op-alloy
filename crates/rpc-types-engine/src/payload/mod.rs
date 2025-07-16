@@ -495,6 +495,11 @@ impl OpExecutionPayload {
 
         let mut block = self.into_block_raw()?;
 
+        if let Some(blobs_hashes) = sidecar.versioned_hashes() {
+            if !blobs_hashes.is_empty() {
+                return Err(OpPayloadError::NonEmptyBlobVersionedHashes);
+            }
+        }
         if let Some(reqs_hash) = sidecar.requests_hash() {
             if reqs_hash != EMPTY_REQUESTS_HASH {
                 return Err(OpPayloadError::NonEmptyELRequests);
