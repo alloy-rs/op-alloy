@@ -5,6 +5,7 @@ pub mod v3;
 pub mod v4;
 
 use crate::{OpExecutionPayloadSidecar, OpExecutionPayloadV4};
+use alloc::vec::Vec;
 use alloy_consensus::{Block, BlockHeader, Transaction};
 use alloy_eips::{Decodable2718, Encodable2718, Typed2718, eip7685::EMPTY_REQUESTS_HASH};
 use alloy_primitives::{B256, Bytes, Sealable};
