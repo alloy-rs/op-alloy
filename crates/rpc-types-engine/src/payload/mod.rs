@@ -495,10 +495,11 @@ impl OpExecutionPayload {
 
         let mut block = self.into_block_raw()?;
 
-        // Set requests hash if present (it will be validated later in
-        // try_into_block_with_sidecar_with)
         if let Some(reqs_hash) = sidecar.requests_hash() {
-            block.header.requests_hash = Some(reqs_hash);
+            if reqs_hash != EMPTY_REQUESTS_HASH {
+                return Err(OpPayloadError::NonEmptyELRequests);
+            }
+            block.header.requests_hash = Some(EMPTY_REQUESTS_HASH)
         }
         block.header.parent_beacon_block_root = sidecar.parent_beacon_block_root();
 
