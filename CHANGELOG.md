@@ -5,12 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.18.10](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.18.10) - 2025-07-17
+
+### Bug Fixes
+
+- [rpc-types-engine] Fix `OpExecutionPayloadEnvelope::payload_hash` ([#572](https://github.com/alloy-rs/op-alloy/issues/572))
+- Simplify OpExecutionPayload numeric field deserialization ([#568](https://github.com/alloy-rs/op-alloy/issues/568))
+- Fix typo in test function name ([#566](https://github.com/alloy-rs/op-alloy/issues/566))
+
+### Features
+
+- Add try_into_block_with methods to OpExecutionPayload ([#563](https://github.com/alloy-rs/op-alloy/issues/563))
+
+### Miscellaneous Tasks
+
+- Add transaction getters ([#571](https://github.com/alloy-rs/op-alloy/issues/571))
+- Add receipt helpers ([#567](https://github.com/alloy-rs/op-alloy/issues/567))
+
+### Other
+
+- Update broken OpAttributesWithParent docs.rs link to crate root in engine.md ([#565](https://github.com/alloy-rs/op-alloy/issues/565))
+
 ## [0.18.9](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.18.9) - 2025-06-27
 
 ### Dependencies
 
 - Bump alloy ([#562](https://github.com/alloy-rs/op-alloy/issues/562))
+
+### Miscellaneous Tasks
+
+- Release 0.18.9
 
 ## [0.18.8](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.18.8) - 2025-06-27
