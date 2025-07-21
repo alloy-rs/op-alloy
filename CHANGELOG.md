@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.18.12](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.18.12) - 2025-07-21
+
+### Bug Fixes
+
+- Generalize `TransactionResponse` impl ([#577](https://github.com/alloy-rs/op-alloy/issues/577))
+
+### Features
+
+- Add deposit receipt conversion ([#575](https://github.com/alloy-rs/op-alloy/issues/575))
+
 ## [0.18.11](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.18.11) - 2025-07-17
 
@@ -12,6 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add into_block_raw methods to OpExecutionPayload types ([#570](https://github.com/alloy-rs/op-alloy/issues/570))
 - Add map logs helpers ([#574](https://github.com/alloy-rs/op-alloy/issues/574))
+
+### Miscellaneous Tasks
+
+- Release 0.18.11
 
 ### Other
 
