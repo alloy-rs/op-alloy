@@ -1,7 +1,7 @@
 //! Support for EIP-1559 parameters after holocene.
 
 use alloy_eips::eip1559::BaseFeeParams;
-use alloy_primitives::{B64, Bytes, aliases::B96};
+use alloy_primitives::{B64, Bytes, FixedBytes};
 
 /// Extracts the Holocene 1599 parameters from the encoded form:
 /// <https://github.com/ethereum-optimism/specs/blob/main/specs/protocol/holocene/exec-engine.md#eip1559params-encoding>
@@ -65,7 +65,7 @@ pub fn encode_holocene_extra_data(
 /// [TODO link design doc]
 ///
 /// Returns (`elasticity`, `denominator`, `min_base_fee_log2`)
-pub fn decode_jovian_eip_1559_params(eip_1559_params: B96) -> (u32, u32, u8) {
+pub fn decode_jovian_eip_1559_params(eip_1559_params: FixedBytes<9>) -> (u32, u32, u8) {
     let denominator: [u8; 4] = eip_1559_params.0[..4].try_into().expect("sufficient length");
     let elasticity: [u8; 4] = eip_1559_params.0[4..8].try_into().expect("sufficient length");
     let min_base_fee_log2: u8 = eip_1559_params.0[8];
@@ -86,12 +86,12 @@ pub fn decode_jovian_extra_data(extra_data: &[u8]) -> Result<(u32, u32, u8), EIP
         return Err(EIP1559ParamError::InvalidVersion(extra_data[0]));
     }
 
-    Ok(decode_jovian_eip_1559_params(B96::from_slice(&extra_data[1..10])))
+    Ok(decode_jovian_eip_1559_params(FixedBytes::from_slice(&extra_data[1..10])))
 }
 
 /// Encodes the Jovian 1599 parameters for the payload.
 pub fn encode_jovian_extra_data(
-    eip_1559_params: B96,
+    eip_1559_params: FixedBytes<9>,
     default_base_fee_params: BaseFeeParams,
 ) -> Result<Bytes, EIP1559ParamError> {
     // 10 bytes: 1 byte for version (1) and 9 bytes for eip1559 params
@@ -165,14 +165,14 @@ mod tests {
 
     #[test]
     fn test_get_extra_data_jovian() {
-        let eip_1559_params = B96::from_str("0x000000080000000801000000").unwrap();
+        let eip_1559_params = FixedBytes::from_str("0x000000080000000801").unwrap();
         let extra_data = encode_jovian_extra_data(eip_1559_params, BaseFeeParams::new(80, 60));
         assert_eq!(extra_data.unwrap(), Bytes::copy_from_slice(&[1, 0, 0, 0, 8, 0, 0, 0, 8, 1]));
     }
 
     #[test]
     fn test_get_extra_data_jovian_default() {
-        let eip_1559_params = B96::ZERO;
+        let eip_1559_params = FixedBytes::ZERO;
         let extra_data = encode_jovian_extra_data(eip_1559_params, BaseFeeParams::new(80, 60));
         assert_eq!(extra_data.unwrap(), Bytes::copy_from_slice(&[1, 0, 0, 0, 80, 0, 0, 0, 60, 0]));
     }
