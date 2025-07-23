@@ -6,7 +6,7 @@ use alloy_eips::{
     eip1559::BaseFeeParams,
     eip2718::{Eip2718Result, WithEncoded},
 };
-use alloy_primitives::{B64, Bytes, aliases::B96};
+use alloy_primitives::{B64, Bytes, FixedBytes};
 use alloy_rlp::Result;
 use alloy_rpc_types_engine::PayloadAttributes;
 use op_alloy_consensus::{
@@ -44,7 +44,7 @@ pub struct OpPayloadAttributes {
     ///
     /// Prior to Jovian activation, this field should always be [None].
     #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
-    pub jovian_eip_1559_params: Option<B96>,
+    pub jovian_eip_1559_params: Option<FixedBytes<9>>,
 }
 
 impl OpPayloadAttributes {
@@ -263,7 +263,7 @@ mod test {
             no_tx_pool: Some(true),
             gas_limit: Some(42),
             eip_1559_params: None,
-            jovian_eip_1559_params: Some(fixed_bytes!("000000080000000801000000")),
+            jovian_eip_1559_params: Some(fixed_bytes!("000000080000000801")),
         };
 
         let ser = serde_json::to_string(&attributes).unwrap();
@@ -275,7 +275,7 @@ mod test {
     #[test]
     fn test_get_extra_data_post_jovian() {
         let attributes = OpPayloadAttributes {
-            jovian_eip_1559_params: Some(fixed_bytes!("000000080000000801000000")),
+            jovian_eip_1559_params: Some(fixed_bytes!("000000080000000801")),
             ..Default::default()
         };
         let extra_data = attributes.get_jovian_extra_data(BaseFeeParams::new(80, 60));
@@ -284,8 +284,10 @@ mod test {
 
     #[test]
     fn test_get_extra_data_post_jovian_default() {
-        let attributes =
-            OpPayloadAttributes { jovian_eip_1559_params: Some(B96::ZERO), ..Default::default() };
+        let attributes = OpPayloadAttributes {
+            jovian_eip_1559_params: Some(FixedBytes::ZERO),
+            ..Default::default()
+        };
         let extra_data = attributes.get_jovian_extra_data(BaseFeeParams::new(80, 60));
         assert_eq!(extra_data.unwrap(), Bytes::copy_from_slice(&[1, 0, 0, 0, 80, 0, 0, 0, 60, 0]));
     }
