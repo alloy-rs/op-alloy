@@ -242,7 +242,8 @@ mod tests {
           "ecotoneTime": 0,
           "fjordTime": 0,
           "graniteTime": 0,
-          "holoceneTime": 0
+          "holoceneTime": 0,
+          "jovianTime": 0
         }
         "#;
 
@@ -262,7 +263,7 @@ mod tests {
                     holocene_time: Some(0),
                     isthmus_time: None,
                     interop_time: None,
-                    jovian_time: None,
+                    jovian_time: Some(0),
                 }),
                 base_fee_info: None,
             }

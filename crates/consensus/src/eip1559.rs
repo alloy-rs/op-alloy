@@ -1,7 +1,7 @@
 //! Support for EIP-1559 parameters after holocene.
 
 use alloy_eips::eip1559::BaseFeeParams;
-use alloy_primitives::{B64, Bytes};
+use alloy_primitives::{B64, Bytes, aliases::B96};
 
 /// Extracts the Holocene 1599 parameters from the encoded form:
 /// <https://github.com/ethereum-optimism/specs/blob/main/specs/protocol/holocene/exec-engine.md#eip1559params-encoding>
@@ -61,6 +61,72 @@ pub fn encode_holocene_extra_data(
     Ok(Bytes::copy_from_slice(&extra_data))
 }
 
+/// Decodes the Jovian 1599 parameters from the encoded form:
+/// [TODO link design doc]
+///
+/// Returns (`elasticity`, `denominator`, `min_base_fee_log2`)
+pub fn decode_jovian_eip_1559_params(eip_1559_params: B96) -> (u32, u32, u8) {
+    let denominator: [u8; 4] = eip_1559_params.0[..4].try_into().expect("sufficient length");
+    let elasticity: [u8; 4] = eip_1559_params.0[4..8].try_into().expect("sufficient length");
+    let min_base_fee_log2: u8 = eip_1559_params.0[8];
+
+    (u32::from_be_bytes(elasticity), u32::from_be_bytes(denominator), min_base_fee_log2)
+}
+
+/// Decodes the Jovian 1599 parameters from the `extradata` bytes.
+///
+/// Returns (`elasticity`, `denominator`, `min_base_fee_log2`)
+pub fn decode_jovian_extra_data(extra_data: &[u8]) -> Result<(u32, u32, u8), EIP1559ParamError> {
+    if extra_data.len() < 10 {
+        return Err(EIP1559ParamError::NoEIP1559Params);
+    }
+
+    if extra_data[0] != 1 {
+        // version must be 1: [TODO link design doc]
+        return Err(EIP1559ParamError::InvalidVersion(extra_data[0]));
+    }
+
+    Ok(decode_jovian_eip_1559_params(B96::from_slice(&extra_data[1..10])))
+}
+
+/// Encodes the Jovian 1599 parameters for the payload.
+pub fn encode_jovian_extra_data(
+    eip_1559_params: B96,
+    default_base_fee_params: BaseFeeParams,
+) -> Result<Bytes, EIP1559ParamError> {
+    // 10 bytes: 1 byte for version (1) and 9 bytes for eip1559 params
+    let mut extra_data = [0u8; 10];
+    extra_data[0] = 1;
+    // If eip 1559 params aren't set, use the canyon base fee param constants
+    // otherwise use them
+    if eip_1559_params.is_zero() {
+        // Try casting max_change_denominator to u32
+        let max_change_denominator: u32 = (default_base_fee_params.max_change_denominator)
+            .try_into()
+            .map_err(|_| EIP1559ParamError::DenominatorOverflow)?;
+
+        // Try casting elasticity_multiplier to u32
+        let elasticity_multiplier: u32 = (default_base_fee_params.elasticity_multiplier)
+            .try_into()
+            .map_err(|_| EIP1559ParamError::ElasticityOverflow)?;
+
+        // Not Jovian so set it to 0
+        let min_base_fee_log2: u8 = 0;
+
+        // Copy the values safely
+        extra_data[1..5].copy_from_slice(&max_change_denominator.to_be_bytes());
+        extra_data[5..9].copy_from_slice(&elasticity_multiplier.to_be_bytes());
+        extra_data[9] = min_base_fee_log2;
+    } else {
+        let (elasticity, denominator, min_base_fee_log2) =
+            decode_jovian_eip_1559_params(eip_1559_params);
+        extra_data[1..5].copy_from_slice(&denominator.to_be_bytes());
+        extra_data[5..9].copy_from_slice(&elasticity.to_be_bytes());
+        extra_data[9] = min_base_fee_log2;
+    }
+    Ok(Bytes::copy_from_slice(&extra_data))
+}
+
 /// Error type for EIP-1559 parameters
 #[derive(Debug, thiserror::Error, Clone, Copy, PartialEq, Eq)]
 pub enum EIP1559ParamError {
@@ -95,5 +161,19 @@ mod tests {
         let eip_1559_params = B64::ZERO;
         let extra_data = encode_holocene_extra_data(eip_1559_params, BaseFeeParams::new(80, 60));
         assert_eq!(extra_data.unwrap(), Bytes::copy_from_slice(&[0, 0, 0, 0, 80, 0, 0, 0, 60]));
+    }
+
+    #[test]
+    fn test_get_extra_data_jovian() {
+        let eip_1559_params = B96::from_str("0x000000080000000801000000").unwrap();
+        let extra_data = encode_jovian_extra_data(eip_1559_params, BaseFeeParams::new(80, 60));
+        assert_eq!(extra_data.unwrap(), Bytes::copy_from_slice(&[1, 0, 0, 0, 8, 0, 0, 0, 8, 1]));
+    }
+
+    #[test]
+    fn test_get_extra_data_jovian_default() {
+        let eip_1559_params = B96::ZERO;
+        let extra_data = encode_jovian_extra_data(eip_1559_params, BaseFeeParams::new(80, 60));
+        assert_eq!(extra_data.unwrap(), Bytes::copy_from_slice(&[1, 0, 0, 0, 80, 0, 0, 0, 60, 0]));
     }
 }
