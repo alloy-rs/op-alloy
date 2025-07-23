@@ -6,11 +6,12 @@ use alloy_eips::{
     eip1559::BaseFeeParams,
     eip2718::{Eip2718Result, WithEncoded},
 };
-use alloy_primitives::{B64, Bytes};
+use alloy_primitives::{B64, Bytes, aliases::B96};
 use alloy_rlp::Result;
 use alloy_rpc_types_engine::PayloadAttributes;
 use op_alloy_consensus::{
-    EIP1559ParamError, OpTxEnvelope, decode_eip_1559_params, encode_holocene_extra_data,
+    EIP1559ParamError, OpTxEnvelope, decode_eip_1559_params, decode_jovian_eip_1559_params,
+    encode_holocene_extra_data, encode_jovian_extra_data,
 };
 
 /// Optimism Payload Attributes
@@ -39,6 +40,11 @@ pub struct OpPayloadAttributes {
     /// Prior to Holocene activation, this field should always be [None].
     #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
     pub eip_1559_params: Option<B64>,
+    /// If set, this sets the Jovian 1599 parameters for the block.
+    ///
+    /// Prior to Jovian activation, this field should always be [None].
+    #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
+    pub jovian_eip_1559_params: Option<B96>,
 }
 
 impl OpPayloadAttributes {
@@ -58,6 +64,24 @@ impl OpPayloadAttributes {
     /// Returns (`elasticity`, `denominator`)
     pub fn decode_eip_1559_params(&self) -> Option<(u32, u32)> {
         self.eip_1559_params.map(decode_eip_1559_params)
+    }
+
+    /// Encodes the Jovian `eip1559` parameters for the payload.
+    pub fn get_jovian_extra_data(
+        &self,
+        default_base_fee_params: BaseFeeParams,
+    ) -> Result<Bytes, EIP1559ParamError> {
+        self.jovian_eip_1559_params
+            .map(|params| encode_jovian_extra_data(params, default_base_fee_params))
+            .ok_or(EIP1559ParamError::NoEIP1559Params)?
+    }
+
+    /// Extracts the Jovian 1599 parameters from the encoded form:
+    /// [TODO link design doc]
+    ///
+    /// Returns (`elasticity`, `denominator`, `min_base_fee_log2`)
+    pub fn decode_jovian_eip_1559_params(&self) -> Option<(u32, u32, u8)> {
+        self.jovian_eip_1559_params.map(decode_jovian_eip_1559_params)
     }
 
     /// Returns an iterator over the decoded [`OpTxEnvelope`] in this attributes.
@@ -134,7 +158,7 @@ impl OpPayloadAttributes {
 mod test {
     use super::*;
     use alloc::vec;
-    use alloy_primitives::{Address, B256, b64};
+    use alloy_primitives::{Address, B256, b64, fixed_bytes};
     use alloy_rpc_types_engine::PayloadAttributes;
     use core::str::FromStr;
 
@@ -152,6 +176,7 @@ mod test {
             no_tx_pool: Some(true),
             gas_limit: Some(42),
             eip_1559_params: None,
+            jovian_eip_1559_params: None,
         };
 
         let ser = serde_json::to_string(&attributes).unwrap();
@@ -174,6 +199,7 @@ mod test {
             no_tx_pool: Some(true),
             gas_limit: Some(42),
             eip_1559_params: Some(b64!("0000dead0000beef")),
+            jovian_eip_1559_params: None,
         };
 
         let ser = serde_json::to_string(&attributes).unwrap();
@@ -198,5 +224,69 @@ mod test {
             OpPayloadAttributes { eip_1559_params: Some(B64::ZERO), ..Default::default() };
         let extra_data = attributes.get_holocene_extra_data(BaseFeeParams::new(80, 60));
         assert_eq!(extra_data.unwrap(), Bytes::copy_from_slice(&[0, 0, 0, 0, 80, 0, 0, 0, 60]));
+    }
+
+    #[test]
+    fn test_serde_roundtrip_attributes_pre_jovian() {
+        let attributes = OpPayloadAttributes {
+            payload_attributes: PayloadAttributes {
+                timestamp: 0x1337,
+                prev_randao: B256::ZERO,
+                suggested_fee_recipient: Address::ZERO,
+                withdrawals: Default::default(),
+                parent_beacon_block_root: Some(B256::ZERO),
+            },
+            transactions: Some(vec![b"hello".to_vec().into()]),
+            no_tx_pool: Some(true),
+            gas_limit: Some(42),
+            eip_1559_params: Some(b64!("0000dead0000beef")),
+            jovian_eip_1559_params: None,
+        };
+
+        let ser = serde_json::to_string(&attributes).unwrap();
+        let de: OpPayloadAttributes = serde_json::from_str(&ser).unwrap();
+
+        assert_eq!(attributes, de);
+    }
+
+    #[test]
+    fn test_serde_roundtrip_attributes_post_jovian() {
+        let attributes = OpPayloadAttributes {
+            payload_attributes: PayloadAttributes {
+                timestamp: 0x1337,
+                prev_randao: B256::ZERO,
+                suggested_fee_recipient: Address::ZERO,
+                withdrawals: Default::default(),
+                parent_beacon_block_root: Some(B256::ZERO),
+            },
+            transactions: Some(vec![b"hello".to_vec().into()]),
+            no_tx_pool: Some(true),
+            gas_limit: Some(42),
+            eip_1559_params: None,
+            jovian_eip_1559_params: Some(fixed_bytes!("000000080000000801000000")),
+        };
+
+        let ser = serde_json::to_string(&attributes).unwrap();
+        let de: OpPayloadAttributes = serde_json::from_str(&ser).unwrap();
+
+        assert_eq!(attributes, de);
+    }
+
+    #[test]
+    fn test_get_extra_data_post_jovian() {
+        let attributes = OpPayloadAttributes {
+            jovian_eip_1559_params: Some(fixed_bytes!("000000080000000801000000")),
+            ..Default::default()
+        };
+        let extra_data = attributes.get_jovian_extra_data(BaseFeeParams::new(80, 60));
+        assert_eq!(extra_data.unwrap(), Bytes::copy_from_slice(&[1, 0, 0, 0, 8, 0, 0, 0, 8, 1]));
+    }
+
+    #[test]
+    fn test_get_extra_data_post_jovian_default() {
+        let attributes =
+            OpPayloadAttributes { jovian_eip_1559_params: Some(B96::ZERO), ..Default::default() };
+        let extra_data = attributes.get_jovian_extra_data(BaseFeeParams::new(80, 60));
+        assert_eq!(extra_data.unwrap(), Bytes::copy_from_slice(&[1, 0, 0, 0, 80, 0, 0, 0, 60, 0]));
     }
 }
