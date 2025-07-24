@@ -6,12 +6,12 @@ use alloy_eips::{
     eip1559::BaseFeeParams,
     eip2718::{Eip2718Result, WithEncoded},
 };
-use alloy_primitives::{B64, Bytes, FixedBytes};
+use alloy_primitives::{B64, Bytes};
 use alloy_rlp::Result;
 use alloy_rpc_types_engine::PayloadAttributes;
 use op_alloy_consensus::{
-    EIP1559ParamError, OpTxEnvelope, decode_eip_1559_params, decode_jovian_eip_1559_params,
-    encode_holocene_extra_data, encode_jovian_extra_data,
+    EIP1559ParamError, OpTxEnvelope, decode_eip_1559_params, encode_holocene_extra_data,
+    encode_jovian_extra_data,
 };
 
 /// Optimism Payload Attributes
@@ -40,11 +40,11 @@ pub struct OpPayloadAttributes {
     /// Prior to Holocene activation, this field should always be [None].
     #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
     pub eip_1559_params: Option<B64>,
-    /// If set, this sets the Jovian 1599 parameters for the block.
+    /// If set, this sets the minimum base fee log2 for the block.
     ///
     /// Prior to Jovian activation, this field should always be [None].
     #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
-    pub jovian_eip_1559_params: Option<FixedBytes<9>>,
+    pub min_base_fee_log2: Option<u8>,
 }
 
 impl OpPayloadAttributes {
@@ -66,12 +66,13 @@ impl OpPayloadAttributes {
         self.eip_1559_params.map(decode_eip_1559_params)
     }
 
-    /// Encodes the Jovian `eip1559` parameters for the payload.
+    /// Encodes the Jovian `eip1559` parameters for the payload, which is the same as the Holocene
+    /// except the version byte is set to 1.
     pub fn get_jovian_extra_data(
         &self,
         default_base_fee_params: BaseFeeParams,
     ) -> Result<Bytes, EIP1559ParamError> {
-        self.jovian_eip_1559_params
+        self.eip_1559_params
             .map(|params| encode_jovian_extra_data(params, default_base_fee_params))
             .ok_or(EIP1559ParamError::NoEIP1559Params)?
     }
@@ -81,7 +82,11 @@ impl OpPayloadAttributes {
     ///
     /// Returns (`elasticity`, `denominator`, `min_base_fee_log2`)
     pub fn decode_jovian_eip_1559_params(&self) -> Option<(u32, u32, u8)> {
-        self.jovian_eip_1559_params.map(decode_jovian_eip_1559_params)
+        self.eip_1559_params.map(|params| {
+            let (elasticity, denominator) = decode_eip_1559_params(params);
+            let min_base_fee_log2 = self.min_base_fee_log2.unwrap_or(0);
+            (elasticity, denominator, min_base_fee_log2)
+        })
     }
 
     /// Returns an iterator over the decoded [`OpTxEnvelope`] in this attributes.
@@ -158,7 +163,7 @@ impl OpPayloadAttributes {
 mod test {
     use super::*;
     use alloc::vec;
-    use alloy_primitives::{Address, B256, b64, fixed_bytes};
+    use alloy_primitives::{Address, B256, b64};
     use alloy_rpc_types_engine::PayloadAttributes;
     use core::str::FromStr;
 
@@ -176,7 +181,7 @@ mod test {
             no_tx_pool: Some(true),
             gas_limit: Some(42),
             eip_1559_params: None,
-            jovian_eip_1559_params: None,
+            min_base_fee_log2: None,
         };
 
         let ser = serde_json::to_string(&attributes).unwrap();
@@ -199,7 +204,7 @@ mod test {
             no_tx_pool: Some(true),
             gas_limit: Some(42),
             eip_1559_params: Some(b64!("0000dead0000beef")),
-            jovian_eip_1559_params: None,
+            min_base_fee_log2: None,
         };
 
         let ser = serde_json::to_string(&attributes).unwrap();
@@ -240,7 +245,7 @@ mod test {
             no_tx_pool: Some(true),
             gas_limit: Some(42),
             eip_1559_params: Some(b64!("0000dead0000beef")),
-            jovian_eip_1559_params: None,
+            min_base_fee_log2: None,
         };
 
         let ser = serde_json::to_string(&attributes).unwrap();
@@ -263,7 +268,7 @@ mod test {
             no_tx_pool: Some(true),
             gas_limit: Some(42),
             eip_1559_params: None,
-            jovian_eip_1559_params: Some(fixed_bytes!("000000080000000801")),
+            min_base_fee_log2: Some(1),
         };
 
         let ser = serde_json::to_string(&attributes).unwrap();
@@ -275,20 +280,26 @@ mod test {
     #[test]
     fn test_get_extra_data_post_jovian() {
         let attributes = OpPayloadAttributes {
-            jovian_eip_1559_params: Some(fixed_bytes!("000000080000000801")),
+            eip_1559_params: Some(B64::from_str("0x0000000800000008").unwrap()),
+            min_base_fee_log2: Some(1),
             ..Default::default()
         };
+        assert_eq!(attributes.decode_jovian_eip_1559_params(), Some((8, 8, 1)));
+
         let extra_data = attributes.get_jovian_extra_data(BaseFeeParams::new(80, 60));
-        assert_eq!(extra_data.unwrap(), Bytes::copy_from_slice(&[1, 0, 0, 0, 8, 0, 0, 0, 8, 1]));
+        assert_eq!(extra_data.unwrap(), Bytes::copy_from_slice(&[1, 0, 0, 0, 8, 0, 0, 0, 8]));
     }
 
     #[test]
     fn test_get_extra_data_post_jovian_default() {
         let attributes = OpPayloadAttributes {
-            jovian_eip_1559_params: Some(FixedBytes::ZERO),
+            eip_1559_params: Some(B64::ZERO),
+            min_base_fee_log2: Some(0),
             ..Default::default()
         };
+        assert_eq!(attributes.decode_jovian_eip_1559_params(), Some((0, 0, 0)));
+
         let extra_data = attributes.get_jovian_extra_data(BaseFeeParams::new(80, 60));
-        assert_eq!(extra_data.unwrap(), Bytes::copy_from_slice(&[1, 0, 0, 0, 80, 0, 0, 0, 60, 0]));
+        assert_eq!(extra_data.unwrap(), Bytes::copy_from_slice(&[1, 0, 0, 0, 80, 0, 0, 0, 60]));
     }
 }
