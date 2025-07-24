@@ -11,7 +11,7 @@ use alloy_rlp::Result;
 use alloy_rpc_types_engine::PayloadAttributes;
 use op_alloy_consensus::{
     EIP1559ParamError, OpTxEnvelope, decode_eip_1559_params, encode_holocene_extra_data,
-    encode_jovian_extra_data,
+    encode_min_base_fee_extra_data,
 };
 
 /// Optimism Payload Attributes
@@ -66,15 +66,14 @@ impl OpPayloadAttributes {
         self.eip_1559_params.map(decode_eip_1559_params)
     }
 
-    /// Encodes the Jovian `eip1559` parameters for the payload, which is the same as the Holocene
-    /// except the version byte is set to 1.
-    pub fn get_jovian_extra_data(
+    /// Encodes the `eip1559` parameters for the payload along with the minimum base fee.
+    pub fn get_min_base_fee_extra_data(
         &self,
         default_base_fee_params: BaseFeeParams,
     ) -> Result<Bytes, EIP1559ParamError> {
         self.eip_1559_params
             .map(|params| {
-                encode_jovian_extra_data(
+                encode_min_base_fee_extra_data(
                     params,
                     default_base_fee_params,
                     self.min_base_fee_log2.unwrap_or(0),
@@ -279,7 +278,7 @@ mod test {
             ..Default::default()
         };
 
-        let extra_data = attributes.get_jovian_extra_data(BaseFeeParams::new(80, 60));
+        let extra_data = attributes.get_min_base_fee_extra_data(BaseFeeParams::new(80, 60));
         assert_eq!(extra_data.unwrap(), Bytes::copy_from_slice(&[1, 0, 0, 0, 8, 0, 0, 0, 8, 1]));
     }
 
@@ -291,7 +290,7 @@ mod test {
             ..Default::default()
         };
 
-        let extra_data = attributes.get_jovian_extra_data(BaseFeeParams::new(80, 60));
+        let extra_data = attributes.get_min_base_fee_extra_data(BaseFeeParams::new(80, 60));
         assert_eq!(extra_data.unwrap(), Bytes::copy_from_slice(&[1, 0, 0, 0, 80, 0, 0, 0, 60, 0]));
     }
 }
