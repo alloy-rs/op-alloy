@@ -66,16 +66,37 @@ pub fn encode_holocene_extra_data(
     Ok(Bytes::copy_from_slice(&extra_data))
 }
 
-/// Encodes the Jovian 1599 parameters for the payload, specifically setting
-/// the version byte to 1.
+/// Decodes the Jovian 1599 parameters from the `extradata` bytes.
+///
+/// Returns (`elasticity`, `denominator`, `min_base_fee_log2`)
+pub fn decode_jovian_extra_data(extra_data: &[u8]) -> Result<(u32, u32, u8), EIP1559ParamError> {
+    if extra_data.len() < 10 {
+        return Err(EIP1559ParamError::NoEIP1559Params);
+    }
+
+    if extra_data[0] != 1 {
+        // version must be 1: <https://github.com/ethereum-optimism/design-docs/blob/main/protocol/minimum-base-fee.md#minimum-base-fee-in-block-header>
+        return Err(EIP1559ParamError::InvalidVersion(extra_data[0]));
+    }
+    // skip the first version byte
+    let denominator: [u8; 4] = extra_data[1..5].try_into().expect("sufficient length");
+    let elasticity: [u8; 4] = extra_data[5..9].try_into().expect("sufficient length");
+    let min_base_fee_log2: u8 = extra_data[9];
+
+    Ok((u32::from_be_bytes(elasticity), u32::from_be_bytes(denominator), min_base_fee_log2))
+}
+
+/// Encodes the Jovian 1599 parameters for the payload
 pub fn encode_jovian_extra_data(
     eip_1559_params: B64,
     default_base_fee_params: BaseFeeParams,
+    min_base_fee_log2: u8,
 ) -> Result<Bytes, EIP1559ParamError> {
-    // 9 bytes: 1 byte for version (1) and 8 bytes for eip1559 params
-    let mut extra_data = [0u8; 9];
+    // 9 bytes: 1 byte for version (1) and 9 bytes for eip1559 params
+    let mut extra_data = [0u8; 10];
     extra_data[0] = 1;
     encode_eip_1559_params(eip_1559_params, default_base_fee_params, &mut extra_data)?;
+    extra_data[9] = min_base_fee_log2;
     Ok(Bytes::copy_from_slice(&extra_data))
 }
 
@@ -118,16 +139,16 @@ mod tests {
     #[test]
     fn test_get_extra_data_jovian() {
         let eip_1559_params = B64::from_str("0x0000000800000008").unwrap();
-        let extra_data = encode_jovian_extra_data(eip_1559_params, BaseFeeParams::new(80, 60));
-        // specifically check the version byte is 1
-        assert_eq!(extra_data.unwrap(), Bytes::copy_from_slice(&[1, 0, 0, 0, 8, 0, 0, 0, 8]));
+        let extra_data = encode_jovian_extra_data(eip_1559_params, BaseFeeParams::new(80, 60), 20);
+        // check the version byte is 1 and the min_base_fee_log2 is 20
+        assert_eq!(extra_data.unwrap(), Bytes::copy_from_slice(&[1, 0, 0, 0, 8, 0, 0, 0, 8, 20]));
     }
 
     #[test]
     fn test_get_extra_data_jovian_default() {
         let eip_1559_params = B64::ZERO;
-        let extra_data = encode_jovian_extra_data(eip_1559_params, BaseFeeParams::new(80, 60));
-        // specifically check the version byte is 1
-        assert_eq!(extra_data.unwrap(), Bytes::copy_from_slice(&[1, 0, 0, 0, 80, 0, 0, 0, 60]));
+        let extra_data = encode_jovian_extra_data(eip_1559_params, BaseFeeParams::new(80, 60), 0);
+        // check the version byte is 1 and the min_base_fee_log2 is 0
+        assert_eq!(extra_data.unwrap(), Bytes::copy_from_slice(&[1, 0, 0, 0, 80, 0, 0, 0, 60, 0]));
     }
 }

@@ -73,20 +73,14 @@ impl OpPayloadAttributes {
         default_base_fee_params: BaseFeeParams,
     ) -> Result<Bytes, EIP1559ParamError> {
         self.eip_1559_params
-            .map(|params| encode_jovian_extra_data(params, default_base_fee_params))
+            .map(|params| {
+                encode_jovian_extra_data(
+                    params,
+                    default_base_fee_params,
+                    self.min_base_fee_log2.unwrap_or(0),
+                )
+            })
             .ok_or(EIP1559ParamError::NoEIP1559Params)?
-    }
-
-    /// Extracts the Jovian 1599 parameters from the encoded form:
-    /// <https://github.com/ethereum-optimism/design-docs/blob/main/protocol/minimum-base-fee.md#minimum-base-fee-in-block-header>
-    ///
-    /// Returns (`elasticity`, `denominator`, `min_base_fee_log2`)
-    pub fn decode_jovian_eip_1559_params(&self) -> Option<(u32, u32, u8)> {
-        self.eip_1559_params.map(|params| {
-            let (elasticity, denominator) = decode_eip_1559_params(params);
-            let min_base_fee_log2 = self.min_base_fee_log2.unwrap_or(0);
-            (elasticity, denominator, min_base_fee_log2)
-        })
     }
 
     /// Returns an iterator over the decoded [`OpTxEnvelope`] in this attributes.
@@ -284,10 +278,9 @@ mod test {
             min_base_fee_log2: Some(1),
             ..Default::default()
         };
-        assert_eq!(attributes.decode_jovian_eip_1559_params(), Some((8, 8, 1)));
 
         let extra_data = attributes.get_jovian_extra_data(BaseFeeParams::new(80, 60));
-        assert_eq!(extra_data.unwrap(), Bytes::copy_from_slice(&[1, 0, 0, 0, 8, 0, 0, 0, 8]));
+        assert_eq!(extra_data.unwrap(), Bytes::copy_from_slice(&[1, 0, 0, 0, 8, 0, 0, 0, 8, 1]));
     }
 
     #[test]
@@ -297,9 +290,8 @@ mod test {
             min_base_fee_log2: Some(0),
             ..Default::default()
         };
-        assert_eq!(attributes.decode_jovian_eip_1559_params(), Some((0, 0, 0)));
 
         let extra_data = attributes.get_jovian_extra_data(BaseFeeParams::new(80, 60));
-        assert_eq!(extra_data.unwrap(), Bytes::copy_from_slice(&[1, 0, 0, 0, 80, 0, 0, 0, 60]));
+        assert_eq!(extra_data.unwrap(), Bytes::copy_from_slice(&[1, 0, 0, 0, 80, 0, 0, 0, 60, 0]));
     }
 }
