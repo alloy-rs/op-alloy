@@ -110,13 +110,11 @@ pub fn encode_jovian_extra_data(
             .try_into()
             .map_err(|_| EIP1559ParamError::ElasticityOverflow)?;
 
-        // Not Jovian so set it to 0
-        let min_base_fee_log2: u8 = 0;
-
         // Copy the values safely
         extra_data[1..5].copy_from_slice(&max_change_denominator.to_be_bytes());
         extra_data[5..9].copy_from_slice(&elasticity_multiplier.to_be_bytes());
-        extra_data[9] = min_base_fee_log2;
+        // Not Jovian so set it to 0
+        extra_data[9] = 0;
     } else {
         let (elasticity, denominator, min_base_fee_log2) =
             decode_jovian_eip_1559_params(eip_1559_params);
