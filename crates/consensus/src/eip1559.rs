@@ -62,7 +62,7 @@ pub fn encode_holocene_extra_data(
 }
 
 /// Decodes the Jovian 1599 parameters from the encoded form:
-/// [TODO link design doc]
+/// <https://github.com/ethereum-optimism/design-docs/blob/main/protocol/minimum-base-fee.md>
 ///
 /// Returns (`elasticity`, `denominator`, `min_base_fee_log2`)
 pub fn decode_jovian_eip_1559_params(eip_1559_params: FixedBytes<9>) -> (u32, u32, u8) {
@@ -82,7 +82,7 @@ pub fn decode_jovian_extra_data(extra_data: &[u8]) -> Result<(u32, u32, u8), EIP
     }
 
     if extra_data[0] != 1 {
-        // version must be 1: [TODO link design doc]
+        // version must be 1: <https://github.com/ethereum-optimism/design-docs/blob/main/protocol/minimum-base-fee.md#minimum-base-fee-in-block-header>
         return Err(EIP1559ParamError::InvalidVersion(extra_data[0]));
     }
 
