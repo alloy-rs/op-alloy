@@ -77,7 +77,7 @@ impl OpPayloadAttributes {
     }
 
     /// Extracts the Jovian 1599 parameters from the encoded form:
-    /// [TODO link design doc]
+    /// <https://github.com/ethereum-optimism/design-docs/blob/main/protocol/minimum-base-fee.md#minimum-base-fee-in-block-header>
     ///
     /// Returns (`elasticity`, `denominator`, `min_base_fee_log2`)
     pub fn decode_jovian_eip_1559_params(&self) -> Option<(u32, u32, u8)> {
