@@ -42,7 +42,8 @@ pub struct OpPayloadAttributes {
     pub eip_1559_params: Option<B64>,
     /// If set, this sets the minimum base fee log2 for the block.
     ///
-    /// Prior to Jovian activation, this field should always be [None].
+    /// Prior to having the configurable minimum base fee enabled, this field should always be
+    /// [None].
     #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
     pub min_base_fee_log2: Option<u8>,
 }
@@ -225,7 +226,7 @@ mod test {
     }
 
     #[test]
-    fn test_serde_roundtrip_attributes_pre_jovian() {
+    fn test_serde_roundtrip_attributes_pre_min_base_fee() {
         let attributes = OpPayloadAttributes {
             payload_attributes: PayloadAttributes {
                 timestamp: 0x1337,
@@ -248,7 +249,7 @@ mod test {
     }
 
     #[test]
-    fn test_serde_roundtrip_attributes_post_jovian() {
+    fn test_serde_roundtrip_attributes_post_min_base_fee() {
         let attributes = OpPayloadAttributes {
             payload_attributes: PayloadAttributes {
                 timestamp: 0x1337,
@@ -271,7 +272,7 @@ mod test {
     }
 
     #[test]
-    fn test_get_extra_data_post_jovian() {
+    fn test_get_extra_data_post_min_base_fee() {
         let attributes = OpPayloadAttributes {
             eip_1559_params: Some(B64::from_str("0x0000000800000008").unwrap()),
             min_base_fee_log2: Some(1),
@@ -283,7 +284,7 @@ mod test {
     }
 
     #[test]
-    fn test_get_extra_data_post_jovian_default() {
+    fn test_get_extra_data_post_min_base_fee_default() {
         let attributes = OpPayloadAttributes {
             eip_1559_params: Some(B64::ZERO),
             min_base_fee_log2: Some(0),

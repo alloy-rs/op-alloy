@@ -142,7 +142,7 @@ mod tests {
     }
 
     #[test]
-    fn test_get_extra_data_jovian() {
+    fn test_get_extra_data_min_base_fee() {
         let eip_1559_params = B64::from_str("0x0000000800000008").unwrap();
         let extra_data =
             encode_min_base_fee_extra_data(eip_1559_params, BaseFeeParams::new(80, 60), 20);
@@ -151,7 +151,7 @@ mod tests {
     }
 
     #[test]
-    fn test_get_extra_data_jovian_default() {
+    fn test_get_extra_data_min_base_fee_default() {
         let eip_1559_params = B64::ZERO;
         let extra_data =
             encode_min_base_fee_extra_data(eip_1559_params, BaseFeeParams::new(80, 60), 0);
