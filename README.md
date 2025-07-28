@@ -31,7 +31,7 @@ The following crates are provided by `op-alloy`:
 
 ## Supported Rust Versions (MSRV)
 
-The current MSRV (minimum supported rust version) is 1.85.
+The current MSRV (minimum supported rust version) is 1.86.
 
 Unlike Alloy, op-alloy may use the latest stable release,
 to benefit from the latest features.
