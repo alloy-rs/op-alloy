@@ -243,6 +243,7 @@ mod tests {
           "fjordTime": 0,
           "graniteTime": 0,
           "holoceneTime": 0,
+          "isthmusTime": 0,
           "jovianTime": 0
         }
         "#;
@@ -261,7 +262,7 @@ mod tests {
                     fjord_time: Some(0),
                     granite_time: Some(0),
                     holocene_time: Some(0),
-                    isthmus_time: None,
+                    isthmus_time: Some(0),
                     interop_time: None,
                     jovian_time: Some(0),
                 }),
