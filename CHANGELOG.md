@@ -5,12 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.18.14](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.18.14) - 2025-07-31
+
+### Dependencies
+
+- Bump msrv 1.86 ([#579](https://github.com/alloy-rs/op-alloy/issues/579))
+
+### Features
+
+- Add `jovian_time` to `OpGenesisInfo` ([#581](https://github.com/alloy-rs/op-alloy/issues/581))
+
 ## [0.18.13](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.18.13) - 2025-07-22
 
 ### Bug Fixes
 
 - [rpc-types-engine] `OpExecutionPayloadEnvelope` serialization fix ([#578](https://github.com/alloy-rs/op-alloy/issues/578))
+
+### Miscellaneous Tasks
+
+- Release 0.18.13
 
 ## [0.18.12](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.18.12) - 2025-07-21
