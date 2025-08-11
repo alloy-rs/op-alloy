@@ -3,9 +3,10 @@ extend-exclude = [
     ".git",
     "target",
     "Cargo.lock",
-    "book/mermaid.min.js",    # Generated JS file
+    "book/mermaid*.js",       # Minified JS files
     "book/dist/",             # Built documentation
     "book/theme/",            # Theme files may have intentional spellings
+    "*.min.js",               # All minified JS files
 ]
 
 [default]
