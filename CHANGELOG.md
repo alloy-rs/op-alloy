@@ -516,7 +516,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Testing
 
-- Fix flaky bincode compat rountrip test ([#453](https://github.com/alloy-rs/op-alloy/issues/453))
+- Fix flaky bincode compat roundtrip test ([#453](https://github.com/alloy-rs/op-alloy/issues/453))
 
 ## [0.10.5](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.10.5) - 2025-02-19
@@ -540,7 +540,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Std leakage ([#432](https://github.com/alloy-rs/op-alloy/issues/432))
 - [consensus] Ecotone Upgrade Txs ([#412](https://github.com/alloy-rs/op-alloy/issues/412))
-- [consensus] L1BlockInfo datas ([#408](https://github.com/alloy-rs/op-alloy/issues/408))
+- [consensus] L1BlockInfo data ([#408](https://github.com/alloy-rs/op-alloy/issues/408))
 
 ### Features
 
