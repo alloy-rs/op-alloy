@@ -44,7 +44,7 @@ table tbody tr:nth-child(2n) {
 
     --sidebar-bg: #383539;
     --sidebar-fg: #fecdb2;
-    --sidebar-non-existant: #feceb454;
+    --sidebar-non-existent: #feceb454;
     --sidebar-active: #ffa07a;
     --scrollbar: var(--sidebar-fg);
 
