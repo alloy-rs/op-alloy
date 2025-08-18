@@ -79,14 +79,14 @@ ethereum_ssz = "0.9"
 ethereum_ssz_derive = "0.9"
 
 # rpc
-jsonrpsee = { version = "0.25", features = [
+jsonrpsee = { version = "0.26", features = [
     "jsonrpsee-core",
     "client-core",
     "server-core",
     "macros",
 ] }
-jsonrpsee-core = "0.25"
-jsonrpsee-types = "0.25"
+jsonrpsee-core = "0.26"
+jsonrpsee-types = "0.26"
 
 # misc
 async-trait = "0.1.87"
