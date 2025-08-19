@@ -10,8 +10,8 @@ use alloy_primitives::{B64, Bytes};
 use alloy_rlp::Result;
 use alloy_rpc_types_engine::PayloadAttributes;
 use op_alloy_consensus::{
-    EIP1559ParamError, OpTxEnvelope, decode_eip_1559_params, decode_min_base_fee_factors,
-    encode_holocene_extra_data, encode_min_base_fee_extra_data,
+    EIP1559ParamError, OpTxEnvelope, decode_eip_1559_params, encode_holocene_extra_data,
+    encode_min_base_fee_extra_data,
 };
 
 /// Optimism Payload Attributes
@@ -40,13 +40,12 @@ pub struct OpPayloadAttributes {
     /// Prior to Holocene activation, this field should always be [None].
     #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
     pub eip_1559_params: Option<B64>,
-    /// If set, this sets the minimum base fee factors for the block, which contains the
-    /// significand (4 bits) and exponent (4 bits) packed into a single byte.
+    /// If set, this sets the minimum base fee for the block.
     ///
     /// Prior to having the configurable minimum base fee enabled, this field should always be
     /// [None].
     #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
-    pub min_base_fee_factors: Option<u8>,
+    pub min_base_fee: Option<u64>,
 }
 
 impl OpPayloadAttributes {
@@ -73,15 +72,12 @@ impl OpPayloadAttributes {
         &self,
         default_base_fee_params: BaseFeeParams,
     ) -> Result<Bytes, EIP1559ParamError> {
-        let (significand, exponent) =
-            self.min_base_fee_factors.map(decode_min_base_fee_factors).unwrap_or_default();
         self.eip_1559_params
             .map(|params| {
                 encode_min_base_fee_extra_data(
                     params,
                     default_base_fee_params,
-                    significand,
-                    exponent,
+                    self.min_base_fee.unwrap_or_default(),
                 )
             })
             .ok_or(EIP1559ParamError::NoEIP1559Params)?
@@ -179,7 +175,7 @@ mod test {
             no_tx_pool: Some(true),
             gas_limit: Some(42),
             eip_1559_params: None,
-            min_base_fee_factors: None,
+            min_base_fee: None,
         };
 
         let ser = serde_json::to_string(&attributes).unwrap();
@@ -202,7 +198,7 @@ mod test {
             no_tx_pool: Some(true),
             gas_limit: Some(42),
             eip_1559_params: Some(b64!("0000dead0000beef")),
-            min_base_fee_factors: None,
+            min_base_fee: None,
         };
 
         let ser = serde_json::to_string(&attributes).unwrap();
@@ -243,7 +239,7 @@ mod test {
             no_tx_pool: Some(true),
             gas_limit: Some(42),
             eip_1559_params: Some(b64!("0000dead0000beef")),
-            min_base_fee_factors: None,
+            min_base_fee: None,
         };
 
         let ser = serde_json::to_string(&attributes).unwrap();
@@ -266,7 +262,7 @@ mod test {
             no_tx_pool: Some(true),
             gas_limit: Some(42),
             eip_1559_params: None,
-            min_base_fee_factors: Some(1),
+            min_base_fee: Some(1),
         };
 
         let ser = serde_json::to_string(&attributes).unwrap();
@@ -279,23 +275,29 @@ mod test {
     fn test_get_extra_data_post_min_base_fee() {
         let attributes = OpPayloadAttributes {
             eip_1559_params: Some(B64::from_str("0x0000000800000008").unwrap()),
-            min_base_fee_factors: Some(1),
+            min_base_fee: Some(257),
             ..Default::default()
         };
 
         let extra_data = attributes.get_min_base_fee_extra_data(BaseFeeParams::new(80, 60));
-        assert_eq!(extra_data.unwrap(), Bytes::copy_from_slice(&[1, 0, 0, 0, 8, 0, 0, 0, 8, 1]));
+        assert_eq!(
+            extra_data.unwrap(),
+            Bytes::copy_from_slice(&[1, 0, 0, 0, 8, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 1, 1])
+        );
     }
 
     #[test]
     fn test_get_extra_data_post_min_base_fee_default() {
         let attributes = OpPayloadAttributes {
             eip_1559_params: Some(B64::ZERO),
-            min_base_fee_factors: Some(0),
+            min_base_fee: Some(0),
             ..Default::default()
         };
 
         let extra_data = attributes.get_min_base_fee_extra_data(BaseFeeParams::new(80, 60));
-        assert_eq!(extra_data.unwrap(), Bytes::copy_from_slice(&[1, 0, 0, 0, 80, 0, 0, 0, 60, 0]));
+        assert_eq!(
+            extra_data.unwrap(),
+            Bytes::copy_from_slice(&[1, 0, 0, 0, 80, 0, 0, 0, 60, 0, 0, 0, 0, 0, 0, 0, 0])
+        );
     }
 }

@@ -66,26 +66,14 @@ pub fn encode_holocene_extra_data(
     Ok(Bytes::copy_from_slice(&extra_data))
 }
 
-/// Decodes the significand and exponent from a single byte.
-///
-/// Returns (`significand`, `exponent`)
-pub fn decode_min_base_fee_factors(factors: u8) -> (u8, u8) {
-    (factors >> 4, factors & 0x0F)
-}
-
-/// Encodes the significand and exponent into a single byte.
-pub fn encode_min_base_fee_factors(significand: u8, exponent: u8) -> u8 {
-    (significand << 4) | (exponent & 0x0F)
-}
-
 /// Decodes the EIP-1559 parameters from `extra_data`,
-/// as well as the minimum base fee factors (significand and exponent).
+/// as well as the minimum base fee.
 ///
-/// Returns (`elasticity`, `denominator`, `significand`, `exponent`)
+/// Returns (`elasticity`, `denominator`, `min_base_fee`)
 pub fn decode_min_base_fee_extra_data(
     extra_data: &[u8],
-) -> Result<(u32, u32, u8, u8), EIP1559ParamError> {
-    if extra_data.len() < 10 {
+) -> Result<(u32, u32, u64), EIP1559ParamError> {
+    if extra_data.len() < 17 {
         return Err(EIP1559ParamError::NoEIP1559Params);
     }
 
@@ -96,25 +84,28 @@ pub fn decode_min_base_fee_extra_data(
     // skip the first version byte
     let denominator: [u8; 4] = extra_data[1..5].try_into().expect("sufficient length");
     let elasticity: [u8; 4] = extra_data[5..9].try_into().expect("sufficient length");
-    let (significand, exponent) = decode_min_base_fee_factors(extra_data[9]);
+    let min_base_fee: [u8; 8] = extra_data[9..17].try_into().expect("sufficient length");
 
-    Ok((u32::from_be_bytes(elasticity), u32::from_be_bytes(denominator), significand, exponent))
+    Ok((
+        u32::from_be_bytes(elasticity),
+        u32::from_be_bytes(denominator),
+        u64::from_be_bytes(min_base_fee),
+    ))
 }
 
 /// Encodes the EIP-1559 parameters for the payload,
-/// as well as the minimum base fee factors (significand and exponent).
+/// as well as the minimum base fee.
 pub fn encode_min_base_fee_extra_data(
     eip_1559_params: B64,
     default_base_fee_params: BaseFeeParams,
-    significand: u8,
-    exponent: u8,
+    min_base_fee: u64,
 ) -> Result<Bytes, EIP1559ParamError> {
-    // 10 bytes: 1 byte for version (1), 8 bytes for eip1559 params, and 1 byte for the minimum base
-    // fee factors (significand and exponent)
-    let mut extra_data = [0u8; 10];
+    // 17 bytes: 1 byte for version (1), 8 bytes for eip1559 params, and 8 byte for the minimum base
+    // fee
+    let mut extra_data = [0u8; 17];
     extra_data[0] = 1;
     encode_eip_1559_params(eip_1559_params, default_base_fee_params, &mut extra_data)?;
-    extra_data[9] = encode_min_base_fee_factors(significand, exponent);
+    extra_data[9..17].copy_from_slice(&min_base_fee.to_be_bytes());
     Ok(Bytes::copy_from_slice(&extra_data))
 }
 
@@ -158,17 +149,22 @@ mod tests {
     fn test_get_extra_data_min_base_fee() {
         let eip_1559_params = B64::from_str("0x0000000800000008").unwrap();
         let extra_data =
-            encode_min_base_fee_extra_data(eip_1559_params, BaseFeeParams::new(80, 60), 1, 9);
-        // significand=1, exponent=9: (1 << 4) | 9 -> 16 | 9 = 25
-        assert_eq!(extra_data.unwrap(), Bytes::copy_from_slice(&[1, 0, 0, 0, 8, 0, 0, 0, 8, 25]));
+            encode_min_base_fee_extra_data(eip_1559_params, BaseFeeParams::new(80, 60), 257);
+        assert_eq!(
+            extra_data.unwrap(),
+            Bytes::copy_from_slice(&[1, 0, 0, 0, 8, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 1, 1])
+        );
     }
 
     #[test]
     fn test_get_extra_data_min_base_fee_default() {
         let eip_1559_params = B64::ZERO;
         let extra_data =
-            encode_min_base_fee_extra_data(eip_1559_params, BaseFeeParams::new(80, 60), 0, 0);
-        // check the version byte is 1 and the min_base_fee_factors is 0
-        assert_eq!(extra_data.unwrap(), Bytes::copy_from_slice(&[1, 0, 0, 0, 80, 0, 0, 0, 60, 0]));
+            encode_min_base_fee_extra_data(eip_1559_params, BaseFeeParams::new(80, 60), 0);
+        // check the version byte is 1 and the min_base_fee is 0
+        assert_eq!(
+            extra_data.unwrap(),
+            Bytes::copy_from_slice(&[1, 0, 0, 0, 80, 0, 0, 0, 60, 0, 0, 0, 0, 0, 0, 0, 0])
+        );
     }
 }
