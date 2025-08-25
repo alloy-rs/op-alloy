@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.19.0](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.19.0) - 2025-08-25
+
+### Dependencies
+
+- Bump jsonrpsee dependencies to version 0.26 ([#589](https://github.com/alloy-rs/op-alloy/issues/589))
+
+### Features
+
+- [rpc] Add superchain reorg error variants ([#590](https://github.com/alloy-rs/op-alloy/issues/590))
+
+### Miscellaneous Tasks
+
+- Fix typo in comment ([#583](https://github.com/alloy-rs/op-alloy/issues/583))
+- Fix grammatical typos ([#576](https://github.com/alloy-rs/op-alloy/issues/576))
+
+### Other
+
+- Add spellcheck workflow with typos ([#585](https://github.com/alloy-rs/op-alloy/issues/585))
+- Migrate workflows to checkout v5 ([#586](https://github.com/alloy-rs/op-alloy/issues/586))
+
 ## [0.18.14](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.18.14) - 2025-07-31
 
@@ -15,6 +36,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Features
 
 - Add `jovian_time` to `OpGenesisInfo` ([#581](https://github.com/alloy-rs/op-alloy/issues/581))
+
+### Miscellaneous Tasks
+
+- Release 0.18.14
 
 ## [0.18.13](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.18.13) - 2025-07-22
@@ -516,7 +541,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Testing
 
-- Fix flaky bincode compat roundtrip test ([#453](https://github.com/alloy-rs/op-alloy/issues/453))
+- Fix flaky bincode compat rountrip test ([#453](https://github.com/alloy-rs/op-alloy/issues/453))
 
 ## [0.10.5](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.10.5) - 2025-02-19
@@ -540,7 +565,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Std leakage ([#432](https://github.com/alloy-rs/op-alloy/issues/432))
 - [consensus] Ecotone Upgrade Txs ([#412](https://github.com/alloy-rs/op-alloy/issues/412))
-- [consensus] L1BlockInfo data ([#408](https://github.com/alloy-rs/op-alloy/issues/408))
+- [consensus] L1BlockInfo datas ([#408](https://github.com/alloy-rs/op-alloy/issues/408))
 
 ### Features
 
