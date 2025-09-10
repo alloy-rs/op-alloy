@@ -11,7 +11,7 @@ use alloy_rlp::Result;
 use alloy_rpc_types_engine::PayloadAttributes;
 use op_alloy_consensus::{
     EIP1559ParamError, OpTxEnvelope, decode_eip_1559_params, encode_holocene_extra_data,
-    encode_min_base_fee_extra_data,
+    encode_jovian_extra_data,
 };
 
 /// Optimism Payload Attributes
@@ -42,8 +42,7 @@ pub struct OpPayloadAttributes {
     pub eip_1559_params: Option<B64>,
     /// If set, this sets the minimum base fee for the block.
     ///
-    /// Prior to having the configurable minimum base fee enabled, this field should always be
-    /// [None].
+    /// Prior to Jovian activation, this field should always be [None].
     #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
     pub min_base_fee: Option<u64>,
 }
@@ -68,13 +67,13 @@ impl OpPayloadAttributes {
     }
 
     /// Encodes the `eip1559` parameters for the payload along with the minimum base fee.
-    pub fn get_min_base_fee_extra_data(
+    pub fn get_jovian_extra_data(
         &self,
         default_base_fee_params: BaseFeeParams,
     ) -> Result<Bytes, EIP1559ParamError> {
         self.eip_1559_params
             .map(|params| {
-                encode_min_base_fee_extra_data(
+                encode_jovian_extra_data(
                     params,
                     default_base_fee_params,
                     self.min_base_fee.unwrap_or_default(),
@@ -279,7 +278,7 @@ mod test {
             ..Default::default()
         };
 
-        let extra_data = attributes.get_min_base_fee_extra_data(BaseFeeParams::new(80, 60));
+        let extra_data = attributes.get_jovian_extra_data(BaseFeeParams::new(80, 60));
         assert_eq!(
             extra_data.unwrap(),
             Bytes::copy_from_slice(&[1, 0, 0, 0, 8, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 1, 1])
@@ -294,7 +293,7 @@ mod test {
             ..Default::default()
         };
 
-        let extra_data = attributes.get_min_base_fee_extra_data(BaseFeeParams::new(80, 60));
+        let extra_data = attributes.get_jovian_extra_data(BaseFeeParams::new(80, 60));
         assert_eq!(
             extra_data.unwrap(),
             Bytes::copy_from_slice(&[1, 0, 0, 0, 80, 0, 0, 0, 60, 0, 0, 0, 0, 0, 0, 0, 0])

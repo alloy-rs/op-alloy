@@ -3,6 +3,9 @@
 use alloy_eips::eip1559::BaseFeeParams;
 use alloy_primitives::{B64, Bytes};
 
+const HOLOCENE_EXTRA_DATA_VERSION_BYTE: u8 = 0;
+const JOVIAN_EXTRA_DATA_VERSION_BYTE: u8 = 1;
+
 /// Encodes the `eip1559` parameters for the payload.
 fn encode_eip_1559_params(
     eip_1559_params: B64,
@@ -47,7 +50,7 @@ pub fn decode_holocene_extra_data(extra_data: &[u8]) -> Result<(u32, u32), EIP15
         return Err(EIP1559ParamError::NoEIP1559Params);
     }
 
-    if extra_data[0] != 0 {
+    if extra_data[0] != HOLOCENE_EXTRA_DATA_VERSION_BYTE {
         // version must be 0: https://github.com/ethereum-optimism/specs/blob/main/specs/protocol/holocene/exec-engine.md#eip-1559-parameters-in-block-header
         return Err(EIP1559ParamError::InvalidVersion(extra_data[0]));
     }
@@ -70,15 +73,13 @@ pub fn encode_holocene_extra_data(
 /// as well as the minimum base fee.
 ///
 /// Returns (`elasticity`, `denominator`, `min_base_fee`)
-pub fn decode_min_base_fee_extra_data(
-    extra_data: &[u8],
-) -> Result<(u32, u32, u64), EIP1559ParamError> {
+pub fn decode_jovian_extra_data(extra_data: &[u8]) -> Result<(u32, u32, u64), EIP1559ParamError> {
     if extra_data.len() < 17 {
         return Err(EIP1559ParamError::NoEIP1559Params);
     }
 
-    if extra_data[0] != 1 {
-        // version must be 1: <https://github.com/ethereum-optimism/design-docs/blob/main/protocol/minimum-base-fee.md#minimum-base-fee-in-block-header>
+    if extra_data[0] != JOVIAN_EXTRA_DATA_VERSION_BYTE {
+        // version must be 1: https://github.com/ethereum-optimism/design-docs/blob/main/protocol/minimum-base-fee.md#minimum-base-fee-in-block-header
         return Err(EIP1559ParamError::InvalidVersion(extra_data[0]));
     }
     // skip the first version byte
@@ -95,7 +96,7 @@ pub fn decode_min_base_fee_extra_data(
 
 /// Encodes the EIP-1559 parameters for the payload,
 /// as well as the minimum base fee.
-pub fn encode_min_base_fee_extra_data(
+pub fn encode_jovian_extra_data(
     eip_1559_params: B64,
     default_base_fee_params: BaseFeeParams,
     min_base_fee: u64,
@@ -103,7 +104,7 @@ pub fn encode_min_base_fee_extra_data(
     // 17 bytes: 1 byte for version (1), 8 bytes for eip1559 params, and 8 byte for the minimum base
     // fee
     let mut extra_data = [0u8; 17];
-    extra_data[0] = 1;
+    extra_data[0] = JOVIAN_EXTRA_DATA_VERSION_BYTE;
     encode_eip_1559_params(eip_1559_params, default_base_fee_params, &mut extra_data)?;
     extra_data[9..17].copy_from_slice(&min_base_fee.to_be_bytes());
     Ok(Bytes::copy_from_slice(&extra_data))
@@ -148,8 +149,7 @@ mod tests {
     #[test]
     fn test_get_extra_data_min_base_fee() {
         let eip_1559_params = B64::from_str("0x0000000800000008").unwrap();
-        let extra_data =
-            encode_min_base_fee_extra_data(eip_1559_params, BaseFeeParams::new(80, 60), 257);
+        let extra_data = encode_jovian_extra_data(eip_1559_params, BaseFeeParams::new(80, 60), 257);
         assert_eq!(
             extra_data.unwrap(),
             Bytes::copy_from_slice(&[1, 0, 0, 0, 8, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 1, 1])
@@ -159,8 +159,7 @@ mod tests {
     #[test]
     fn test_get_extra_data_min_base_fee_default() {
         let eip_1559_params = B64::ZERO;
-        let extra_data =
-            encode_min_base_fee_extra_data(eip_1559_params, BaseFeeParams::new(80, 60), 0);
+        let extra_data = encode_jovian_extra_data(eip_1559_params, BaseFeeParams::new(80, 60), 0);
         // check the version byte is 1 and the min_base_fee is 0
         assert_eq!(
             extra_data.unwrap(),
