@@ -131,6 +131,12 @@ pub enum EIP1559ParamError {
     /// Extra data is not the correct length.
     #[error("Extra data is not the correct length")]
     InvalidExtraDataLength,
+    /// Minimum base fee must be None before Jovian.
+    #[error("Minimum base fee must be None before Jovian")]
+    MinBaseFeeMustBeNone,
+    /// Minimum base fee cannot be None after Jovian.
+    #[error("Minimum base fee cannot be None after Jovian")]
+    MinBaseFeeNotSet,
 }
 
 #[cfg(test)]
@@ -153,7 +159,7 @@ mod tests {
     }
 
     #[test]
-    fn test_get_extra_data_min_base_fee() {
+    fn test_get_extra_data_post_jovian() {
         let eip_1559_params = B64::from_str("0x0000000800000008").unwrap();
         let extra_data = encode_jovian_extra_data(eip_1559_params, BaseFeeParams::new(80, 60), 257);
         assert_eq!(
@@ -163,7 +169,7 @@ mod tests {
     }
 
     #[test]
-    fn test_get_extra_data_min_base_fee_default() {
+    fn test_get_extra_data_post_jovian_default() {
         let eip_1559_params = B64::ZERO;
         let extra_data = encode_jovian_extra_data(eip_1559_params, BaseFeeParams::new(80, 60), 0);
         // check the version byte is 1 and the min_base_fee is 0
@@ -171,5 +177,23 @@ mod tests {
             extra_data.unwrap(),
             Bytes::copy_from_slice(&[1, 0, 0, 0, 80, 0, 0, 0, 60, 0, 0, 0, 0, 0, 0, 0, 0])
         );
+    }
+
+    #[test]
+    fn test_encode_jovian_invalid_length() {
+        let eip_1559_params = B64::ZERO;
+
+        // Extra data is less than 9 bytes, which would error when encoding the eip1559 params
+        let mut extra_data = [0u8; 8];
+        let result =
+            encode_eip_1559_params(eip_1559_params, BaseFeeParams::new(80, 60), &mut extra_data);
+        assert_eq!(result.unwrap_err(), EIP1559ParamError::InvalidExtraDataLength);
+    }
+
+    #[test]
+    fn test_decode_jovian_invalid_length() {
+        let extra_data = [0u8; 8];
+        let res = decode_jovian_extra_data(&extra_data);
+        assert_eq!(res.unwrap_err(), EIP1559ParamError::InvalidExtraDataLength);
     }
 }

@@ -53,6 +53,9 @@ impl OpPayloadAttributes {
         &self,
         default_base_fee_params: BaseFeeParams,
     ) -> Result<Bytes, EIP1559ParamError> {
+        if self.min_base_fee.is_some() {
+            return Err(EIP1559ParamError::MinBaseFeeMustBeNone);
+        }
         self.eip_1559_params
             .map(|params| encode_holocene_extra_data(params, default_base_fee_params))
             .ok_or(EIP1559ParamError::NoEIP1559Params)?
@@ -71,12 +74,15 @@ impl OpPayloadAttributes {
         &self,
         default_base_fee_params: BaseFeeParams,
     ) -> Result<Bytes, EIP1559ParamError> {
+        if self.min_base_fee.is_none() {
+            return Err(EIP1559ParamError::MinBaseFeeNotSet);
+        }
         self.eip_1559_params
             .map(|params| {
                 encode_jovian_extra_data(
                     params,
                     default_base_fee_params,
-                    self.min_base_fee.unwrap_or_default(),
+                    self.min_base_fee.unwrap(),
                 )
             })
             .ok_or(EIP1559ParamError::NoEIP1559Params)?
@@ -225,7 +231,7 @@ mod test {
     }
 
     #[test]
-    fn test_serde_roundtrip_attributes_pre_min_base_fee() {
+    fn test_serde_roundtrip_attributes_pre_jovian() {
         let attributes = OpPayloadAttributes {
             payload_attributes: PayloadAttributes {
                 timestamp: 0x1337,
@@ -248,7 +254,7 @@ mod test {
     }
 
     #[test]
-    fn test_serde_roundtrip_attributes_post_min_base_fee() {
+    fn test_serde_roundtrip_attributes_post_jovian() {
         let attributes = OpPayloadAttributes {
             payload_attributes: PayloadAttributes {
                 timestamp: 0x1337,
@@ -271,7 +277,7 @@ mod test {
     }
 
     #[test]
-    fn test_get_extra_data_post_min_base_fee() {
+    fn test_get_extra_data_post_jovian() {
         let attributes = OpPayloadAttributes {
             eip_1559_params: Some(B64::from_str("0x0000000800000008").unwrap()),
             min_base_fee: Some(257),
@@ -286,7 +292,7 @@ mod test {
     }
 
     #[test]
-    fn test_get_extra_data_post_min_base_fee_default() {
+    fn test_get_extra_data_post_jovian_default() {
         let attributes = OpPayloadAttributes {
             eip_1559_params: Some(B64::ZERO),
             min_base_fee: Some(0),
@@ -298,5 +304,30 @@ mod test {
             extra_data.unwrap(),
             Bytes::copy_from_slice(&[1, 0, 0, 0, 80, 0, 0, 0, 60, 0, 0, 0, 0, 0, 0, 0, 0])
         );
+    }
+
+    #[test]
+    fn test_get_jovian_extra_data_fails_without_min_base_fee() {
+        let attributes = OpPayloadAttributes {
+            eip_1559_params: Some(B64::from_str("0x0000000800000008").unwrap()),
+            min_base_fee: None,
+            ..Default::default()
+        };
+
+        let result = attributes.get_jovian_extra_data(BaseFeeParams::new(80, 60));
+        assert_eq!(result.unwrap_err(), EIP1559ParamError::MinBaseFeeNotSet);
+    }
+
+    #[test]
+    fn test_min_base_fee_must_be_none_before_jovian() {
+        let attributes = OpPayloadAttributes {
+            eip_1559_params: Some(B64::from_str("0x0000000800000008").unwrap()),
+            min_base_fee: Some(100),
+            ..Default::default()
+        };
+
+        // Use Holocene function for pre-Jovian decoding of extra data
+        let result = attributes.get_holocene_extra_data(BaseFeeParams::new(80, 60));
+        assert_eq!(result.unwrap_err(), EIP1559ParamError::MinBaseFeeMustBeNone);
     }
 }
