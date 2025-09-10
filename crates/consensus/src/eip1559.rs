@@ -79,7 +79,7 @@ pub fn decode_jovian_extra_data(extra_data: &[u8]) -> Result<(u32, u32, u64), EI
     }
 
     if extra_data[0] != JOVIAN_EXTRA_DATA_VERSION_BYTE {
-        // version must be 1: https://github.com/ethereum-optimism/design-docs/blob/main/protocol/minimum-base-fee.md#minimum-base-fee-in-block-header
+        // version must be 1: https://specs.optimism.io/protocol/jovian/exec-engine.html
         return Err(EIP1559ParamError::InvalidVersion(extra_data[0]));
     }
     // skip the first version byte
