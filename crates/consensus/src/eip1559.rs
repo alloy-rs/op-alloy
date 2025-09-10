@@ -12,6 +12,9 @@ fn encode_eip_1559_params(
     default_base_fee_params: BaseFeeParams,
     extra_data: &mut [u8],
 ) -> Result<(), EIP1559ParamError> {
+    if extra_data.len() < 9 {
+        return Err(EIP1559ParamError::InvalidExtraDataLength);
+    }
     if eip_1559_params.is_zero() {
         let max_change_denominator: u32 = (default_base_fee_params.max_change_denominator)
             .try_into()
@@ -74,8 +77,8 @@ pub fn encode_holocene_extra_data(
 ///
 /// Returns (`elasticity`, `denominator`, `min_base_fee`)
 pub fn decode_jovian_extra_data(extra_data: &[u8]) -> Result<(u32, u32, u64), EIP1559ParamError> {
-    if extra_data.len() < 17 {
-        return Err(EIP1559ParamError::NoEIP1559Params);
+    if extra_data.len() != 17 {
+        return Err(EIP1559ParamError::InvalidExtraDataLength);
     }
 
     if extra_data[0] != JOVIAN_EXTRA_DATA_VERSION_BYTE {
@@ -125,6 +128,9 @@ pub enum EIP1559ParamError {
     /// Elasticity overflow.
     #[error("Elasticity overflow")]
     ElasticityOverflow,
+    /// Extra data is not the correct length.
+    #[error("Extra data is not the correct length")]
+    InvalidExtraDataLength,
 }
 
 #[cfg(test)]
