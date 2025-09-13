@@ -651,11 +651,10 @@ impl OpExecutionPayload {
         &self,
     ) -> impl Iterator<Item = alloy_eips::eip2718::Eip2718Result<alloy_eips::eip2718::WithEncoded<T>>> + '_
     {
-        self.transactions().iter().cloned().zip(self.decoded_transactions()).map(
-            |(tx_bytes, result)| {
-                result.map(|tx| alloy_eips::eip2718::WithEncoded::new(tx_bytes, tx))
-            },
-        )
+        self.transactions().iter().cloned().map(|tx_bytes| {
+            T::decode_2718_exact(tx_bytes.as_ref())
+                .map(|tx| alloy_eips::eip2718::WithEncoded::new(tx_bytes, tx))
+        })
     }
 
     /// Returns an iterator over the recovered transactions in this payload.
