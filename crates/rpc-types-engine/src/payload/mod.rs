@@ -661,7 +661,6 @@ impl OpExecutionPayload {
     /// Returns an iterator over the recovered transactions in this payload.
     ///
     /// This iterator will decode and recover signer addresses for transactions on the fly.
-    #[cfg(feature = "k256")]
     pub fn recovered_transactions<T>(
         &self,
     ) -> impl Iterator<
@@ -684,7 +683,6 @@ impl OpExecutionPayload {
     ///
     /// This iterator will decode and recover signer addresses for transactions on the fly
     /// and return them with their bytes.
-    #[cfg(feature = "k256")]
     pub fn recovered_transactions_with_encoded<T>(
         &self,
     ) -> impl Iterator<
