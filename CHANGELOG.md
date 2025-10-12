@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.20.0](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.20.0) - 2025-09-12
+
+### Bug Fixes
+
+- [consensus/holocene] Fix the extra data length for holocene ([#596](https://github.com/alloy-rs/op-alloy/issues/596))
+
+### Miscellaneous Tasks
+
+- Missing typed conversion ([#595](https://github.com/alloy-rs/op-alloy/issues/595))
+- Add into_envelope helper ([#594](https://github.com/alloy-rs/op-alloy/issues/594))
+- `missing-const-for-fn` lint back to warn. ([#593](https://github.com/alloy-rs/op-alloy/issues/593))
+
+### Other
+
+- [jovian] extend `extraData` to include minBaseFee in EIP1559Params ([#580](https://github.com/alloy-rs/op-alloy/issues/580))
+
 ## [0.19.1](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.19.1) - 2025-08-26
 
@@ -14,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.19.1
 - Ignore changelog in typos ([#592](https://github.com/alloy-rs/op-alloy/issues/592))
 
 ## [0.19.0](https://github.com/alloy-rs/op-alloy
