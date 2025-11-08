@@ -35,3 +35,9 @@ mod superchain;
 pub use superchain::{
     ProtocolVersion, ProtocolVersionError, ProtocolVersionFormatV0, SuperchainSignal,
 };
+
+pub mod flashblock;
+pub use flashblock::{
+    OpFlashblockExecutionPayloadBaseV1, OpFlashblockExecutionPayloadDeltaV1,
+    OpFlashblockMetadataV1, OpFlashblockPayload, OpFlashblockPayloadV1, OpFlashblockError,
+};

@@ -3,14 +3,12 @@
 //! This module uses the `snappy` compression algorithm to decompress the payload.
 //! The license for snappy can be found in the `SNAPPY-LICENSE` at the root of the repository.
 
-use crate::{OpExecutionPayload, OpExecutionPayloadSidecar, OpExecutionPayloadV4};
+use crate::{OpExecutionPayload, OpExecutionPayloadSidecar, OpExecutionPayloadV4, OpFlashblockPayload, OpFlashblockError};
 use alloc::vec::Vec;
 use alloy_consensus::{Block, BlockHeader, Sealable, Transaction};
 use alloy_eips::{Encodable2718, eip4895::Withdrawal, eip7685::Requests};
 use alloy_primitives::{B256, Signature, keccak256};
-use alloy_rpc_types_engine::{
-    CancunPayloadFields, ExecutionPayloadInputV2, ExecutionPayloadV3, PraguePayloadFields,
-};
+use alloy_rpc_types_engine::{CancunPayloadFields, ExecutionPayloadInputV2, ExecutionPayloadV1, ExecutionPayloadV2, ExecutionPayloadV3, PraguePayloadFields};
 
 /// A thin wrapper around [`OpExecutionPayload`] that includes the parent beacon block root.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -147,6 +145,67 @@ impl OpExecutionData {
         let (payload, sidecar) = OpExecutionPayload::from_block_unchecked(block_hash, block);
 
         Self::new(payload, sidecar)
+    }
+
+    /// Conversion from a vec of [`OpFlashblockPayload`]. Also returns the
+    /// [`OpExecutionPayloadSidecar`] extracted from the payloads.
+    ///
+    /// Note: This does validation to make sure input are valid.
+    pub fn from_flashblocks(flashblocks: Vec<OpFlashblockPayload>) -> Result<Self, OpFlashblockError> {
+        let base = flashblocks
+            .first().ok_or(OpFlashblockError::MissingPayload)?
+            .base().ok_or(OpFlashblockError::MissingBasePayload)?;
+
+        let diff = flashblocks
+            .last().ok_or(OpFlashblockError::MissingPayload)?
+            .diff();
+
+        let transactions = flashblocks
+            .iter()
+            .flat_map(|p| p.diff().transactions().to_vec())
+            .collect();
+
+        let withdrawals = flashblocks
+            .iter()
+            .flat_map(|p| p.diff().withdrawals().to_vec())
+            .collect();
+
+        let v3 = ExecutionPayloadV3 {
+            blob_gas_used: 0,
+            excess_blob_gas: 0,
+            payload_inner: ExecutionPayloadV2 {
+                withdrawals,
+                payload_inner: ExecutionPayloadV1 {
+                    parent_hash: base.parent_hash(),
+                    fee_recipient: base.fee_recipient(),
+                    state_root: diff.state_root(),
+                    receipts_root: diff.receipts_root(),
+                    logs_bloom: diff.logs_bloom(),
+                    prev_randao: base.prev_randao(),
+                    block_number: base.block_number(),
+                    gas_limit: base.gas_limit(),
+                    gas_used: diff.gas_used(),
+                    timestamp: base.timestamp(),
+                    extra_data: base.extra_data(),
+                    base_fee_per_gas: base.base_fee_per_gas(),
+                    block_hash: diff.block_hash(),
+                    transactions,
+                },
+            },
+        };
+
+        // Before Isthmus
+        if diff.withdrawals_root() == B256::ZERO {
+            return Ok(Self::v3(v3,  vec![], base.parent_beacon_block_root()))
+        }
+
+        let v4 = OpExecutionPayloadV4 {
+            withdrawals_root: diff.withdrawals_root(),
+            payload_inner: v3,
+        };
+
+
+        Ok(Self::v4(v4, vec![], base.parent_beacon_block_root(), Default::default()))
     }
 
     /// Creates a new instance from args to engine API method `newPayloadV2`.
