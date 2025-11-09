@@ -251,6 +251,7 @@ mod tests {
             transactions: vec![],
             withdrawals: vec![],
             withdrawals_root: B256::ZERO,
+            blob_gas_used: 0,
         };
 
         let metadata = OpFlashblockMetadataV1 {

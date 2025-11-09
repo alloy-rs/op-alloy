@@ -76,6 +76,11 @@ impl OpFlashblockExecutionPayloadDelta {
     pub const fn withdrawals_root(&self) -> B256 {
         self.as_v1().withdrawals_root
     }
+
+    /// Returns the blob gas used.
+    pub const fn blob_gas_used(&self) -> u64 {
+        self.as_v1().blob_gas_used
+    }
 }
 
 impl<'a> From<OpFlashblockExecutionPayloadDeltaRef<'a>> for OpFlashblockExecutionPayloadDelta {
@@ -137,6 +142,11 @@ pub struct OpFlashblockExecutionPayloadDeltaV1 {
     pub withdrawals: Vec<Withdrawal>,
     /// The withdrawals root of the block.
     pub withdrawals_root: B256,
+    /// The estimated cumulative blob gas used for the block. Introduced in Jovian.
+    /// spec: <https://docs.optimism.io/notices/upgrade-17#block-header-changes>
+    /// Defaults to 0 if not present (for pre-Jovian blocks).
+    #[cfg_attr(feature = "serde", serde(default))]
+    pub blob_gas_used: u64,
 }
 
 #[cfg(test)]
@@ -155,6 +165,7 @@ mod tests {
             transactions: vec![Bytes::from(vec![1, 2, 3])],
             withdrawals: vec![],
             withdrawals_root: B256::random(),
+            blob_gas_used: 0,
         };
 
         let json = serde_json::to_string(&delta).unwrap();
@@ -173,6 +184,7 @@ mod tests {
             transactions: vec![],
             withdrawals: vec![],
             withdrawals_root: B256::ZERO,
+            blob_gas_used: 0,
         };
 
         let json = serde_json::to_string(&delta).unwrap();
@@ -202,6 +214,7 @@ mod tests {
             transactions: vec![],
             withdrawals: vec![withdrawal],
             withdrawals_root: B256::ZERO,
+            blob_gas_used: 0,
         };
 
         let json = serde_json::to_string(&delta).unwrap();
