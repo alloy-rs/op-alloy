@@ -16,6 +16,9 @@ use alloy_rpc_types_engine::{
     ExecutionPayloadV3, PraguePayloadFields,
 };
 
+#[cfg(not(feature = "std"))]
+use alloc::vec;
+
 /// A thin wrapper around [`OpExecutionPayload`] that includes the parent beacon block root.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
