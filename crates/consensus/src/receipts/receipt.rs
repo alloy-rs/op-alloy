@@ -13,12 +13,13 @@ use alloy_eips::{
 };
 use alloy_primitives::{Bloom, Log};
 use alloy_rlp::{BufMut, Decodable, Encodable, Header};
-use serde::{Deserialize, Serialize};
 
 /// Typed Optimism transaction receipt.
 ///
 /// Receipt containing result of transaction execution.
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "arbitrary", derive(arbitrary::Arbitrary))]
 pub enum OpReceipt {
     /// Legacy receipt
     Legacy(Receipt),

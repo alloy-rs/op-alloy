@@ -32,6 +32,10 @@ lint-native: fmt-check lint-docs clippy
 clippy:
   cargo +stable clippy --workspace --all-features --all-targets -- -D warnings
 
+# Fix clippy warnings across the workspace
+clippy-fix:
+  cargo +stable clippy --workspace --all-features --all-targets --fix --allow-staged --allow-dirty -- -D warnings
+
 # Check the formatting of the workspace
 fmt-check:
   cargo +nightly fmt --all -- --check

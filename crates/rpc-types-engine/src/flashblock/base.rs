@@ -14,66 +14,97 @@ pub enum OpFlashblockExecutionPayloadBase {
 }
 
 impl OpFlashblockExecutionPayloadBase {
+    /// Returns a reference to the V1 base payload.
+    pub const fn as_v1(&self) -> &OpFlashblockExecutionPayloadBaseV1 {
+        match self {
+            Self::V1(base) => base,
+        }
+    }
+
+    /// Returns a mutable reference to the V1 base payload.
+    pub const fn as_v1_mut(&mut self) -> &mut OpFlashblockExecutionPayloadBaseV1 {
+        match self {
+            Self::V1(base) => base,
+        }
+    }
+
+    /// Consumes self and returns the V1 base payload.
+    pub fn into_v1(self) -> OpFlashblockExecutionPayloadBaseV1 {
+        match self {
+            Self::V1(base) => base,
+        }
+    }
+
     /// Returns the parent beacon block root.
     pub const fn parent_beacon_block_root(&self) -> B256 {
-        match self {
-            Self::V1(base) => base.parent_beacon_block_root,
-        }
+        self.as_v1().parent_beacon_block_root
     }
 
     /// Returns the parent hash.
     pub const fn parent_hash(&self) -> B256 {
-        match self {
-            Self::V1(base) => base.parent_hash,
-        }
+        self.as_v1().parent_hash
     }
 
-    /// Returns the fee recipient address.
+    /// Returns the fee recipient.
     pub const fn fee_recipient(&self) -> Address {
-        match self {
-            Self::V1(base) => base.fee_recipient,
-        }
+        self.as_v1().fee_recipient
     }
 
-    /// Returns the previous randao value.
+    /// Returns the prev randao value.
     pub const fn prev_randao(&self) -> B256 {
-        match self {
-            Self::V1(base) => base.prev_randao,
-        }
+        self.as_v1().prev_randao
     }
 
     /// Returns the block number.
     pub const fn block_number(&self) -> u64 {
-        match self {
-            Self::V1(base) => base.block_number,
-        }
+        self.as_v1().block_number
     }
 
     /// Returns the gas limit.
     pub const fn gas_limit(&self) -> u64 {
-        match self {
-            Self::V1(base) => base.gas_limit,
-        }
+        self.as_v1().gas_limit
     }
 
     /// Returns the timestamp.
     pub const fn timestamp(&self) -> u64 {
-        match self {
-            Self::V1(base) => base.timestamp,
-        }
+        self.as_v1().timestamp
     }
 
-    /// Returns the extra data.
-    pub fn extra_data(&self) -> Bytes {
-        match self {
-            Self::V1(base) => base.extra_data.clone(),
-        }
+    /// Returns a reference to the extra data.
+    pub const fn extra_data(&self) -> &Bytes {
+        &self.as_v1().extra_data
     }
 
-    /// Returns the base fee per gas.
-    pub const fn base_fee_per_gas(&self) -> U256 {
+    /// Returns a reference to the base fee per gas.
+    pub const fn base_fee_per_gas(&self) -> &U256 {
+        &self.as_v1().base_fee_per_gas
+    }
+}
+
+impl<'a> From<OpFlashblockExecutionPayloadBaseRef<'a>> for OpFlashblockExecutionPayloadBase {
+    fn from(base: OpFlashblockExecutionPayloadBaseRef<'a>) -> Self {
+        match base {
+            OpFlashblockExecutionPayloadBaseRef::V1(v1) => Self::V1(v1.clone()),
+        }
+    }
+}
+
+/// Borrowed reference to execution payload base.
+///
+/// This enum allows for future versioning of flashblock execution payload base types
+/// while providing zero-cost access to the inner fields via [`Deref`](core::ops::Deref).
+#[derive(Debug, Clone, Copy)]
+pub enum OpFlashblockExecutionPayloadBaseRef<'a> {
+    /// Version 1 execution payload base reference.
+    V1(&'a OpFlashblockExecutionPayloadBaseV1),
+}
+
+impl<'a> core::ops::Deref for OpFlashblockExecutionPayloadBaseRef<'a> {
+    type Target = OpFlashblockExecutionPayloadBaseV1;
+
+    fn deref(&self) -> &Self::Target {
         match self {
-            Self::V1(base) => base.base_fee_per_gas,
+            Self::V1(inner) => inner,
         }
     }
 }

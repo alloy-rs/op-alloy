@@ -1,6 +1,6 @@
 //! Optimism flashblock errors.
 
-/// Extends [`PayloadError`] for Optimism.
+/// Flashblock related errors.
 #[derive(Debug, thiserror::Error)]
 pub enum OpFlashblockError {
     /// The base payload is required for the initial flashblock (index 0) but was not provided.

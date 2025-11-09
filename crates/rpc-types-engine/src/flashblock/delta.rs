@@ -16,59 +16,92 @@ pub enum OpFlashblockExecutionPayloadDelta {
 }
 
 impl OpFlashblockExecutionPayloadDelta {
+    /// Returns a reference to the V1 delta payload.
+    pub const fn as_v1(&self) -> &OpFlashblockExecutionPayloadDeltaV1 {
+        match self {
+            Self::V1(delta) => delta,
+        }
+    }
+
+    /// Returns a mutable reference to the V1 delta payload.
+    pub const fn as_v1_mut(&mut self) -> &mut OpFlashblockExecutionPayloadDeltaV1 {
+        match self {
+            Self::V1(delta) => delta,
+        }
+    }
+
+    /// Consumes self and returns the V1 delta payload.
+    pub fn into_v1(self) -> OpFlashblockExecutionPayloadDeltaV1 {
+        match self {
+            Self::V1(delta) => delta,
+        }
+    }
+
     /// Returns the state root.
     pub const fn state_root(&self) -> B256 {
-        match self {
-            Self::V1(delta) => delta.state_root,
-        }
+        self.as_v1().state_root
     }
 
     /// Returns the receipts root.
     pub const fn receipts_root(&self) -> B256 {
-        match self {
-            Self::V1(delta) => delta.receipts_root,
-        }
+        self.as_v1().receipts_root
     }
 
-    /// Returns the logs bloom.
-    pub const fn logs_bloom(&self) -> Bloom {
-        match self {
-            Self::V1(delta) => delta.logs_bloom,
-        }
+    /// Returns a reference to the logs bloom.
+    pub const fn logs_bloom(&self) -> &Bloom {
+        &self.as_v1().logs_bloom
     }
 
     /// Returns the gas used.
     pub const fn gas_used(&self) -> u64 {
-        match self {
-            Self::V1(delta) => delta.gas_used,
-        }
+        self.as_v1().gas_used
     }
 
     /// Returns the block hash.
     pub const fn block_hash(&self) -> B256 {
-        match self {
-            Self::V1(delta) => delta.block_hash,
-        }
+        self.as_v1().block_hash
     }
 
-    /// Returns the transactions.
-    pub fn transactions(&self) -> &[Bytes] {
-        match self {
-            Self::V1(delta) => &delta.transactions,
-        }
+    /// Returns a reference to the transactions.
+    pub const fn transactions(&self) -> &Vec<Bytes> {
+        &self.as_v1().transactions
     }
 
-    /// Returns the withdrawals.
-    pub fn withdrawals(&self) -> &[Withdrawal] {
-        match self {
-            Self::V1(delta) => &delta.withdrawals,
-        }
+    /// Returns a reference to the withdrawals.
+    pub const fn withdrawals(&self) -> &Vec<Withdrawal> {
+        &self.as_v1().withdrawals
     }
 
     /// Returns the withdrawals root.
     pub const fn withdrawals_root(&self) -> B256 {
+        self.as_v1().withdrawals_root
+    }
+}
+
+impl<'a> From<OpFlashblockExecutionPayloadDeltaRef<'a>> for OpFlashblockExecutionPayloadDelta {
+    fn from(delta: OpFlashblockExecutionPayloadDeltaRef<'a>) -> Self {
+        match delta {
+            OpFlashblockExecutionPayloadDeltaRef::V1(v1) => Self::V1(v1.clone()),
+        }
+    }
+}
+
+/// Borrowed reference to execution payload delta.
+///
+/// This enum allows for future versioning of flashblock execution payload delta types
+/// while providing zero-cost access to the inner fields via [`Deref`](core::ops::Deref).
+#[derive(Debug, Clone, Copy)]
+pub enum OpFlashblockExecutionPayloadDeltaRef<'a> {
+    /// Version 1 execution payload delta reference.
+    V1(&'a OpFlashblockExecutionPayloadDeltaV1),
+}
+
+impl<'a> core::ops::Deref for OpFlashblockExecutionPayloadDeltaRef<'a> {
+    type Target = OpFlashblockExecutionPayloadDeltaV1;
+
+    fn deref(&self) -> &Self::Target {
         match self {
-            Self::V1(delta) => delta.withdrawals_root,
+            Self::V1(inner) => inner,
         }
     }
 }
@@ -130,7 +163,7 @@ mod tests {
     }
 
     #[test]
-    fn test_delta_camel_case_serialization() {
+    fn test_delta_snake_case_serialization() {
         let delta = OpFlashblockExecutionPayloadDeltaV1 {
             state_root: B256::ZERO,
             receipts_root: B256::ZERO,

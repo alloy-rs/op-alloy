@@ -16,31 +16,67 @@ pub enum OpFlashblockMetadata {
 }
 
 impl OpFlashblockMetadata {
+    /// Returns a reference to the V1 metadata.
+    pub const fn as_v1(&self) -> &OpFlashblockMetadataV1 {
+        match self {
+            Self::V1(metadata) => metadata,
+        }
+    }
+
+    /// Returns a mutable reference to the V1 metadata.
+    pub const fn as_v1_mut(&mut self) -> &mut OpFlashblockMetadataV1 {
+        match self {
+            Self::V1(metadata) => metadata,
+        }
+    }
+
+    /// Consumes self and returns the V1 metadata.
+    pub fn into_v1(self) -> OpFlashblockMetadataV1 {
+        match self {
+            Self::V1(metadata) => metadata,
+        }
+    }
+
     /// Returns the block number.
     pub const fn block_number(&self) -> u64 {
-        match self {
-            Self::V1(metadata) => metadata.block_number,
-        }
+        self.as_v1().block_number
     }
 
-    /// Returns the new account balances.
-    pub fn new_account_balances(&self) -> &BTreeMap<Address, U256> {
-        match self {
-            Self::V1(metadata) => &metadata.new_account_balances,
-        }
+    /// Returns a reference to the new account balances.
+    pub const fn new_account_balances(&self) -> &BTreeMap<Address, U256> {
+        &self.as_v1().new_account_balances
     }
 
-    /// Returns the receipts map.
-    pub fn receipts(&self) -> &BTreeMap<B256, OpReceipt> {
-        match self {
-            Self::V1(metadata) => &metadata.receipts,
+    /// Returns a reference to the receipts.
+    pub const fn receipts(&self) -> &BTreeMap<B256, OpReceipt> {
+        &self.as_v1().receipts
+    }
+}
+
+impl<'a> From<OpFlashblockMetadataRef<'a>> for OpFlashblockMetadata {
+    fn from(metadata: OpFlashblockMetadataRef<'a>) -> Self {
+        match metadata {
+            OpFlashblockMetadataRef::V1(v1) => Self::V1(v1.clone()),
         }
     }
+}
 
-    /// Returns the receipt for the given transaction hash.
-    pub fn receipt_by_hash(&self, hash: &B256) -> Option<&OpReceipt> {
+/// Borrowed reference to flashblock metadata.
+///
+/// This enum allows for future versioning of flashblock metadata types
+/// while providing zero-cost access to the inner fields via [`Deref`](core::ops::Deref).
+#[derive(Debug, Clone, Copy)]
+pub enum OpFlashblockMetadataRef<'a> {
+    /// Version 1 flashblock metadata reference.
+    V1(&'a OpFlashblockMetadataV1),
+}
+
+impl<'a> core::ops::Deref for OpFlashblockMetadataRef<'a> {
+    type Target = OpFlashblockMetadataV1;
+
+    fn deref(&self) -> &Self::Target {
         match self {
-            Self::V1(metadata) => metadata.receipts.get(hash),
+            Self::V1(inner) => inner,
         }
     }
 }

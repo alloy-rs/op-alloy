@@ -3,12 +3,18 @@
 //! This module uses the `snappy` compression algorithm to decompress the payload.
 //! The license for snappy can be found in the `SNAPPY-LICENSE` at the root of the repository.
 
-use crate::{OpExecutionPayload, OpExecutionPayloadSidecar, OpExecutionPayloadV4, OpFlashblockPayload, OpFlashblockError};
+use crate::{
+    OpExecutionPayload, OpExecutionPayloadSidecar, OpExecutionPayloadV4, OpFlashblockError,
+    OpFlashblockPayload,
+};
 use alloc::vec::Vec;
 use alloy_consensus::{Block, BlockHeader, Sealable, Transaction};
 use alloy_eips::{Encodable2718, eip4895::Withdrawal, eip7685::Requests};
 use alloy_primitives::{B256, Signature, keccak256};
-use alloy_rpc_types_engine::{CancunPayloadFields, ExecutionPayloadInputV2, ExecutionPayloadV1, ExecutionPayloadV2, ExecutionPayloadV3, PraguePayloadFields};
+use alloy_rpc_types_engine::{
+    CancunPayloadFields, ExecutionPayloadInputV2, ExecutionPayloadV1, ExecutionPayloadV2,
+    ExecutionPayloadV3, PraguePayloadFields,
+};
 
 /// A thin wrapper around [`OpExecutionPayload`] that includes the parent beacon block root.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -150,25 +156,54 @@ impl OpExecutionData {
     /// Conversion from a vec of [`OpFlashblockPayload`]. Also returns the
     /// [`OpExecutionPayloadSidecar`] extracted from the payloads.
     ///
-    /// Note: This does validation to make sure input are valid.
-    pub fn from_flashblocks(flashblocks: Vec<OpFlashblockPayload>) -> Result<Self, OpFlashblockError> {
-        let base = flashblocks
-            .first().ok_or(OpFlashblockError::MissingPayload)?
-            .base().ok_or(OpFlashblockError::MissingBasePayload)?;
+    /// # Validation
+    ///
+    /// This method performs the following validations:
+    /// - At least one flashblock must be present
+    /// - Indices must be sequential starting from 0
+    /// - First flashblock (index 0) must have a base payload
+    /// - Only the first flashblock may have a base payload
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if any validation fails.
+    pub fn from_flashblocks(
+        flashblocks: Vec<OpFlashblockPayload>,
+    ) -> Result<Self, OpFlashblockError> {
+        // Validate we have at least one flashblock
+        if flashblocks.is_empty() {
+            return Err(OpFlashblockError::MissingPayload);
+        }
 
-        let diff = flashblocks
-            .last().ok_or(OpFlashblockError::MissingPayload)?
-            .diff();
+        // Validate indices are sequential starting from 0
+        for (i, fb) in flashblocks.iter().enumerate() {
+            if fb.index() as usize != i {
+                return Err(OpFlashblockError::InvalidIndex);
+            }
+        }
 
-        let transactions = flashblocks
-            .iter()
-            .flat_map(|p| p.diff().transactions().to_vec())
-            .collect();
+        // Validate first flashblock has base and extract it
+        let first = flashblocks.first().unwrap(); // Safe: checked empty above
+        let base = first.base().ok_or(OpFlashblockError::MissingBasePayload)?;
 
-        let withdrawals = flashblocks
-            .iter()
-            .flat_map(|p| p.diff().withdrawals().to_vec())
-            .collect();
+        // Validate no other flashblocks have base (only first should have it)
+        for fb in flashblocks.iter().skip(1) {
+            if fb.base().is_some() {
+                return Err(OpFlashblockError::UnexpectedBasePayload);
+            }
+        }
+
+        // Get the final state from the last flashblock
+        let diff = flashblocks.last().unwrap().diff();
+
+        // Collect all transactions and withdrawals from all flashblocks in one loop
+        let (transactions, withdrawals) =
+            flashblocks.iter().fold((Vec::new(), Vec::new()), |(mut txs, mut withdrawals), p| {
+                let diff = p.diff();
+                txs.extend(diff.transactions.iter().cloned());
+                withdrawals.extend(diff.withdrawals.iter().cloned());
+                (txs, withdrawals)
+            });
 
         let v3 = ExecutionPayloadV3 {
             blob_gas_used: 0,
@@ -176,36 +211,34 @@ impl OpExecutionData {
             payload_inner: ExecutionPayloadV2 {
                 withdrawals,
                 payload_inner: ExecutionPayloadV1 {
-                    parent_hash: base.parent_hash(),
-                    fee_recipient: base.fee_recipient(),
-                    state_root: diff.state_root(),
-                    receipts_root: diff.receipts_root(),
-                    logs_bloom: diff.logs_bloom(),
-                    prev_randao: base.prev_randao(),
-                    block_number: base.block_number(),
-                    gas_limit: base.gas_limit(),
-                    gas_used: diff.gas_used(),
-                    timestamp: base.timestamp(),
-                    extra_data: base.extra_data(),
-                    base_fee_per_gas: base.base_fee_per_gas(),
-                    block_hash: diff.block_hash(),
+                    parent_hash: base.parent_hash,
+                    fee_recipient: base.fee_recipient,
+                    state_root: diff.state_root,
+                    receipts_root: diff.receipts_root,
+                    logs_bloom: diff.logs_bloom,
+                    prev_randao: base.prev_randao,
+                    block_number: base.block_number,
+                    gas_limit: base.gas_limit,
+                    gas_used: diff.gas_used,
+                    timestamp: base.timestamp,
+                    extra_data: base.extra_data.clone(),
+                    base_fee_per_gas: base.base_fee_per_gas,
+                    block_hash: diff.block_hash,
                     transactions,
                 },
             },
         };
 
-        // Before Isthmus
-        if diff.withdrawals_root() == B256::ZERO {
-            return Ok(Self::v3(v3,  vec![], base.parent_beacon_block_root()))
+        // Before Isthmus hardfork, withdrawals_root was not included.
+        // A zero withdrawals_root indicates a pre-Isthmus flashblock.
+        if diff.withdrawals_root == B256::ZERO {
+            return Ok(Self::v3(v3, vec![], base.parent_beacon_block_root));
         }
 
-        let v4 = OpExecutionPayloadV4 {
-            withdrawals_root: diff.withdrawals_root(),
-            payload_inner: v3,
-        };
+        let v4 =
+            OpExecutionPayloadV4 { withdrawals_root: diff.withdrawals_root, payload_inner: v3 };
 
-
-        Ok(Self::v4(v4, vec![], base.parent_beacon_block_root(), Default::default()))
+        Ok(Self::v4(v4, vec![], base.parent_beacon_block_root, Default::default()))
     }
 
     /// Creates a new instance from args to engine API method `newPayloadV2`.
@@ -662,5 +695,115 @@ mod tests {
         assert_eq!(1741842007, payload_envelop.payload.timestamp());
         let encoded = payload_envelop.encode_v4().unwrap();
         assert_eq!(data, encoded);
+    }
+
+    // Helper function to create a test flashblock
+    #[cfg(test)]
+    fn create_test_flashblock(index: u64, with_base: bool) -> OpFlashblockPayload {
+        use crate::flashblock::{
+            OpFlashblockExecutionPayloadBaseV1, OpFlashblockExecutionPayloadDeltaV1,
+            OpFlashblockMetadataV1, OpFlashblockPayloadV1,
+        };
+        use alloc::collections::BTreeMap;
+        use alloy_primitives::{Address, Bloom, Bytes, U256};
+        use alloy_rpc_types_engine::PayloadId;
+
+        let base = if with_base {
+            Some(OpFlashblockExecutionPayloadBaseV1 {
+                parent_beacon_block_root: B256::ZERO,
+                parent_hash: B256::ZERO,
+                fee_recipient: Address::ZERO,
+                prev_randao: B256::ZERO,
+                block_number: 100,
+                gas_limit: 30_000_000,
+                timestamp: 1234567890,
+                extra_data: Bytes::default(),
+                base_fee_per_gas: U256::from(1000000000u64),
+            })
+        } else {
+            None
+        };
+
+        let diff = OpFlashblockExecutionPayloadDeltaV1 {
+            state_root: B256::ZERO,
+            receipts_root: B256::ZERO,
+            logs_bloom: Bloom::ZERO,
+            gas_used: 21000,
+            block_hash: B256::ZERO,
+            transactions: vec![],
+            withdrawals: vec![],
+            withdrawals_root: B256::from([1u8; 32]), // Non-zero for Isthmus
+        };
+
+        let metadata = OpFlashblockMetadataV1 {
+            block_number: 100,
+            new_account_balances: BTreeMap::new(),
+            receipts: BTreeMap::new(),
+        };
+
+        OpFlashblockPayload::V1(OpFlashblockPayloadV1 {
+            payload_id: PayloadId::new([1u8; 8]),
+            index,
+            base,
+            diff,
+            metadata,
+        })
+    }
+
+    #[test]
+    fn test_from_flashblocks_empty_vec() {
+        let result = OpExecutionData::from_flashblocks(vec![]);
+        assert!(matches!(result, Err(OpFlashblockError::MissingPayload)));
+    }
+
+    #[test]
+    fn test_from_flashblocks_non_sequential_indices() {
+        let fb1 = create_test_flashblock(0, true);
+        let fb2 = create_test_flashblock(2, false); // Skip index 1
+
+        let result = OpExecutionData::from_flashblocks(vec![fb1, fb2]);
+        assert!(matches!(result, Err(OpFlashblockError::InvalidIndex)));
+    }
+
+    #[test]
+    fn test_from_flashblocks_missing_base_in_first() {
+        let fb1 = create_test_flashblock(0, false); // First should have base
+
+        let result = OpExecutionData::from_flashblocks(vec![fb1]);
+        assert!(matches!(result, Err(OpFlashblockError::MissingBasePayload)));
+    }
+
+    #[test]
+    fn test_from_flashblocks_unexpected_base_in_second() {
+        let fb1 = create_test_flashblock(0, true);
+        let fb2 = create_test_flashblock(1, true); // Should not have base
+
+        let result = OpExecutionData::from_flashblocks(vec![fb1, fb2]);
+        assert!(matches!(result, Err(OpFlashblockError::UnexpectedBasePayload)));
+    }
+
+    #[test]
+    fn test_from_flashblocks_single_valid_flashblock() {
+        let fb1 = create_test_flashblock(0, true);
+
+        let result = OpExecutionData::from_flashblocks(vec![fb1]);
+        assert!(result.is_ok(), "Single valid flashblock should succeed");
+    }
+
+    #[test]
+    fn test_from_flashblocks_multiple_valid_flashblocks() {
+        let fb1 = create_test_flashblock(0, true);
+        let fb2 = create_test_flashblock(1, false);
+        let fb3 = create_test_flashblock(2, false);
+
+        let result = OpExecutionData::from_flashblocks(vec![fb1, fb2, fb3]);
+        assert!(result.is_ok(), "Multiple valid flashblocks should succeed");
+    }
+
+    #[test]
+    fn test_from_flashblocks_wrong_first_index() {
+        let fb1 = create_test_flashblock(1, true); // Should be index 0
+        let result = OpExecutionData::from_flashblocks(vec![fb1]);
+        assert!(matches!(result, Err(OpFlashblockError::InvalidIndex)));
     }
 }

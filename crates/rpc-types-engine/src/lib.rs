@@ -38,6 +38,6 @@ pub use superchain::{
 
 pub mod flashblock;
 pub use flashblock::{
-    OpFlashblockExecutionPayloadBaseV1, OpFlashblockExecutionPayloadDeltaV1,
-    OpFlashblockMetadataV1, OpFlashblockPayload, OpFlashblockPayloadV1, OpFlashblockError,
+    OpFlashblockError, OpFlashblockExecutionPayloadBaseV1, OpFlashblockExecutionPayloadDeltaV1,
+    OpFlashblockMetadataV1, OpFlashblockPayload, OpFlashblockPayloadV1,
 };
