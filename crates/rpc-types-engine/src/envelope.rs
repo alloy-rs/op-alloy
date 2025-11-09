@@ -260,13 +260,13 @@ impl OpExecutionData {
         // Before Isthmus hardfork, withdrawals_root was not included.
         // A zero withdrawals_root indicates a pre-Isthmus flashblock.
         if diff.withdrawals_root == B256::ZERO {
-            return Self::v3(v3, vec![], base.parent_beacon_block_root);
+            return Self::v3(v3, Vec::new(), base.parent_beacon_block_root);
         }
 
         let v4 =
             OpExecutionPayloadV4 { withdrawals_root: diff.withdrawals_root, payload_inner: v3 };
 
-        Self::v4(v4, vec![], base.parent_beacon_block_root, Default::default())
+        Self::v4(v4, Vec::new(), base.parent_beacon_block_root, Default::default())
     }
 
     /// Creates a new instance from args to engine API method `newPayloadV2`.
@@ -758,8 +758,8 @@ mod tests {
             logs_bloom: Bloom::ZERO,
             gas_used: 21000,
             block_hash: B256::ZERO,
-            transactions: vec![],
-            withdrawals: vec![],
+            transactions: Vec::new(),
+            withdrawals: Vec::new(),
             withdrawals_root: B256::from([1u8; 32]), // Non-zero for Isthmus
             blob_gas_used: 0,
         };
