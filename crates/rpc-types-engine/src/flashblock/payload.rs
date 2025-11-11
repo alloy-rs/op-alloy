@@ -1,8 +1,8 @@
 //! Flashblock payload types.
 
-use alloy_primitives::B256;
 use super::{OpFlashblockPayloadBase, OpFlashblockPayloadDelta};
 use crate::flashblock::metadata::OpFlashblockPayloadMetadata;
+use alloy_primitives::B256;
 use alloy_rpc_types_engine::PayloadId;
 
 /// Flashblock payload.
