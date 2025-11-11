@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.22.1](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.22.1) - 2025-11-11
+
+### Dependencies
+
+- Bump msrv ([#607](https://github.com/alloy-rs/op-alloy/issues/607))
+
+### Features
+
+- [flashblock] Commit shared flashblock data structures ([#606](https://github.com/alloy-rs/op-alloy/issues/606))
+
 ## [0.22.0](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.22.0) - 2025-10-29
 
@@ -12,6 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [rpc-jsonrpsee] Add setGasLimit RPC to MinerApiExt ([#605](https://github.com/alloy-rs/op-alloy/issues/605))
 - Generate `OpTypedTransaction` via macro ([#600](https://github.com/alloy-rs/op-alloy/issues/600))
+
+### Miscellaneous Tasks
+
+- Release 0.22.0
 
 ## [0.21.0](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.21.0) - 2025-10-14
