@@ -177,20 +177,20 @@ impl OpExecutionData {
 
         // Validate indices are sequential starting from 0
         for (i, fb) in flashblocks.iter().enumerate() {
-            if fb.index() as usize != i {
+            if fb.index as usize != i {
                 return Err(OpFlashblockError::InvalidIndex);
             }
         }
 
         // Validate first flashblock has base and extract it
         let first = flashblocks.first().unwrap(); // Safe: checked empty above
-        if first.base().is_none() {
+        if first.base.is_none() {
             return Err(OpFlashblockError::MissingBasePayload);
         }
 
         // Validate no other flashblocks have base (only first should have it)
         for fb in flashblocks.iter().skip(1) {
-            if fb.base().is_some() {
+            if fb.base.is_some() {
                 return Err(OpFlashblockError::UnexpectedBasePayload);
             }
         }
@@ -218,23 +218,22 @@ impl OpExecutionData {
         // Extract base from first flashblock
         // SAFETY: Caller guarantees at least one flashblock exists with base payload
         let first = flashblocks.first().expect("flashblocks must not be empty");
-        let base = first.base().expect("first flashblock must have base payload");
+        let base = first.base.as_ref().expect("first flashblock must have base payload");
 
         // Get the final state from the last flashblock
         // SAFETY: Caller guarantees at least one flashblock exists
-        let diff = flashblocks.last().expect("flashblocks must not be empty").diff();
+        let diff = &flashblocks.last().expect("flashblocks must not be empty").diff;
 
         // Collect all transactions and withdrawals from all flashblocks
         let (transactions, withdrawals) =
             flashblocks.iter().fold((Vec::new(), Vec::new()), |(mut txs, mut withdrawals), p| {
-                let diff = p.diff();
-                txs.extend(diff.transactions.iter().cloned());
-                withdrawals.extend(diff.withdrawals.iter().cloned());
+                txs.extend(p.diff.transactions.iter().cloned());
+                withdrawals.extend(p.diff.withdrawals.iter().cloned());
                 (txs, withdrawals)
             });
 
         let v3 = ExecutionPayloadV3 {
-            blob_gas_used: diff.blob_gas_used,
+            blob_gas_used: diff.blob_gas_used.unwrap_or(0),
             excess_blob_gas: 0,
             payload_inner: ExecutionPayloadV2 {
                 withdrawals,
@@ -729,15 +728,14 @@ mod tests {
     #[cfg(test)]
     fn create_test_flashblock(index: u64, with_base: bool) -> OpFlashblockPayload {
         use crate::flashblock::{
-            OpFlashblockExecutionPayloadBaseV1, OpFlashblockExecutionPayloadDeltaV1,
-            OpFlashblockMetadataV1, OpFlashblockPayloadV1,
+            OpFlashblockPayloadBase, OpFlashblockPayloadDelta, OpFlashblockPayloadMetadata,
         };
         use alloc::collections::BTreeMap;
         use alloy_primitives::{Address, Bloom, Bytes, U256};
         use alloy_rpc_types_engine::PayloadId;
 
         let base = if with_base {
-            Some(OpFlashblockExecutionPayloadBaseV1 {
+            Some(OpFlashblockPayloadBase {
                 parent_beacon_block_root: B256::ZERO,
                 parent_hash: B256::ZERO,
                 fee_recipient: Address::ZERO,
@@ -752,7 +750,7 @@ mod tests {
             None
         };
 
-        let diff = OpFlashblockExecutionPayloadDeltaV1 {
+        let diff = OpFlashblockPayloadDelta {
             state_root: B256::ZERO,
             receipts_root: B256::ZERO,
             logs_bloom: Bloom::ZERO,
@@ -761,22 +759,16 @@ mod tests {
             transactions: Vec::new(),
             withdrawals: Vec::new(),
             withdrawals_root: B256::from([1u8; 32]), // Non-zero for Isthmus
-            blob_gas_used: 0,
+            blob_gas_used: Some(0),
         };
 
-        let metadata = OpFlashblockMetadataV1 {
+        let metadata = OpFlashblockPayloadMetadata {
             block_number: 100,
             new_account_balances: BTreeMap::new(),
             receipts: BTreeMap::new(),
         };
 
-        OpFlashblockPayload::V1(OpFlashblockPayloadV1 {
-            payload_id: PayloadId::new([1u8; 8]),
-            index,
-            base,
-            diff,
-            metadata,
-        })
+        OpFlashblockPayload { payload_id: PayloadId::new([1u8; 8]), index, base, diff, metadata }
     }
 
     #[test]

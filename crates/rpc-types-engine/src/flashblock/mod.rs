@@ -5,7 +5,7 @@
 //!
 //! ## Overview
 //!
-//! Flashblocks enable real-time visibility into block construction on Base L2,
+//! Flashblocks enable real-time visibility into block construction on OP Stack L2,
 //! allowing users to see transaction effects before blocks are finalized. Each flashblock
 //! represents a snapshot of the block's evolving state during its construction.
 //!
@@ -13,14 +13,13 @@
 //!
 //! A flashblock sequence consists of:
 //!
-//! - **Base payload** ([`OpFlashblockExecutionPayloadBase`]): Immutable block properties that
-//!   remain constant throughout the block construction. Only present in the first flashblock (index
-//!   0).
+//! - **Base payload** ([`OpFlashblockPayloadBase`]): Immutable block properties that remain
+//!   constant throughout the block construction. Only present in the first flashblock (index 0).
 //!
-//! - **Delta payloads** ([`OpFlashblockExecutionPayloadDelta`]): Mutable/accumulating properties
-//!   that change as transactions are added. Present in all flashblocks.
+//! - **Delta payloads** ([`OpFlashblockPayloadDelta`]): Mutable/accumulating properties that change
+//!   as transactions are added. Present in all flashblocks.
 //!
-//! - **Metadata** ([`OpFlashblockMetadata`]): Additional information useful for indexing and
+//! - **Metadata** ([`OpFlashblockPayloadMetadata`]): Additional information useful for indexing and
 //!   analysis.
 //!
 //! - **Complete payload** ([`OpFlashblockPayload`]): The envelope containing all of the above,
@@ -49,22 +48,16 @@
 //! - The sequence must contain at least one flashblock
 
 mod base;
-pub use base::{
-    OpFlashblockExecutionPayloadBase, OpFlashblockExecutionPayloadBaseRef,
-    OpFlashblockExecutionPayloadBaseV1,
-};
+pub use base::OpFlashblockPayloadBase;
 
 mod delta;
-pub use delta::{
-    OpFlashblockExecutionPayloadDelta, OpFlashblockExecutionPayloadDeltaRef,
-    OpFlashblockExecutionPayloadDeltaV1,
-};
+pub use delta::OpFlashblockPayloadDelta;
 
 mod metadata;
-pub use metadata::{OpFlashblockMetadata, OpFlashblockMetadataRef, OpFlashblockMetadataV1};
+pub use metadata::OpFlashblockPayloadMetadata;
 
 mod payload;
-pub use payload::{OpFlashblockPayload, OpFlashblockPayloadV1};
+pub use payload::OpFlashblockPayload;
 
 mod error;
 pub use error::OpFlashblockError;
