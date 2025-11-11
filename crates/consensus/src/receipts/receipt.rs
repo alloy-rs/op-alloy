@@ -419,6 +419,7 @@ impl From<super::OpReceiptEnvelope> for OpReceipt {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use alloc::vec;
     use alloy_primitives::{Bytes, address, b256, bytes, hex_literal::hex};
     use alloy_rlp::Encodable;
 

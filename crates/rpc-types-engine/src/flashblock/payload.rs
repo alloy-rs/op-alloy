@@ -47,7 +47,7 @@ mod tests {
     use crate::flashblock::{
         OpFlashblockPayloadBase, OpFlashblockPayloadDelta, OpFlashblockPayloadMetadata,
     };
-    use alloc::collections::BTreeMap;
+    use alloc::{collections::BTreeMap, vec};
     use alloy_primitives::{B256, Bloom, Bytes, U256, address};
 
     fn sample_payload() -> OpFlashblockPayload {

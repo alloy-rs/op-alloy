@@ -22,6 +22,7 @@ pub struct OpFlashblockPayloadMetadata {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use alloc::vec::Vec;
     use alloy_consensus::{Eip658Value, Receipt};
     use alloy_primitives::{Log, address};
 

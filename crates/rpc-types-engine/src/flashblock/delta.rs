@@ -39,6 +39,7 @@ pub struct OpFlashblockPayloadDelta {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use alloc::vec;
 
     #[test]
     #[cfg(feature = "serde")]
