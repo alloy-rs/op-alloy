@@ -5,12 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.22.3](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.22.3) - 2025-11-19
+
+### Miscellaneous Tasks
+
+- [op-alloy] Update blob gas used serialization method ([#609](https://github.com/alloy-rs/op-alloy/issues/609))
+
 ## [0.22.2](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.22.2) - 2025-11-18
 
 ### Features
 
 - Add bincode compat to OpReceipt ([#608](https://github.com/alloy-rs/op-alloy/issues/608))
+
+### Miscellaneous Tasks
+
+- Release 0.22.2
 
 ## [0.22.1](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.22.1) - 2025-11-11
