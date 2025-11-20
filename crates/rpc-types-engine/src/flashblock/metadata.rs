@@ -135,8 +135,7 @@ mod tests {
             .get("0x0000000000000000000000000000000000000000000000000000000000000000")
             .unwrap();
 
-        // OpReceipt serializes as internally tagged enum
-        assert!(receipt_entry.get("Legacy").is_some());
+        assert_eq!(receipt_entry.get("type").unwrap().as_str().unwrap(), "0x0");
     }
 
     #[test]
