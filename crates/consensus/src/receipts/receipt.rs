@@ -22,16 +22,22 @@ use alloy_rlp::{BufMut, Decodable, Encodable, Header};
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "arbitrary", derive(arbitrary::Arbitrary))]
+#[cfg_attr(feature = "serde", serde(tag = "type"))]
 pub enum OpReceipt<T = Log> {
     /// Legacy receipt
+    #[cfg_attr(feature = "serde", serde(rename = "0x0", alias = "0x00"))]
     Legacy(Receipt<T>),
     /// EIP-2930 receipt
+    #[cfg_attr(feature = "serde", serde(rename = "0x1", alias = "0x01"))]
     Eip2930(Receipt<T>),
     /// EIP-1559 receipt
+    #[cfg_attr(feature = "serde", serde(rename = "0x2", alias = "0x02"))]
     Eip1559(Receipt<T>),
     /// EIP-7702 receipt
+    #[cfg_attr(feature = "serde", serde(rename = "0x4", alias = "0x04"))]
     Eip7702(Receipt<T>),
     /// Deposit receipt
+    #[cfg_attr(feature = "serde", serde(rename = "0x7e", alias = "0x7E"))]
     Deposit(OpDepositReceipt<T>),
 }
 
