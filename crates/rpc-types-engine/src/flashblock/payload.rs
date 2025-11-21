@@ -53,14 +53,14 @@ impl OpFlashblockPayload {
     where
         T: Decodable2718,
     {
-        self.raw_transactions().iter().map(|tx| T::decode_2718_exact(&tx))
+        self.raw_transactions().iter().map(|tx| T::decode_2718_exact(tx))
     }
 
     /// Recovers transactions from flashblocks lazily.
     ///
     /// This is done only when we actually need to build a sequence, avoiding wasted computation.
     #[cfg(feature = "k256")]
-    pub fn recover_transactions<'a, T>(
+    pub fn recover_transactions<T>(
         &self,
     ) -> impl Iterator<
         Item = alloy_rlp::Result<
@@ -72,7 +72,7 @@ impl OpFlashblockPayload {
         T: Decodable2718 + alloy_consensus::transaction::SignerRecoverable,
     {
         self.raw_transactions().iter().map(|raw| {
-            let tx = T::decode_2718_exact(&raw)
+            let tx = T::decode_2718_exact(raw)
                 .map_err(alloy_consensus::crypto::RecoveryError::from_source)?;
             tx.try_into_recovered().map(|tx| tx.into_encoded_with(raw.clone()))
         })
