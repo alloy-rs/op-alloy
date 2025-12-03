@@ -170,6 +170,7 @@ impl<T> OpReceipt<T> {
     where
         T: Encodable,
     {
+        self.tx_type().encode(out);
         match self {
             Self::Legacy(receipt)
             | Self::Eip2930(receipt)
@@ -344,8 +345,7 @@ impl<T: Decodable> Decodable for OpReceipt<T> {
             return Err(alloy_rlp::Error::UnexpectedString);
         }
 
-        let remaining = buf.len();
-        if remaining < header.payload_length {
+        if buf.len() < header.payload_length {
             return Err(alloy_rlp::Error::InputTooShort);
         }
         let mut fields_buf = &buf[..header.payload_length];
