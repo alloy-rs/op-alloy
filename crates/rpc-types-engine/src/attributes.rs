@@ -6,13 +6,14 @@ use alloy_eips::{
     eip1559::BaseFeeParams,
     eip2718::{Eip2718Result, WithEncoded},
 };
-use alloy_primitives::{B64, Bytes};
-use alloy_rlp::Result;
-use alloy_rpc_types_engine::PayloadAttributes;
+use alloy_primitives::{B64, B256, Bytes, keccak256};
+use alloy_rlp::{Encodable, Result};
+use alloy_rpc_types_engine::{PayloadAttributes, PayloadId};
 use op_alloy_consensus::{
     EIP1559ParamError, OpTxEnvelope, decode_eip_1559_params, encode_holocene_extra_data,
     encode_jovian_extra_data,
 };
+use sha2::Digest;
 
 /// Optimism Payload Attributes
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
@@ -52,6 +53,61 @@ pub struct OpPayloadAttributes {
 }
 
 impl OpPayloadAttributes {
+    /// Generates the payload id for the configured payload from the [`OpPayloadAttributes`].
+    ///
+    /// Returns an 8-byte identifier by hashing the payload components with sha256 hash.
+    ///
+    /// Note: This must be updated whenever the [`OpPayloadAttributes`] changes for a hardfork.
+    /// See also <https://github.com/ethereum-optimism/op-geth/blob/d401af16f2dd94b010a72eaef10e07ac10b31931/miner/payload_building.go#L59-L59>
+    pub fn payload_id(&self, parent: &B256, payload_version: u8) -> PayloadId {
+        let mut hasher = sha2::Sha256::new();
+        hasher.update(parent.as_slice());
+        hasher.update(&self.payload_attributes.timestamp.to_be_bytes()[..]);
+        hasher.update(self.payload_attributes.prev_randao.as_slice());
+        hasher.update(self.payload_attributes.suggested_fee_recipient.as_slice());
+        if let Some(withdrawals) = &self.payload_attributes.withdrawals {
+            let mut buf = Vec::new();
+            withdrawals.encode(&mut buf);
+            hasher.update(buf);
+        }
+
+        if let Some(parent_beacon_block) = self.payload_attributes.parent_beacon_block_root {
+            hasher.update(parent_beacon_block);
+        }
+
+        let no_tx_pool = self.no_tx_pool.unwrap_or_default();
+        if no_tx_pool || self.transactions.as_ref().is_some_and(|txs| !txs.is_empty()) {
+            hasher.update([no_tx_pool as u8]);
+            let txs_len = self.transactions.as_ref().map(|txs| txs.len()).unwrap_or_default();
+            hasher.update(&txs_len.to_be_bytes()[..]);
+            if let Some(txs) = &self.transactions {
+                for tx in txs {
+                    // we have to just hash the bytes here because otherwise we would need to decode
+                    // the transactions here which really isn't ideal
+                    let tx_hash = keccak256(tx);
+                    // maybe we can try just taking the hash and not decoding
+                    hasher.update(tx_hash)
+                }
+            }
+        }
+
+        if let Some(gas_limit) = self.gas_limit {
+            hasher.update(gas_limit.to_be_bytes());
+        }
+
+        if let Some(eip_1559_params) = self.eip_1559_params {
+            hasher.update(eip_1559_params.as_slice());
+        }
+
+        if let Some(min_base_fee) = self.min_base_fee {
+            hasher.update(min_base_fee.to_be_bytes());
+        }
+
+        let mut out = hasher.finalize();
+        out[0] = payload_version;
+        PayloadId::new(out[..8].try_into().expect("sufficient length"))
+    }
+
     /// Encodes the `eip1559` parameters for the payload.
     pub fn get_holocene_extra_data(
         &self,
