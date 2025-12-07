@@ -37,6 +37,9 @@ pub use block::OpBlock;
 
 pub mod interop;
 
+pub mod predeploys;
+pub use predeploys::L2_TO_L1_MESSAGE_PASSER;
+
 #[cfg(feature = "serde")]
 pub use transaction::serde_deposit_tx_rpc;
 
