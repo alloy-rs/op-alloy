@@ -5,11 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.23.0](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.23.0) - 2025-12-08
+
+### Bug Fixes
+
+- Correct `OpReceipt` rlp ([#612](https://github.com/alloy-rs/op-alloy/issues/612))
+
+### Features
+
+- [consensus] Add L2ToL1MessagePasser predeploy address ([#614](https://github.com/alloy-rs/op-alloy/issues/614))
+- Add helpers for recovering txs from flashblocks ([#611](https://github.com/alloy-rs/op-alloy/issues/611))
+- Use `OpReceipt` as `ReceiptEnvelope` for OP network ([#610](https://github.com/alloy-rs/op-alloy/issues/610))
+
+### Miscellaneous Tasks
+
+- [rpc-types-engine] Upstream `payloadID` computation to `op-alloy` ([#613](https://github.com/alloy-rs/op-alloy/issues/613))
+
 ## [0.22.3](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.22.3) - 2025-11-19
 
 ### Miscellaneous Tasks
 
+- Release 0.22.3
 - [op-alloy] Update blob gas used serialization method ([#609](https://github.com/alloy-rs/op-alloy/issues/609))
 
 ## [0.22.2](https://github.com/alloy-rs/op-alloy
