@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.23.1](https://github.com/alloy-rs/op-alloy
+/releases/tag/v0.23.1) - 2025-12-10
+
+### Features
+
+- Add `OpReceipt::map_logs` ([#615](https://github.com/alloy-rs/op-alloy/issues/615))
+
 ## [0.23.0](https://github.com/alloy-rs/op-alloy
 /releases/tag/v0.23.0) - 2025-12-08
 
@@ -20,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.23.0
 - [rpc-types-engine] Upstream `payloadID` computation to `op-alloy` ([#613](https://github.com/alloy-rs/op-alloy/issues/613))
 
 ## [0.22.3](https://github.com/alloy-rs/op-alloy
