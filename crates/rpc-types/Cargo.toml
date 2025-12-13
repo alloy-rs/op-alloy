@@ -21,6 +21,7 @@ op-alloy-consensus = { workspace = true, features = ["serde"] }
 # Alloy
 alloy-serde.workspace = true
 alloy-consensus.workspace = true
+alloy-network.workspace = true
 alloy-network-primitives.workspace = true
 alloy-eips = { workspace = true, features = ["serde"] }
 alloy-rpc-types-eth = { workspace = true, features = ["serde"] }
