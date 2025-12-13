@@ -18,6 +18,7 @@ pub use receipt::{L1BlockInfo, OpTransactionReceipt, OpTransactionReceiptFields}
 mod transaction;
 pub use transaction::{OpTransactionFields, OpTransactionRequest, Transaction};
 
+#[cfg(feature = "std")]
 mod builder;
 
 pub mod error;
