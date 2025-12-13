@@ -33,7 +33,6 @@ derive_more = { workspace = true, features = ["display"] }
 arbitrary = { workspace = true, features = ["derive"], optional = true }
 
 # serde
-serde_with = { workspace = true, optional = true }
 alloy-serde = { workspace = true, optional = true }
 serde = { workspace = true, features = ["derive"], optional = true }
 
@@ -67,4 +66,4 @@ serde = [
     "alloy-consensus/serde",
     "alloy-eips/serde",
 ]
-serde-bincode-compat = ["serde_with", "alloy-consensus/serde-bincode-compat"]
+serde-bincode-compat = ["alloy-consensus/serde-bincode-compat"]

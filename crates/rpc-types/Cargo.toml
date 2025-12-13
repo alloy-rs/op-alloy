@@ -33,9 +33,6 @@ serde = { workspace = true, features = ["derive"] }
 # RPC
 jsonrpsee = { workspace = true, optional = true }
 
-# arbitrary
-arbitrary = { workspace = true, features = ["derive"], optional = true }
-
 # misc
 derive_more = { workspace = true, features = ["as_ref", "deref_mut", "try_from"] }
 thiserror.workspace = true
@@ -59,7 +56,6 @@ std = [
 ]
 arbitrary = [
   "std",
-  "dep:arbitrary",
   "alloy-primitives/arbitrary",
   "alloy-rpc-types-eth/arbitrary",
   "op-alloy-consensus/arbitrary",
