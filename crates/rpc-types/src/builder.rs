@@ -1,9 +1,9 @@
 //! Transaction builder for [`OpTransactionRequest`].
 
+use crate::OpTransactionRequest;
+use alloy_network::TransactionBuilder;
 use alloy_primitives::{Address, Bytes, ChainId, TxKind, U256};
 use alloy_rpc_types_eth::AccessList;
-use alloy_network::TransactionBuilder;
-use crate::OpTransactionRequest;
 
 impl TransactionBuilder for OpTransactionRequest {
     fn chain_id(&self) -> Option<ChainId> {
