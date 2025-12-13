@@ -18,6 +18,10 @@ pub struct OpFlashblockPayloadMetadata {
     /// Contains logs, gas usage, and other EVM-level metadata.
     #[cfg_attr(feature = "serde", serde(deserialize_with = "deserialize_flashblock_receipts"))]
     pub receipts: BTreeMap<B256, OpReceipt>,
+    /// A map of transaction hashes to their sender addresses.
+    /// This provides the `from` field for each transaction in the block.
+    #[cfg_attr(feature = "serde", serde(default))]
+    pub from_addresses: BTreeMap<B256, Address>,
 }
 
 #[cfg(feature = "serde")]
@@ -88,7 +92,12 @@ mod tests {
         });
         receipts.insert(B256::ZERO, receipt);
 
-        OpFlashblockPayloadMetadata { block_number: 100, new_account_balances: balances, receipts }
+        OpFlashblockPayloadMetadata {
+            block_number: 100,
+            new_account_balances: balances,
+            receipts,
+            from_addresses: BTreeMap::new(),
+        }
     }
 
     #[test]
@@ -123,6 +132,7 @@ mod tests {
             block_number: 1,
             new_account_balances: balances,
             receipts: BTreeMap::new(),
+            from_addresses: BTreeMap::new(),
         };
 
         let json = serde_json::to_value(&metadata).unwrap();
@@ -148,6 +158,7 @@ mod tests {
             block_number: 1,
             new_account_balances: BTreeMap::new(),
             receipts,
+            from_addresses: BTreeMap::new(),
         };
 
         let json = serde_json::to_value(&metadata).unwrap();
@@ -177,6 +188,7 @@ mod tests {
             block_number: 1,
             new_account_balances: BTreeMap::new(),
             receipts,
+            from_addresses: BTreeMap::new(),
         };
 
         let json = serde_json::to_value(&metadata).unwrap();
@@ -194,5 +206,6 @@ mod tests {
         assert_eq!(metadata.block_number, 0);
         assert!(metadata.new_account_balances.is_empty());
         assert!(metadata.receipts.is_empty());
+        assert!(metadata.from_addresses.is_empty());
     }
 }
