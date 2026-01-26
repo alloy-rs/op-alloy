@@ -219,7 +219,6 @@ impl From<OpTransactionReceipt> for OpReceiptEnvelope<alloy_primitives::Log> {
                     status: receipt.status,
                     cumulative_gas_used: receipt.cumulative_gas_used,
                     logs: consensus_logs,
-                    gas_spent: receipt.gas_spent,
                 },
                 logs_bloom,
             }
@@ -238,7 +237,6 @@ impl From<OpTransactionReceipt> for OpReceiptEnvelope<alloy_primitives::Log> {
                             status: receipt.inner.status,
                             cumulative_gas_used: receipt.inner.cumulative_gas_used,
                             logs: consensus_logs,
-                            gas_spent: receipt.inner.gas_spent,
                         },
                         deposit_nonce: receipt.deposit_nonce,
                         deposit_receipt_version: receipt.deposit_receipt_version,

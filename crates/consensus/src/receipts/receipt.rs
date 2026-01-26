@@ -258,28 +258,24 @@ impl<T> OpReceipt<T> {
                 status,
                 cumulative_gas_used,
                 logs,
-                gas_spent: None,
             })),
             OpTxType::Eip2930 => Ok(Self::Eip2930(Receipt {
                 status,
                 cumulative_gas_used,
                 logs,
-                gas_spent: None,
             })),
             OpTxType::Eip1559 => Ok(Self::Eip1559(Receipt {
                 status,
                 cumulative_gas_used,
                 logs,
-                gas_spent: None,
             })),
             OpTxType::Eip7702 => Ok(Self::Eip7702(Receipt {
                 status,
                 cumulative_gas_used,
                 logs,
-                gas_spent: None,
             })),
             OpTxType::Deposit => Ok(Self::Deposit(OpDepositReceipt {
-                inner: Receipt { status, cumulative_gas_used, logs, gas_spent: None },
+                inner: Receipt { status, cumulative_gas_used, logs },
                 deposit_nonce,
                 deposit_receipt_version,
             })),
@@ -625,7 +621,6 @@ mod tests {
                     ],
                     bytes!("0100ff"),
                 )],
-                gas_spent: None,
             }),
             logs_bloom: [0; 256].into(),
         };
@@ -657,7 +652,6 @@ mod tests {
                     ],
                     bytes!("0100ff"),
                 )],
-                gas_spent: None,
             }),
             logs_bloom: [0; 256].into(),
         };
@@ -679,7 +673,6 @@ mod tests {
                     status: Eip658Value::Eip658(true),
                     cumulative_gas_used: 46913,
                     logs: vec![],
-                    gas_spent: None,
                 },
                 deposit_nonce: Some(4012991),
                 deposit_receipt_version: None,
@@ -708,7 +701,6 @@ mod tests {
                     status: Eip658Value::Eip658(true),
                     cumulative_gas_used: 46913,
                     logs: vec![],
-                    gas_spent: None,
                 },
                 deposit_nonce: Some(4012991),
                 deposit_receipt_version: Some(1),
@@ -745,7 +737,6 @@ mod tests {
                     Bytes::from(vec![1; 0xffffff]),
                 ),
             ],
-            gas_spent: None,
         });
 
         let _bloom = receipt.bloom();
@@ -763,7 +754,6 @@ mod tests {
                 status: Eip658Value::Eip658(true),
                 cumulative_gas_used: 21000,
                 logs: vec![],
-                gas_spent: None,
             }),
             logs_bloom: Bloom::default(),
         };
@@ -781,7 +771,6 @@ mod tests {
                 status: Eip658Value::Eip658(true),
                 cumulative_gas_used: 21000,
                 logs: vec![],
-                gas_spent: None,
             }),
             logs_bloom: Bloom::default(),
         };

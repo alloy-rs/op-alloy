@@ -65,7 +65,6 @@ impl OpReceiptEnvelope<Log> {
             status: Eip658Value::Eip658(status),
             cumulative_gas_used,
             logs,
-            gas_spent: None,
         };
         match tx_type {
             OpTxType::Legacy => {
@@ -403,7 +402,6 @@ mod tests {
                         bytes!("0100ff"),
                     ),
                 }],
-                gas_spent: None,
             },
             logs_bloom: [0; 256].into(),
         });

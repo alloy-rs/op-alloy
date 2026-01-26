@@ -85,7 +85,6 @@ mod tests {
             status: Eip658Value::Eip658(true),
             cumulative_gas_used: 21000,
             logs: Vec::new(),
-            gas_spent: None,
         });
         receipts.insert(B256::ZERO, receipt);
 
@@ -142,7 +141,6 @@ mod tests {
             status: Eip658Value::Eip658(true),
             cumulative_gas_used: 21000,
             logs: Vec::<Log>::new(),
-            gas_spent: None,
         });
         receipts.insert(B256::ZERO, receipt1);
 
@@ -172,7 +170,6 @@ mod tests {
             status: Eip658Value::Eip658(true),
             cumulative_gas_used: 21000,
             logs: Vec::<Log>::new(),
-            gas_spent: None,
         });
         receipts.insert(B256::ZERO, receipt);
 
