@@ -61,8 +61,11 @@ impl OpReceiptEnvelope<Log> {
     ) -> Self {
         let logs = logs.into_iter().cloned().collect::<Vec<_>>();
         let logs_bloom = logs_bloom(&logs);
-        let inner_receipt =
-            Receipt { status: Eip658Value::Eip658(status), cumulative_gas_used, logs };
+        let inner_receipt = Receipt {
+            status: Eip658Value::Eip658(status),
+            cumulative_gas_used,
+            logs,
+        };
         match tx_type {
             OpTxType::Legacy => {
                 Self::Legacy(ReceiptWithBloom { receipt: inner_receipt, logs_bloom })
