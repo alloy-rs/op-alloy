@@ -15,7 +15,7 @@ impl InMemorySize for OpTxType {
 impl InMemorySize for TxDeposit {
     #[inline]
     fn size(&self) -> usize {
-        TxDeposit::size(self)
+        Self::size(self)
     }
 }
 
