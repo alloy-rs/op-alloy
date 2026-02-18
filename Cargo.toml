@@ -5,7 +5,7 @@ resolver = "2"
 [workspace.package]
 version = "0.23.1"
 edition = "2024"
-rust-version = "1.88"
+rust-version = "1.91"
 authors = ["Alloy Contributors"]
 license = "MIT OR Apache-2.0"
 homepage = "https://github.com/alloy-rs/op-alloy"
@@ -45,17 +45,17 @@ op-alloy-rpc-types-engine = { version = "0.23.1", path = "crates/rpc-types-engin
 op-alloy-rpc-jsonrpsee = { version = "0.23.1", path = "crates/rpc-jsonrpsee", default-features = false }
 
 # Alloy
-alloy-eips = { version = "1.5.2", default-features = false }
-alloy-serde = { version = "1.5.2", default-features = false }
-alloy-signer = { version = "1.5.2", default-features = false }
-alloy-network = { version = "1.5.2", default-features = false }
-alloy-provider = { version = "1.5.2", default-features = false }
-alloy-transport = { version = "1.5.2", default-features = false }
-alloy-consensus = { version = "1.5.2", default-features = false }
-alloy-rpc-types-eth = { version = "1.5.2", default-features = false }
-alloy-rpc-types-engine = { version = "1.5.2", default-features = false }
-alloy-network-primitives = { version = "1.5.2", default-features = false }
-alloy-json-rpc = { version = "1.5.2", default-features = false }
+alloy-eips = { version = "1.7.3", default-features = false }
+alloy-serde = { version = "1.7.3", default-features = false }
+alloy-signer = { version = "1.7.3", default-features = false }
+alloy-network = { version = "1.7.3", default-features = false }
+alloy-provider = { version = "1.7.3", default-features = false }
+alloy-transport = { version = "1.7.3", default-features = false }
+alloy-consensus = { version = "1.7.3", default-features = false }
+alloy-rpc-types-eth = { version = "1.7.3", default-features = false }
+alloy-rpc-types-engine = { version = "1.7.3", default-features = false }
+alloy-network-primitives = { version = "1.7.3", default-features = false }
+alloy-json-rpc = { version = "1.7.3", default-features = false }
 
 # Alloy RLP
 alloy-rlp = { version = "0.3", default-features = false }
