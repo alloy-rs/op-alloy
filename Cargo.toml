@@ -111,14 +111,14 @@ tokio = "1"
 rstest = "0.24.0"
 
 [patch.crates-io]
-alloy-eips = { git = "https://github.com/alloy-rs/alloy", branch = "bal-devnet2" }
-alloy-serde = { git = "https://github.com/alloy-rs/alloy", branch = "bal-devnet2" }
-alloy-signer = { git = "https://github.com/alloy-rs/alloy", branch = "bal-devnet2" }
-alloy-network = { git = "https://github.com/alloy-rs/alloy", branch = "bal-devnet2" }
-alloy-provider = { git = "https://github.com/alloy-rs/alloy", branch = "bal-devnet2" }
-alloy-transport = { git = "https://github.com/alloy-rs/alloy", branch = "bal-devnet2" }
-alloy-consensus = { git = "https://github.com/alloy-rs/alloy", branch = "bal-devnet2" }
-alloy-rpc-types-eth = { git = "https://github.com/alloy-rs/alloy", branch = "bal-devnet2" }
-alloy-rpc-types-engine = { git = "https://github.com/alloy-rs/alloy", branch = "bal-devnet2" }
-alloy-network-primitives = { git = "https://github.com/alloy-rs/alloy", branch = "bal-devnet2" }
-alloy-json-rpc = { git = "https://github.com/alloy-rs/alloy", branch = "bal-devnet2" }
+alloy-eips = { git = "https://github.com/Rimeeeeee/alloy", branch = "devnet-fix" }
+alloy-serde = { git = "https://github.com/Rimeeeeee/alloy", branch = "devnet-fix" }
+alloy-signer = { git = "https://github.com/Rimeeeeee/alloy", branch = "devnet-fix" }
+alloy-network = { git = "https://github.com/Rimeeeeee/alloy", branch = "devnet-fix" }
+alloy-provider = { git = "https://github.com/Rimeeeeee/alloy", branch = "devnet-fix" }
+alloy-transport = { git = "https://github.com/Rimeeeeee/alloy", branch = "devnet-fix" }
+alloy-consensus = { git = "https://github.com/Rimeeeeee/alloy", branch = "devnet-fix" }
+alloy-rpc-types-eth = { git = "https://github.com/Rimeeeeee/alloy", branch = "devnet-fix" }
+alloy-rpc-types-engine = { git = "https://github.com/Rimeeeeee/alloy", branch = "devnet-fix" }
+alloy-network-primitives = { git = "https://github.com/Rimeeeeee/alloy", branch = "devnet-fix" }
+alloy-json-rpc = { git = "https://github.com/Rimeeeeee/alloy", branch = "devnet-fix" }
