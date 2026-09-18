@@ -10,16 +10,19 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
+      id-token: write
       contents: write
       deployments: write
     name: Publish to GitHub Pages
     steps:
+      - name: Secure runner
+        uses: tempoxyz/gh-actions/actions/secure-runner@ca2b15de1d1f6edd2276736187d7e4c2d898972c
       - uses: actions/checkout@v5
       - uses: dtolnay/rust-toolchain@stable
       - name: Setup mdbook
         run: |
-          cargo install --version 0.4.40 mdbook
-          cargo install mdbook-mermaid mdbook-template mdbook-alerts
+          cargo install --locked --version 0.4.40 mdbook
+          cargo install --locked mdbook-mermaid mdbook-template mdbook-alerts
       - name: Build book
         working-directory: ./book
         run: mdbook build
