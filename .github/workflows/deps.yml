@@ -16,13 +16,13 @@ jobs:
       id-token: write
     steps:
       - name: Secure runner
-        uses: tempoxyz/gh-actions/actions/secure-runner@ca2b15de1d1f6edd2276736187d7e4c2d898972c
+        uses: tempoxyz/gh-actions/actions/secure-runnerd67c611dc0050e9f3fcd5bd47f3f899a00e
       - uses: actions/checkout@v5
       - uses: dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772
         with:
           toolchain: nightly
       - name: Install cargo-deny
-        uses: tempoxyz/gh-actions/vendor/taiki-e/install-action@25cce154e7fb10f99361a166468a6c56b9c31aa3
+        uses: tempoxyz/gh-actions/vendor/taiki-e/install-actiond67c611dc0050e9f3fcd5bd47f3f899a00e
         with:
           tool: cargo-deny@0.20.2
           checksum: true
