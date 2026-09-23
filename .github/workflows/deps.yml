@@ -9,9 +9,7 @@ on:
 
 jobs:
   cargo-deny:
-    with:
-      rust-toolchain: nightly
-    uses: tempoxyz/gh-actions/.github/workflows/rust-deny.yml@b35994a23aaf6acf4d5e2f91d18235a6e2f90e95 # 2026-09-23T08-07-21Z-b35994a2
+    uses: tempoxyz/ci/.github/workflows/deny.yml@631b2c767919910a23685267999ae812f9902e87
     permissions:
       contents: read
       id-token: write
