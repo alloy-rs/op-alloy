@@ -58,6 +58,8 @@ jobs:
         if: ${{ matrix.rust != '1.88' }}
       - name: build
         if: ${{ matrix.rust == '1.88' }} # MSRV
+        env:
+          CARGO_RESOLVER_INCOMPATIBLE_RUST_VERSIONS: fallback
         run: cargo build --workspace ${{ matrix.flags }}
       - name: test
         if: ${{ matrix.rust != '1.88' }} # MSRV

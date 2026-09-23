@@ -48,7 +48,8 @@ op-alloy-rpc-jsonrpsee = { version = "0.23.1", path = "crates/rpc-jsonrpsee", de
 alloy-eips = { version = "1.1.2", default-features = false }
 alloy-serde = { version = "1.1.2", default-features = false }
 alloy-signer = { version = "1.1.2", default-features = false }
-alloy-network = { version = "1.1.2", default-features = false }
+# Alloy 1.7.4 adds a blanket wallet impl that conflicts with Optimism's impl.
+alloy-network = { version = ">=1.1.2, <1.7.4", default-features = false }
 alloy-provider = { version = "1.1.2", default-features = false }
 alloy-transport = { version = "1.1.2", default-features = false }
 alloy-consensus = { version = "1.6.2", default-features = false }
