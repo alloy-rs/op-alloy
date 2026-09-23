@@ -19,10 +19,10 @@ jobs:
       id-token: write
     steps:
       - name: Secure runner
-        uses: tempoxyz/gh-actions/actions/secure-runner@7e2ea6e1a8f5a22f16c2d4b389ffde25da93fa1b # 2026-09-22T22-21-59Z-7e2ea6e1
+        uses: tempoxyz/gh-actions/actions/secure-runner@117919c943b804057be733b0c4034c5542e58959
       - uses: actions/checkout@v5
       - name: Install Zepter
-        uses: tempoxyz/gh-actions/vendor/taiki-e/install-action@48ff2b0c97ede86c9f10d105424380b9605f790d
+        uses: tempoxyz/gh-actions/vendor/taiki-e/install-action@117919c943b804057be733b0c4034c5542e58959
         with:
           tool: zepter@1.88.1
           checksum: true
@@ -40,6 +40,6 @@ jobs:
       id-token: write
     steps:
       - name: Secure runner
-        uses: tempoxyz/gh-actions/actions/secure-runner@7e2ea6e1a8f5a22f16c2d4b389ffde25da93fa1b # 2026-09-22T22-21-59Z-7e2ea6e1
+        uses: tempoxyz/gh-actions/actions/secure-runner@117919c943b804057be733b0c4034c5542e58959
       - uses: actions/checkout@v4
       - uses: crate-ci/typos@v1
