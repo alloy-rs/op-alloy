@@ -26,7 +26,12 @@ jobs:
           # Some features have higher MSRV.
           - rust: "1.88" # MSRV
             flags: "--all-features"
+    permissions:
+      contents: read
+      id-token: write
     steps:
+      - name: Secure runner
+        uses: tempoxyz/gh-actions/actions/secure-runner@117919c943b804057be733b0c4034c5542e58959
       - uses: actions/checkout@v5
         with:
           submodules: true
@@ -44,11 +49,17 @@ jobs:
         with:
           cache-on-failure: true
       # Only run tests on latest stable and above
-      - name: Install cargo-nextest
-        if: ${{ matrix.rust != '1.88' }} # MSRV
-        uses: taiki-e/install-action@nextest
+      - name: Install nextest
+        uses: tempoxyz/gh-actions/vendor/taiki-e/install-action@117919c943b804057be733b0c4034c5542e58959
+        with:
+          tool: nextest@0.9.140
+          checksum: true
+          fallback: none
+        if: ${{ matrix.rust != '1.88' }}
       - name: build
         if: ${{ matrix.rust == '1.88' }} # MSRV
+        env:
+          CARGO_RESOLVER_INCOMPATIBLE_RUST_VERSIONS: fallback
         run: cargo build --workspace ${{ matrix.flags }}
       - name: test
         if: ${{ matrix.rust != '1.88' }} # MSRV
@@ -57,13 +68,28 @@ jobs:
   doctest:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: read
+      id-token: write
     steps:
+      - name: Secure runner
+        uses: tempoxyz/gh-actions/actions/secure-runner@117919c943b804057be733b0c4034c5542e58959
       - uses: actions/checkout@v5
         with:
           submodules: true
-      - uses: taiki-e/install-action@just
+      - name: Install just
+        uses: tempoxyz/gh-actions/vendor/taiki-e/install-action@117919c943b804057be733b0c4034c5542e58959
+        with:
+          tool: just@1.57.0
+          checksum: true
+          fallback: none
       - uses: dtolnay/rust-toolchain@stable
-      - uses: taiki-e/install-action@nextest
+      - name: Install nextest
+        uses: tempoxyz/gh-actions/vendor/taiki-e/install-action@117919c943b804057be733b0c4034c5542e58959
+        with:
+          tool: nextest@0.9.140
+          checksum: true
+          fallback: none
       - uses: Swatinem/rust-cache@v2
         with:
           cache-on-failure: true
@@ -72,14 +98,24 @@ jobs:
   wasm-unknown:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: read
+      id-token: write
     steps:
+      - name: Secure runner
+        uses: tempoxyz/gh-actions/actions/secure-runner@117919c943b804057be733b0c4034c5542e58959
       - uses: actions/checkout@v5
         with:
           submodules: true
       - uses: dtolnay/rust-toolchain@stable
         with:
           target: wasm32-unknown-unknown
-      - uses: taiki-e/install-action@cargo-hack
+      - name: Install cargo-hack
+        uses: tempoxyz/gh-actions/vendor/taiki-e/install-action@117919c943b804057be733b0c4034c5542e58959
+        with:
+          tool: cargo-hack@0.6.45
+          checksum: true
+          fallback: none
       - uses: Swatinem/rust-cache@v2
         with:
           cache-on-failure: true
@@ -90,14 +126,24 @@ jobs:
   wasm-wasi:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: read
+      id-token: write
     steps:
+      - name: Secure runner
+        uses: tempoxyz/gh-actions/actions/secure-runner@117919c943b804057be733b0c4034c5542e58959
       - uses: actions/checkout@v5
         with:
           submodules: true
       - uses: dtolnay/rust-toolchain@stable
         with:
           target: wasm32-wasip1
-      - uses: taiki-e/install-action@cargo-hack
+      - name: Install cargo-hack
+        uses: tempoxyz/gh-actions/vendor/taiki-e/install-action@117919c943b804057be733b0c4034c5542e58959
+        with:
+          tool: cargo-hack@0.6.45
+          checksum: true
+          fallback: none
       - uses: Swatinem/rust-cache@v2
         with:
           cache-on-failure: true
@@ -108,14 +154,24 @@ jobs:
   no-std:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: read
+      id-token: write
     steps:
+      - name: Secure runner
+        uses: tempoxyz/gh-actions/actions/secure-runner@117919c943b804057be733b0c4034c5542e58959
       - uses: actions/checkout@v5
         with:
           submodules: true
       - uses: dtolnay/rust-toolchain@stable
         with:
           target: riscv32imac-unknown-none-elf
-      - uses: taiki-e/install-action@cargo-hack
+      - name: Install cargo-hack
+        uses: tempoxyz/gh-actions/vendor/taiki-e/install-action@117919c943b804057be733b0c4034c5542e58959
+        with:
+          tool: cargo-hack@0.6.45
+          checksum: true
+          fallback: none
       - uses: Swatinem/rust-cache@v2
         with:
           cache-on-failure: true
@@ -125,12 +181,22 @@ jobs:
   feature-checks:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: read
+      id-token: write
     steps:
+      - name: Secure runner
+        uses: tempoxyz/gh-actions/actions/secure-runner@117919c943b804057be733b0c4034c5542e58959
       - uses: actions/checkout@v5
         with:
           submodules: true
       - uses: dtolnay/rust-toolchain@stable
-      - uses: taiki-e/install-action@cargo-hack
+      - name: Install cargo-hack
+        uses: tempoxyz/gh-actions/vendor/taiki-e/install-action@117919c943b804057be733b0c4034c5542e58959
+        with:
+          tool: cargo-hack@0.6.45
+          checksum: true
+          fallback: none
       - uses: Swatinem/rust-cache@v2
         with:
           cache-on-failure: true
@@ -140,11 +206,21 @@ jobs:
   clippy:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: read
+      id-token: write
     steps:
+      - name: Secure runner
+        uses: tempoxyz/gh-actions/actions/secure-runner@117919c943b804057be733b0c4034c5542e58959
       - uses: actions/checkout@v5
         with:
           submodules: true
-      - uses: taiki-e/install-action@just
+      - name: Install just
+        uses: tempoxyz/gh-actions/vendor/taiki-e/install-action@117919c943b804057be733b0c4034c5542e58959
+        with:
+          tool: just@1.57.0
+          checksum: true
+          fallback: none
       - uses: dtolnay/rust-toolchain@master
         with:
           toolchain: stable
@@ -157,7 +233,12 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: read
+      id-token: write
     steps:
+      - name: Secure runner
+        uses: tempoxyz/gh-actions/actions/secure-runner@117919c943b804057be733b0c4034c5542e58959
       - uses: actions/checkout@v5
         with:
           submodules: true
@@ -174,11 +255,21 @@ jobs:
   fmt:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: read
+      id-token: write
     steps:
+      - name: Secure runner
+        uses: tempoxyz/gh-actions/actions/secure-runner@117919c943b804057be733b0c4034c5542e58959
       - uses: actions/checkout@v5
         with:
           submodules: true
-      - uses: taiki-e/install-action@just
+      - name: Install just
+        uses: tempoxyz/gh-actions/vendor/taiki-e/install-action@117919c943b804057be733b0c4034c5542e58959
+        with:
+          tool: just@1.57.0
+          checksum: true
+          fallback: none
       - uses: dtolnay/rust-toolchain@nightly
         with:
           components: rustfmt
@@ -187,11 +278,21 @@ jobs:
   examples:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: read
+      id-token: write
     steps:
+      - name: Secure runner
+        uses: tempoxyz/gh-actions/actions/secure-runner@117919c943b804057be733b0c4034c5542e58959
       - uses: actions/checkout@v5
         with:
           submodules: true
-      - uses: taiki-e/install-action@just
+      - name: Install just
+        uses: tempoxyz/gh-actions/vendor/taiki-e/install-action@117919c943b804057be733b0c4034c5542e58959
+        with:
+          tool: just@1.57.0
+          checksum: true
+          fallback: none
       - uses: dtolnay/rust-toolchain@nightly
         with:
           toolchain: nightly
@@ -200,11 +301,21 @@ jobs:
   cfg-check:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: read
+      id-token: write
     steps:
+      - name: Secure runner
+        uses: tempoxyz/gh-actions/actions/secure-runner@117919c943b804057be733b0c4034c5542e58959
       - uses: actions/checkout@v5
         with:
           submodules: true
-      - uses: taiki-e/install-action@just
+      - name: Install just
+        uses: tempoxyz/gh-actions/vendor/taiki-e/install-action@117919c943b804057be733b0c4034c5542e58959
+        with:
+          tool: just@1.57.0
+          checksum: true
+          fallback: none
       - uses: dtolnay/rust-toolchain@nightly
         with:
           toolchain: nightly
@@ -216,13 +327,28 @@ jobs:
   feature-powerset:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: read
+      id-token: write
     steps:
+      - name: Secure runner
+        uses: tempoxyz/gh-actions/actions/secure-runner@117919c943b804057be733b0c4034c5542e58959
       - uses: actions/checkout@v5
         with:
           submodules: true
-      - uses: taiki-e/install-action@just
+      - name: Install just
+        uses: tempoxyz/gh-actions/vendor/taiki-e/install-action@117919c943b804057be733b0c4034c5542e58959
+        with:
+          tool: just@1.57.0
+          checksum: true
+          fallback: none
       - uses: dtolnay/rust-toolchain@stable
-      - uses: taiki-e/install-action@cargo-hack
+      - name: Install cargo-hack
+        uses: tempoxyz/gh-actions/vendor/taiki-e/install-action@117919c943b804057be733b0c4034c5542e58959
+        with:
+          tool: cargo-hack@0.6.45
+          checksum: true
+          fallback: none
       - uses: Swatinem/rust-cache@v2
         with:
           cache-on-failure: true

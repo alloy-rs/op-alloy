@@ -14,10 +14,20 @@ jobs:
   feature-propagation:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    permissions:
+      contents: read
+      id-token: write
     steps:
+      - name: Secure runner
+        uses: tempoxyz/gh-actions/actions/secure-runner@117919c943b804057be733b0c4034c5542e58959
       - uses: actions/checkout@v5
+      - name: Install Zepter
+        uses: tempoxyz/gh-actions/vendor/taiki-e/install-action@117919c943b804057be733b0c4034c5542e58959
+        with:
+          tool: zepter@1.88.1
+          checksum: true
+          fallback: cargo-binstall
       - run: |
-          cargo install zepter
           zepter --version
           time zepter run check
 
@@ -25,6 +35,11 @@ jobs:
   typos:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: read
+      id-token: write
     steps:
+      - name: Secure runner
+        uses: tempoxyz/gh-actions/actions/secure-runner@117919c943b804057be733b0c4034c5542e58959
       - uses: actions/checkout@v4
       - uses: crate-ci/typos@v1

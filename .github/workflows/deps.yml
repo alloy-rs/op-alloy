@@ -9,8 +9,7 @@ on:
 
 jobs:
   cargo-deny:
-    name: cargo deny check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: EmbarkStudios/cargo-deny-action@v2
+    uses: tempoxyz/ci/.github/workflows/deny.yml@631b2c767919910a23685267999ae812f9902e87
+    permissions:
+      contents: read
+      id-token: write
