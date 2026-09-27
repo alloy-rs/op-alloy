@@ -26,7 +26,10 @@ jobs:
       - name: Setup mdbook
         run: |
           cargo install --locked --version 0.4.40 mdbook
-          cargo install --locked mdbook-mermaid mdbook-template mdbook-alerts
+          # Keep preprocessors compatible with mdBook 0.4; Mermaid 0.17 requires 0.5.
+          cargo install --locked --version 0.16.2 mdbook-mermaid
+          cargo install --locked --version 1.1.1+deprecated mdbook-template
+          cargo install --locked --version 0.8.0 mdbook-alerts
       - name: Build book
         working-directory: ./book
         run: mdbook build
