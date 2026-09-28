@@ -9,7 +9,7 @@ on:
 
 jobs:
   cargo-deny:
-    uses: tempoxyz/ci/.github/workflows/deny.yml@631b2c767919910a23685267999ae812f9902e87
+    uses: tempoxyz/ci/.github/workflows/deny.yml@e8b0b7e43db282a365ea7019f5e1657381bccc51
     permissions:
       contents: read
       id-token: write
