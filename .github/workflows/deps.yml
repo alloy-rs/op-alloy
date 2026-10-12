@@ -9,7 +9,7 @@ on:
 
 jobs:
   cargo-deny:
-    uses: tempoxyz/gh-actions/.github/workflows/rust-deny.yml@2da86a50d7565fbabc606b1ab7fed382b9f4829b # 2026-09-29T12-00-49Z-2da86a50
+    uses: tempoxyz/gh-actions/.github/workflows/rust-deny.yml@2ab28a31ae569be9f780c7675b684471060afa40 # 2026-10-09T21-43-19Z-2ab28a31
     permissions:
       contents: read
       id-token: write
