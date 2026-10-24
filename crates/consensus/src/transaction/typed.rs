@@ -6,6 +6,7 @@ use alloy_consensus::{
 };
 use alloy_eips::Encodable2718;
 use alloy_primitives::{B256, ChainId, Signature, TxHash, bytes::BufMut};
+use alloy_rlp::Header;
 
 impl From<TxLegacy> for OpTypedTransaction {
     fn from(tx: TxLegacy) -> Self {
@@ -201,6 +202,38 @@ impl RlpEcdsaEncodableTx for OpTypedTransaction {
         }
     }
 
+    fn rlp_header_signed(&self, signature: &Signature) -> Header {
+        match self {
+            Self::Legacy(tx) => tx.rlp_header_signed(signature),
+            Self::Eip2930(tx) => tx.rlp_header_signed(signature),
+            Self::Eip1559(tx) => tx.rlp_header_signed(signature),
+            Self::Eip7702(tx) => tx.rlp_header_signed(signature),
+            Self::Deposit(tx) => {
+                Header { list: true, payload_length: tx.rlp_encoded_fields_length() }
+            }
+        }
+    }
+
+    fn rlp_encode_signed(&self, signature: &Signature, out: &mut dyn BufMut) {
+        match self {
+            Self::Legacy(tx) => tx.rlp_encode_signed(signature, out),
+            Self::Eip2930(tx) => tx.rlp_encode_signed(signature, out),
+            Self::Eip1559(tx) => tx.rlp_encode_signed(signature, out),
+            Self::Eip7702(tx) => tx.rlp_encode_signed(signature, out),
+            Self::Deposit(tx) => tx.rlp_encode(out),
+        }
+    }
+
+    fn eip2718_encoded_length(&self, signature: &Signature) -> usize {
+        match self {
+            Self::Legacy(tx) => tx.eip2718_encoded_length(signature),
+            Self::Eip2930(tx) => tx.eip2718_encoded_length(signature),
+            Self::Eip1559(tx) => tx.eip2718_encoded_length(signature),
+            Self::Eip7702(tx) => tx.eip2718_encoded_length(signature),
+            Self::Deposit(tx) => tx.eip2718_encoded_length(),
+        }
+    }
+
     fn eip2718_encode_with_type(&self, signature: &Signature, _ty: u8, out: &mut dyn BufMut) {
         match self {
             Self::Legacy(tx) => tx.eip2718_encode_with_type(signature, tx.ty(), out),
@@ -218,6 +251,28 @@ impl RlpEcdsaEncodableTx for OpTypedTransaction {
             Self::Eip1559(tx) => tx.eip2718_encode(signature, out),
             Self::Eip7702(tx) => tx.eip2718_encode(signature, out),
             Self::Deposit(tx) => tx.encode_2718(out),
+        }
+    }
+
+    fn network_header(&self, signature: &Signature) -> Header {
+        match self {
+            Self::Legacy(tx) => tx.network_header(signature),
+            Self::Eip2930(tx) => tx.network_header(signature),
+            Self::Eip1559(tx) => tx.network_header(signature),
+            Self::Eip7702(tx) => tx.network_header(signature),
+            Self::Deposit(tx) => {
+                Header { list: false, payload_length: tx.eip2718_encoded_length() }
+            }
+        }
+    }
+
+    fn network_encoded_length(&self, signature: &Signature) -> usize {
+        match self {
+            Self::Legacy(tx) => tx.network_encoded_length(signature),
+            Self::Eip2930(tx) => tx.network_encoded_length(signature),
+            Self::Eip1559(tx) => tx.network_encoded_length(signature),
+            Self::Eip7702(tx) => tx.network_encoded_length(signature),
+            Self::Deposit(tx) => tx.network_encoded_length(),
         }
     }
 
@@ -299,5 +354,80 @@ impl SignableTransaction<Signature> for OpTypedTransaction {
     {
         let hash = self.tx_hash(&signature);
         Signed::new_unchecked(self, signature, hash)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use alloc::vec::Vec;
+    use alloy_primitives::{Address, Bytes, TxKind, U256};
+
+    #[test]
+    fn signed_encoding_lengths_match_encoded_bytes() {
+        let signature = Signature::test_signature();
+        let txs: [OpTypedTransaction; 3] = [
+            TxLegacy {
+                chain_id: Some(10),
+                nonce: 1,
+                gas_price: 1_000_000_000,
+                gas_limit: 21_000,
+                to: TxKind::Call(Address::repeat_byte(0x11)),
+                value: U256::from(1),
+                input: Bytes::new(),
+            }
+            .into(),
+            TxEip1559 { chain_id: 10, gas_limit: 21_000, ..Default::default() }.into(),
+            TxDeposit {
+                source_hash: B256::repeat_byte(0x22),
+                from: Address::repeat_byte(0x33),
+                to: TxKind::Call(Address::repeat_byte(0x44)),
+                mint: 100,
+                value: U256::from(5),
+                gas_limit: 100_000,
+                is_system_transaction: false,
+                input: Bytes::from_static(&[0xde, 0xad]),
+            }
+            .into(),
+        ];
+
+        for tx in txs {
+            let expected_rlp = match &tx {
+                OpTypedTransaction::Legacy(tx) => {
+                    let mut buf = Vec::new();
+                    tx.rlp_encode_signed(&signature, &mut buf);
+                    buf
+                }
+                OpTypedTransaction::Eip1559(tx) => {
+                    let mut buf = Vec::new();
+                    tx.rlp_encode_signed(&signature, &mut buf);
+                    buf
+                }
+                OpTypedTransaction::Deposit(tx) => {
+                    let mut buf = Vec::new();
+                    tx.rlp_encode(&mut buf);
+                    buf
+                }
+                _ => unreachable!(),
+            };
+
+            let signed = tx.into_signed(signature);
+
+            let mut rlp = Vec::new();
+            signed.rlp_encode(&mut rlp);
+            assert_eq!(rlp, expected_rlp);
+            assert_eq!(signed.rlp_encoded_length(), rlp.len());
+
+            let mut eip2718 = Vec::new();
+            signed.encode_2718(&mut eip2718);
+            assert_eq!(signed.encode_2718_len(), eip2718.len());
+
+            let mut network = Vec::new();
+            signed.network_encode(&mut network);
+            assert_eq!(signed.network_encoded_length(), network.len());
+
+            let envelope: OpTxEnvelope = signed.into();
+            assert_eq!(envelope.encoded_2718(), eip2718);
+        }
     }
 }
