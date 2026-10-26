@@ -8,6 +8,9 @@ feature-depth = 1
 
 [advisories]
 ignore = [
+    # https://rustsec.org/advisories/RUSTSEC-2026-0387 crypto-bigint timing variability, patched
+    # in 0.7.6, but elliptic-curve 0.13 (k256) still requires 0.5.x, which has no fix.
+    "RUSTSEC-2026-0387",
     # paste crate is no longer maintained.
     "RUSTSEC-2024-0436",
     # bincode is unmaintained, but only used as a dev-dependency for testing.

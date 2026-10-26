@@ -61,7 +61,14 @@ jobs:
         if: ${{ matrix.rust == '1.88' }} # MSRV
         env:
           CARGO_RESOLVER_INCOMPATIBLE_RUST_VERSIONS: fallback
-        run: cargo build --workspace ${{ matrix.flags }}
+          # Resolve on nightly, which honors the release cooldown (Cargo 1.100+), with the
+          # fallback picking versions compatible with the workspace rust-version.
+          CARGO_REGISTRY_GLOBAL_MIN_PUBLISH_AGE: 7 days
+        # Cargo.lock tracks the latest compatible versions; re-resolve for the MSRV.
+        run: |
+          rustup toolchain install nightly --profile minimal
+          cargo +nightly update
+          cargo build --workspace ${{ matrix.flags }}
       - name: test
         if: ${{ matrix.rust != '1.88' }} # MSRV
         run: cargo nextest run --workspace ${{ matrix.flags }}
