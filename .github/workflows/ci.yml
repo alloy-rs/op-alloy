@@ -61,7 +61,10 @@ jobs:
         if: ${{ matrix.rust == '1.88' }} # MSRV
         env:
           CARGO_RESOLVER_INCOMPATIBLE_RUST_VERSIONS: fallback
-        run: cargo build --workspace ${{ matrix.flags }}
+        # Cargo.lock tracks the latest compatible versions; re-resolve for the MSRV.
+        run: |
+          cargo update
+          cargo build --workspace ${{ matrix.flags }}
       - name: test
         if: ${{ matrix.rust != '1.88' }} # MSRV
         run: cargo nextest run --workspace ${{ matrix.flags }}
